@@ -13,5 +13,13 @@
   "forgotPass": "forgot password?",
   "Cloud": "Cloud",
   "Support": "Support",
-  "Invoice": "Invoice"
+  "Invoice": "Invoice",
+  "settings": "settings",
+  "cloud": "cloud",
+  "support": "support",
+  "invoice": "invoice",
+  "Balance": "Balance",
+  "Exit": "Exit",
+  "I have a password": "I have a password",
+  "Restore": "Restore"
 }

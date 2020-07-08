@@ -16,13 +16,20 @@
 			<div class="login__UI">
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
-					<div class="inputs__log-pas">
+					<div v-if="remember" class="inputs__log-pas">
 						<input type="text" placeholder="Login">
 						<span class="login__horisontal-line"></span>
 						<input type="password" placeholder="Password">
 					</div>
+					<div v-else class="inputs__log-pas inputs__log-pas--remember">
+						<input type="text" placeholder="Email">
+					</div>
 					<template>
-						<button v-if="!tryingLogin" @click="submitHandler()" class="login__submit">{{$t('login')}}</button>
+						<template v-if="!tryingLogin">
+							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login')}}</button>
+							<button v-else @click="restorePass()" class="login__submit">{{$t('Restore')}}</button>
+
+						</template>
 						<div v-else class="login__loading">
 							<span class="load__item"></span>
 							<span class="load__item"></span>
@@ -31,7 +38,7 @@
 					</template>
 				</div>
 				<div class="login__forgot">
-					<a href="#">{{$t('forgotPass')}}</a>
+					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password')}}</a>
 				</div>
 			</div>
 		</div>
@@ -45,7 +52,8 @@ export default {
 	data(){
 		return {
 			tryingLogin: false,
-			loginError: ""
+			loginError: "",
+			remember: true
 		}
 	},
 	props: {
@@ -72,6 +80,9 @@ export default {
 					});
 				}, 2000);
 			})
+		},
+		forgotPass(){
+			this.remember = !this.remember;
 		}
 	}
 }
@@ -86,10 +97,12 @@ export default {
 
 .login{
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .login__layout{
-	height: 50%;
+	flex: 1 0;
 }
 
 .login__title{
@@ -116,6 +129,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	width: 80%;
+	max-width: 500px;
 }
 
 .login__horisontal-line{
@@ -225,5 +239,22 @@ export default {
 }
 
 
+@media screen and (min-width: 1024px){
+	.login{
+		flex-direction: row;
+	}
+
+	.login__title{
+		clip-path: none;
+	}
+
+	.login__UI{
+		justify-content: center;
+	}
+
+	.login__forgot{
+		margin-top: 40px;
+	}
+}
 
 </style>

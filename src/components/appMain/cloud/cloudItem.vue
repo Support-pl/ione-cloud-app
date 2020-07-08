@@ -1,8 +1,8 @@
 <template>
 	<div class="cloud__item-wrapper">
-		<div class="cloud__item">
+		<div class="cloud__item" @click="cloudClick(cloud.id)">
 			<div class="upper">
-				<div class="item__color" :style="{'background-color': cloud.color}"></div>
+				<div class="item__color" :style="{'background-color': statusColor}"></div>
 				<div class="item__title">{{cloud.title}}</div>
 				<div class="item__status">{{cloud.status}}</div>
 			</div>
@@ -18,6 +18,31 @@ export default {
 	name: "cloudItem",
 	props: {
 		cloud: Object,
+	},
+	computed: {
+		statusColor(){
+			let color = '';
+			switch (this.cloud.status.toLowerCase()) {
+				case 'running':
+					color = '#0fd058';
+					break;
+				case 'poweroff':
+					color = '#919191';
+					break;
+				case 'suspend':
+					color = '#f9f038';
+					break;
+				default:
+					color = '#f9f038';
+					break;
+			}
+			return color;
+		}
+	},
+	methods: {
+		cloudClick(id){
+			this.$router.push('cloud-' + id)
+		}
 	}
 }
 </script>
@@ -25,7 +50,8 @@ export default {
 <style>
 
 	.cloud__item-wrapper{
-		padding: 0 15px 0 35px  
+		padding: 0 15px 0 35px; 
+		cursor: pointer;
 	}
 
 	.cloud__item{
@@ -33,6 +59,10 @@ export default {
 		border-bottom: 1px solid gray;
 		padding: 10px 0;
 		font-size: 16px;
+	}
+
+	.cloud__item-wrapper:hover{
+		background-color: rgba(0,0,0,.08);
 	}
 
 	.upper{

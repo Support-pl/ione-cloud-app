@@ -4,8 +4,9 @@
 			<login v-if="!isLoggined" :getUser="getUser" />
 		</transition>
 		<template v-if="isLoggined">
-			<appMain :user='user' />
+			<!-- <appMain :user='user' /> -->
 		</template>
+		<router-view :user="user" :getUser="getUser"></router-view>
 	</div>
 </template>
 
@@ -21,13 +22,13 @@ export default {
 	},
 	data() {
 		return {
-			user: {
-				name: "test name",
-				balance: 241.24
-			},
-			isLoggined: true
-			// user: null,
-			// isLoggined: false
+			// user: {
+			// 	name: "test name",
+			// 	balance: 241.24
+			// },
+			// isLoggined: true
+			user: null,
+			isLoggined: false
 		};
 	},
 	methods: {
@@ -40,6 +41,7 @@ export default {
 			this.isLoggined = true;
 			console.log("loggined")
 			console.log(this.user)
+			this.$router.push("cloud")
 		}
 	},
 	mounted() {

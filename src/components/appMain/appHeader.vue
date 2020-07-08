@@ -1,36 +1,47 @@
 <template>
 	<div class="header__container">
-		<div v-if="active == 0" class="header__wrapper">
-			<div class="header__left clickable">
-				<a-icon class="header__icon" type="search" />
+		<div class="container">
+			<div class="header__content">
+				<div v-if="active == 'cloud'" class="header__wrapper">
+			<div class="header__left clickable" @click="change">
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="search" />
+				</div>
 			</div>
 			<div class="header__title">{{$t('Cloud')}}</div>
 			<div class="header__right">${{user.balance.toFixed(2)}}</div>
 		</div>
 
-		<div  v-if="active == 1"  class="header__wrapper">
+		<div v-if="active == 'support'"  class="header__wrapper">
 			<div class="header__left">
 			</div>
 			<div class="header__title">{{$t('Support')}}</div>
 			<div class="header__right clickable">
-				<a-icon class="header__icon" type="plus" />
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="plus" />
+				</div>
 			</div>
 		</div>
 
-		<div  v-if="active == 2"  class="header__wrapper">
+		<div v-if="active == 'invoice'"  class="header__wrapper">
 			<div class="header__left clickable">
-				<a-icon class="header__icon" type="plus" />
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="plus" />
+				</div>
 			</div>
 			<div class="header__title">{{$t('Invoice')}}</div>
 			<div class="header__right">${{user.balance.toFixed(2)}}</div>
 		</div>
 
-		<div  v-if="active == 3"  class="header__wrapper">
+		<div v-if="active == 'settings'"  class="header__wrapper">
 			<div class="header__left">
 			</div>
 			<div class="header__title">{{$t('Settings')}}</div>
-			<div class="header__right clickable">Edit</div>
+			<div class="header__right"></div>
 		</div>
+			</div>
+		</div>
+		
 	</div>
 </template>
 
@@ -39,7 +50,8 @@ export default {
 	name: "appHeader",
 	props: {
 		user: Object,
-		active: Number
+		active: String,
+		change: Function
 	}
 }
 </script>
@@ -71,6 +83,28 @@ export default {
 
 	.clickable:hover{
 		cursor: pointer;
-		transform: scale(1.05)
+	}
+
+	.icon__wrapper{
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition:
+			background-color .2s ease,
+			color .1s ease,
+			transform .2s ease;
+	}
+
+	.icon__wrapper:hover{
+		background-color: #fff;
+		color: #427cf7;
+		transform: scale(1.2);
+	}
+
+	.icon__wrapper:active{
+		transform: scale(1.1);
 	}
 </style>

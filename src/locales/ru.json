@@ -13,5 +13,13 @@
   "forgotPass": "Забыли пароль?",
   "Cloud": "Облако",
   "Support": "Поддержка",
-  "Invoice": "Счета"
+  "Invoice": "Счета",
+  "cloud": "облако",
+  "support": "поддержка",
+  "invoice": "счета",
+  "settings": "настройки",
+  "Balance": "Баланс",
+  "Exit": "Выход",
+  "I have a password": "У меня есть пароль",
+  "Restore": "Восстановить"
 }

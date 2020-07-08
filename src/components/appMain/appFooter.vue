@@ -1,16 +1,21 @@
 <template>
 	<div class="footer">
-		<div v-for="(button, index) in buttons" :key="button" @click="changeFunc(index)" class="button" :class="{ active: index==active }">
-			<div class="button__icon">
-				<a-icon :type="button.icon" :theme="button.theme" />
-			</div>
-			<div class="button__title">
-				{{button.title}}
+		<div class="container">
+			<div class="footer__content">
+				<div v-for="(button, index) in buttons" :key="index" @click="changeFunc(index, button.title)" class="button" :class="{ active: button.title==active }">
+					<div class="button__icon">
+						<a-icon :type="button.icon" :theme="button.theme" />
+					</div>
+					<div class="button__title">
+						<!-- {{button.title}} -->
+						{{$t(button.title)}}
+					</div>
+				</div>
+				<!-- <div class="footer__active" :style="{left: '47px'}">
+					<a-icon :type="buttons[active].icon" :theme="buttons[active].theme"/>
+				</div> -->
 			</div>
 		</div>
-		<!-- <div class="footer__active" :style="{left: '47px'}">
-			<a-icon :type="buttons[active].icon" :theme="buttons[active].theme"/>
-		</div> -->
 	</div>
 </template>
 
@@ -18,7 +23,7 @@
 export default {
 	name: "appFooter",
 	props: {
-		active: Number,
+		active: String,
 		changeFunc: Function
 	},
 	data(){
@@ -58,10 +63,13 @@ export default {
 <style>
 
 .footer{
-	display: flex;
 	background-color: #fdfdfd;
 	position: relative;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
+}
+
+.footer__content{
+	display: flex;
 }
 
 .button{
