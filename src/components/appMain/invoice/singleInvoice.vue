@@ -1,5 +1,5 @@
 <template>
-	<div class="invoice">
+	<div class="invoice" @click="clickOnInvoice(invoice.id)">
 		<div class="invoice__header flex-between">
 			<div class="invoice__id">#{{invoice.id}}</div>
 			<div class="invoice__status" :style="{color: statusColor}">{{invoice.status}}</div>
@@ -25,7 +25,7 @@
 		</div>
 		<div class="horisontal-line"></div>
 		<div class="invoice__footer flex-between">
-			<div class="invoice__comment">{{invoice.comment}}</div>
+			<div class="invoice__service">{{invoice.service}}</div>
 			<div class="invoice__btn"><a-icon type="right" /></div>
 		</div>
 	</div>
@@ -41,6 +41,11 @@ export default {
 		statusColor(){
 			return this.invoice.status.toLowerCase() == 'paid'? '#0fd058' : '#e82f3b';
 		}
+	},
+	methods: {
+		clickOnInvoice(id){
+			this.$router.push("/invoice-" + id);
+		}
 	}
 }
 </script>
@@ -52,7 +57,8 @@ export default {
 		box-shadow: 5px 8px 10px rgba(0, 0, 0, .05);
 		border-radius: 15px;
 		background-color: #fff;
-		color:rgba(0, 0, 0, .7)
+		color:rgba(0, 0, 0, .7);
+		cursor: pointer;
 	}
 
 	.invoice__status{

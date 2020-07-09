@@ -65,6 +65,7 @@ export default {
 	height: 100%;
 	overflow: auto;
 	position: relative;
+	padding: 20px 10px 0;
 }
 
 .searchActive{

@@ -3,10 +3,13 @@
 		<div class="ticket__status"></div>
 		<div class="ticket__content">
 			<div class="ticket__upper">
-				<div class="ticket__title">{{ticket.title}}</div>
+				<div class="ticket__title">#{{ticket.id}} - {{ticket.title}}</div>
+				<div class="ticket__status-text">{{ticket.status}}</div>
+			</div>
+			<div class="ticket__lower">
+				<div class="ticket__message">{{ticket.message}}</div>
 				<div class="ticket__time">{{ticket.time}}</div>
 			</div>
-			<div class="ticket__lower">{{ticket.message}}</div>
 		</div>
 	</div>
 </template>
@@ -43,7 +46,10 @@ export default {
 	.ticket__upper{
 		display: flex;
 		justify-content: space-between;
-		line-height: 0.8;
+	}
+	.ticket__lower{
+		display: flex;
+		justify-content: space-between;
 	}
 	.ticket__status{
 		width: 10px;

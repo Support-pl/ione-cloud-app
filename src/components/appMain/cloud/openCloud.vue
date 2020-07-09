@@ -1,9 +1,16 @@
 <template>
 	<div class="cloud__fullscreen Fcloud">
 		<div class="Fcloud__header">
-			<div class="Fcloud__status-color" :style="{'background-color': statusColor}"></div>
-			<div class="Fcloud__title">{{name}}</div>
-			<div class="Fcloud__status">{{status}}</div>
+			<div class="Fcloud__back-wrapper">
+				<router-link class="Fcloud__back icon__wrapper" to="cloud">
+					<a-icon type="left" />
+				</router-link>
+			</div>
+			<div class="Fcloud__header-title">
+				<div class="Fcloud__status-color" :style="{'background-color': statusColor}"></div>
+				<div class="Fcloud__title">{{name}}</div>
+				<div class="Fcloud__status">{{status}}</div>
+			</div>
 		</div>
 		<div class="Fcloud__buttons">
 			<div class="Fcloud__button">
@@ -22,16 +29,15 @@
 			</div>
 			<div class="Fcloud__button">
 				<div class="Fcloud__BTN-icon">
-					<a-icon type="sync" />
+					<a-icon type="stop" />
 				</div>
-				<div class="Fcloud__BTN-title">Recovery</div>
+				<div class="Fcloud__BTN-title">Stop</div>
 			</div>
 		</div>
 
 		
 		<div class="Fcloud__info">
 			<div class="Fcloud__info-header">
-				<router-link class="Fcloud__back" to="cloud">Back</router-link>
 				<div class="Fcloud__info-title">Infomation</div>
 			</div>
 
@@ -70,7 +76,7 @@
 					</div>
 					<div class="block__column">
 						<div class="block__title">Memory</div>
-						<div class="block__value">2.0 GB</div>
+						<div class="block__value">2 GB</div>
 					</div>
 				</div>
 			</div>
@@ -87,12 +93,12 @@
 					</div>
 					<div class="block__column">
 						<div class="block__title">Size</div>
-						<div class="block__value">10.0 GB</div>
+						<div class="block__value">10 GB</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="Fcloud__info-block block">
+			<div v-if="permissions" class="Fcloud__info-block block">
 				<div class="Fcloud__block-header">
 					<a-icon type="user" />
 					Permissions
@@ -140,7 +146,8 @@ export default {
 	data(){
 		return {
 			status: 'running',
-			name: 'test3'
+			name: 'test3',
+			permissions: false,
 		}
 	},
 	computed: {
@@ -176,10 +183,18 @@ export default {
 
 	.Fcloud__header{
 		position: sticky;
-		padding: 10px 0 0 40px;
+		padding-top: 10px;
 		color: #fff;
 		top: 0;
 		background-color: #468aff;
+		display: grid;
+		grid-template-columns: 20% 1fr 20%;
+		justify-items: center;
+		align-items: center;
+	}
+
+	.Fcloud__header-title{
+		position: relative;
 	}
 
 	.Fcloud__title{
@@ -202,7 +217,7 @@ export default {
 		background-color: #fff;
 		border-radius: 50%;
 		top: 50%;
-		left: 15px;
+		left: -25px;
 		transform: translateY(-50%);
 	}
 
@@ -210,7 +225,7 @@ export default {
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
-		margin-top: 10px;
+		margin-top: 20px;
 	}
 
 	.Fcloud__button{
@@ -241,18 +256,18 @@ export default {
 		background: #f0f3f6;
 		flex: 1 0;
 		border-radius: 35px 35px 0 0;
-		margin-top: 60px;
+		margin-top: 30px;
 		padding: 10px 30px 0;
 	}
 
 	.Fcloud__info-header{
-		display: grid;
-		grid-template-columns: 20% 1fr 20%;
-		align-items: center;
+		text-align: center;
 	}
 
 	.Fcloud__back{
 		font-weight: bold;
+		color: #fff;
+		font-size: 1.4rem;
 	}
 
 	.Fcloud__info-title{

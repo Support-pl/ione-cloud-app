@@ -34,7 +34,7 @@ export default {
 					title: 'cloud',
 					theme: 'filled'
 				},{
-					icon: 'question',
+					icon: 'message',
 					title: 'support',
 					theme: 'outlined'
 				},{
@@ -79,6 +79,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	cursor: pointer;
 }
 
 .button__title{

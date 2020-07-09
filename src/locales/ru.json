@@ -21,5 +21,14 @@
   "Balance": "Баланс",
   "Exit": "Выход",
   "I have a password": "У меня есть пароль",
-  "Restore": "Восстановить"
+  "Restore": "Восстановить",
+  "Language": "Язык",
+  "singleInvoice": "Счёт",
+  "status": "Статус",
+  "payed": "оплачен",
+  "unpaid": "не оплачен",
+  "service": "Услуга",
+  "invoiceDate": "Дата счёта",
+  "dueDate": "Срок оплаты",
+  "Choice payment": "Способ оплаты"
 }

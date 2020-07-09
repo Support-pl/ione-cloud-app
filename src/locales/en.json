@@ -21,5 +21,14 @@
   "Balance": "Balance",
   "Exit": "Exit",
   "I have a password": "I have a password",
-  "Restore": "Restore"
+  "Restore": "Restore",
+  "Language": "Language",
+  "singleInvoice": "Invoice",
+  "status": "Status",
+  "payed": "payed",
+  "unpaid": "unpaid",
+  "service": "Service",
+  "invoiceDate": "Invoice date",
+  "dueDate": "Due date",
+  "Choice payment": "Choice payment"
 }

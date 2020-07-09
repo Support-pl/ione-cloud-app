@@ -22,23 +22,23 @@ export default {
 					status: 'Unpaid',
 					invoiceDate: '07/01/2020',
 					dueDate: '17/01/2020',
-					comment: 'CRM+ (Cloud)'
+					service: 'CRM+ (Cloud)'
 				},{
-					id: '123',
+					id: '124',
 					cost: '50',
 					currency: 'USD',
 					status: 'Unpaid',
 					invoiceDate: '07/01/2020',
 					dueDate: '17/01/2020',
-					comment: 'CRM+ (Cloud)'
+					service: 'CRM+ (Cloud)'
 				},{
-					id: '123',
+					id: '125',
 					cost: '50',
 					currency: 'USD',
 					status: 'Paid',
 					invoiceDate: '07/01/2020',
 					dueDate: '17/01/2020',
-					comment: 'CRM+ (Cloud)'
+					service: 'CRM+ (Cloud)'
 				}
 			]
 		}

@@ -8,20 +8,23 @@
 				</div>
 			</div>
 			<div class="chat__title">
-				Chat
+				{{theme}}
 			</div>
 		</div>
 
 
 		<div class="chat__content">
-			<div class="chat__message chat__message--out">hello, dude</div>
-			<div class="chat__message chat__message--in">wow,hello</div>
+			<div class="chat__message chat__message--out">Тестовое исходящее сообщение</div>
+			<div class="chat__message chat__message--in">Тестовое входяещее сообщение в ответ</div>
 		</div>
 
 		<div class="chat__footer">
 			<input type="text" class="chat__input" name="message" id="message" placeholder="Message...">
 			<div class="chat__send">
 				<a-icon type="arrow-up" />
+			</div>
+			<div class="chat__send">
+				<a-icon type="plus" />
 			</div>
 		</div>
 	</div>
@@ -30,11 +33,17 @@
 <script>
 export default {
 	name: "ticketChat",
+	data(){
+		return {
+			theme: "Чат с агентом поддержки"
+		}
+	},
 	methods: {
 		goBack(){
 			this.$router.push("support");
-		}
-	}
+		},
+	},
+
 }
 </script>
 
@@ -115,12 +124,17 @@ export default {
 
 	.chat__message {
 		background: #dcfdbe;
-		width: max-content;
 		font-weight: 500;
 		padding: 5px 7px;
 		border-radius: 5px;
 		box-shadow: 2px 2px 2px rgba(0, 0, 0, .07);
 		position: relative;
+		width: max-content;
+		max-width: 80%;
+	}
+
+	.chat__message:not(:last-child){
+		margin-bottom: 10px;
 	}
 
 	.chat__message::after{

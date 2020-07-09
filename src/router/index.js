@@ -51,6 +51,11 @@ Vue.use(VueRouter)
 		path: '/ticket-*',
 		name: 'ticket',
 		component: () => import('../components/appMain/support/ticketchat.vue')
+	},
+	{
+		path: '/invoice-*',
+		name: 'invoiceFS',
+		component: () => import('../components/appMain/invoice/openInvoice.vue')
 	}
 ]
 

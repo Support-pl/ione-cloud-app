@@ -1,12 +1,12 @@
 <template>
 	<div class="cloud__item-wrapper">
 		<div class="cloud__item" @click="cloudClick(cloud.id)">
-			<div class="upper">
+			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
 				<div class="item__title">{{cloud.title}}</div>
 				<div class="item__status">{{cloud.status}}</div>
 			</div>
-			<div class="lower">
+			<div class="cloud__lower">
 				HOST: {{cloud.host}}, IP: {{cloud.ip}}
 			</div>
 		</div>
@@ -50,22 +50,27 @@ export default {
 <style>
 
 	.cloud__item-wrapper{
-		padding: 0 15px 0 35px; 
+		position: relative;
+		padding: 8px 15px 15px 40px;
+		box-shadow: 5px 8px 10px rgba(0, 0, 0, .05);
+		border-radius: 15px;
+		background-color: #fff;
+		color:rgba(0, 0, 0, .7);
 		cursor: pointer;
+	}
+	.cloud__item-wrapper:hover{
+		background-color: rgba(255,255,255,.55);
+	}
+	.cloud__item-wrapper:not(:last-child){
+		margin-bottom: 20px;
 	}
 
 	.cloud__item{
 		position: relative;
-		border-bottom: 1px solid gray;
-		padding: 10px 0;
 		font-size: 16px;
 	}
 
-	.cloud__item-wrapper:hover{
-		background-color: rgba(0,0,0,.08);
-	}
-
-	.upper{
+	.cloud__upper{
 		display: flex;
 		justify-content: space-between;
 	}
@@ -76,7 +81,7 @@ export default {
 		background-color: #fff;
 		position: absolute;
 		border-radius: 50%;
-		left: -24px;
+		left: -28px;
 		top: 15px;
 	}
 
@@ -84,7 +89,7 @@ export default {
 		font-weight: bold;
 	}
 
-	.item__status, .lower{
+	.item__status, .cloud__lower{
 		color: rgba(0, 0, 0, .4)
 	}
 </style>

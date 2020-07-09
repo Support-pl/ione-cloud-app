@@ -60,7 +60,7 @@ export default {
 				let ret = this.activeName == '' ? this.$router.currentRoute.name : this.activeName;
 				ret = ret == "cloudHome" ? 'cloud' : ret;
 				// console.log('~~~', ret, this.activeName, this.$router.currentRoute.name)
-				return ret; //TODO: сделать адекватный переход по ссылкам и кнопки навгинации по приложению из браузера (не работает хедер и футер).
+				return ret;
 			},
 			set(newVal){
 				this.activeName = newVal; 
@@ -89,6 +89,6 @@ export default {
 
 	.container {
 		max-width: 768px;
-		margin: auto;
+		margin: 0 auto;
 	}
 </style>

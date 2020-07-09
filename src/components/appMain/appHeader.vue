@@ -2,13 +2,18 @@
 	<div class="header__container">
 		<div class="container">
 			<div class="header__content">
-				<div v-if="active == 'cloud'" class="header__wrapper">
+				<div v-if="active == 'cloud'" class="header__wrapper header__wrapper--cloud">
 			<div class="header__left clickable" @click="change">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="search" />
 				</div>
 			</div>
 			<div class="header__title">{{$t('Cloud')}}</div>
+			<div class="header__left clickable" @click="reload">
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="reload" />
+				</div>
+			</div>
 			<div class="header__right">${{user.balance.toFixed(2)}}</div>
 		</div>
 
@@ -52,6 +57,11 @@ export default {
 		user: Object,
 		active: String,
 		change: Function
+	},
+	methods:{
+		reload(){
+			console.log('reload');
+		}
 	}
 }
 </script>
@@ -62,6 +72,10 @@ export default {
 		grid-template-columns: 20% 1fr 20%;
 		justify-items: center;
 		align-items: center;
+	}
+
+	.header__wrapper--cloud{
+		grid-template-columns: 20% 1fr 20% 20%;
 	}
 
 	.header__left{
