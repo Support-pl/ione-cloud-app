@@ -150,7 +150,7 @@ export default {
 
 	.info__row{
 		display: flex;
-		margin-top: 10px;
+		/* margin-top: 10px; */
 		border-top: 1px solid rgb(230, 230, 230);
 	}
 
@@ -206,6 +206,7 @@ export default {
 		padding: 12px 0;
 		border-radius: 20px;
 		transition: background-color .2s ease;
+		margin-top: 20px;
 	}
 	
 	.info__row--pay-btn:hover{

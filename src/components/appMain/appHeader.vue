@@ -5,13 +5,13 @@
 				<div v-if="active == 'cloud'" class="header__wrapper header__wrapper--cloud">
 			<div class="header__left clickable" @click="change">
 				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="search" />
+					<a-icon class="header__icon" type="search"/>
 				</div>
 			</div>
 			<div class="header__title">{{$t('Cloud')}}</div>
 			<div class="header__left clickable" @click="reload">
 				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="reload" />
+					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
 			<div class="header__right">${{user.balance.toFixed(2)}}</div>
@@ -39,8 +39,7 @@
 		</div>
 
 		<div v-if="active == 'settings'"  class="header__wrapper">
-			<div class="header__left">
-			</div>
+			<div class="header__left"></div>
 			<div class="header__title">{{$t('Settings')}}</div>
 			<div class="header__right"></div>
 		</div>
@@ -53,12 +52,17 @@
 <script>
 export default {
 	name: "appHeader",
+	date(){
+		return {
+			
+		}
+	},
 	props: {
 		user: Object,
 		active: String,
 		change: Function
 	},
-	methods:{
+	methods: {
 		reload(){
 			console.log('reload');
 		}

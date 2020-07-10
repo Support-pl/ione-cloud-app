@@ -41,3 +41,5 @@ export default {
 		height: 100%;
 	}
 </style>
+
+// todo: сделать чаты правее от всего

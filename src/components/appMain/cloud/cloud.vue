@@ -1,18 +1,26 @@
 <template>
 	<div class="cloud" :class="{searchActive: search}">
+		
+		<div v-if="search" class="search">
+			<input type="text" v-model="textToSearch" placeholder="Filter by name of status">
+		</div>
+		<loading v-if="isLoading" />
+
+		<template v-else>
 		<div v-if="clouds.length == 0" class="none">
 			<div class="smile">:(</div>
 			Тут пока ничего нет...
 		</div>
-		<div v-if="search" class="search">
-			<input type="text" v-model="textToSearch" placeholder="Filter by name of status">
+		<div class="cloud__wrapper">
+			<cloudItem v-for="(cloud, idx) in clouds" :key="idx" :cloud="cloud"/>
 		</div>
-		<cloudItem v-for="(cloud, idx) in clouds" :key="idx" :cloud="cloud"/>
+		</template>
 	</div>
 </template>
 
 <script>
 import cloudItem from './cloudItem.vue';
+import loading from '../../loading/loading.vue';
 
 export default {
 	name: "cloud",
@@ -20,42 +28,46 @@ export default {
 		search: Boolean
 	},
 	components: {
-		cloudItem
+		cloudItem,
+		loading
 	},
 	data(){
 		return {
 			textToSearch: '',
+			isLoading: true,
 			clouds: [{
 				id: '123123',
-				title: 'user_10350_vm',
+				title: 'user_10350_vmuser_10350_vmuser_10350_vm',
 				status: 'SUSPEND',
 				host: 'vcenter',
-				ip: '186.66.68.222',
-				color: '#f9f038'
+				ip: '186.66.68.222'
 			},{
 				id: '1241243123',
 				title: 'user_10350_vm',
 				status: 'SUSPEND',
 				host: 'vcenter',
-				ip: '186.66.68.222',
-				color: '#f08a06'
+				ip: '186.66.68.222'
 			},{
 				id: '123123423',
 				title: 'user_10350_vm',
 				status: 'RUNNING',
 				host: 'vcenter',
-				ip: '186.66.68.222',
-				color: '#49b649'
+				ip: '186.66.68.222'
 			},{
 				id: '121239723',
 				title: 'user_10350_vm',
 				status: 'POWEROFF',
 				host: 'vcenter',
-				ip: '186.66.68.222',
-				color: '#919191'
+				ip: '186.66.68.222'
 			}
 			]
+			// clouds: []
 		}
+	},
+	created(){
+		setInterval(()=>{
+			this.isLoading = false;
+		}, 700)
 	}
 }
 </script>
@@ -107,5 +119,15 @@ export default {
 	padding: 5px 10px;
 }
 
+
+@media screen and (min-width: 768px){
+	.cloud__wrapper {
+		height: 100%;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+		grid-template-rows: max-content;
+		grid-gap: 20px;
+	}
+}
 
 </style>

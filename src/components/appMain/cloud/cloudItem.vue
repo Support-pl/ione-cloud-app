@@ -3,7 +3,7 @@
 		<div class="cloud__item" @click="cloudClick(cloud.id)">
 			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
-				<div class="item__title">{{cloud.title}}</div>
+				<div class="item__title">{{title}}</div>
 				<div class="item__status">{{cloud.status}}</div>
 			</div>
 			<div class="cloud__lower">
@@ -37,6 +37,13 @@ export default {
 					break;
 			}
 			return color;
+		},
+		title(){
+			const CUT = 24;
+			if(this.cloud.title.length > CUT){
+				return this.cloud.title.slice(0, CUT) + "..."
+			}
+			return this.cloud.title
 		}
 	},
 	methods: {
@@ -91,5 +98,16 @@ export default {
 
 	.item__status, .cloud__lower{
 		color: rgba(0, 0, 0, .4)
+	}
+
+	
+
+	@media screen and (min-width: 768px){
+		.cloud__item-wrapper:not(:last-child){
+			margin-bottom: 0px;
+		}
+		.cloud__item-wrapper{
+			height: max-content;
+		}
 	}
 </style>
