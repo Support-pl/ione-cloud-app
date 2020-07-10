@@ -4,12 +4,14 @@
 			<a-layout-header :style="{'background-color': '#427cf7', color: '#fff', padding: 0}">
 				<appHeader :user="user" :active="active" :change="searchChangeFunc"/>
 			</a-layout-header>
-			<a-layout-content :style="{'background-color': '#f7f7f7'}">
+			<a-layout-content :style="{'background-color': '#f7f7f7', 'position': 'relative'}">
 				<!-- <cloud v-if="active == 0"></cloud>
 				<support v-if="active == 1"></support>
 				<invoice v-if="active == 2"></invoice>
 				<settings v-if="active == 3"></settings> -->
-				<router-view :search="search"></router-view>
+				<transition name="nomain__slider">
+					<router-view class="frame" :search="search"></router-view>
+				</transition>
 			</a-layout-content>
 			<a-layout-footer :style="{padding: 0}">
 				<appFooter :active="active" :changeFunc="changeActive" />
@@ -90,5 +92,21 @@ export default {
 	.container {
 		max-width: 768px;
 		margin: 0 auto;
+	}
+
+	/* .main__slider-enter-active, .main__slider-leave-active {
+		left: 0%;
+		transition: left .1s;
+	}
+
+	.main__slider-enter, .main__slider-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+		/* opacity: 0; */
+		left: 100%
+	} */
+
+	.frame{
+		position: absolute;
+		height: 100%;
+		width: 100%;
 	}
 </style>

@@ -2,6 +2,7 @@
 	<div class="footer">
 		<div class="container">
 			<div class="footer__content">
+				<div class="bg" :style="{transform: 'translateX('+getBiasLeft+'px)'}"></div>
 				<div v-for="(button, index) in buttons" :key="index" @click="changeFunc(index, button.title)" class="button" :class="{ active: button.title==active }">
 					<div class="button__icon">
 						<a-icon :type="button.icon" :theme="button.theme" />
@@ -53,8 +54,15 @@ export default {
 		getBiasLeft(){
 			const btn = document.querySelector(".button");
 			const width = btn.offsetWidth;
+			let ind = -1;
+			
+			for(let i = 0; i < this.buttons.length; i++){
+				if(this.active == this.buttons[i].title) ind = i;
+			}
 
-			return width / 2;
+			ind = ind < 0? 0 : ind;
+
+			return width * ind;
 		}
 	}
 }
@@ -70,6 +78,7 @@ export default {
 
 .footer__content{
 	display: flex;
+	position: relative;
 }
 
 .button{
@@ -80,11 +89,13 @@ export default {
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	position: relative;
+	z-index: 2;
 }
 
 .button__title{
 	transform: translateY(20px);
-	transition: transform .2s .1s ease;
+	transition: transform .2s .3s ease;
 }
 
 .button__icon{
@@ -94,7 +105,7 @@ export default {
 	z-index: 2;
 	translate: color .2s ease;
 	transform: translateY(10px);
-	transition: transform .2s ease;
+	transition: transform .2s .1s ease;
 }
 
 .button:hover .button__icon{
@@ -156,10 +167,18 @@ export default {
 }
 
 /* temp */
-.button.active{
+/* .button.active{
 	background-color: #427cf7;
-}
+} */
 
+.bg{
+	background-color: #427cf7;
+	position: absolute;
+	z-index: 1;
+	height: 100%;
+	width: 25%;
+	transition: transform .2s ease;
+}
 
 .button.active .button__icon{
 	color: #fff;
