@@ -25,10 +25,10 @@
 
 		<div class="chat__footer">
 			<input v-model="messageInput" v-on:keyup.enter="sendMessage" type="text" class="chat__input" name="message" id="message" placeholder="Message...">
-			<div class="chat__send">
+			<div class="chat__send" @click="sendMessage">
 				<a-icon type="arrow-up" />
 			</div>
-			<div class="chat__send" @click="sendMessage">
+			<div class="chat__send">
 				<a-icon type="plus" />
 			</div>
 		</div>
