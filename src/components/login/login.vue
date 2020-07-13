@@ -17,9 +17,9 @@
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
 					<div v-if="remember" class="inputs__log-pas">
-						<input type="text" placeholder="Login">
+						<input type="text" placeholder="Login" v-model="email">
 						<span class="login__horisontal-line"></span>
-						<input type="password" placeholder="Password">
+						<input type="password" placeholder="Password"  v-model="password">
 					</div>
 					<div v-else class="inputs__log-pas inputs__log-pas--remember">
 						<input type="text" placeholder="Email">
@@ -47,13 +47,17 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
 	name: "login",
 	data(){
 		return {
 			tryingLogin: false,
 			loginError: "",
-			remember: true
+			remember: true,
+			password: '',
+			email: ''
 		}
 	},
 	props: {
@@ -62,24 +66,40 @@ export default {
 	methods: {
 		submitHandler(){
 			this.tryingLogin = true;
-			const result = this.send(this);
-			result
-				.then((data) => this.getUser(data))
-				.catch((err) => {
-					this.loginError = err;
-				})
+			this.send(this);
 		},
 		send(context){
-			return new Promise((reslove, reject) =>{
-				setInterval(() => {
-					context.tryingLogin = false;
-					// DEBUG
-					reslove({
-						name: "test",
-						balance: 222
+			// return new Promise((reslove, reject) =>{
+			// 	setInterval(() => {
+			// 		context.tryingLogin = false;
+			// 		// DEBUG
+			// 		reslove({
+			// 			name: "test",
+			// 			balance: 222
+			// 		});
+			// 	}, 2000);
+			// })
+			// const email = encodeURI("trestsadasds@tsdas.er");
+			// const password = encodeURI("trestsadasds");
+			const email = encodeURI(this.email);
+			const password = encodeURI(this.password);
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/login.php?email=${email}&password=${password}`)
+			.then(Response => {
+				console.log("login. stage 1:")
+				console.log("\t", Response)
+				console.log("\t", Response.data)
+				if (Response.data.result == "success"){
+					this.getUser({
+						id: Response.data.userid,
+						passwordhash: Response.data.passwordhash
 					});
-				}, 2000);
+				}
+				else if(Response.data.result == "error"){
+					this.loginError = Response.data.message;
+					this.tryingLogin = false;
+				}
 			})
+			.catch(err => console.error(err))
 		},
 		forgotPass(){
 			this.remember = !this.remember;
@@ -254,6 +274,11 @@ export default {
 
 	.login__forgot{
 		margin-top: 40px;
+	}
+
+	.login__error{
+		top: 50%;
+		transform: translateX(-50%) translateY(-750%);
 	}
 }
 

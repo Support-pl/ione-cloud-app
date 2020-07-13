@@ -7,12 +7,14 @@
 			<!-- <appMain :user='user' /> -->
 		<!-- </template> -->
 		<transition name="slide">
-			<router-view :user="user" :getUser="getUser"></router-view>
+			<router-view :user="user" :getUser="getUser" :logoutFunc='logout'></router-view>
 		</transition>
 	</div>
 </template>
 
 <script>
+const axios = require('axios');
+
 import login from './components/login/login.vue';
 import appMain from './components/appMain/appMain.vue';
 
@@ -24,26 +26,39 @@ export default {
 	},
 	data() {
 		return {
-			user: {
-				name: "test name",
-				balance: 241.24
-			},
-			isLoggined: true 
-			// user: null,
-			// isLoggined: false
+			// user: {
+			// 	name: "test name",
+			// 	balance: 241.24
+			// },
+			// isLoggined: true 
+			user: null,
+			isLoggined: false
 		};
 	},
 	methods: {
 		getUser(_user){
-			this.user = _user; 
-			// this.user = {
-			// 	name: "Test Name",
-			// 	balance: 250
-			// }
-			this.isLoggined = true;
-			console.log("loggined")
-			console.log(this.user)
-			this.$router.push("cloud")
+			this.user = _user;
+			console.log(_user);
+			// WARNING: there is one danger moment to security
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${_user.id}`)
+			.then(resp => {
+				console.log("login. stage 2:");
+				console.log("\t", resp);
+				this.user.firstname = resp.data.firstname;
+				this.user.lastname = resp.data.lastname;
+				this.user.balance = resp.data.credit;
+				this.user.currency_code = resp.data.currency_code;
+				console.log("\t", this.user);
+				console.log("\t", "loggined");
+				this.isLoggined = true;
+				this.$router.push("cloud")
+			})
+
+		},
+		logout(){
+			this.user = null;
+			this.isLoggined = false;
+			this.$router.push('/login')
 		}
 	},
 	watch: {

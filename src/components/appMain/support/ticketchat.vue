@@ -13,17 +13,22 @@
 		</div>
 
 
-		<div class="chat__content">
+		<!-- <div class="chat__content">
 			<div class="chat__message chat__message--out">Тестовое исходящее сообщение</div>
 			<div class="chat__message chat__message--in">Тестовое входяещее сообщение в ответ</div>
+		</div> -->
+		<div class="chat__content">
+			<div v-for='(reply, index) in replies' :key='index' class="chat__message" :class="[ isAdminSent(reply) ? 'chat__message--in' : 'chat__message--out']">
+				<pre v-html="beauty(reply.message)"></pre>
+			</div>
 		</div>
 
 		<div class="chat__footer">
-			<input type="text" class="chat__input" name="message" id="message" placeholder="Message...">
+			<input v-model="messageInput" v-on:keyup.enter="sendMessage" type="text" class="chat__input" name="message" id="message" placeholder="Message...">
 			<div class="chat__send">
 				<a-icon type="arrow-up" />
 			</div>
-			<div class="chat__send">
+			<div class="chat__send" @click="sendMessage">
 				<a-icon type="plus" />
 			</div>
 		</div>
@@ -31,18 +36,57 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
 	name: "ticketChat",
+	props: {
+		user: Object
+	},
 	data(){
 		return {
-			theme: "Чат с агентом поддержки"
+			theme: "SUPPORT",
+			replies: null,
+			messageInput: "",
 		}
 	},
 	methods: {
 		goBack(){
 			this.$router.push("support");
 		},
+		beauty(message){
+			message = message.replace(/\n/g, '<br>');
+			message = message.replace(/[\s\uFEFF\xA0]{2,}/g, ' ');
+			return message.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+		},
+		isAdminSent(reply){
+			return reply.admin !== "";
+		},
+		sendMessage(){
+			if (this.messageInput.length < 1) return;
+			this.replies.unshift({
+				admin: "",
+				attachment: "",
+				contactid: "0",
+				date: new Date(),
+				email: "TEMP",
+				message: this.messageInput,
+				name: "TEMP",
+				userid: "TEMP"
+			})
+			this.messageInput = "";
+		}
 	},
+	mounted(){
+		console.log(this.user)
+		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticket.php?id=${this.$route.params.pathMatch}`)
+		.then(resp => {
+			this.replies = resp.data.replies.reply;
+			this.theme = resp.data.subject;
+			console.log(resp);
+			console.log(this.replies);
+		})
+	}
 
 }
 </script>
@@ -52,9 +96,16 @@ export default {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		position: relative;
+		padding-top: 64px;
+		padding-bottom: 55px;
 	}
 
 	.chat__header {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
 		height: 64px;
 		line-height: 64px;
 		background-color: rgb(66, 124, 247);
@@ -82,6 +133,10 @@ export default {
 		align-items: center;
 		background-color: #ececec;
 		padding: 10px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 
 	.chat__input{
@@ -115,11 +170,15 @@ export default {
 	}
 
 	.chat__content{
+		height: 100%;
 		flex: 1 0;
 		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
+		/* flex-direction: column;
+		justify-content: flex-end; */
+		flex-direction: column-reverse;
+		justify-content: flex-start;
 		padding: 6px 15px;
+		overflow: auto;
 	}
 
 	.chat__message {
@@ -133,7 +192,7 @@ export default {
 		max-width: 80%;
 	}
 
-	.chat__message:not(:last-child){
+	.chat__message{
 		margin-bottom: 10px;
 	}
 

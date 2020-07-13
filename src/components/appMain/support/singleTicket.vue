@@ -1,14 +1,14 @@
 <template>
-	<div class="ticket" @click="ticketClick(ticket.id)">
-		<div class="ticket__status"></div>
+	<div class="ticket" @click="ticketClick(ticket.tid)">
+		<div class="ticket__status" :style="{'background-color': statusColor}"></div>
 		<div class="ticket__content">
 			<div class="ticket__upper">
-				<div class="ticket__title">#{{ticket.id}} - {{ticket.title}}</div>
+				<div class="ticket__title">#{{ticket.tid}} - {{ticket.subject}}</div>
 				<div class="ticket__status-text">{{ticket.status}}</div>
 			</div>
 			<div class="ticket__lower">
 				<div class="ticket__message">{{ticket.message}}</div>
-				<div class="ticket__time">{{ticket.time}}</div>
+				<div class="ticket__time">{{ticket.lastreply}}</div>
 			</div>
 		</div>
 	</div>
@@ -23,7 +23,27 @@ export default {
 	methods: {
 		ticketClick(id){
 			this.$router.push('ticket-' + id);
-		}
+		},
+	},
+	computed: {
+		statusColor(){
+			let color = '';
+			switch (this.ticket.status.toLowerCase()) {
+				case 'open':
+					color = '#58f938';
+					break;
+				case 'customer-reply':
+					color = '#f9f038';
+					break;
+				case 'closed':
+					color = '#0fd058';
+					break;
+				default:
+					color = '#f9f038';
+					break;
+			}
+			return color;
+		},
 	}
 }
 </script>
@@ -55,7 +75,6 @@ export default {
 		width: 10px;
 		height: 10px;
 		position: absolute;
-		background-color: #f84237;
 		border-radius: 50%;
 		top: 50%;
 		left: 20px;

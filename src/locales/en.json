@@ -30,5 +30,6 @@
   "service": "Service",
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
-  "Choice payment": "Choice payment"
+  "Choice payment": "Choice payment",
+  "There is empty...": "There is empty..."
 }

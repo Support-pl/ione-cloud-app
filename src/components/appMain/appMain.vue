@@ -10,7 +10,7 @@
 				<invoice v-if="active == 2"></invoice>
 				<settings v-if="active == 3"></settings> -->
 				<transition name="nomain__slider">
-					<router-view class="frame" :search="search"></router-view>
+					<router-view class="frame" :search="search" :logoutFunc='logoutFunc' :user='user'></router-view>
 				</transition>
 			</a-layout-content>
 			<a-layout-footer :style="{padding: 0}">
@@ -40,6 +40,7 @@ export default {
 	},
 	props: {
 		user: Object,
+		logoutFunc: Function
 	},
 	data(){
 		return {
@@ -70,6 +71,10 @@ export default {
 		}
 	},
 	mounted(){
+		if(this.user == null){
+			this.$router.push('/login');
+		}
+		console.log(this.user)
 	},
 	watch: {
 		$route(to, from){
@@ -99,8 +104,8 @@ export default {
 		transition: left .1s;
 	}
 
-	.main__slider-enter, .main__slider-leave-to /* .fade-leave-active до версии 2.1.8 */ {
-		/* opacity: 0; */
+	.main__slider-enter, .main__slider-leave-to {
+		opacity: 0;
 		left: 100%
 	} */
 

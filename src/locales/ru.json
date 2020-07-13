@@ -30,5 +30,6 @@
   "service": "Услуга",
   "invoiceDate": "Дата счёта",
   "dueDate": "Срок оплаты",
-  "Choice payment": "Способ оплаты"
+  "Choice payment": "Способ оплаты",
+  "There is empty...": "Тут пока ничего нет..."
 }

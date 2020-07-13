@@ -14,7 +14,7 @@
 					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
-			<div class="header__right">${{user.balance.toFixed(2)}}</div>
+			<div class="header__right">${{user.balance}}</div>
 		</div>
 
 		<div v-if="active == 'support'"  class="header__wrapper">
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<div class="header__title">{{$t('Invoice')}}</div>
-			<div class="header__right">${{user.balance.toFixed(2)}}</div>
+			<div class="header__right">${{user.balance}}</div>
 		</div>
 
 		<div v-if="active == 'settings'"  class="header__wrapper">

@@ -5,8 +5,8 @@
 
 				<div class="settings__info">
 					<div class="settings__user">
-						<div class="settings__name">Jacod Willms</div>
-						<div class="settings__balance">{{$t('Balance')}}: 109 $</div>
+						<div class="settings__name">{{user.firstname}} {{user.lastname}}</div>
+						<div class="settings__balance">{{$t('Balance')}}: {{user.balance}} $</div>
 					</div>
 					<div class="settings__user-btn">
 						<a-icon type="right" />
@@ -22,10 +22,9 @@
 					</div>
 				</div>
 
-				<button class="settings__exit" @click="exit">
+				<button class="settings__exit" @click="logoutFunc">
 					{{$t('Exit')}}
 				</button>
-				
 			</div>
 		</div>
 		
@@ -36,6 +35,10 @@
 
 export default {
 	name: 'settings',
+	props: {
+		logoutFunc: Function,
+		user: Object
+	},
 	methods: {
 		exit(){
 			this.$router.push("login")

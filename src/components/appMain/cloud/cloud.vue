@@ -7,10 +7,13 @@
 		<loading v-if="isLoading" />
 
 		<template v-else>
-		<div v-if="clouds.length == 0" class="none">
+		<!-- <div v-if="clouds.length == 0" class="none">
 			<div class="smile">:(</div>
 			Тут пока ничего нет...
-		</div>
+		</div> -->
+		
+		<empty v-if="clouds.length == 0"/>
+
 		<div class="cloud__wrapper">
 			<cloudItem v-for="(cloud, idx) in clouds" :key="idx" :cloud="cloud"/>
 		</div>
@@ -84,7 +87,7 @@ export default {
 	padding-top: 40px;
 }
 
-.none{
+/* .none{
 	display: flex;
 	height: 100%;
 	justify-content: center;
@@ -97,7 +100,7 @@ export default {
 	width: 100px;
 	height: 100px;
 	font-size: 64px;
-}
+} */
 
 .search{
 	background: #427cf7;
