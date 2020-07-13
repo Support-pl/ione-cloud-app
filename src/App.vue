@@ -6,7 +6,9 @@
 		<template v-if="isLoggined"> -->
 			<!-- <appMain :user='user' /> -->
 		<!-- </template> -->
-		<router-view :user="user" :getUser="getUser"></router-view>
+		<transition name="slide">
+			<router-view :user="user" :getUser="getUser"></router-view>
+		</transition>
 	</div>
 </template>
 
@@ -78,11 +80,13 @@ html, body{
 	height: 100%;
 }
 
-.login-fade-enter-active, .login-fade-leave-active {
-  transition: opacity .5s;
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: left .5s;
+  left: 0;
+  position: relative;
 }
-.login-fade-enter, .login-fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
-  opacity: 0;
+.slide-fade-enter, .slide-fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  left: 100%;
 }
 
 </style>

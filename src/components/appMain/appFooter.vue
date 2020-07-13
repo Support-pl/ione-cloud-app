@@ -2,7 +2,8 @@
 	<div class="footer">
 		<div class="container">
 			<div class="footer__content">
-				<div class="bg" :style="{transform: 'translateX('+getBiasLeft+'px)'}"></div>
+				<!-- <div class="bg" :style="{transform: 'translateX('+getBiasLeft+'px)'}"></div> -->
+				<!-- <div class="bg"></div> -->
 				<div v-for="(button, index) in buttons" :key="index" @click="changeFunc(index, button.title)" class="button" :class="{ active: button.title==active }">
 					<div class="button__icon">
 						<a-icon :type="button.icon" :theme="button.theme" />
@@ -95,7 +96,7 @@ export default {
 
 .button__title{
 	transform: translateY(20px);
-	transition: transform .2s .3s ease;
+	transition: transform .2s .1s ease;
 }
 
 .button__icon{
@@ -105,7 +106,7 @@ export default {
 	z-index: 2;
 	translate: color .2s ease;
 	transform: translateY(10px);
-	transition: transform .2s .1s ease;
+	transition: transform .2s ease;
 }
 
 .button:hover .button__icon{
@@ -167,9 +168,9 @@ export default {
 }
 
 /* temp */
-/* .button.active{
+.button.active{
 	background-color: #427cf7;
-} */
+}
 
 .bg{
 	background-color: #427cf7;
