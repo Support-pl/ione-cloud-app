@@ -64,18 +64,23 @@ export default {
 		},
 		sendMessage(){
 			if (this.messageInput.length < 1) return;
-			this.replies.unshift({
+			const message = {
 				admin: "",
 				attachment: "",
 				contactid: "0",
 				date: new Date(),
-				email: "TEMP",
+				email: this.user.email,
 				message: this.messageInput,
-				name: "TEMP",
-				userid: "TEMP"
+				name: this.user.firstname + " " + this.user.lastname,
+				userid: this.user.id
+			};
+			this.replies.unshift(message);
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?id=${this.$route.params.pathMatch}&message=${message.message}&clientid=${message.userid}`)
+			.then(res => {
+				// console.log(res);
 			})
 			this.messageInput = "";
-		}
+		},
 	},
 	mounted(){
 		console.log(this.user)
@@ -83,8 +88,8 @@ export default {
 		.then(resp => {
 			this.replies = resp.data.replies.reply;
 			this.theme = resp.data.subject;
-			console.log(resp);
-			console.log(this.replies);
+			// console.log(resp);
+			// console.log(this.replies);
 		})
 	}
 

@@ -142,7 +142,7 @@
 
 <script>
 export default {
-	name: "kek",
+	name: "openCloud",
 	data(){
 		return {
 			status: 'running',

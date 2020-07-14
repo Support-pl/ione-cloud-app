@@ -2,7 +2,13 @@
 	<div class="application">
 		<a-layout>
 			<a-layout-header :style="{'background-color': '#427cf7', color: '#fff', padding: 0}">
-				<appHeader :user="user" :active="active" :change="searchChangeFunc"/>
+				<appHeader
+					:user="user"
+					:active="active"
+					:change="searchChangeFunc"
+					:addTicketStatus="changeAddTicketStatus"
+					:ticketStatus="addTicket"
+					:showOnlyClosed="showOnlyClosed"/>
 			</a-layout-header>
 			<a-layout-content :style="{'background-color': '#f7f7f7', 'position': 'relative'}">
 				<!-- <cloud v-if="active == 0"></cloud>
@@ -10,7 +16,14 @@
 				<invoice v-if="active == 2"></invoice>
 				<settings v-if="active == 3"></settings> -->
 				<transition name="nomain__slider">
-					<router-view class="frame" :search="search" :logoutFunc='logoutFunc' :user='user'></router-view>
+					<router-view class="frame"
+						:search="search"
+						:logoutFunc='logoutFunc'
+						:user='user'
+						:addTicket='addTicket'
+						:showClosed='showClosed'
+						:changeAddTicketStatus="changeAddTicketStatus"
+						></router-view>
 				</transition>
 			</a-layout-content>
 			<a-layout-footer :style="{padding: 0}">
@@ -45,7 +58,9 @@ export default {
 	data(){
 		return {
 			activeName: '',
-			search: false
+			search: false,
+			addTicket: false,
+			showClosed: false
 		}
 	},
 	methods: {
@@ -55,6 +70,12 @@ export default {
 		},
 		searchChangeFunc(){
 			this.search = !this.search;
+		},
+		changeAddTicketStatus(){
+			this.addTicket = !this.addTicket;
+		},
+		showOnlyClosed(){
+			this.showClosed = !this.showClosed;
 		}
 	},
 	computed: {
@@ -74,7 +95,7 @@ export default {
 		if(this.user == null){
 			this.$router.push('/login');
 		}
-		console.log(this.user)
+		// console.log(this.user)
 	},
 	watch: {
 		$route(to, from){

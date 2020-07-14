@@ -5,13 +5,13 @@
 			<div class="invoice__status" :style="{color: statusColor}">{{invoice.status}}</div>
 		</div>
 		<div class="invoice__middle flex-between">
-			<div class="invoice__cost">{{invoice.cost}} {{invoice.currency}}</div>
+			<div class="invoice__cost">{{invoice.subtotal}} {{invoice.currencyprefix}}</div>
 			<div class="invoice__date-item invoice__invDate">
 				<div class="invoice__date-title">
 					Invoice Date
 				</div>
 				<div class="invoice__date">
-					{{invoice.invoiceDate}}
+					{{invoice.date}}
 				</div>
 			</div>
 			<div class="invoice__date-item invoice__dueDate">
@@ -19,7 +19,7 @@
 					Due Date
 				</div>
 				<div class="invoice__date">
-					{{invoice.dueDate}}
+					{{invoice.duedate}}
 				</div>
 			</div>
 		</div>

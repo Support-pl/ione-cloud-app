@@ -51,6 +51,9 @@ export default {
 				console.log("\t", this.user);
 				console.log("\t", "loggined");
 				this.isLoggined = true;
+				this.setCookie('CloudUser', JSON.stringify(this.user), {
+					'max-age': '2592000'
+				});
 				this.$router.push("cloud")
 			})
 
@@ -58,7 +61,41 @@ export default {
 		logout(){
 			this.user = null;
 			this.isLoggined = false;
-			this.$router.push('/login')
+			this.deleteCookie("CloudUser");
+			this.$router.push('/login');
+		},
+		getCookie(name) {
+			let matches = document.cookie.match(new RegExp(
+				"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			));
+			return matches ? decodeURIComponent(matches[1]) : undefined;
+		},
+		setCookie(name, value, options = {}) {
+			options = {
+				path: '/',
+				...options
+			};
+
+			if (options.expires instanceof Date) {
+				options.expires = options.expires.toUTCString();
+			}
+
+			let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+			for (let optionKey in options) {
+				updatedCookie += "; " + optionKey;
+				let optionValue = options[optionKey];
+				if (optionValue !== true) {
+				updatedCookie += "=" + optionValue;
+				}
+			}
+
+			document.cookie = updatedCookie;
+		},
+		deleteCookie(name) {
+			this.setCookie(name, "", {
+				'max-age': -1
+			})
 		}
 	},
 	watch: {
@@ -66,11 +103,19 @@ export default {
 		// 	if(to.name != 'login' && this.isLoggined == false) this.$router.push("login") 
 		// }
 	},
-	mounted(){
+	created(){
+		this.user = JSON.parse(this.getCookie("CloudUser"));
+		if(this.user !== undefined) this.isLoggined = true;
+
 		this.$router.beforeEach((to, from, next) => {
 			if (to.name !== 'login' && this.isLoggined == false) next({ name: 'login' })
 			else next()
 		})
+	},
+	mounted(){
+		if (this.$router.currentRoute.name != 'login' && !this.isLoggined) {
+			this.$router.replace("login");
+		}
 	}
 };
 </script>

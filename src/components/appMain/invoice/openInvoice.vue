@@ -20,24 +20,24 @@
 		<div class="openInvoice__main">
 			<div class="container full-height">
 				<div class="openInvoice__main-content">
-					<div class="openInvoice__cost">{{inv.cost}} {{inv.currency}}</div>
+					<div class="openInvoice__cost">{{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}}</div>
 					<div class="openInvoice__info">
 						<div class="info__header-title">Information</div>
 						<div class="info__row">
 							<div class="info__title">{{$t("status")}}</div>
-							<div class="info__value">{{$t(inv.status)}}</div>
+							<div class="info__value">{{$t(inv.status.toLowerCase())}}</div>
 						</div>
 						<div class="info__row">
 							<div class="info__title">{{$t("invoiceDate")}}</div>
-							<div class="info__value">{{inv.invoiceDate}}</div>
+							<div class="info__value">{{inv.date}}</div>
 						</div>
 						<div class="info__row">
 							<div class="info__title">{{$t("dueDate")}}</div>
-							<div class="info__value">{{inv.dueDate}}</div>
+							<div class="info__value">{{inv.duedate}}</div>
 						</div>
 						<div class="info__row">
 							<div class="info__title">{{$t("service")}}</div>
-							<div class="info__value">{{inv.service}}</div>
+							<div class="info__value">{{inv.service == undefined? "не получен с API" : inv.service}}</div>
 						</div>
 						<template v-if="inv.status == 'Unpaid'">
 							<div class="info__row info__row--pay">
@@ -60,18 +60,20 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
 	name: "openInvoice",
 	data(){
 		return {
 			inv: {
-				id: '124',
-				cost: '50',
-				currency: 'USD',
-				status: 'Unpaid',
-				invoiceDate: '07/01/2020',
-				dueDate: '17/01/2020',
-				service: 'CRM+ (Cloud)'
+				// id: '124',
+				// cost: '50',
+				// currency: 'USD',
+				// status: 'Unpaid',
+				// invoiceDate: '07/01/2020',
+				// dueDate: '17/01/2020',
+				// service: 'CRM+ (Cloud)'
 			},
 			payment: [
 				'visa',
@@ -84,9 +86,15 @@ export default {
 	methods: {
 		goBack(){
 			this.$router.push("/invoice");
-		},
-		
+		},	
 	},
+	mounted(){
+		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}`)
+		.then(res => {
+			// console.log(res);
+			this.inv = res.data;
+		})
+	}
 
 }
 </script>
@@ -181,14 +189,16 @@ export default {
 
 	.info__header-title{
 		text-align: center;
-		font-size: 1.2rem;
+		font-size: 1.3rem;
 		font-weight: 500;
+		margin-bottom: 20px;
 	}
 
 	.info__payment-select{
 		border: none;
 		outline: none;
 		background-color: rgb(250, 250, 250);
+		width: 90%;
 	}
 
 	.info__payment-select > option{
@@ -206,7 +216,7 @@ export default {
 		padding: 12px 0;
 		border-radius: 20px;
 		transition: background-color .2s ease;
-		margin-top: 20px;
+		margin-top: 30px;
 	}
 	
 	.info__row--pay-btn:hover{

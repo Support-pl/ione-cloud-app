@@ -9,7 +9,7 @@
 				</div>
 			</div>
 			<div class="header__title">{{$t('Cloud')}}</div>
-			<div class="header__left clickable" @click="reload">
+			<div class="header__right clickable" @click="reload">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="reload"/>
 				</div>
@@ -18,10 +18,13 @@
 		</div>
 
 		<div v-if="active == 'support'"  class="header__wrapper">
-			<div class="header__left">
+			<div class="header__left clickable" @click="showOnlyClosed">
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="filter"/>
+				</div>
 			</div>
 			<div class="header__title">{{$t('Support')}}</div>
-			<div class="header__right clickable">
+			<div class="header__right clickable" @click="addTicketStatus" :class="{ticketActive: ticketStatus}">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="plus" />
 				</div>
@@ -60,7 +63,10 @@ export default {
 	props: {
 		user: Object,
 		active: String,
-		change: Function
+		change: Function,
+		addTicketStatus: Function,
+		showOnlyClosed: Function,
+		ticketStatus: Boolean,
 	},
 	methods: {
 		reload(){
@@ -95,12 +101,16 @@ export default {
 		font-size: 1.1rem;
 	}
 
+	.header__right{
+		transition: transform .2s ease;
+	}
+
 	.header__icon{
 		font-size: 1.4rem;
 	}
 
 	.clickable:hover{
-		cursor: pointer;
+		/* cursor: pointer; */
 	}
 
 	.icon__wrapper{
@@ -110,6 +120,7 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		cursor: pointer;
 		transition:
 			background-color .2s ease,
 			color .1s ease,
@@ -124,5 +135,9 @@ export default {
 
 	.icon__wrapper:active{
 		transform: scale(1.1);
+	}
+	
+	.ticketActive{
+		transform: rotate(45deg);
 	}
 </style>

@@ -12,6 +12,10 @@
 			<singleTicket v-for='(ticket, index) in tickets' :key='index' :ticket='ticket'/>
 		</div>
 		</template>
+
+		<transition name="ticket__add">
+			<addTicketField v-if="addTicket" :changeAddTicketStatus="changeAddTicketStatus" :user="user" :update="update"/>
+		</transition>
 	</div>
 </template>
 
@@ -21,16 +25,21 @@ const axios = require('axios');
 import singleTicket from "./singleTicket.vue"
 import loading from '../../loading/loading.vue';
 import empty from '../../empty/empty.vue';
+import addTicketField from './addTicket.vue';
 
 export default {
 	name: 'support',
 	components: {
 		singleTicket,
 		loading,
-		empty
+		empty,
+		addTicketField
 	},
 	props: {
-		user: Object
+		user: Object,
+		addTicket: Boolean,
+		showClosed: Boolean,
+		changeAddTicketStatus: Function
 	},
 	data(){
 		return {
@@ -52,17 +61,28 @@ export default {
 			]
 		}
 	},
+	methods: {
+		update(closed = false){
+			this.isLoading = true;
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}${closed?"&closed=true":''}`)
+			.then(resp => {
+				console.log("update: ",resp);
+				if(resp.data.numreturned == 0) {
+					this.tickets = []
+				} else {
+					this.tickets = resp.data.tickets.ticket;
+				}
+				this.isLoading = false;
+			})
+		}
+	},
 	mounted(){
-		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}`)
-		.then(resp => {
-			console.log(resp);
-			if(resp.data.numreturned == 0) {
-				this.tickets = []
-			} else {
-				this.tickets = resp.data.tickets.ticket;
-			}
-			this.isLoading = false;
-		})
+		this.update();
+	},
+	watch: {
+		showClosed(){
+			this.update(this.showClosed)
+		}
 	}
 }
 </script>
@@ -70,9 +90,46 @@ export default {
 <style>
 	.tickets{
 		padding: 20px 10px 0;
-		overflow: auto;
+		overflow: hidden;
 		height: 100%;
+		position: relative;
+	}
+
+
+	.ticket__wrapper{
+		height: 100%;
+		overflow: auto;
+	}
+
+	.ticket__add-enter-active.addTicket__wrapper,
+	.ticket__add-leave-active.addTicket__wrapper {
+		transition:
+			opacity .2s ease;
+		/* transform: translateY(150px); */
+	}
+	.ticket__add-enter-active .addTicket,
+	.ticket__add-leave-active .addTicket {
+		transition:
+			opacity .2s ease,
+			transform .3s ease;
+		/* transform: translateY(150px); */
+	}
+	.ticket__add-enter-active,
+	.ticket__add-leave-active {
+		transition:
+			all .4s ease,
+		/* transform: translateY(150px); */
+	}
+
+	.ticket__add-enter.addTicket__wrapper,
+	.ticket__add-leave-to.addTicket__wrapper {
+		opacity: 0;
+	}
+	.ticket__add-enter .addTicket,
+	.ticket__add-leave-to .addTicket {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%) !important;
 	}
 </style>
 
-// todo: сделать чаты правее от всего
+// todo (not sure): сделать чаты правее от всего

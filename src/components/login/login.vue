@@ -79,19 +79,24 @@ export default {
 			// 		});
 			// 	}, 2000);
 			// })
-			// const email = encodeURI("trestsadasds@tsdas.er");
-			// const password = encodeURI("trestsadasds");
+
+
 			const email = encodeURI(this.email);
 			const password = encodeURI(this.password);
+			// const email = encodeURI('trestsadasds@tsdas.er');
+			// const password = encodeURI('trestsadasds');
+
+			
 			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/login.php?email=${email}&password=${password}`)
 			.then(Response => {
-				console.log("login. stage 1:")
-				console.log("\t", Response)
-				console.log("\t", Response.data)
+				// console.log("login. stage 1:")
+				// console.log("\t", Response)
+				// console.log("\t", Response.data)
 				if (Response.data.result == "success"){
 					this.getUser({
 						id: Response.data.userid,
-						passwordhash: Response.data.passwordhash
+						passwordhash: Response.data.passwordhash,
+						email: Response.data.email,
 					});
 				}
 				else if(Response.data.result == "error"){

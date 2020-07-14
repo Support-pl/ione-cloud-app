@@ -1,5 +1,5 @@
 <template>
-	<div class="ticket" @click="ticketClick(ticket.tid)">
+	<div class="ticket" @click="ticketClick(ticket.id)">
 		<div class="ticket__status" :style="{'background-color': statusColor}"></div>
 		<div class="ticket__content">
 			<div class="ticket__upper">
@@ -7,7 +7,7 @@
 				<div class="ticket__status-text">{{ticket.status}}</div>
 			</div>
 			<div class="ticket__lower">
-				<div class="ticket__message">{{ticket.message}}</div>
+				<div class="ticket__message">{{beauty(ticket.lastmessage.message)}}</div>
 				<div class="ticket__time">{{ticket.lastreply}}</div>
 			</div>
 		</div>
@@ -15,8 +15,15 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
 	name: "ticket",
+	data(){
+		return {
+			// lastMessage: ''
+		}
+	},
 	props: {
 		ticket: Object,
 	},
@@ -24,6 +31,12 @@ export default {
 		ticketClick(id){
 			this.$router.push('ticket-' + id);
 		},
+		beauty(message){
+			// return message
+			message = message.replace(/-{2,}.*/gi, '');
+			message = message.replace(/IP Address.*/gi, '');
+			return message;
+		}
 	},
 	computed: {
 		statusColor(){
@@ -36,7 +49,7 @@ export default {
 					color = '#f9f038';
 					break;
 				case 'closed':
-					color = '#0fd058';
+					color = '#f9383b';
 					break;
 				default:
 					color = '#f9f038';
@@ -44,6 +57,8 @@ export default {
 			}
 			return color;
 		},
+	},
+	mounted(){
 	}
 }
 </script>
