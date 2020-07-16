@@ -8,7 +8,9 @@
 					:change="searchChangeFunc"
 					:addTicketStatus="changeAddTicketStatus"
 					:ticketStatus="addTicket"
-					:showOnlyClosed="showOnlyClosed"/>
+					:showOnlyClosed="showOnlyClosed"
+					:goSupportReload="goSupportReload"
+					:goInvoiceReload="goInvoiceReload"/>
 			</a-layout-header>
 			<a-layout-content :style="{'background-color': '#f7f7f7', 'position': 'relative'}">
 				<!-- <cloud v-if="active == 0"></cloud>
@@ -23,6 +25,10 @@
 						:addTicket='addTicket'
 						:showClosed='showClosed'
 						:changeAddTicketStatus="changeAddTicketStatus"
+						:stopSupportReload="stopSupportReload"
+						:supportReload="supportReload"
+						:invoiceReload="invoiceReload"
+						:stopInvoiceReload="stopInvoiceReload"
 						></router-view>
 				</transition>
 			</a-layout-content>
@@ -60,7 +66,9 @@ export default {
 			activeName: '',
 			search: false,
 			addTicket: false,
-			showClosed: false
+			showClosed: false,
+			supportReload: false,
+			invoiceReload: false
 		}
 	},
 	methods: {
@@ -76,6 +84,22 @@ export default {
 		},
 		showOnlyClosed(){
 			this.showClosed = !this.showClosed;
+		},
+		goSupportReload(){
+			console.log("goSupportReload");
+			this.supportReload = true
+		},
+		stopSupportReload(){
+			console.log("stopSupportReload");
+			this.supportReload = false
+		},
+		goInvoiceReload(){
+			console.log("goInvoiceReload");
+			this.invoiceReload = true
+		},
+		stopInvoiceReload(){
+			console.log("stopInvoiceReload");
+			this.invoiceReload = false
 		}
 	},
 	computed: {

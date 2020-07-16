@@ -1,7 +1,7 @@
 <template>
 	<div class="addTicket__wrapper" @click="clickOutOfBlock(this)">
 		<div class="addTicket">
-			<div class="addTicket__header">Задать вопрос</div>
+			<div class="addTicket__header">Создать обращение</div>
 			<div class="addTicket__title">
 				<div class="addTicket__title-name row__name">Тема вопроса</div>
 				<input type="text" class="addTicket__title-input" v-model="ticketTitle">
@@ -11,7 +11,7 @@
 				<textarea name="question" id="question" cols="30" rows="10" class="addTicket__message-input"  v-model="ticketMessage"></textarea>
 			</div>
 			<div class="addTicket__buttons">
-				<button class="addTicket__button addTicket__button--cancel" @click="changeAddTicketStatus">Отмена</button>
+				<button class="addTicket__button addTicket__button--cancel" @click="changeAddTicketStatus()">Отмена</button>
 				<button class="addTicket__button addTicket__button--send" @click="sendNewTicket()">
 					<template v-if="!isSending">Отправить</template>
 					<a-icon v-else type="loading" />
@@ -45,6 +45,7 @@ export default {
 			}
 		},
 		sendNewTicket(){
+			console.log('sending')
 			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3) return;
 			this.isSending = true;
 			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/openticket.php?subject=${encodeURI(this.ticketTitle)}&message=${encodeURI(this.ticketMessage)}&clientid=${this.user.id}`)

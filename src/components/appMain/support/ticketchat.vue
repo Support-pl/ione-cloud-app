@@ -10,6 +10,11 @@
 			<div class="chat__title">
 				{{theme}}
 			</div>
+			<div class="chat__reload">
+				<div class="icon__wrapper" @click="reload()">
+					<a-icon type="reload" />
+				</div>
+			</div>
 		</div>
 
 
@@ -17,7 +22,8 @@
 			<div class="chat__message chat__message--out">Тестовое исходящее сообщение</div>
 			<div class="chat__message chat__message--in">Тестовое входяещее сообщение в ответ</div>
 		</div> -->
-		<div class="chat__content">
+		<load v-if="loading"/>
+		<div v-else class="chat__content">
 			<div v-for='(reply, index) in replies' :key='index' class="chat__message" :class="[ isAdminSent(reply) ? 'chat__message--in' : 'chat__message--out']">
 				<pre v-html="beauty(reply.message)"></pre>
 			</div>
@@ -38,8 +44,13 @@
 <script>
 const axios = require('axios');
 
+import load from '../../loading/loading.vue';
+
 export default {
 	name: "ticketChat",
+	components: {
+		load
+	},
 	props: {
 		user: Object
 	},
@@ -48,6 +59,7 @@ export default {
 			theme: "SUPPORT",
 			replies: null,
 			messageInput: "",
+			loading: true
 		}
 	},
 	methods: {
@@ -81,16 +93,24 @@ export default {
 			})
 			this.messageInput = "";
 		},
+		loadMessages(){
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticket.php?id=${this.$route.params.pathMatch}`)
+			.then(resp => {
+				this.replies = resp.data.replies.reply;
+				this.theme = resp.data.subject;
+				// console.log(resp);
+				// console.log(this.replies);
+				this.loading = false;
+			})
+		},
+		reload(){
+			this.loading = true;
+			this.loadMessages();
+		}
 	},
 	mounted(){
 		console.log(this.user)
-		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticket.php?id=${this.$route.params.pathMatch}`)
-		.then(resp => {
-			this.replies = resp.data.replies.reply;
-			this.theme = resp.data.subject;
-			// console.log(resp);
-			// console.log(this.replies);
-		})
+		this.loadMessages();
 	}
 
 }
@@ -127,7 +147,8 @@ export default {
 		line-height: 1.1rem;
 	}
 
-	.chat__back{
+	.chat__back,
+	.chat__reload{
 		font-size: 1.4rem;
 		cursor: pointer;
 	}

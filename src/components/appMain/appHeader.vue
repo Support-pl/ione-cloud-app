@@ -2,7 +2,7 @@
 	<div class="header__container">
 		<div class="container">
 			<div class="header__content">
-				<div v-if="active == 'cloud'" class="header__wrapper header__wrapper--cloud">
+				<div v-if="active == 'cloud'" class="header__wrapper header__wrapper--four">
 			<div class="header__left clickable" @click="change">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="search"/>
@@ -17,13 +17,18 @@
 			<div class="header__right">${{user.balance}}</div>
 		</div>
 
-		<div v-if="active == 'support'"  class="header__wrapper">
+		<div v-if="active == 'support'"  class="header__wrapper header__wrapper--four">
 			<div class="header__left clickable" @click="showOnlyClosed">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="filter"/>
 				</div>
 			</div>
 			<div class="header__title">{{$t('Support')}}</div>
+			<div class="header__right clickable" @click="goSupportReload">
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="reload"/>
+				</div>
+			</div>
 			<div class="header__right clickable" @click="addTicketStatus" :class="{ticketActive: ticketStatus}">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="plus" />
@@ -31,13 +36,18 @@
 			</div>
 		</div>
 
-		<div v-if="active == 'invoice'"  class="header__wrapper">
+		<div v-if="active == 'invoice'"  class="header__wrapper header__wrapper--four">
 			<div class="header__left clickable">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="plus" />
 				</div>
 			</div>
 			<div class="header__title">{{$t('Invoice')}}</div>
+			<div class="header__right clickable" @click="goInvoiceReload">
+				<div class="icon__wrapper">
+					<a-icon class="header__icon" type="reload"/>
+				</div>
+			</div>
 			<div class="header__right">${{user.balance}}</div>
 		</div>
 
@@ -66,6 +76,8 @@ export default {
 		change: Function,
 		addTicketStatus: Function,
 		showOnlyClosed: Function,
+		goInvoiceReload: Function,
+		goSupportReload: Function,
 		ticketStatus: Boolean,
 	},
 	methods: {
@@ -84,7 +96,7 @@ export default {
 		align-items: center;
 	}
 
-	.header__wrapper--cloud{
+	.header__wrapper--four{
 		grid-template-columns: 20% 1fr 20% 20%;
 	}
 

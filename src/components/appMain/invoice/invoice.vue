@@ -26,47 +26,35 @@ export default {
 		empty
 	},
 	props: {
-		user: Object
+		user: Object,
+		stopInvoiceReload: Function,
+		invoiceReload: Boolean
 	},
 	data(){
 		return {
 			isLoading: true,
-			invoices: [
-				// {
-				// 	id: '123',
-				// 	cost: '30',
-				// 	currency: 'USD',
-				// 	status: 'Unpaid',
-				// 	invoiceDate: '07/01/2020',
-				// 	dueDate: '17/01/2020',
-				// 	service: 'CRM+ (Cloud)'
-				// },{
-				// 	id: '124',
-				// 	cost: '50',
-				// 	currency: 'USD',
-				// 	status: 'Unpaid',
-				// 	invoiceDate: '07/01/2020',
-				// 	dueDate: '17/01/2020',
-				// 	service: 'CRM+ (Cloud)'
-				// },{
-				// 	id: '125',
-				// 	cost: '50',
-				// 	currency: 'USD',
-				// 	status: 'Paid',
-				// 	invoiceDate: '07/01/2020',
-				// 	dueDate: '17/01/2020',
-				// 	service: 'CRM+ (Cloud)'
-				// }
-			]
+			invoices: []
+		}
+	},
+	methods: {
+		loadInvoices(){
+			this.isLoading = true;
+			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${this.user.id}`)
+			.then(res => {
+				this.invoices = res.data.invoices.invoice;
+				this.isLoading = false;
+			});
 		}
 	},
 	mounted(){
-		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${this.user.id}`)
-		.then(res => {
-			this.isLoading = false;
-			// console.log(res);
-			this.invoices = res.data.invoices.invoice;
-		})
+		this.loadInvoices();
+	},
+	watch: {
+		invoiceReload(){
+			console.log("wath working");
+			this.loadInvoices();
+			this.stopInvoiceReload();
+		}
 	}
 }
 </script>

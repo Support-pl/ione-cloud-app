@@ -36,10 +36,12 @@ export default {
 		addTicketField
 	},
 	props: {
+		changeAddTicketStatus: Function,
 		user: Object,
 		addTicket: Boolean,
 		showClosed: Boolean,
-		changeAddTicketStatus: Function
+		stopSupportReload: Function,
+		supportReload: Boolean
 	},
 	data(){
 		return {
@@ -66,7 +68,7 @@ export default {
 			this.isLoading = true;
 			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}${closed?"&closed=true":''}`)
 			.then(resp => {
-				console.log("update: ",resp);
+				// console.log("update: ",resp);
 				if(resp.data.numreturned == 0) {
 					this.tickets = []
 				} else {
@@ -82,6 +84,11 @@ export default {
 	watch: {
 		showClosed(){
 			this.update(this.showClosed)
+		},
+
+		supportReload(){
+			this.update();
+			this.stopSupportReload();
 		}
 	}
 }
