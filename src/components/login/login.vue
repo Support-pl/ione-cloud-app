@@ -97,6 +97,7 @@ export default {
 						id: Response.data.userid,
 						passwordhash: Response.data.passwordhash,
 						email: Response.data.email,
+						secret: Response.data.secret,
 					});
 				}
 				else if(Response.data.result == "error"){

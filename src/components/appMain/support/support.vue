@@ -21,6 +21,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 import singleTicket from "./singleTicket.vue"
 import loading from '../../loading/loading.vue';
@@ -66,9 +67,14 @@ export default {
 	methods: {
 		update(closed = false){
 			this.isLoading = true;
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}${closed?"&closed=true":''}`)
+
+			const close_your_eyes = md5('tickets'+this.user.id+this.user.secret);
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}&secret=${close_your_eyes}${closed?"&closed=true":''}`;
+			console.log(url)
+
+			axios.get(url)
 			.then(resp => {
-				// console.log("update: ",resp);
+				console.log("update: ",resp);
 				if(resp.data.numreturned == 0) {
 					this.tickets = []
 				} else {
@@ -96,7 +102,6 @@ export default {
 
 <style>
 	.tickets{
-		padding: 20px 10px 0;
 		overflow: hidden;
 		height: 100%;
 		position: relative;
@@ -106,6 +111,7 @@ export default {
 	.ticket__wrapper{
 		height: 100%;
 		overflow: auto;
+		padding: 20px 10px 0;
 	}
 
 	.ticket__add-enter-active.addTicket__wrapper,

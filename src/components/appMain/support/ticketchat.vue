@@ -216,10 +216,12 @@ export default {
 		position: relative;
 		width: max-content;
 		max-width: 80%;
+		word-wrap: wrap;
+		margin-bottom: 10px;
 	}
 
-	.chat__message{
-		margin-bottom: 10px;
+	.chat__message pre{
+		white-space: pre-wrap;
 	}
 
 	.chat__message::after{

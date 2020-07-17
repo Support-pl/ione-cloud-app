@@ -4,11 +4,10 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import i18n from './i18n'
 import router from './router'
-
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 Vue.use(Antd)
-
 
 // @ts-ignore
 // BX24.init( () => {
@@ -19,16 +18,16 @@ new Vue({
 }).$mount('#app')
 // })
 
-window.addEventListener('load', () => {
+// window.addEventListener('load', () => {
 
-	if ('serviceWorker' in navigator) {
+// 	if ('serviceWorker' in navigator) {
 
-		navigator.serviceWorker.register('./sw.js')
-			.then(registration => {
-				console.log('Service worker successfully registered', registration);
-			})
-			.catch(error => {
-				console.log('Service worker registration failed', error);
-			});
-	}
-});
+// 		navigator.serviceWorker.register('./sw.js')
+// 			.then(registration => {
+// 				console.log('Service worker successfully registered', registration);
+// 			})
+// 			.catch(error => {
+// 				console.log('Service worker registration failed', error);
+// 			});
+// 	}
+// });

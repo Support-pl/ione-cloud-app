@@ -14,6 +14,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 import login from './components/login/login.vue';
 import appMain from './components/appMain/appMain.vue';
@@ -39,8 +40,11 @@ export default {
 		getUser(_user){
 			this.user = _user;
 			console.log(_user);
-			// WARNING: there is one danger moment to security
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${_user.id}`)
+			
+			const close_your_eyes = md5('clientDetails'+this.user.id+this.user.secret);
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${_user.id}&secret=${close_your_eyes}`;
+			console.log(url)
+			axios.get(url)
 			.then(resp => {
 				console.log("login. stage 2:");
 				console.log("\t", resp);
@@ -150,3 +154,13 @@ html, body{
 }
 
 </style>
+
+
+/*
+
+TODO:
+	-разобраться vuex
+
+	-перейти на TypeScript
+
+*/

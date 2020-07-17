@@ -2,7 +2,7 @@
 	<div class="header__container">
 		<div class="container">
 			<div class="header__content">
-				<div v-if="active == 'cloud'" class="header__wrapper header__wrapper--four">
+				<div v-if="active == 'cloud'" class="header__wrapper">
 			<div class="header__left clickable" @click="change">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="search"/>
@@ -14,7 +14,6 @@
 					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
-			<div class="header__right">${{user.balance}}</div>
 		</div>
 
 		<div v-if="active == 'support'"  class="header__wrapper header__wrapper--four">
