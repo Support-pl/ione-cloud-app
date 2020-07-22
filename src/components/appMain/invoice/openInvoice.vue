@@ -61,6 +61,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 export default {
 	name: "openInvoice",
@@ -83,15 +84,23 @@ export default {
 			]
 		}
 	},
+	props: {
+		user: Object
+	},
 	methods: {
 		goBack(){
 			this.$router.push("/invoice");
 		},	
 	},
 	mounted(){
-		axios.get(`https://devwhmcs.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}`)
+
+		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
+		const url = `https://devwhmcs.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
+		console.log(url)
+
+		axios.get(url)
 		.then(res => {
-			// console.log(res);
+			console.log(res);
 			this.inv = res.data;
 		})
 	}

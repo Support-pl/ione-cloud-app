@@ -23,6 +23,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 export default {
 	name: 'addTicket',
@@ -45,10 +46,25 @@ export default {
 			}
 		},
 		sendNewTicket(){
-			console.log('sending')
+			// console.log('sending')
 			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3) return;
 			this.isSending = true;
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/openticket.php?subject=${encodeURI(this.ticketTitle)}&message=${encodeURI(this.ticketMessage)}&clientid=${this.user.id}`)
+
+			const close_your_eyes = md5('openticket'+this.user.id+this.user.secret);
+			const object = {
+				subject: this.ticketTitle,
+				message: this.ticketMessage,
+				clientid: this.user.id,
+				secret: close_your_eyes
+			}
+
+			// парсим объект в GET параметры
+			const params = Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/openticket.php?${params}}`;
+			// console.log(url)
+
+			axios.get(url)
 				.then(resp => {
 					if(resp.data.result == "success"){
 						this.ticketTitle = "";

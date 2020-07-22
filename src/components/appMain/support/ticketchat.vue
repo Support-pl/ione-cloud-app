@@ -43,6 +43,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 import load from '../../loading/loading.vue';
 
@@ -59,7 +60,8 @@ export default {
 			theme: "SUPPORT",
 			replies: null,
 			messageInput: "",
-			loading: true
+			loading: true,
+			chatid: this.$route.params.pathMatch
 		}
 	},
 	methods: {
@@ -87,18 +89,46 @@ export default {
 				userid: this.user.id
 			};
 			this.replies.unshift(message);
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?id=${this.$route.params.pathMatch}&message=${message.message}&clientid=${message.userid}`)
+
+			const close_your_eyes = md5('ticketreply'+this.user.id+this.user.secret);
+			const object = {
+				id: this.$route.params.pathMatch,
+				message: this.messageInput,
+				secret: close_your_eyes,
+				clientid: this.user.id,
+			}
+
+			const params = this.objectToParams(object);
+
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?${params}}`;
+			// console.log(url)
+
+			axios.get(url)
 			.then(res => {
 				// console.log(res);
 			})
 			this.messageInput = "";
 		},
 		loadMessages(){
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/ticket.php?id=${this.$route.params.pathMatch}`)
+			this.loading = true;
+
+			const close_your_eyes = md5('ticket'+this.user.id+this.user.secret);
+			const object = {
+				secret: close_your_eyes,
+				id: this.chatid,
+			}
+
+			// парсим объект в GET параметры
+			const params = this.objectToParams(object);
+
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticket.php?${params}}`;
+			// console.log(url)
+
+			axios.get(url)
 			.then(resp => {
+				// console.log(resp);
 				this.replies = resp.data.replies.reply;
 				this.theme = resp.data.subject;
-				// console.log(resp);
 				// console.log(this.replies);
 				this.loading = false;
 			})
@@ -106,10 +136,19 @@ export default {
 		reload(){
 			this.loading = true;
 			this.loadMessages();
+		},
+		objectToParams(object){
+			return Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
 		}
 	},
 	mounted(){
-		console.log(this.user)
+		// console.log(this.user)
+		this.loadMessages();
+	},
+	beforeRouteUpdate (to, from, next){
+		// console.log(to, from);
+		// console.log(this.$route);
+		this.chatid = to.params.pathMatch;
 		this.loadMessages();
 	}
 

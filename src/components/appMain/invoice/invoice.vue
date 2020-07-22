@@ -13,6 +13,7 @@
 
 <script>
 const axios = require('axios');
+const md5 = require('md5');
 
 import singleInvoice from "./singleInvoice.vue";
 import loading from '../../loading/loading.vue';
@@ -38,9 +39,15 @@ export default {
 	},
 	methods: {
 		loadInvoices(){
+
+			const close_your_eyes = md5('invoices'+this.user.id+this.user.secret);
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${this.user.id}&secret=${close_your_eyes}`;
+			console.log(url)
+
 			this.isLoading = true;
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${this.user.id}`)
+			axios.get(url)
 			.then(res => {
+				console.log(res);
 				this.invoices = res.data.invoices.invoice;
 				this.isLoading = false;
 			});
