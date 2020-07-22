@@ -4,7 +4,7 @@ export default {
 	namespaced: true,
 
 	state: {
-		loading: true,
+		loading: false,
 		tickets: [],
 		onlyClosedTickets: false,
 		addTicketState: false
@@ -18,10 +18,14 @@ export default {
 		},
 		makeOnlyClosedTicketsIs(state, value){
 			state.onlyClosedTickets = value
+		},
+		inverseAddTicketState(state){
+			state.addTicketState = !state.addTicketState;
 		}
 	},
 	actions: {
-		fetchTickets(ctx){
+		fetchTickets(ctx) {
+			if (ctx.getters.isLoading) return;
 			ctx.commit('makeLoadingIs', true);
 			const closed = ctx.getters.isOnlyClosedTickets;
 			const user = ctx.rootGetters.getUser;
@@ -42,6 +46,7 @@ export default {
 				})
 		},
 		fetchTicketsThatClosed(ctx){
+			if(ctx.getters.isLoading) return;
 			const curState = ctx.getters.isOnlyClosedTickets;
 			ctx.commit("makeOnlyClosedTicketsIs", !curState);
 			ctx.dispatch("fetchTickets");
@@ -56,6 +61,9 @@ export default {
 		},
 		isOnlyClosedTickets(state){
 			return state.onlyClosedTickets;
+		},
+		isAddTicketState(state){
+			return state.addTicketState;
 		}
 	}
 }

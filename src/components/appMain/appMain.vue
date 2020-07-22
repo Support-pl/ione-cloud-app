@@ -19,7 +19,6 @@
 				<transition name="nomain__slider">
 					<router-view class="frame"
 						:search="search"
-						:addTicket='addTicket'
 						:changeAddTicketStatus="changeAddTicketStatus"
 						:invoiceReload="invoiceReload"
 						:stopInvoiceReload="stopInvoiceReload"

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-const axios = require('axios');
-const md5 = require('md5');
+import axios from 'axios';
+import md5 from 'md5';
 
 export default {
 	name: 'addTicket',
@@ -39,14 +39,10 @@ export default {
 			return this.$store.getters.getUser;
 		}
 	},
-	props: {
-		changeAddTicketStatus: Function,
-		update: Function
-	},
 	methods: {
 		clickOutOfBlock(){
 			if(event.target.classList.contains("addTicket__wrapper")){
-				this.changeAddTicketStatus();
+				this.$store.commit('support/inverseAddTicketState')
 			}
 		},
 		sendNewTicket(){
@@ -75,11 +71,12 @@ export default {
 						this.ticketMessage = "";
 						this.isSending = false;
 						
-						this.update();
-						this.changeAddTicketStatus();
+						
+						this.$store.dispatch("support/fetchTickets")
+						this.$store.commit('support/inverseAddTicketState')
 					}
 				})
-		}
+		},
 	}
 }
 </script>

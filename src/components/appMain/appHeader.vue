@@ -28,7 +28,7 @@
 					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
-			<div class="header__right clickable" @click="addTicketStatus" :class="{ticketActive: ticketStatus}">
+			<div class="header__right clickable" @click="inverseAddTicketState" :class="{ticketActive: isAddTicketState}">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="plus" />
 				</div>
@@ -62,29 +62,28 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
 	name: "appHeader",
 	props: {
 		active: String,
 		change: Function,
-		addTicketStatus: Function,
-		showOnlyClosed: Function,
 		goInvoiceReload: Function,
-		goSupportReload: Function,
-		ticketStatus: Boolean,
 	},
 	methods: {
 		reload(){
 			console.log('reload');
 		},
-		...mapActions(['fetchTickets', 'fetchTicketsThatClosed'])
+		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
+		...mapActions('invoices', ['fetchInvoices']),
+		...mapMutations('support', ['inverseAddTicketState'])
 	},
 	computed:{
 		user(){
 			return this.$store.getters.getUser
-		}
+		},
+		...mapGetters('support', ['isAddTicketState'])
 	}
 }
 </script>

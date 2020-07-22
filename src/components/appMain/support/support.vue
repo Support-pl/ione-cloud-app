@@ -10,7 +10,7 @@
 		</template>
 
 		<transition name="ticket__add">
-			<addTicketField v-if="addTicket" :changeAddTicketStatus="changeAddTicketStatus" :user="user" :update="update"/>
+			<addTicketField v-if="addTicketStatus"/>
 		</transition>
 	</div>
 </template>
@@ -22,6 +22,7 @@ import singleTicket from "./singleTicket.vue";
 import loading from '../../loading/loading.vue';
 import empty from '../../empty/empty.vue';
 import addTicketField from './addTicket.vue';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'support',
@@ -31,20 +32,15 @@ export default {
 		empty,
 		addTicketField
 	},
-	props: {
-		changeAddTicketStatus: Function,
-		addTicket: Boolean,
-	},
 	computed: {
-		user(){
-			return this.$store.getters['support/getUser'];
-		},
-		isLoading(){
-			return this.$store.getters['support/isLoading'];
-		},
-		tickets(){
-			return this.$store.getters['support/getTickets'];
-		}
+		...mapGetters({
+			user: 'getUser',
+		}),
+		...mapGetters('support', {
+			isLoading: 'isLoading',
+			tickets: 'getTickets',
+			addTicketStatus: 'isAddTicketState'
+		})
 	},
 	mounted(){
 		this.$store.dispatch("support/fetchTickets")
@@ -58,7 +54,6 @@ export default {
 		height: 100%;
 		position: relative;
 	}
-
 
 	.ticket__wrapper{
 		height: 100%;

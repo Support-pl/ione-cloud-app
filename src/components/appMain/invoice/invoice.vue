@@ -17,6 +17,7 @@ import md5 from "md5";
 import singleInvoice from "./singleInvoice.vue";
 import loading from '../../loading/loading.vue';
 import empty from '../../empty/empty.vue';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'invoices',
@@ -25,46 +26,17 @@ export default {
 		loading,
 		empty
 	},
-	props: {
-		stopInvoiceReload: Function,
-		invoiceReload: Boolean
-	},
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
-		}
-	},
-	data(){
-		return {
-			isLoading: true,
-			invoices: []
-		}
-	},
-	methods: {
-		loadInvoices(){
-
-			const close_your_eyes = md5('invoices'+this.user.id+this.user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${this.user.id}&secret=${close_your_eyes}`;
-			console.log(url)
-
-			this.isLoading = true;
-			axios.get(url)
-			.then(res => {
-				console.log(res);
-				this.invoices = res.data.invoices.invoice;
-				this.isLoading = false;
-			});
-		}
+		},
+		...mapGetters('invoices', {
+			isLoading: 'isLoading',
+			invoices: 'getInvoices'
+		})
 	},
 	mounted(){
-		this.loadInvoices();
-	},
-	watch: {
-		invoiceReload(){
-			console.log("wath working");
-			this.loadInvoices();
-			this.stopInvoiceReload();
-		}
+		this.$store.dispatch('invoices/fetchInvoices');
 	}
 }
 </script>
