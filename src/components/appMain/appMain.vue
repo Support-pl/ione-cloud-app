@@ -20,10 +20,7 @@
 					<router-view class="frame"
 						:search="search"
 						:addTicket='addTicket'
-						:showClosed='showClosed'
 						:changeAddTicketStatus="changeAddTicketStatus"
-						:stopSupportReload="stopSupportReload"
-						:supportReload="supportReload"
 						:invoiceReload="invoiceReload"
 						:stopInvoiceReload="stopInvoiceReload"
 						></router-view>

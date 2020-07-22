@@ -17,13 +17,13 @@
 		</div>
 
 		<div v-if="active == 'support'"  class="header__wrapper header__wrapper--four">
-			<div class="header__left clickable" @click="showOnlyClosed">
+			<div class="header__left clickable" @click="fetchTicketsThatClosed">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="filter"/>
 				</div>
 			</div>
 			<div class="header__title">{{$t('Support')}}</div>
-			<div class="header__right clickable" @click="goSupportReload">
+			<div class="header__right clickable" @click="fetchTickets">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="reload"/>
 				</div>
@@ -62,13 +62,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	name: "appHeader",
-	date(){
-		return {
-			
-		}
-	},
 	props: {
 		active: String,
 		change: Function,
@@ -81,7 +78,8 @@ export default {
 	methods: {
 		reload(){
 			console.log('reload');
-		}
+		},
+		...mapActions(['fetchTickets', 'fetchTicketsThatClosed'])
 	},
 	computed:{
 		user(){

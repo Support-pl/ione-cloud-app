@@ -3,14 +3,10 @@
 		<loading v-if="isLoading" />
 
 		<template v-else>
-		<!-- <div v-if="tickets.length == 0" class="none">
-			<div class="smile">:(</div>
-			Тут пока ничего нет...
-		</div> -->
-		<empty v-if="tickets.length == 0"/>
-		<div class="ticket__wrapper">
-			<singleTicket v-for='(ticket, index) in tickets' :key='index' :ticket='ticket'/>
-		</div>
+			<empty v-if="tickets.length == 0"/>
+			<div class="ticket__wrapper">
+				<singleTicket v-for='(ticket, index) in tickets' :key='index' :ticket='ticket'/>
+			</div>
 		</template>
 
 		<transition name="ticket__add">
@@ -20,10 +16,9 @@
 </template>
 
 <script>
-const axios = require('axios');
-const md5 = require('md5');
-
-import singleTicket from "./singleTicket.vue"
+import axios from 'axios';
+import md5 from 'md5';
+import singleTicket from "./singleTicket.vue";
 import loading from '../../loading/loading.vue';
 import empty from '../../empty/empty.vue';
 import addTicketField from './addTicket.vue';
@@ -39,68 +34,21 @@ export default {
 	props: {
 		changeAddTicketStatus: Function,
 		addTicket: Boolean,
-		showClosed: Boolean,
-		stopSupportReload: Function,
-		supportReload: Boolean
-	},
-	data(){
-		return {
-			isLoading: true,
-			tickets: [
-				// {
-				// 	id: 123123,
-				// 	title: 'test1',
-				// 	message: 'test1 for test',
-				// 	status: 'unreaded',
-				// 	time: '2020-03-19 18:00:18'
-				// },{
-				// 	id: 412424,
-				// 	title: 'test2',
-				// 	message: 'test2 for test',
-				// 	status: 'unreaded',
-				// 	time: '2020-03-19 02:25:50'
-				// },
-			]
-		}
 	},
 	computed: {
 		user(){
-			return this.$store.getters.getUser;
-		}
-	},
-	methods: {
-		update(closed = false){
-			this.isLoading = true;
-
-			const close_your_eyes = md5('tickets'+this.user.id+this.user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/tickets.php?id=${this.user.id}&secret=${close_your_eyes}${closed?"&closed=true":''}`;
-			console.log(url)
-
-			axios.get(url)
-			.then(resp => {
-				console.log("update: ",resp);
-				if(resp.data.numreturned == 0) {
-					this.tickets = []
-				} else {
-					this.tickets = resp.data.tickets.ticket;
-				}
-				this.isLoading = false;
-			})
+			return this.$store.getters['support/getUser'];
+		},
+		isLoading(){
+			return this.$store.getters['support/isLoading'];
+		},
+		tickets(){
+			return this.$store.getters['support/getTickets'];
 		}
 	},
 	mounted(){
-		this.update();
+		this.$store.dispatch("support/fetchTickets")
 	},
-	watch: {
-		showClosed(){
-			this.update(this.showClosed)
-		},
-
-		supportReload(){
-			this.update();
-			this.stopSupportReload();
-		}
-	}
 }
 </script>
 
