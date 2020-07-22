@@ -3,6 +3,7 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import i18n from './i18n'
+import store from './store'
 import router from './router'
 import './registerServiceWorker'
 
@@ -13,7 +14,8 @@ Vue.use(Antd)
 // BX24.init( () => {
 new Vue({
   i18n,
-  router,
+	router,
+	store,
   render: h => h(App)
 }).$mount('#app')
 // })

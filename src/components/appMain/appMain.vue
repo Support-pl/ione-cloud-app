@@ -3,7 +3,6 @@
 		<a-layout>
 			<a-layout-header :style="{'background-color': '#427cf7', color: '#fff', padding: 0}">
 				<appHeader
-					:user="user"
 					:active="active"
 					:change="searchChangeFunc"
 					:addTicketStatus="changeAddTicketStatus"
@@ -20,8 +19,6 @@
 				<transition name="nomain__slider">
 					<router-view class="frame"
 						:search="search"
-						:logoutFunc='logoutFunc'
-						:user='user'
 						:addTicket='addTicket'
 						:showClosed='showClosed'
 						:changeAddTicketStatus="changeAddTicketStatus"
@@ -56,10 +53,6 @@ export default {
 		support,
 		invoice,
 		settings
-	},
-	props: {
-		user: Object,
-		logoutFunc: Function
 	},
 	data(){
 		return {
@@ -116,9 +109,9 @@ export default {
 		}
 	},
 	mounted(){
-		if(this.user == null){
-			this.$router.push('/login');
-		}
+		// if(this.user == null){
+		// 	this.$router.push('/login');
+		// }
 		// console.log(this.user)
 	},
 	watch: {

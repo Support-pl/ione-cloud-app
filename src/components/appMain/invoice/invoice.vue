@@ -12,9 +12,8 @@
 </template>
 
 <script>
-const axios = require('axios');
-const md5 = require('md5');
-
+import axios from "axios";
+import md5 from "md5";
 import singleInvoice from "./singleInvoice.vue";
 import loading from '../../loading/loading.vue';
 import empty from '../../empty/empty.vue';
@@ -27,9 +26,13 @@ export default {
 		empty
 	},
 	props: {
-		user: Object,
 		stopInvoiceReload: Function,
 		invoiceReload: Boolean
+	},
+	computed: {
+		user(){
+			return this.$store.getters.getUser;
+		}
 	},
 	data(){
 		return {

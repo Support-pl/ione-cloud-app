@@ -52,9 +52,6 @@ export default {
 	components: {
 		load
 	},
-	props: {
-		user: Object
-	},
 	data(){
 		return {
 			theme: "SUPPORT",
@@ -62,6 +59,11 @@ export default {
 			messageInput: "",
 			loading: true,
 			chatid: this.$route.params.pathMatch
+		}
+	},
+	computed: {
+		user(){
+			return this.$store.getters.getUser;
 		}
 	},
 	methods: {

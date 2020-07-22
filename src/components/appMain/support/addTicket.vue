@@ -34,9 +34,13 @@ export default {
 			isSending: false,
 		}
 	},
+	computed: {
+		user(){
+			return this.$store.getters.getUser;
+		}
+	},
 	props: {
 		changeAddTicketStatus: Function,
-		user: Object,
 		update: Function
 	},
 	methods: {

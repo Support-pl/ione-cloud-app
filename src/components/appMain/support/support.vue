@@ -38,7 +38,6 @@ export default {
 	},
 	props: {
 		changeAddTicketStatus: Function,
-		user: Object,
 		addTicket: Boolean,
 		showClosed: Boolean,
 		stopSupportReload: Function,
@@ -62,6 +61,11 @@ export default {
 				// 	time: '2020-03-19 02:25:50'
 				// },
 			]
+		}
+	},
+	computed: {
+		user(){
+			return this.$store.getters.getUser;
 		}
 	},
 	methods: {

@@ -7,15 +7,12 @@
 			<!-- <appMain :user='user' /> -->
 		<!-- </template> -->
 		<transition name="slide">
-			<router-view :user="user" :getUser="getUser" :logoutFunc='logout'></router-view>
+			<router-view></router-view>
 		</transition>
 	</div>
 </template>
 
 <script>
-const axios = require('axios');
-const md5 = require('md5');
-
 import login from './components/login/login.vue';
 import appMain from './components/appMain/appMain.vue';
 
@@ -27,80 +24,40 @@ export default {
 	},
 	data() {
 		return {
-			// user: {
-			// 	name: "test name",
-			// 	balance: 241.24
-			// },
-			// isLoggined: true 
-			user: null,
-			isLoggined: false
 		};
 	},
 	methods: {
-		getUser(_user){
-			this.user = _user;
-			console.log(_user);
+		// getUser(_user){
+		// 	this.user = _user;
+		// 	console.log(_user);
 			
-			const close_your_eyes = md5('clientDetails'+this.user.id+this.user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${_user.id}&secret=${close_your_eyes}`;
-			console.log(url)
-			axios.get(url)
-			.then(resp => {
-				console.log("login. stage 2:");
-				console.log("\t", resp);
-				this.user.firstname = resp.data.firstname;
-				this.user.lastname = resp.data.lastname;
-				this.user.balance = resp.data.credit;
-				this.user.currency_code = resp.data.currency_code;
-				console.log("\t", this.user);
-				console.log("\t", "loggined");
-				this.isLoggined = true;
-				this.setCookie('CloudUser', JSON.stringify(this.user), {
-					'max-age': '2592000'
-				});
-				this.$router.push("cloud")
-			})
+		// 	const close_your_eyes = md5('clientDetails'+this.user.id+this.user.secret);
+		// 	const url = `https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${_user.id}&secret=${close_your_eyes}`;
+		// 	console.log(url)
+		// 	axios.get(url)
+		// 	.then(resp => {
+		// 		console.log("login. stage 2:");
+		// 		console.log("\t", resp);
+		// 		this.user.firstname = resp.data.firstname;
+		// 		this.user.lastname = resp.data.lastname;
+		// 		this.user.balance = resp.data.credit;
+		// 		this.user.currency_code = resp.data.currency_code;
+		// 		console.log("\t", this.user);
+		// 		console.log("\t", "loggined");
+		// 		this.isLoggined = true;
+		// 		this.setCookie('CloudUser', JSON.stringify(this.user), {
+		// 			'max-age': '2592000'
+		// 		});
+		// 		this.$router.push("cloud")
+		// 	})
 
-		},
+		// },
 		logout(){
 			this.user = null;
 			this.isLoggined = false;
 			this.deleteCookie("CloudUser");
 			this.$router.push('/login');
 		},
-		getCookie(name) {
-			let matches = document.cookie.match(new RegExp(
-				"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-			));
-			return matches ? decodeURIComponent(matches[1]) : undefined;
-		},
-		setCookie(name, value, options = {}) {
-			options = {
-				path: '/',
-				...options
-			};
-
-			if (options.expires instanceof Date) {
-				options.expires = options.expires.toUTCString();
-			}
-
-			let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-
-			for (let optionKey in options) {
-				updatedCookie += "; " + optionKey;
-				let optionValue = options[optionKey];
-				if (optionValue !== true) {
-				updatedCookie += "=" + optionValue;
-				}
-			}
-
-			document.cookie = updatedCookie;
-		},
-		deleteCookie(name) {
-			this.setCookie(name, "", {
-				'max-age': -1
-			})
-		}
 	},
 	watch: {
 		// $route(to, from){
@@ -108,16 +65,19 @@ export default {
 		// }
 	},
 	created(){
-		this.user = JSON.parse(this.getCookie("CloudUser"));
-		if(this.user !== undefined) this.isLoggined = true;
+		// this.user = JSON.parse(this.getCookie("CloudUser"));
+		const user = JSON.parse(this.$store.getters.getCookie('CloudUser'));
+		if(user !== undefined) {
+			this.$store.commit("setUser", user)
+		};
 
 		this.$router.beforeEach((to, from, next) => {
-			if (to.name !== 'login' && this.isLoggined == false) next({ name: 'login' })
+			if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
 			else next()
 		})
 	},
 	mounted(){
-		if (this.$router.currentRoute.name != 'login' && !this.isLoggined) {
+		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 			this.$router.replace("login");
 		}
 	}

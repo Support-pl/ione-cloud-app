@@ -47,7 +47,7 @@
 					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
-			<div class="header__right">${{user.balance}}</div>
+			<div class="header__right">${{user.balance?user.balance:0}}</div>
 		</div>
 
 		<div v-if="active == 'settings'"  class="header__wrapper">
@@ -70,7 +70,6 @@ export default {
 		}
 	},
 	props: {
-		user: Object,
 		active: String,
 		change: Function,
 		addTicketStatus: Function,
@@ -82,6 +81,11 @@ export default {
 	methods: {
 		reload(){
 			console.log('reload');
+		}
+	},
+	computed:{
+		user(){
+			return this.$store.getters.getUser
 		}
 	}
 }

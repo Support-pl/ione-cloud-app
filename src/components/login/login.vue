@@ -47,7 +47,8 @@
 </template>
 
 <script>
-const axios = require('axios');
+import axios from 'axios'
+import md5 from 'md5'
 
 export default {
 	name: "login",
@@ -89,18 +90,34 @@ export default {
 			
 			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/login.php?email=${email}&password=${password}`)
 			.then(Response => {
-				// console.log("login. stage 1:")
-				// console.log("\t", Response)
-				// console.log("\t", Response.data)
-				if (Response.data.result == "success"){
-					this.getUser({
-						id: Response.data.userid,
-						passwordhash: Response.data.passwordhash,
-						email: Response.data.email,
-						secret: Response.data.secret,
-					});
+				const data = Response.data;
+				const user = {};
+				if (data.result == "success"){
+
+					user.id = data.userid;
+					user.passwordhash = data.passwordhash;
+					user.email = data.email;
+					user.secret = data.secret;
+					
+					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
+					const url = `https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
+					console.log(url)
+					axios.get(url)
+					.then(resp => {
+						user.firstname = resp.data.firstname;
+						user.lastname = resp.data.lastname;
+						user.balance = resp.data.credit;
+						user.currency_code = resp.data.currency_code;
+
+						this.$store.dispatch("onLoadUser", user);
+						
+						// this.setCookie('CloudUser', JSON.stringify(user), {
+						// 	'max-age': '2592000'
+						// });
+						this.$router.push("cloud")
+					})
 				}
-				else if(Response.data.result == "error"){
+				else if(data.result == "error"){
 					this.loginError = Response.data.message;
 					this.tryingLogin = false;
 				}
@@ -109,7 +126,12 @@ export default {
 		},
 		forgotPass(){
 			this.remember = !this.remember;
-		}
+		},
+		
+	},
+	mounted(){
+		console.log('this.$store');
+		console.log(this.$store);
 	}
 }
 </script>
