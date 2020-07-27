@@ -9,31 +9,31 @@
 					</router-link>
 				</div>
 				<div class="Fcloud__header-title">
-					<div class="Fcloud__status-color" :style="{'background-color': statusColor}"></div>
+					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 					<div class="Fcloud__title">{{cloud.NAME}}</div>
-					<div class="Fcloud__status">{{cloud.STATE}}</div>
+					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{cloud.STATE}}</div>
 				</div>
 			</div>
 			<div class="Fcloud__buttons">
-				<div v-if="cloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" @click="sendAction('Shutdown')">
+				<div v-if="cloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="pause" />
 					</div>
 					<div class="Fcloud__BTN-title">Stop</div>
 				</div>
-				<div v-else class="Fcloud__button" @click='sendAction("Start")'>
+				<div v-else class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Start")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="caret-right" />
 					</div>
 					<div class="Fcloud__BTN-title">Start</div>
 				</div>
-				<div class="Fcloud__button" @click='sendAction("Restart")'>
+				<div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="redo" />
 					</div>
 					<div class="Fcloud__BTN-title">Restart</div>
 				</div>
-				<div class="Fcloud__button" @click='sendAction("Shutdown")'>
+				<div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="stop" />
 					</div>
@@ -52,15 +52,15 @@
 						<tbody>
 							<tr>
 								<td>Start time</td>
-								<td>1593171442</td> <!-- change to dynamic data -->
+								<td>1593171442 no info</td>
 							</tr>
 							<tr>
 								<td>Host</td>
-								<td>{{cloud.HOST}}</td> <!-- change to dynamic data -->
+								<td>{{cloud.HOST}}</td>
 							</tr>
 							<tr>
 								<td>IP</td>
-								<td>{{cloud.IP}}</td> <!-- change to dynamic data -->
+								<td>{{cloud.IP}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -78,7 +78,7 @@
 						</div>
 						<div class="block__column">
 							<div class="block__title">VCPU</div>
-							<div class="block__value">2 no in date</div>
+							<div class="block__value">2 no info</div>
 						</div>
 						<div class="block__column">
 							<div class="block__title">Memory</div>
@@ -99,7 +99,7 @@
 						</div>
 						<div class="block__column">
 							<div class="block__title">Size</div>
-							<div class="block__value">10 GB no in date</div>
+							<div class="block__value">10 GB no info</div>
 						</div>
 					</div>
 				</div>
@@ -159,6 +159,7 @@ export default {
 			status: 'running',
 			name: 'test3',
 			permissions: false,
+			// updating: true
 		}
 	},
 	computed: {
@@ -182,7 +183,10 @@ export default {
 		},
 		cloud(){
 			return this.$store.getters['cloud/getCloudById'](this.$route.params.pathMatch);
-		}
+		},
+		...mapGetters('cloud', {
+			updating: 'isUpdating'
+		})
 	},
 	created(){
 		this.$store.dispatch('cloud/fetchClouds');
@@ -304,10 +308,6 @@ export default {
 			text-shadow .1s ease;
 	}
 
-	.Fcloud__button:hover{
-		transform: scale(1.1);
-	}
-
 	.Fcloud__button:hover .Fcloud__BTN-icon{
 		background-color: #fff;
 		box-shadow: 2px 2px 7px rgba(0, 0, 0, .2);
@@ -320,6 +320,20 @@ export default {
 
 	.Fcloud__button:active{
 		transform: scale(1.05);
+	}
+
+	.Fcloud__button.disabled{
+		opacity: 0.8;
+		transform: scale(.8);
+		color: #c9c9c9;
+	}
+
+	.Fcloud__button.disabled .Fcloud__BTN-title{
+		color: rgba(255,255,255,.4)
+	}
+
+	.Fcloud__button.disabled:hover{
+		transform: scale(0.81)
 	}
 
 	.Fcloud__info{
@@ -410,5 +424,18 @@ export default {
 	}
 	.permissions td:first-child{
 		color: #919392;
+	}
+
+	.glowing-animations {
+		animation: glowing 1.5s ease infinite;
+	}
+
+	@keyframes glowing {
+		from, to {
+			opacity: 1;
+		}
+		50% {
+			opacity: .5;
+		}
 	}
 </style>

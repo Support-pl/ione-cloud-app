@@ -36,6 +36,7 @@ export default {
 		loading: false,
 		isSearch: false,
 		clouds: [],
+		updating: false,
 	},
 	mutations: {
 		updateClouds(state, value) {
@@ -46,11 +47,15 @@ export default {
 		},
 		inverseSearch(state) {
 			state.isSearch = !state.isSearch;
+		},
+		makeUpdatingIs(state, value) {
+			state.updating = value
 		}
 	},
 	actions: {
 		fetchClouds(ctx) {
 			if (ctx.getters.isLoading) return;
+			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
 			ctx.commit('makeLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
@@ -64,6 +69,7 @@ export default {
 				.then(resp => {
 					console.log("vuex got clouds: ", resp);
 					ctx.commit("updateClouds", resp.data.data)
+					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)
 				})
 		},
@@ -87,6 +93,9 @@ export default {
 		},
 		getCloudById: state => id => {
 			return state.clouds.find(el => el.ID = id)
+		},
+		isUpdating(state){
+			return state.updating;
 		}
 	}
 }
