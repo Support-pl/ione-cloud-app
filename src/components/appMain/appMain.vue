@@ -2,14 +2,7 @@
 	<div class="application">
 		<a-layout>
 			<a-layout-header :style="{'background-color': '#427cf7', color: '#fff', padding: 0}">
-				<appHeader
-					:active="active"
-					:change="searchChangeFunc"
-					:addTicketStatus="changeAddTicketStatus"
-					:ticketStatus="addTicket"
-					:showOnlyClosed="showOnlyClosed"
-					:goSupportReload="goSupportReload"
-					:goInvoiceReload="goInvoiceReload"/>
+				<appHeader/>
 			</a-layout-header>
 			<a-layout-content :style="{'background-color': '#f7f7f7', 'position': 'relative'}">
 				<!-- <cloud v-if="active == 0"></cloud>
@@ -17,12 +10,7 @@
 				<invoice v-if="active == 2"></invoice>
 				<settings v-if="active == 3"></settings> -->
 				<transition name="nomain__slider">
-					<router-view class="frame"
-						:search="search"
-						:changeAddTicketStatus="changeAddTicketStatus"
-						:invoiceReload="invoiceReload"
-						:stopInvoiceReload="stopInvoiceReload"
-						></router-view>
+					<router-view class="frame"></router-view>
 				</transition>
 			</a-layout-content>
 			<a-layout-footer :style="{padding: 0}">
@@ -53,43 +41,14 @@ export default {
 	data(){
 		return {
 			activeName: '',
-			search: false,
-			addTicket: false,
-			showClosed: false,
-			supportReload: false,
-			invoiceReload: false
+			unwatch: null,
 		}
 	},
 	methods: {
 		changeActive(newStatus, title){
-			if(this.activeName == title) return;
-			this.$router.push({ name: title})
+			// if(this.activeName == title) return;
+			// this.$router.push({ name: title})
 		},
-		searchChangeFunc(){
-			this.search = !this.search;
-		},
-		changeAddTicketStatus(){
-			this.addTicket = !this.addTicket;
-		},
-		showOnlyClosed(){
-			this.showClosed = !this.showClosed;
-		},
-		goSupportReload(){
-			console.log("goSupportReload");
-			this.supportReload = true
-		},
-		stopSupportReload(){
-			console.log("stopSupportReload");
-			this.supportReload = false
-		},
-		goInvoiceReload(){
-			console.log("goInvoiceReload");
-			this.invoiceReload = true
-		},
-		stopInvoiceReload(){
-			console.log("stopInvoiceReload");
-			this.invoiceReload = false
-		}
 	},
 	computed: {
 		active: {
@@ -109,11 +68,27 @@ export default {
 		// 	this.$router.push('/login');
 		// }
 		// console.log(this.user)
+		// this.$store.subscribe((mutation, state) => {
+		// 	if(mutation.type == 'app/setActiveTabName' || mutation.type == 'app/setActiveTabNum'){
+		// 		console.log(mutation.type)
+		// 		console.log(mutation.payload)
+		// 	}
+		// })
+		// this.unwatch = this.$store.watch(
+		// 	(state, getters) => getters['app/getActiveTab'],
+		// 	(newVal, oldVal) => {
+		// 		console.log(newVal, oldVal)
+		// 		this.$router.push({ name: newVal.title})
+		// 	}
+		// )
 	},
 	watch: {
 		$route(to, from){
 			this.activeName = to.name == 'cloudHome' ? 'cloud' : to.name;
-		}
+		},
+	},
+	created(){
+		this.$store.dispatch('app/setTabByName', this.$router.currentRoute.name)
 	}
 }
 </script>

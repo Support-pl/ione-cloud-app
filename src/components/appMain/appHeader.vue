@@ -3,13 +3,13 @@
 		<div class="container">
 			<div class="header__content">
 				<div v-if="active == 'cloud'" class="header__wrapper">
-			<div class="header__left clickable" @click="change">
-				<div class="icon__wrapper">
+			<div class="header__left clickable" @click="inverseSearch">
+				<div class="icon__wrapper" :class="{ active__btn:isSearch }">
 					<a-icon class="header__icon" type="search"/>
 				</div>
 			</div>
 			<div class="header__title">{{$t('Cloud')}}</div>
-			<div class="header__right clickable" @click="reload">
+			<div class="header__right clickable" @click="fetchClouds">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="reload"/>
 				</div>
@@ -18,7 +18,7 @@
 
 		<div v-if="active == 'support'"  class="header__wrapper header__wrapper--four">
 			<div class="header__left clickable" @click="fetchTicketsThatClosed">
-				<div class="icon__wrapper">
+				<div class="icon__wrapper" :class="{ active__btn:isOnlyClosedTickets  }">
 					<a-icon class="header__icon" type="filter"/>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div class="header__title">{{$t('Invoice')}}</div>
-			<div class="header__right clickable" @click="goInvoiceReload">
+			<div class="header__right clickable" @click="fetchInvoices">
 				<div class="icon__wrapper">
 					<a-icon class="header__icon" type="reload"/>
 				</div>
@@ -66,24 +66,26 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
 	name: "appHeader",
-	props: {
-		active: String,
-		change: Function,
-		goInvoiceReload: Function,
-	},
 	methods: {
 		reload(){
 			console.log('reload');
 		},
 		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
 		...mapActions('invoices', ['fetchInvoices']),
-		...mapMutations('support', ['inverseAddTicketState'])
+		...mapActions('cloud', ['fetchClouds']),
+		...mapMutations('support', ['inverseAddTicketState']),
+		...mapMutations('cloud', ['inverseSearch'])
 	},
 	computed:{
 		user(){
 			return this.$store.getters.getUser
 		},
-		...mapGetters('support', ['isAddTicketState'])
+		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets']),
+		...mapGetters('app', ['getActiveTab']),
+		...mapGetters('cloud', ['isSearch']),
+		active(){
+			return this.getActiveTab.title
+		}
 	}
 }
 </script>
@@ -143,6 +145,10 @@ export default {
 		background-color: #fff;
 		color: #427cf7;
 		transform: scale(1.2);
+	}
+	.icon__wrapper.active__btn{
+		background-color: #fff;
+		color: #427cf7;
 	}
 
 	.icon__wrapper:active{

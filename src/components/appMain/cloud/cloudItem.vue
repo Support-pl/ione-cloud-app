@@ -1,13 +1,13 @@
 <template>
 	<div class="cloud__item-wrapper">
-		<div class="cloud__item" @click="cloudClick(cloud.id)">
+		<div class="cloud__item" @click="cloudClick(cloud.ID)">
 			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
 				<div class="item__title">{{title}}</div>
-				<div class="item__status">{{cloud.status}}</div>
+				<div class="item__status">{{cloud.STATE}}</div>
 			</div>
 			<div class="cloud__lower">
-				HOST: {{cloud.host}}, IP: {{cloud.ip}}
+				HOST: {{cloud.HOST}}, IP: {{cloud.IP}}
 			</div>
 		</div>
 	</div>
@@ -22,7 +22,7 @@ export default {
 	computed: {
 		statusColor(){
 			let color = '';
-			switch (this.cloud.status.toLowerCase()) {
+			switch (this.cloud.STATE.toLowerCase()) {
 				case 'running':
 					color = '#0fd058';
 					break;
@@ -40,10 +40,10 @@ export default {
 		},
 		title(){
 			const CUT = 24;
-			if(this.cloud.title.length > CUT){
-				return this.cloud.title.slice(0, CUT) + "..."
+			if(this.cloud.NAME.length > CUT){
+				return this.cloud.NAME.slice(0, CUT) + "..."
 			}
-			return this.cloud.title
+			return this.cloud.NAME
 		}
 	},
 	methods: {

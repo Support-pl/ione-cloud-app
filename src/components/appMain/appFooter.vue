@@ -4,67 +4,45 @@
 			<div class="footer__content">
 				<!-- <div class="bg" :style="{transform: 'translateX('+getBiasLeft+'px)'}"></div> -->
 				<!-- <div class="bg"></div> -->
-				<div v-for="(button, index) in buttons" :key="index" @click="changeFunc(index, button.title)" class="button" :class="{ active: button.title==active }">
+				<div v-for="(button, index) in getButtons" :key="index" @click="setTabByName(button.title)" class="button" :class="{ active: button.title==active }">
 					<div class="button__icon">
 						<a-icon :type="button.icon" :theme="button.theme" />
 					</div>
 					<div class="button__title">
-						<!-- {{button.title}} -->
 						{{$t(button.title)}}
 					</div>
 				</div>
-				<!-- <div class="footer__active" :style="{left: '47px'}">
-					<a-icon :type="buttons[active].icon" :theme="buttons[active].theme"/>
-				</div> -->
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
 	name: "appFooter",
-	props: {
-		active: String,
-		changeFunc: Function
-	},
-	data(){
-		return {
-			buttons: [
-				{
-					icon: 'database',
-					title: 'cloud',
-					theme: 'filled'
-				},{
-					icon: 'message',
-					title: 'support',
-					theme: 'outlined'
-				},{
-					icon: 'credit-card',
-					title: 'invoice',
-					theme: 'outlined'
-				},{
-					icon: 'setting',
-					title: 'settings',
-					theme: 'filled'
-				},
-			]
-		}
-	},
 	computed: {
 		getBiasLeft(){
 			const btn = document.querySelector(".button");
 			const width = btn.offsetWidth;
 			let ind = -1;
 			
-			for(let i = 0; i < this.buttons.length; i++){
-				if(this.active == this.buttons[i].title) ind = i;
+			for(let i = 0; i < this.getButtons.length; i++){
+				if(this.active == this.getButtons[i].title) ind = i;
 			}
 
 			ind = ind < 0? 0 : ind;
 
 			return width * ind;
+		},
+		...mapGetters('app', ['getButtons']),
+		...mapGetters('app', ['getActiveTab']),
+		active(){
+			return this.getActiveTab.title
 		}
+	},
+	methods: {
+		...mapActions('app', ['setTabByName'])
 	}
 }
 </script>
