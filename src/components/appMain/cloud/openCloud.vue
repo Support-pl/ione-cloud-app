@@ -8,14 +8,14 @@
 						<a-icon type="left" />
 					</router-link>
 				</div>
-				<div class="Fcloud__header-title" v-if="cloud">
+				<div class="Fcloud__header-title" v-if="cloud.STATE">
 					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 					<div class="Fcloud__title">{{cloud.NAME}}</div>
 					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{cloud.STATE}}</div>
 				</div>
 			</div>
 			<div class="Fcloud__buttons">
-				<div v-if="cloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
+				<div v-if="cloud && cloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="pause" />
 					</div>
@@ -82,7 +82,7 @@
 						</div>
 						<div class="block__column">
 							<div class="block__title">Memory</div>
-							<div class="block__value">{{cloud.RAM}} MB</div>
+							<div class="block__value">{{mbToGb(cloud.RAM)}} GB</div>
 						</div>
 					</div>
 				</div>
@@ -99,7 +99,7 @@
 						</div>
 						<div class="block__column">
 							<div class="block__title">Size</div>
-							<div class="block__value">{{cloud.DRIVE}} MB</div>
+							<div class="block__value">{{mbToGb(cloud.DRIVE)}} GB</div>
 						</div>
 					</div>
 				</div>
@@ -210,6 +210,10 @@ export default {
 			})
 			console.log(action)
 
+		},
+		mbToGb(mb){
+			const gb = Math.round(mb / 1024);
+			return gb
 		}
 	}
 }
