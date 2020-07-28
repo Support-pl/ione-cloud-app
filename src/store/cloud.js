@@ -40,6 +40,7 @@ export default {
 	},
 	mutations: {
 		updateClouds(state, value) {
+			console.log('updating clouds:', value);
 			state.clouds = value;
 		},
 		makeLoadingIs(state, value) {

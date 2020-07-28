@@ -8,7 +8,7 @@
 						<a-icon type="left" />
 					</router-link>
 				</div>
-				<div class="Fcloud__header-title">
+				<div class="Fcloud__header-title" v-if="cloud">
 					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 					<div class="Fcloud__title">{{cloud.NAME}}</div>
 					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{cloud.STATE}}</div>
@@ -99,7 +99,7 @@
 						</div>
 						<div class="block__column">
 							<div class="block__title">Size</div>
-							<div class="block__value">10 GB no info</div>
+							<div class="block__value">{{cloud.DRIVE}} MB</div>
 						</div>
 					</div>
 				</div>
@@ -151,6 +151,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import md5 from 'md5'
 
 export default {
 	name: "openCloud",
@@ -165,7 +166,7 @@ export default {
 	computed: {
 		statusColor(){
 			let color = '';
-			switch (this.status) {
+			switch (this.cloud.STATE.toLowerCase()) {
 				case 'running':
 					color = '#0fd058';
 					break;
@@ -182,7 +183,9 @@ export default {
 			return color;
 		},
 		cloud(){
-			return this.$store.getters['cloud/getCloudById'](this.$route.params.pathMatch);
+			const cloud = this.$store.getters['cloud/getCloudById'](this.$route.params.pathMatch);
+			console.log(cloud);
+			return cloud;
 		},
 		...mapGetters('cloud', {
 			updating: 'isUpdating'
@@ -193,9 +196,14 @@ export default {
 	},
 	methods: {
 		sendAction(action){
-			const userid = this.$store.getters.getUser.id;
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
 			const vmid = this.cloud.ID;
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}`)
+
+			const close_your_eyes = md5('orders' + userid + user.secret);
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			console.log(url);
+			axios.get(url)
 			.then(res => {
 				console.log(res);
 				this.$store.dispatch('cloud/fetchClouds');

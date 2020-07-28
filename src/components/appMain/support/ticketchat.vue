@@ -24,8 +24,20 @@
 		</div> -->
 		<load v-if="loading"/>
 		<div v-else class="chat__content">
-			<div v-for='(reply, index) in replies' :key='index' class="chat__message" :class="[ isAdminSent(reply) ? 'chat__message--in' : 'chat__message--out']">
+			<div
+				v-for='(reply, index) in replies'
+				:key='index' class="chat__message"
+				:class="[ isAdminSent(reply) ? 'chat__message--in' : 'chat__message--out']">
 				<pre v-html="beauty(reply.message)"></pre>
+				<a-icon v-if="reply.sending" type="loading" class="msgStatus loading"></a-icon>
+				<a-popover v-if="reply.error" title="Ошибка отправления">
+					<template slot="content">
+						<a class="popover-link" slot="content" @click="messageDelete(reply)">Удалить сообщение</a>
+						<a class="popover-link" slot="content" @click="messageResend(reply)">Повторить отправку</a>
+					</template>
+					<a-icon type="exclamation-circle" class="msgStatus error"></a-icon>
+				</a-popover>
+				
 			</div>
 		</div>
 
@@ -58,7 +70,8 @@ export default {
 			replies: null,
 			messageInput: "",
 			loading: true,
-			chatid: this.$route.params.pathMatch
+			chatid: this.$route.params.pathMatch,
+			sendingMessagesCount: 0
 		}
 	},
 	computed: {
@@ -88,8 +101,10 @@ export default {
 				email: this.user.email,
 				message: this.messageInput,
 				name: this.user.firstname + " " + this.user.lastname,
-				userid: this.user.id
+				userid: this.user.id,
+				sending: true,
 			};
+			this.sendingMessagesCount++;
 			this.replies.unshift(message);
 
 			const close_your_eyes = md5('ticketreply'+this.user.id+this.user.secret);
@@ -102,12 +117,19 @@ export default {
 
 			const params = this.objectToParams(object);
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?${params}}`;
-			// console.log(url)
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?${params}`;
+			console.log(url)
 
 			axios.get(url)
 			.then(res => {
-				// console.log(res);
+				console.log(res);
+				if(res.data.result == "success")
+					this.replies[--this.sendingMessagesCount].sending = false;
+				else {
+					this.sendingMessagesCount--;
+					this.replies[this.sendingMessagesCount].sending = false;
+					this.replies[this.sendingMessagesCount].error = true;
+				}
 			})
 			this.messageInput = "";
 		},
@@ -123,7 +145,7 @@ export default {
 			// парсим объект в GET параметры
 			const params = this.objectToParams(object);
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticket.php?${params}}`;
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticket.php?${params}`;
 			// console.log(url)
 
 			axios.get(url)
@@ -141,6 +163,14 @@ export default {
 		},
 		objectToParams(object){
 			return Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+		},
+		messageDelete(message){
+			this.replies.splice(this.replies.indexOf(message), 1);
+		},
+		messageResend(message){
+			this.messageDelete(message);
+			this.messageInput = message.message;
+			this.sendMessage();
 		}
 	},
 	mounted(){
@@ -226,6 +256,7 @@ export default {
 		margin-left: 10px;
 		font-size: 1.2rem;
 		transition: background-color .2s ease;
+		cursor: pointer;
 	}
 
 	.chat__send:hover{
@@ -265,6 +296,27 @@ export default {
 		white-space: pre-wrap;
 	}
 
+	.msgStatus{
+		position: absolute;
+		bottom: 5px;
+		left: 5px;
+		font-size: 14px;
+		height: auto;
+	}
+
+	.msgStatus.error{
+		left: -25px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: #e41b1b;
+		border-radius: 50%;
+		color: #fff;
+		width: 20px;
+		height: 20px;
+		line-height: 22px;
+		cursor: pointer;
+	}
+
 	.chat__message::after{
 		content: '';
 		display: block;
@@ -291,5 +343,9 @@ export default {
 	.chat__message--in::after{
 		left: 0;
 		transform: translateX(-50%);
+	}
+
+	.popover-link{
+		display: block;
 	}
 </style>
