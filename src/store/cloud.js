@@ -93,7 +93,7 @@ export default {
 			return state.isSearch;
 		},
 		getCloudById: state => id => {
-			return state.clouds.find(el => el.ID = id)
+			return state.clouds.find(el => el.ID == id)
 		},
 		isUpdating(state){
 			return state.updating;
