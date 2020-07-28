@@ -60,8 +60,9 @@
 </template>
 
 <script>
-const axios = require('axios');
-const md5 = require('md5');
+import axios from "axios";
+import md5 from "md5";
+import { mapGetters } from 'vuex';
 
 export default {
 	name: "openInvoice",
@@ -103,6 +104,11 @@ export default {
 			console.log(res);
 			this.inv = res.data;
 		})
+	},
+	computed: {
+		user(){
+			return this.$store.getters.getUser;
+		}
 	}
 
 }
