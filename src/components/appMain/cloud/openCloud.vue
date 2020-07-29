@@ -8,14 +8,14 @@
 						<a-icon type="left" />
 					</router-link>
 				</div>
-				<div class="Fcloud__header-title" v-if="cloud.STATE">
+				<div class="Fcloud__header-title" v-if="!isLoading && SingleCloud.STATE">
 					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
-					<div class="Fcloud__title">{{cloud.NAME}}</div>
-					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{cloud.STATE}}</div>
+					<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
+					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
 				</div>
 			</div>
 			<div class="Fcloud__buttons">
-				<div v-if="cloud && cloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
+				<div v-if="SingleCloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="pause" />
 					</div>
@@ -52,15 +52,15 @@
 						<tbody>
 							<tr>
 								<td>Start time</td>
-								<td>1593171442 no info</td>
+								<td>{{SingleCloud.STIME}}</td>
 							</tr>
 							<tr>
 								<td>Host</td>
-								<td>{{cloud.HOST}}</td>
+								<td>no info</td>
 							</tr>
 							<tr>
 								<td>IP</td>
-								<td>{{cloud.IP}}</td>
+								<td>{{SingleCloud.IP}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -74,15 +74,15 @@
 					<div class="Fcloud__block-content">
 						<div class="block__column">
 							<div class="block__title">CPU</div>
-							<div class="block__value">{{cloud.CPU}}</div>
+							<div class="block__value">{{SingleCloud.CPU}}</div>
 						</div>
 						<div class="block__column">
 							<div class="block__title">VCPU</div>
-							<div class="block__value">2 no info</div>
+							<div class="block__value">{{SingleCloud.VCPU}}</div>
 						</div>
 						<div class="block__column">
 							<div class="block__title">Memory</div>
-							<div class="block__value">{{mbToGb(cloud.RAM)}} GB</div>
+							<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
 						</div>
 					</div>
 				</div>
@@ -95,11 +95,11 @@
 					<div class="Fcloud__block-content">
 						<div class="block__column">
 							<div class="block__title">Type</div>
-							<div class="block__value">{{cloud.DS_TYPE}}</div>
+							<div class="block__value">{{SingleCloud.DRIVE}}</div>
 						</div>
 						<div class="block__column">
 							<div class="block__title">Size</div>
-							<div class="block__value">{{mbToGb(cloud.DRIVE)}} GB</div>
+							<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
 						</div>
 					</div>
 				</div>
@@ -165,34 +165,18 @@ export default {
 	},
 	computed: {
 		statusColor(){
-			let color = '';
-			switch (this.cloud.STATE.toLowerCase()) {
-				case 'running':
-					color = '#0fd058';
-					break;
-				case 'poweroff':
-					color = '#919191';
-					break;
-				case 'suspend':
-					color = '#f9f038';
-					break;
-				default:
-					color = '#f9f038';
-					break;
-			}
+			const color = this.$store.getters['cloud/getStateColor'](this.vmState);
 			return color;
 		},
-		cloud(){
-			const cloud = this.$store.getters['cloud/getCloudById'](this.$route.params.pathMatch);
-			console.log(cloud);
-			return cloud;
-		},
 		...mapGetters('cloud', {
-			updating: 'isUpdating'
+			updating: 'isUpdating',
+			SingleCloud: 'getOpenedCloud',
+			vmState: 'getCloudState',
+			isLoading: 'isLoading'
 		})
 	},
 	created(){
-		this.$store.dispatch('cloud/fetchClouds');
+		this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 	},
 	methods: {
 		sendAction(action){
