@@ -27,8 +27,12 @@ export default {
 			else next()
 		})
 
-		
-		this.$i18n.locale = localStorage.getItem("lang");
+		const lang = localStorage.getItem("lang");
+		if(lang != undefined)
+			this.$i18n.locale = lang;
+		else {
+			this.$i18n.locale = 'ru'
+		}
 		
 	},
 	mounted(){
