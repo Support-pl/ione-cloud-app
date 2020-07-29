@@ -16,7 +16,7 @@
 			<div class="login__UI">
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
-					<div v-if="remember" class="inputs__log-pas">
+					<div v-if="remember" v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
 						<input type="text" placeholder="Login" v-model="email">
 						<span class="login__horisontal-line"></span>
 						<input type="password" placeholder="Password"  v-model="password">
