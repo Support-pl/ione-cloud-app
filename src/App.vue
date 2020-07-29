@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<transition name="slide">
-			<router-view></router-view>
+			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}"></router-view>
 		</transition>
 	</div>
 </template>
@@ -59,13 +59,15 @@ html, body{
 	height: 100%;
 }
 
-/* .slide-enter-active, .slide-leave-active {
-  transition: transform .5s;
+.slide-enter-active, .slide-leave-active {
+  /* transition: transform .5s; */
+  transition: opacity .5s ease;
 }
-.slide-enter {
-  transform: translateX(100%);
+.slide-enter, .slide-leave-to {
+  /* transform: translateX(100%); */
+  opacity: 0;
 }
-.slide-leave-to {
+/* .slide-leave-to {
   transform: translateX(-100%);
 } */
 
