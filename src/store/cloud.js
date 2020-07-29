@@ -170,6 +170,11 @@ export default {
 				start: !params.start.every( el => el ),
 				stop: !params.stop.every( el => el ),
 			}
+		},
+		singleLoading(state){
+			const ans = Object.keys(state.opennedCloud).length == 0
+			// console.log(ans)
+			return ans
 		}
 	}
 }

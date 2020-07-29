@@ -1,12 +1,18 @@
 <template>
-  <div class="loading">
+  <div class="loading" :style="{'color': color}">
       <a-icon type="loading" />
   </div>
 </template>
 
 <script>
 export default {
-    name: 'loading'
+    name: 'loading',
+    props: {
+        color: {
+            type: String,
+            default: '#427cf7'
+        }
+    }
 }
 </script>
 
@@ -16,6 +22,5 @@ export default {
         display: grid;
         place-items: center;
         font-size: 3rem;
-        color: #427cf7;
     }
 </style>

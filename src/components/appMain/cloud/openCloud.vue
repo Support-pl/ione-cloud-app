@@ -1,180 +1,181 @@
 <template>
 	<div class="cloud__fullscreen Fcloud">
-		<div class="cloud__container">
-		<div class="Fcloud">
-			<div class="Fcloud__header">
-				<div class="Fcloud__back-wrapper">
-					<router-link class="Fcloud__back icon__wrapper" to="cloud">
-						<a-icon type="left" />
-					</router-link>
-				</div>
-				<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
-					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
-					<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
-					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
-				</div>
-			</div>
-			<div class="Fcloud__buttons">
-				<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
-					<div class="Fcloud__BTN-icon">
-						<a-icon type="pause" />
+		<div v-if="!singleLoading" class="cloud__container">
+			<div class="Fcloud">
+				<div class="Fcloud__header">
+					<div class="Fcloud__back-wrapper">
+						<router-link class="Fcloud__back icon__wrapper" to="cloud">
+							<a-icon type="left" />
+						</router-link>
 					</div>
-					<div class="Fcloud__BTN-title">Stop</div>
-				</div>
-				<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
-					<div class="Fcloud__BTN-icon">
-						<a-icon type="caret-right" />
+					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
+						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
+						<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
+						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
 					</div>
-					<div class="Fcloud__BTN-title">Start</div>
 				</div>
-				<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'> -->
-				<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot }" @click='openModal("reboot")'>
-					<div class="Fcloud__BTN-icon">
-						<a-icon type="redo" />
-					</div>
-					<div class="Fcloud__BTN-title">Reboot</div>
-					<a-modal v-model="modal.reboot" title="reboot option" @ok="handleOk('reboot')">
-						<p>Выберите настройку перезапуска системы:</p>
-						<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
-							<a-radio :value="0">
-								<a-tag color="green">
-									обычный
-								</a-tag>
-								перезапуск
-							</a-radio>
-							<a-radio :value="1">
-								<a-tag color="red">
-									HARD
-								</a-tag>
-								перезапуск
-							</a-radio>
-						</a-radio-group>
-					</a-modal>
-				</div>
-				<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'> -->
-				<div class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
-					<div class="Fcloud__BTN-icon">
-						<a-icon type="stop" />
-					</div>
-					<div class="Fcloud__BTN-title">Shutdown</div>
-					<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
-						<p>Выберите настройку перезапуска системы:</p>
-						<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
-							<a-radio :value="0">
-								<a-tag color="green" :style="{'margin': '0 2px 0 0'}">обычное</a-tag>
-								отключение
-							</a-radio>
-							<a-radio :value="1">
-								<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
-									HARD
-								</a-tag>
-								отключение
-							</a-radio>
-						</a-radio-group>
-					</a-modal>
-				</div>
-			</div>
-
-			
-			<div class="Fcloud__info">
-				<div class="Fcloud__info-header">
-					<div class="Fcloud__info-title">Infomation</div>
-				</div>
-
-				<div class="Fcloud__main-info">
-					<table class="Fcloud__table">
-						<tbody>
-							<tr>
-								<td>Start time</td>
-								<td>{{SingleCloud.STIME}}</td>
-							</tr>
-							<tr>
-								<td>IP</td>
-								<td>{{SingleCloud.IP}}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="Fcloud__info-block block">
-					<div class="Fcloud__block-header">
-						<a-icon type="setting" theme="filled" />
-						Capacity
-					</div>
-					<div class="Fcloud__block-content">
-						<div class="block__column">
-							<div class="block__title">CPU</div>
-							<div class="block__value">{{SingleCloud.CPU}}</div>
+				<div class="Fcloud__buttons">
+					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
+						<div class="Fcloud__BTN-icon">
+							<a-icon type="pause" />
 						</div>
-						<div class="block__column">
-							<div class="block__title">VCPU</div>
-							<div class="block__value">{{SingleCloud.VCPU}}</div>
+						<div class="Fcloud__BTN-title">Stop</div>
+					</div>
+					<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
+						<div class="Fcloud__BTN-icon">
+							<a-icon type="caret-right" />
 						</div>
-						<div class="block__column">
-							<div class="block__title">Memory</div>
-							<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
+						<div class="Fcloud__BTN-title">Start</div>
+					</div>
+					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'> -->
+					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot }" @click='openModal("reboot")'>
+						<div class="Fcloud__BTN-icon">
+							<a-icon type="redo" />
 						</div>
+						<div class="Fcloud__BTN-title">Reboot</div>
+						<a-modal v-model="modal.reboot" title="reboot option" @ok="handleOk('reboot')">
+							<p>Выберите настройку перезапуска системы:</p>
+							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
+								<a-radio :value="0">
+									<a-tag color="green">
+										обычный
+									</a-tag>
+									перезапуск
+								</a-radio>
+								<a-radio :value="1">
+									<a-tag color="red">
+										HARD
+									</a-tag>
+									перезапуск
+								</a-radio>
+							</a-radio-group>
+						</a-modal>
+					</div>
+					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'> -->
+					<div class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
+						<div class="Fcloud__BTN-icon">
+							<a-icon type="stop" />
+						</div>
+						<div class="Fcloud__BTN-title">Shutdown</div>
+						<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
+							<p>Выберите настройку перезапуска системы:</p>
+							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
+								<a-radio :value="0">
+									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">обычное</a-tag>
+									отключение
+								</a-radio>
+								<a-radio :value="1">
+									<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
+										HARD
+									</a-tag>
+									отключение
+								</a-radio>
+							</a-radio-group>
+						</a-modal>
 					</div>
 				</div>
 
-				<div class="Fcloud__info-block block">
-					<div class="Fcloud__block-header">
-						<a-icon type="database" theme="filled" />
-						Storage
+				
+				<div class="Fcloud__info">
+					<div class="Fcloud__info-header">
+						<div class="Fcloud__info-title">Infomation</div>
 					</div>
-					<div class="Fcloud__block-content">
-						<div class="block__column">
-							<div class="block__title">Type</div>
-							<div class="block__value">{{SingleCloud.DRIVE}}</div>
-						</div>
-						<div class="block__column">
-							<div class="block__title">Size</div>
-							<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
-						</div>
-					</div>
-				</div>
 
-				<div v-if="showPermissions" class="Fcloud__info-block block">
-					<div class="Fcloud__block-header">
-						<a-icon type="user" />
-						Permissions
-					</div>
-					<div class="Fcloud__block-content">
-						<table class="permissions">
+					<div class="Fcloud__main-info">
+						<table class="Fcloud__table">
 							<tbody>
 								<tr>
-									<th></th>
-									<th>Use</th>
-									<th>Manage</th>
-									<th>Admin</th>
+									<td>Start time</td>
+									<td>{{SingleCloud.STIME}}</td>
 								</tr>
 								<tr>
-									<td>Owner</td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
-								</tr>
-								<tr>
-									<td>Group</td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
-								</tr>
-								<tr>
-									<td>Other</td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
-									<td><input type="checkbox" name="" id=""></td>
+									<td>IP</td>
+									<td>{{SingleCloud.IP}}</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
+
+					<div class="Fcloud__info-block block">
+						<div class="Fcloud__block-header">
+							<a-icon type="setting" theme="filled" />
+							Capacity
+						</div>
+						<div class="Fcloud__block-content">
+							<div class="block__column">
+								<div class="block__title">CPU</div>
+								<div class="block__value">{{SingleCloud.CPU}}</div>
+							</div>
+							<div class="block__column">
+								<div class="block__title">VCPU</div>
+								<div class="block__value">{{SingleCloud.VCPU}}</div>
+							</div>
+							<div class="block__column">
+								<div class="block__title">Memory</div>
+								<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="Fcloud__info-block block">
+						<div class="Fcloud__block-header">
+							<a-icon type="database" theme="filled" />
+							Storage
+						</div>
+						<div class="Fcloud__block-content">
+							<div class="block__column">
+								<div class="block__title">Type</div>
+								<div class="block__value">{{SingleCloud.DRIVE}}</div>
+							</div>
+							<div class="block__column">
+								<div class="block__title">Size</div>
+								<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
+							</div>
+						</div>
+					</div>
+
+					<div v-if="showPermissions" class="Fcloud__info-block block">
+						<div class="Fcloud__block-header">
+							<a-icon type="user" />
+							Permissions
+						</div>
+						<div class="Fcloud__block-content">
+							<table class="permissions">
+								<tbody>
+									<tr>
+										<th></th>
+										<th>Use</th>
+										<th>Manage</th>
+										<th>Admin</th>
+									</tr>
+									<tr>
+										<td>Owner</td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+									</tr>
+									<tr>
+										<td>Group</td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+									</tr>
+									<tr>
+										<td>Other</td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+										<td><input type="checkbox" name="" id=""></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+
 				</div>
-
-
-			</div>
 			</div>
 		</div>
+		<loading v-else color="#fff"/>
 	</div>
 </template>
 
@@ -182,9 +183,13 @@
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 import md5 from 'md5'
+import loading from '../../loading/loading.vue'
 
 export default {
 	name: "openCloud",
+	components: {
+		loading
+	},
 	data(){
 		return {
 			status: 'running',
@@ -212,7 +217,8 @@ export default {
 			SingleCloud: 'getOpenedCloud',
 			vmState: 'getCloudState',
 			isLoading: 'isLoading',
-			permissions: 'permissions'
+			permissions: 'permissions',
+			singleLoading: 'singleLoading'
 		})
 	},
 	created(){
