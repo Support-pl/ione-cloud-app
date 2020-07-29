@@ -2,38 +2,13 @@ import md5 from 'md5';
 import axios from 'axios';
 
 
-const clouds = [{
-	id: '123123',
-	title: 'user_10350_vmuser_10350_vmuser_10350_vm',
-	status: 'SUSPEND',
-	host: 'vcenter',
-	ip: '186.66.68.222'
-}, {
-	id: '1241243123',
-	title: 'user_10350_vm',
-	status: 'SUSPEND',
-	host: 'vcenter',
-	ip: '186.66.68.222'
-}, {
-	id: '123123423',
-	title: 'user_10350_vm',
-	status: 'RUNNING',
-	host: 'vcenter',
-	ip: '186.66.68.222'
-}, {
-	id: '121239723',
-	title: 'user_10350_vm',
-	status: 'POWEROFF',
-	host: 'vcenter',
-	ip: '186.66.68.222'
-}];
-
 
 export default {
 	namespaced: true,
 
 	state: {
 		loading: false,
+		singleLoading: true,
 		isSearch: false,
 		clouds: [],
 		updating: false,
@@ -54,7 +29,10 @@ export default {
 		},
 		updateOpenedCloud(state, value){
 			state.opennedCloud = value;
-		}
+		},
+		makeSingleLoadingIs(state, value) {
+			state.singleLoading = value
+		},
 	},
 	actions: {
 		fetchClouds(ctx) {
@@ -80,7 +58,7 @@ export default {
 		fetchSingleCloud(ctx, vmid){
 			// if (ctx.getters.isLoading) return;
 			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
-			ctx.commit('makeLoadingIs', true);
+			ctx.commit('makeSingleLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
@@ -93,7 +71,7 @@ export default {
 					console.log("RETURN OPENNED CLOUD: ", resp);
 					ctx.commit("updateOpenedCloud", resp.data.data)
 					ctx.commit('makeUpdatingIs', false)
-					ctx.commit('makeLoadingIs', false)
+					ctx.commit('makeSingleLoadingIs', false)
 				})
 				.catch(err => console.error(err))
 
@@ -172,9 +150,9 @@ export default {
 			}
 		},
 		singleLoading(state){
-			const ans = Object.keys(state.opennedCloud).length == 0
+			// const ans = Object.keys(state.opennedCloud).length == 0
 			// console.log(ans)
-			return ans
+			return state.singleLoading;
 		}
 	}
 }

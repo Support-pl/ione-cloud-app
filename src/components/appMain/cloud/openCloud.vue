@@ -1,5 +1,6 @@
 <template>
 	<div class="cloud__fullscreen Fcloud">
+		<transition name="opencloud" :duration="600">
 		<div v-if="!singleLoading" class="cloud__container">
 			<div class="Fcloud">
 				<div class="Fcloud__header">
@@ -175,7 +176,14 @@
 				</div>
 			</div>
 		</div>
-		<loading v-else color="#fff"/>
+		<loading
+			v-else
+			color="#fff"
+			:style="{'position': 'absolute', 'height': '100%', 'width': '100%'}"
+			:key="loading"
+			duration: 
+		/>
+		</transition>
 	</div>
 </template>
 
@@ -320,6 +328,7 @@ export default {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.Fcloud__header{
@@ -336,6 +345,7 @@ export default {
 
 	.Fcloud__header-title{
 		position: relative;
+		transition: transform .3s ease;
 	}
 
 	.Fcloud__title{
@@ -532,5 +542,44 @@ export default {
 		50% {
 			opacity: .5;
 		}
+	}
+
+/* ANIMATIONS AFTER LOADING */
+
+	.opencloud-enter-active, .opencloud-leave-active {
+		transition: opacity .6s;
+	}
+	.opencloud-enter, .opencloud-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+		opacity: 0;
+	}
+
+	.opencloud-enter-active .Fcloud__header-title{
+		transition: transform .2s .4s ease;
+	}
+
+	.opencloud-enter .Fcloud__header-title{
+		transform: translateY(-50px);
+	}
+
+	.opencloud-enter-active .Fcloud__info{
+		transition:
+			opacity .2s .2s ease,
+			transform .2s .2s ease;
+	}
+
+	.opencloud-enter .Fcloud__info{
+		transform: translateY(200px);
+		opacity: 0;
+	}
+
+	.opencloud-enter-active .Fcloud__button{
+		transition:
+			opacity .2s .1s ease,
+			transform .2s .1s ease;
+	}
+
+	.opencloud-enter .Fcloud__button{
+		transform: scale(.5) rotate(15deg);
+		opacity: 0;
 	}
 </style>

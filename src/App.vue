@@ -60,12 +60,13 @@ html, body{
 }
 
 /* .slide-enter-active, .slide-leave-active {
-  transition: left .5s;
-  left: 0;
-  position: relative;
+  transition: transform .5s;
 }
-.slide-enter, .slide-leave-to {
-  left: 100%;
+.slide-enter {
+  transform: translateX(100%);
+}
+.slide-leave-to {
+  transform: translateX(-100%);
 } */
 
 </style>
