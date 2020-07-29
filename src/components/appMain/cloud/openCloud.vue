@@ -558,7 +558,8 @@ export default {
 	}
 
 	.opencloud-enter .Fcloud__header-title{
-		transform: translateY(-50px);
+		transform-origin: center left;
+		transform: translateY(-50px) rotate(10deg);
 	}
 
 	.opencloud-enter-active .Fcloud__info{
