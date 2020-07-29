@@ -26,6 +26,10 @@ export default {
 			if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
 			else next()
 		})
+
+		
+		this.$i18n.locale = localStorage.getItem("lang");
+		
 	},
 	mounted(){
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {

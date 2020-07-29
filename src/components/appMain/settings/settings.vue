@@ -42,6 +42,7 @@ export default {
 		changeLanguage(){
 			// console.log("time to change lang", this.$i18n)
 			this.$i18n.locale = this.$i18n.locale == "ru"? "en" : "ru";
+			localStorage.setItem("lang", this.$i18n.locale);
 		},
 		logoutFunc(){
 			console.log('logout Func');
