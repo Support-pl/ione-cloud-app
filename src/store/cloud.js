@@ -78,7 +78,6 @@ export default {
 				})
 		},
 		fetchSingleCloud(ctx, vmid){
-			console.log("i'm fetching")
 			// if (ctx.getters.isLoading) return;
 			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
 			ctx.commit('makeLoadingIs', true);
@@ -96,6 +95,7 @@ export default {
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)
 				})
+				.catch(err => console.error(err))
 
 		}
 		// fetchClouds(ctx) {
@@ -126,10 +126,10 @@ export default {
 			return state.opennedCloud;
 		},
 		getCloudState(state){
-			if(state.opennedCloud.state != 3){
-				return states[state.opennedCloud.STATE - 1];
+			if(state.opennedCloud.STATE != 3){
+				return states[state.opennedCloud.STATE];
 			} else {
-				return lcm_states[state.opennedCloud.LCM_STATE - 1]
+				return lcm_states[state.opennedCloud.LCM_STATE]
 			}
 		},
 		getStateColor: state => vmstate => {
@@ -149,13 +149,34 @@ export default {
 					break;
 			}
 			return color;
+		},
+		permissions(state){
+			const cloud = state.opennedCloud;
+			const updating = state.updating;
+			const isLoaded = Object.keys(cloud).length !== 0
+
+			const commonParams = [isLoaded, !updating, cloud.PERMISSIONS.OWNER_U];
+
+			const params = {
+				reboot: [...commonParams, cloud.STATE == 3],
+				shutdown: [...commonParams, cloud.STATE == 3],
+				start: [...commonParams, cloud.STATE !== 3],
+				stop: [...commonParams, cloud.STATE == 3],
+			}
+
+			return {
+				reboot: !params.reboot.every( el => el ),
+				shutdown: !params.shutdown.every( el => el ),
+				start: !params.start.every( el => el ),
+				stop: !params.stop.every( el => el ),
+			}
 		}
 	}
 }
 
 
 const states = [
-	"INIT", "PENDING", "HOLD", "ACTIVE", "STOPPED", "SUSPENDED", "DONE", "POWEROFF", "UNDEPLOYED", "CLONING", "CLONONG_FAILURE"
+	"INIT", "PENDING", "HOLD", "ACTIVE", "STOPPED", "SUSPENDED", "DONE", "","POWEROFF", "UNDEPLOYED", "CLONING", "CLONONG_FAILURE"
 ]
 
 const lcm_states = [

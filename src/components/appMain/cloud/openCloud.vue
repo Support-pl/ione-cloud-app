@@ -8,36 +8,70 @@
 						<a-icon type="left" />
 					</router-link>
 				</div>
-				<div class="Fcloud__header-title" v-if="!isLoading && SingleCloud.STATE">
+				<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
 					<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 					<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
 					<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
 				</div>
 			</div>
 			<div class="Fcloud__buttons">
-				<div v-if="SingleCloud.STATE.toLowerCase() == 'running'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
+				<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="pause" />
 					</div>
 					<div class="Fcloud__BTN-title">Stop</div>
 				</div>
-				<div v-else class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Start")'>
+				<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="caret-right" />
 					</div>
 					<div class="Fcloud__BTN-title">Start</div>
 				</div>
-				<div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'>
+				<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'> -->
+				<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot }" @click='openModal("reboot")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="redo" />
 					</div>
-					<div class="Fcloud__BTN-title">Restart</div>
+					<div class="Fcloud__BTN-title">Reboot</div>
+					<a-modal v-model="modal.reboot" title="reboot option" @ok="handleOk('reboot')">
+						<p>Выберите настройку перезапуска системы:</p>
+						<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
+							<a-radio :value="0">
+								<a-tag color="green">
+									обычный
+								</a-tag>
+								перезапуск
+							</a-radio>
+							<a-radio :value="1">
+								<a-tag color="red">
+									HARD
+								</a-tag>
+								перезапуск
+							</a-radio>
+						</a-radio-group>
+					</a-modal>
 				</div>
-				<div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'>
+				<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'> -->
+				<div class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
 					<div class="Fcloud__BTN-icon">
 						<a-icon type="stop" />
 					</div>
 					<div class="Fcloud__BTN-title">Shutdown</div>
+					<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
+						<p>Выберите настройку перезапуска системы:</p>
+						<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
+							<a-radio :value="0">
+								<a-tag color="green" :style="{'margin': '0 2px 0 0'}">обычное</a-tag>
+								отключение
+							</a-radio>
+							<a-radio :value="1">
+								<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
+									HARD
+								</a-tag>
+								отключение
+							</a-radio>
+						</a-radio-group>
+					</a-modal>
 				</div>
 			</div>
 
@@ -53,10 +87,6 @@
 							<tr>
 								<td>Start time</td>
 								<td>{{SingleCloud.STIME}}</td>
-							</tr>
-							<tr>
-								<td>Host</td>
-								<td>no info</td>
 							</tr>
 							<tr>
 								<td>IP</td>
@@ -104,7 +134,7 @@
 					</div>
 				</div>
 
-				<div v-if="permissions" class="Fcloud__info-block block">
+				<div v-if="showPermissions" class="Fcloud__info-block block">
 					<div class="Fcloud__block-header">
 						<a-icon type="user" />
 						Permissions
@@ -159,8 +189,17 @@ export default {
 		return {
 			status: 'running',
 			name: 'test3',
-			permissions: false,
+			showPermissions: false,
 			// updating: true
+			modal: {
+				reboot: false,
+				shutdown: false
+			},
+			option: {
+				reboot: 0,
+				shutdown: 0
+			}
+
 		}
 	},
 	computed: {
@@ -172,7 +211,8 @@ export default {
 			updating: 'isUpdating',
 			SingleCloud: 'getOpenedCloud',
 			vmState: 'getCloudState',
-			isLoading: 'isLoading'
+			isLoading: 'isLoading',
+			permissions: 'permissions'
 		})
 	},
 	created(){
@@ -180,24 +220,77 @@ export default {
 	},
 	methods: {
 		sendAction(action){
+			switch (action.toLowerCase()){
+				case 'start':
+					if(this.permissions.start) return;
+					break;
+				case 'shutdown':
+					if(this.permissions.shutdown) return;
+					break;
+				case 'reboot':
+					if(this.permissions.reboot) return;
+					break;
+			}
+
 			const user = this.$store.getters.getUser;
 			const userid = user.id;
-			const vmid = this.cloud.ID;
+			const vmid = this.SingleCloud.ID;
 
 			const close_your_eyes = md5('orders' + userid + user.secret);
 			const url = `https://devwhmcs.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			console.log(action)
 			console.log(url);
 			axios.get(url)
 			.then(res => {
 				console.log(res);
 				this.$store.dispatch('cloud/fetchClouds');
 			})
-			console.log(action)
 
 		},
 		mbToGb(mb){
 			const gb = Math.round(mb / 1024);
 			return gb
+		},
+		handleOk(from){
+			switch(from){
+
+				case "reboot":
+					if(this.option.reboot){
+						console.log("HARD REBOOT");
+					} else {
+						console.log("JUST REBOOT")
+					}
+					sendAction('Reboot')
+					break;
+
+				case "shutdown":
+					if(this.option.shutdown){
+						console.log("HARD SHUTDOWN");
+					} else {
+						console.log("JUST SHUTDOWN")
+					}
+					sendAction('Shutdown')
+					break;
+					
+			}
+			this.modal.reboot = false;
+		},
+		openModal(name){
+
+			switch (name.toLowerCase()){
+				case 'start':
+					if(this.permissions.start) return;
+					break;
+				case 'shutdown':
+					if(this.permissions.shutdown) return;
+					break;
+				case 'reboot':
+					if(this.permissions.reboot) return;
+					break;
+			}
+
+			this.modal[name] = true;
+			console.log(this.permissions)
 		}
 	}
 }

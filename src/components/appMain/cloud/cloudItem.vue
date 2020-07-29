@@ -21,21 +21,7 @@ export default {
 	},
 	computed: {
 		statusColor(){
-			let color = '';
-			switch (this.cloud.STATE.toLowerCase()) {
-				case 'running':
-					color = '#0fd058';
-					break;
-				case 'poweroff':
-					color = '#919191';
-					break;
-				case 'suspend':
-					color = '#f9f038';
-					break;
-				default:
-					color = '#f9f038';
-					break;
-			}
+			const color = this.$store.getters['cloud/getStateColor'](this.cloud.STATE);
 			return color;
 		},
 		title(){
