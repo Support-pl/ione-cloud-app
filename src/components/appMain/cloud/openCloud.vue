@@ -259,7 +259,8 @@ export default {
 			axios.get(url)
 			.then(res => {
 				console.log(res);
-				this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
+				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+				// this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 			})
 
 		},
@@ -268,7 +269,6 @@ export default {
 			return gb
 		},
 		handleOk(from){
-			this.modal.reboot = false;
 			switch(from){
 
 				case "reboot":
@@ -279,6 +279,7 @@ export default {
 						this.sendAction('Reboot')
 						console.log("JUST REBOOT")
 					}
+					this.modal.reboot = false;
 					break;
 
 				case "shutdown":
@@ -289,6 +290,7 @@ export default {
 						this.sendAction('Poweroff')
 						console.log("JUST SHUTDOWN")
 					}
+					this.modal.shutdown = false;
 					break;
 			}
 		},

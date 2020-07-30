@@ -75,6 +75,25 @@ export default {
 				})
 				.catch(err => console.error(err))
 
+		},
+		silentUpdate(ctx, vmid) {
+			ctx.commit('makeUpdatingIs', true)
+			const user = ctx.rootGetters.getUser;
+			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
+			const url = `https://devwhmcs.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
+			console.log(url)
+
+			axios.get(url)
+				.then(resp => {
+					console.log("silent update: ", resp);
+					ctx.commit("updateOpenedCloud", resp.data.data)
+					if(resp.data.data.STATE == 3 && resp.data.data.LCM_STATE != 3) {
+						setTimeout(() => {
+							ctx.dispatch("silentUpdate", vmid)
+						}, 5000); //укажите здесь как часто надо обновлять страницу
+					} else ctx.commit('makeUpdatingIs', false)
+				})
+				.catch(err => console.error(err))
 		}
 		// fetchClouds(ctx) {
 		// 	if (ctx.getters.isLoading) return;
@@ -136,10 +155,10 @@ export default {
 			const commonParams = [isLoaded, !updating, cloud.PERMISSIONS.OWNER_U];
 
 			const params = {
-				reboot: [...commonParams, cloud.STATE == 3],
-				shutdown: [...commonParams, cloud.STATE == 3],
+				reboot: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
+				shutdown: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				start: [...commonParams, cloud.STATE !== 3],
-				stop: [...commonParams, cloud.STATE == 3],
+				stop: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 			}
 
 			return {
