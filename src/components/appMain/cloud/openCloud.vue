@@ -29,7 +29,7 @@
 						<div class="Fcloud__BTN-title">Start</div>
 					</div>
 					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'> -->
-					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot }" @click='openModal("reboot")'>
+					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot , 'btn_disabled_wiggle': true}" @click='openModal("reboot")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="redo" />
 						</div>
@@ -38,7 +38,7 @@
 							<p>Выберите настройку перезапуска системы:</p>
 							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
 								<a-radio :value="0">
-									<a-tag color="green">
+									<a-tag color="green" :style="{'margin-bottom': '10px'}">
 										обычный
 									</a-tag>
 									перезапуск
@@ -59,9 +59,9 @@
 						</div>
 						<div class="Fcloud__BTN-title">Shutdown</div>
 						<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
-							<p>Выберите настройку перезапуска системы:</p>
+							<p>Выберите настройку перезапуска системы: <b>(пока что оба варианты вызывают просто метод shudown поскольку у него нет параметра HARD)</b></p>
 							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
-								<a-radio :value="0">
+								<a-radio :value="0" :style="{'margin-bottom': '10px'}">
 									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">обычное</a-tag>
 									отключение
 								</a-radio>
@@ -238,7 +238,8 @@ export default {
 				case 'start':
 					if(this.permissions.start) return;
 					break;
-				case 'shutdown':
+				case 'Poweroff':
+				case 'PoweroffHard':
 					if(this.permissions.shutdown) return;
 					break;
 				case 'reboot':
@@ -250,14 +251,15 @@ export default {
 			const userid = user.id;
 			const vmid = this.SingleCloud.ID;
 
-			const close_your_eyes = md5('orders' + userid + user.secret);
+
+			const close_your_eyes = md5('vmaction' + userid + user.secret);
 			const url = `https://devwhmcs.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
 			console.log(action)
 			console.log(url);
 			axios.get(url)
 			.then(res => {
 				console.log(res);
-				this.$store.dispatch('cloud/fetchClouds');
+				this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 			})
 
 		},
@@ -266,28 +268,29 @@ export default {
 			return gb
 		},
 		handleOk(from){
+			this.modal.reboot = false;
 			switch(from){
 
 				case "reboot":
 					if(this.option.reboot){
+						this.sendAction('RebootHard')
 						console.log("HARD REBOOT");
 					} else {
+						this.sendAction('Reboot')
 						console.log("JUST REBOOT")
 					}
-					sendAction('Reboot')
 					break;
 
 				case "shutdown":
 					if(this.option.shutdown){
+						this.sendAction('PoweroffHard')
 						console.log("HARD SHUTDOWN");
 					} else {
+						this.sendAction('Poweroff')
 						console.log("JUST SHUTDOWN")
 					}
-					sendAction('Shutdown')
 					break;
-					
 			}
-			this.modal.reboot = false;
 		},
 		openModal(name){
 
@@ -583,4 +586,36 @@ export default {
 		transform: scale(.5) rotate(15deg);
 		opacity: 0;
 	}
+
+/* disabled button animation */
+
+.disabled:active {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-1px) scale(.85);
+  }
+  
+  20%, 80% {
+    transform: translateX(2px) scale(.85);
+  }
+
+  30%, 50%, 70% {
+    transform: translateX(-4px) scale(.85);
+  }
+
+  40%, 60% {
+    transform: translateX(4px) scale(.85);
+  }
+}
+
+
+
+
+
+
+
+
 </style>
