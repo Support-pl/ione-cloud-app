@@ -96,7 +96,7 @@ export default {
 	mounted(){
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
-		const url = `https://devwhmcs.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
+		const url = `https://my.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
 		console.log(url)
 
 		axios.get(url)

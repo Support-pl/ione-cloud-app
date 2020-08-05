@@ -117,7 +117,7 @@ export default {
 
 			const params = this.objectToParams(object);
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticketreply.php?${params}`;
+			const url = `https://my.support.by/app_cloud_mobile/ticketreply.php?${params}`;
 			console.log(url)
 
 			axios.get(url)
@@ -145,7 +145,7 @@ export default {
 			// парсим объект в GET параметры
 			const params = this.objectToParams(object);
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/ticket.php?${params}`;
+			const url = `https://my.support.by/app_cloud_mobile/ticket.php?${params}`;
 			// console.log(url)
 
 			axios.get(url)

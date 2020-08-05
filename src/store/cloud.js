@@ -43,8 +43,8 @@ export default {
 
 			const close_your_eyes = md5('orders' + user.id + user.secret);
 
-			// const url = `https://devwhmcs.support.by/app_cloud_mobile/orders.php?id=${user.id}`;
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
+			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}`;
+			const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
 			console.log(url)
 
 			axios.get(url)
@@ -63,7 +63,7 @@ export default {
 
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
+			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
 			console.log(url)
 
 			axios.get(url)
@@ -80,7 +80,7 @@ export default {
 			ctx.commit('makeUpdatingIs', true)
 			const user = ctx.rootGetters.getUser;
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
+			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
 			console.log(url)
 
 			axios.get(url)

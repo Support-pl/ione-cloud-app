@@ -22,7 +22,7 @@ export default {
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('invoices' + user.id + user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/invoices.php?id=${user.id}&secret=${close_your_eyes}`;
+			const url = `https://my.support.by/app_cloud_mobile/invoices.php?id=${user.id}&secret=${close_your_eyes}`;
 			console.log(url)
 
 			axios.get(url)

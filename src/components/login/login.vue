@@ -88,7 +88,7 @@ export default {
 			// const password = encodeURI('trestsadasds');
 
 			
-			axios.get(`https://devwhmcs.support.by/app_cloud_mobile/login.php?email=${email}&password=${password}`)
+			axios.get(`https://my.support.by/app_cloud_mobile/login.php?email=${email}&password=${password}`)
 			.then(Response => {
 				const data = Response.data;
 				const user = {};
@@ -100,7 +100,7 @@ export default {
 					user.secret = data.secret;
 					
 					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
-					const url = `https://devwhmcs.support.by/app_cloud_mobile/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
+					const url = `https://my.support.by/app_cloud_mobile/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
 					console.log(url)
 					axios.get(url)
 					.then(resp => {

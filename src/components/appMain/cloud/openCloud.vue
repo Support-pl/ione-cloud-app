@@ -253,7 +253,7 @@ export default {
 
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
 			console.log(action)
 			console.log(url);
 			axios.get(url)

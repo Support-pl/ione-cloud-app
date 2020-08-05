@@ -61,7 +61,7 @@ export default {
 			// парсим объект в GET параметры
 			const params = Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
 
-			const url = `https://devwhmcs.support.by/app_cloud_mobile/openticket.php?${params}`;
+			const url = `https://my.support.by/app_cloud_mobile/openticket.php?${params}`;
 			// console.log(url)
 
 			axios.get(url)
