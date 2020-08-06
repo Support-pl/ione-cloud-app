@@ -56,10 +56,6 @@
 										<td>{{ elem.description }}</td>	
 										<td>{{ elem.amount }}</td>	
 									</tr>
-									<tr v-for="(elem, index) of inv.items.item" :key="index">
-										<td>{{ elem.description }}</td>	
-										<td>{{ elem.amount }}</td>	
-									</tr>
 								</table>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
 									Отобразить полный список ({{inv.items.item.length}})
@@ -272,6 +268,7 @@ export default {
 		border-top: 2px solid rgba(0, 0, 0, .70);
 		border-bottom: 2px solid rgba(0, 0, 0, .70);
 		width: 100%;
+		overflow: hidden;
 	}
 
 	.table__table td{
