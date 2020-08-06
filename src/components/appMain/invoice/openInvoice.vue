@@ -23,7 +23,61 @@
 					<div class="openInvoice__cost">{{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}}</div>
 					<div class="openInvoice__info">
 						<div class="info__header-title">Information</div>
-						<div class="info__row">
+
+						<div class="info__main">
+							<div class="info__dates">
+								<div class="info__date-item">
+									<div class="info__date-title">{{$t("invoiceDate")}}</div>
+									<div class="info__date-value">{{inv.date || 'loading...'}}</div>
+								</div>
+								<div class="info__date-item">
+									<div class="info__date-title">{{$t("dueDate")}}</div>
+									<div class="info__date-value">{{inv.duedate || 'loading...'}}</div>
+								</div>
+							</div>
+
+							<div class="info__table table">
+								<div class="table__header">
+									<div class="table__header-item">
+										Description
+									</div>
+									<div class="table__header-item">
+										Price
+									</div>
+								</div>
+								<table v-if="!showFullTable" class="table__table">
+									<tr>
+										<td>{{ inv.items.item[0].description }}</td>	
+										<td>{{ inv.items.item[0].amount }}</td>	
+									</tr>
+								</table>
+								<table v-else class="table__table">
+									<tr v-for="(elem, index) of inv.items.item" :key="index">
+										<td>{{ elem.description }}</td>	
+										<td>{{ elem.amount }}</td>	
+									</tr>
+									<tr v-for="(elem, index) of inv.items.item" :key="index">
+										<td>{{ elem.description }}</td>	
+										<td>{{ elem.amount }}</td>	
+									</tr>
+								</table>
+								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
+									Отобразить полный список ({{inv.items.item.length}})
+								</div>
+							</div>
+						</div>
+						<div class="info__footer">
+							<template v-if="inv.status == 'Unpaid'">
+								<div class="info__postpone">
+									<a-icon type="clock-circle" />
+								</div>
+								<div class="info__button info__button--pay">
+									Оплатить
+								</div>
+							</template>
+						</div>
+
+						<!-- <div class="info__row">
 							<div class="info__title">{{$t("status")}}</div>
 							<div class="info__value">{{$t(inv.status.toLowerCase())}}</div>
 						</div>
@@ -51,7 +105,7 @@
 							<div class="info__row info__row--pay-btn">
 								Оплатить
 							</div>
-						</template>
+						</template> -->
 					</div>
 				</div>
 			</div>
@@ -82,16 +136,17 @@ export default {
 				'mastercard',
 				'yandex.money',
 				'ЕРИП'
-			]
+			],
+			showFullTable: false
 		}
-	},
-	props: {
-		user: Object
 	},
 	methods: {
 		goBack(){
 			this.$router.push("/invoice");
 		},	
+		showfull(){
+			this.showFullTable = true;
+		}
 	},
 	mounted(){
 
@@ -149,6 +204,7 @@ export default {
 
 	.openInvoice__main{
 		flex: 1 0;
+		background-color: rgb(66, 124, 247);
 		/* padding: 6px 15px; */
 	}
 
@@ -161,14 +217,111 @@ export default {
 	.openInvoice__cost{
 		align-self: center;
 		font-size: 4rem;
-		color: #427cf7;
+		color: #fff;
 	}
 
 	.openInvoice__info{
+		display: flex;
+		flex-direction: column;
 		flex: 1 0;
 		background-color: rgb(250, 250, 250);
 		border-radius: 25px 25px 0 0;
-		padding: 10px 20px;
+		padding: 10px 20px 20px;
+		margin-top: 20px;
+	}
+
+	.info__main{
+		display: flex;
+		flex-direction: column;
+		flex: 1 0;
+	}
+
+	.info__dates{
+		display: flex;
+		justify-content: space-around;
+		margin-bottom: 30px;
+	}
+
+	.info__date-item{
+		text-align: center;
+	}
+
+	.info__date-value{
+		font-weight: 600;
+	}
+
+	.info__table{
+		flex: 1 0;
+		overflow: auto;
+	}
+
+	.table__header{
+		display: flex;
+		justify-content: space-between;
+		color:rgba(0, 0, 0, .8);
+		margin-bottom: 5px;
+	}
+
+	.table__header-item{
+		text-transform: uppercase;
+		font-weight: 700;
+		font-size: 1.05rem;
+	}
+
+	.table__table{
+		border-top: 2px solid rgba(0, 0, 0, .70);
+		border-bottom: 2px solid rgba(0, 0, 0, .70);
+		width: 100%;
+	}
+
+	.table__table td{
+		padding: 15px 0 15px 0;
+		line-height: .85rem;
+		border-bottom: 1px solid rgba(0, 0, 0, .25);
+	}
+
+	.table__table td:first-child{
+		border-right: 2px solid rgba(0, 0, 0, .70);
+		text-align: left;
+	}
+
+	.table__table td:last-child{
+		text-align: right;
+		width: 30%;
+		max-width: 150px;
+	}
+
+	.table__show-full{
+		border-bottom: 2px solid rgba(0, 0, 0, .70);
+		color:rgb(66, 124, 247);
+	}
+
+	.table__show-full:hover{
+		text-decoration: underline;
+	}
+
+	.info__footer{
+		display: flex;
+		height: 48px;
+	}
+
+	.info__postpone{
+		font-size: 24px;
+		padding: 9px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.info__button{
+		flex: 1 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #0fd058;
+		border-radius: 24px;
+		font-weight: 600;
+		color: #fff
 	}
 
 	.info__row{
