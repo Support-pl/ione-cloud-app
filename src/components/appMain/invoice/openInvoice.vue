@@ -291,6 +291,7 @@ export default {
 	.table__show-full{
 		border-bottom: 2px solid rgba(0, 0, 0, .70);
 		color:rgb(66, 124, 247);
+		cursor: pointer;
 	}
 
 	.table__show-full:hover{
