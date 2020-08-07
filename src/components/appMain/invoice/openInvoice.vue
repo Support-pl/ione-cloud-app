@@ -20,7 +20,12 @@
 		<div class="openInvoice__main">
 			<div class="container full-height">
 				<div class="openInvoice__main-content">
-					<div class="openInvoice__cost">{{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}}</div>
+					<div class="openInvoice__cost">
+						<svg viewBox="0 0 95 20">
+							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}}</text>
+						</svg>
+						<!-- {{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}} -->
+					</div>
 					<div class="openInvoice__info">
 						<div class="info__header-title">Information</div>
 
@@ -45,18 +50,20 @@
 										Price
 									</div>
 								</div>
-								<table v-if="!showFullTable" class="table__table">
-									<tr>
-										<td>{{ inv.items.item[0].description }}</td>	
-										<td>{{ inv.items.item[0].amount }}</td>	
-									</tr>
-								</table>
-								<table v-else class="table__table">
-									<tr v-for="(elem, index) of inv.items.item" :key="index">
-										<td>{{ elem.description }}</td>	
-										<td>{{ elem.amount }}</td>	
-									</tr>
-								</table>
+								<div class="table__wrapper">
+									<table v-if="!showFullTable" class="table__table">
+										<tr>
+											<td>{{ inv.items.item[0].description }}</td>	
+											<td>{{ inv.items.item[0].amount }}</td>	
+										</tr>
+									</table>
+									<table v-else class="table__table">
+										<tr v-for="(elem, index) of inv.items.item" :key="index">
+											<td>{{ elem.description }}</td>	
+											<td>{{ elem.amount }}</td>	
+										</tr>
+									</table>
+								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
 									Отобразить полный список ({{inv.items.item.length}})
 								</div>
@@ -170,6 +177,7 @@ export default {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.openInvoice__header {
@@ -211,9 +219,11 @@ export default {
 	}
 
 	.openInvoice__cost{
-		align-self: center;
-		font-size: 4rem;
-		color: #fff;
+		width: 100%;
+	}
+	
+	.openInvoice__cost-text{
+		fill: #fff;
 	}
 
 	.openInvoice__info{
@@ -223,7 +233,6 @@ export default {
 		background-color: rgb(250, 250, 250);
 		border-radius: 25px 25px 0 0;
 		padding: 10px 20px 20px;
-		margin-top: 20px;
 	}
 
 	.info__main{
@@ -248,6 +257,10 @@ export default {
 
 	.info__table{
 		flex: 1 0;
+		overflow: auto;
+	}
+
+	.table__wrapper{
 		overflow: auto;
 	}
 
@@ -280,12 +293,14 @@ export default {
 	.table__table td:first-child{
 		border-right: 2px solid rgba(0, 0, 0, .70);
 		text-align: left;
+		padding-right: 5px;
 	}
 
 	.table__table td:last-child{
 		text-align: right;
 		width: 30%;
 		max-width: 150px;
+		padding-left: 5px;
 	}
 
 	.table__show-full{
@@ -301,6 +316,7 @@ export default {
 	.info__footer{
 		display: flex;
 		height: 48px;
+		margin-top: 20px;
 	}
 
 	.info__postpone{
