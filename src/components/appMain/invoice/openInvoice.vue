@@ -1,5 +1,7 @@
 <template>
-	<div class="openInvoice">
+	<div class="openInvoice__fullscreen">
+		<transition name="invoiceApear">
+		<div v-if="!loading" class="openInvoice">
 		<!-- {{this.$route.params.pathMatch}} -->
 		<div class="openInvoice__header">
 			<div class="container full-height">
@@ -10,6 +12,7 @@
 						</div>
 					</div>
 					<div class="openInvoice__title">
+						<div class="openInvoice__title-color" :style="{'background-color': statusColor}"></div>
 						{{$t('singleInvoice')+'#'+this.$route.params.pathMatch}}
 					</div>
 				</div>
@@ -22,7 +25,7 @@
 				<div class="openInvoice__main-content">
 					<div class="openInvoice__cost">
 						<svg viewBox="0 0 95 20">
-							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}}</text>
+							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}</text>
 						</svg>
 						<!-- {{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}} -->
 					</div>
@@ -51,80 +54,83 @@
 									</div>
 								</div>
 								<div class="table__wrapper">
+									<transition name="tableAnim">
 									<table v-if="!showFullTable" class="table__table">
 										<tr>
 											<td>{{ inv.items.item[0].description }}</td>	
-											<td>{{ inv.items.item[0].amount }}</td>	
+											<td>{{ inv.items.item[0].amount }} {{user.currency_code}}</td>	
 										</tr>
 									</table>
 									<table v-else class="table__table">
 										<tr v-for="(elem, index) of inv.items.item" :key="index">
 											<td>{{ elem.description }}</td>	
-											<td>{{ elem.amount }}</td>	
+											<td>{{ elem.amount }} {{user.currency_code}}</td>	
 										</tr>
 									</table>
+									</transition>
 								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									Отобразить полный список ({{inv.items.item.length}})
+									Отобразить полный список ({{inv.items.item.length-1}})
 								</div>
 							</div>
 						</div>
 						<div class="info__footer">
 							<template v-if="inv.status == 'Unpaid'">
-								<div class="info__postpone">
+								<div class="info__postpone" @click="showConfirm">
 									<a-icon type="clock-circle" />
 								</div>
 								<div class="info__button info__button--pay">
-									Оплатить
+									<div @click='showPayModal' class="info__button">
+										Оплатить
+									</div>
+										<a-modal
+											title="Выберите метод оплаты"
+											:visible="visible.pay"
+											:confirm-loading="confirmLoading.pay"
+											@ok="handlePayOk"
+											@cancel="handlePayCancel"
+										>
+											<p>Метод оплаты:</p>
+											<a-select style="min-width: 100%" v-model="elem"> 
+												<!--attr: default-value="lucy" -->
+												<a-select-option v-for="method in payMethods" :key="method.module" :value="method.module">
+													{{method.displayname}}
+												</a-select-option>
+											</a-select>
+										</a-modal>
 								</div>
 							</template>
 						</div>
-
-						<!-- <div class="info__row">
-							<div class="info__title">{{$t("status")}}</div>
-							<div class="info__value">{{$t(inv.status.toLowerCase())}}</div>
-						</div>
-						<div class="info__row">
-							<div class="info__title">{{$t("invoiceDate")}}</div>
-							<div class="info__value">{{inv.date}}</div>
-						</div>
-						<div class="info__row">
-							<div class="info__title">{{$t("dueDate")}}</div>
-							<div class="info__value">{{inv.duedate}}</div>
-						</div>
-						<div class="info__row">
-							<div class="info__title">{{$t("service")}}</div>
-							<div class="info__value">{{inv.service == undefined? "не получен с API" : inv.service}}</div>
-						</div>
-						<template v-if="inv.status == 'Unpaid'">
-							<div class="info__row info__row--pay">
-								<div class="info__title">{{$t("Choice payment")}}</div>
-								<div class="info__value">
-									<select class="info__payment-select" name="payment" id="payment">
-										<option v-for="(pay, index) in payment" :key="index" :value="index">{{pay}}</option>
-									</select>
-								</div>
-							</div>
-							<div class="info__row info__row--pay-btn">
-								Оплатить
-							</div>
-						</template> -->
 					</div>
 				</div>
 			</div>
 		</div>
+		</div>
+		<loading
+			v-else
+			color="#fff"
+			:style="{'position': 'absolute', 'height': '100%', 'width': '100%'}"
+			key="loading"
+			duration: 
+		/>
+		</transition>
 	</div>
 </template>
 
 <script>
 import axios from "axios";
 import md5 from "md5";
+import loading from '../../loading/loading.vue'
 import { mapGetters } from 'vuex';
 
 export default {
 	name: "openInvoice",
+	components: {
+		loading
+	},
 	data(){
 		return {
+			loading: true,
 			inv: {
 				// id: '124',
 				// cost: '50',
@@ -140,7 +146,15 @@ export default {
 				'yandex.money',
 				'ЕРИП'
 			],
-			showFullTable: false
+			payMethods: [],
+			showFullTable: false,
+			visible: {
+				pay: false,
+			},
+			confirmLoading: {
+				pay: false,
+			},
+			elem: ''
 		}
 	},
 	methods: {
@@ -149,23 +163,70 @@ export default {
 		},	
 		showfull(){
 			this.showFullTable = true;
-		}
+		},
+		showPayModal() {
+			if(this.payMethods.length == 1){
+				window.open(this.inv.paytoken.checkout.redirect_url, '_blank');
+				return;
+			}
+			this.PayVisible = true;
+			this.visible.pay = true;
+    },
+    handlePayOk(e) {
+      this.confirmLoading.pay = true;
+      setTimeout(() => {
+        this.visible.pay = false;
+				this.confirmLoading.pay = false;
+				console.log(this.elem);
+      }, 2000);
+    },
+    handlePayCancel(e) {
+      console.log('Clicked cancel button');
+      this.visible.pay = false;
+		},
+		showConfirm() {
+      this.$confirm({
+        title: 'Вы хотите отложить платеж?',
+				maskClosable: true,
+        content: h => <div>Платеж можно отложить только один раз. Платеж откладывается на 5 дней.</div>,
+        okText: 'Да',
+				cancelText: 'Отмена',
+        onOk() {
+					console.log('Да');
+        },
+        onCancel() {
+          console.log('Отмена');
+        },
+        class: 'test',
+      });
+    },
 	},
 	mounted(){
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
 		const url = `https://my.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
 		console.log(url)
-
 		axios.get(url)
 		.then(res => {
 			console.log(res);
 			this.inv = res.data;
+			this.loading = false;
 		})
+		axios.get('https://my.support.by/app_cloud_mobile/GetPaymentMethods.php')
+		.then(res => {
+			console.log('methods:', res);
+			this.payMethods = res.data.paymentmethods.paymentmethod;
+			console.log(this.payMethods);
+		})
+
+
 	},
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
+		},
+		statusColor(){
+			return this.inv.status.toLowerCase() == 'paid' ? '#0fd058' : '#e82f3b';
 		}
 	}
 
@@ -173,11 +234,14 @@ export default {
 </script>
 
 <style>
+	.openInvoice__fullscreen{
+		background: #468aff;
+	}
 	.openInvoice{
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
+		/* overflow: hidden; */
 	}
 
 	.openInvoice__header {
@@ -199,6 +263,17 @@ export default {
 	.openInvoice__title{
 		font-weight: bold;
 		line-height: 1.1rem;
+		position: relative;
+	}
+
+	.openInvoice__title-color{
+		position: absolute;
+		height: 10px;
+		width: 10px;
+		border-radius: 50%;
+		top: 50%;
+		left: -15px;
+		transform: translateY(-50%);
 	}
 
 	.openInvoice__back{
@@ -233,12 +308,14 @@ export default {
 		background-color: rgb(250, 250, 250);
 		border-radius: 25px 25px 0 0;
 		padding: 10px 20px 20px;
+		position: relative;
 	}
 
 	.info__main{
 		display: flex;
 		flex-direction: column;
 		flex: 1 0;
+		padding-bottom: 64px;
 	}
 
 	.info__dates{
@@ -307,6 +384,7 @@ export default {
 		border-bottom: 2px solid rgba(0, 0, 0, .70);
 		color:rgb(66, 124, 247);
 		cursor: pointer;
+		padding: 2px 0;
 	}
 
 	.table__show-full:hover{
@@ -316,7 +394,10 @@ export default {
 	.info__footer{
 		display: flex;
 		height: 48px;
-		margin-top: 20px;
+		position: absolute;
+		bottom: 20px;
+		left: 20px;
+		right: 20px;
 	}
 
 	.info__postpone{
@@ -325,6 +406,17 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		cursor: pointer;
+		border-radius: 50%;
+		transition: transform .2s ease;
+	}
+	
+	.info__postpone:hover{
+		transform: scale(1.1);
+	}
+	
+	.info__postpone:active{
+		transform: scale(.9);
 	}
 
 	.info__button{
@@ -335,7 +427,8 @@ export default {
 		background-color: #0fd058;
 		border-radius: 24px;
 		font-weight: 600;
-		color: #fff
+		color: #fff;
+		cursor: pointer;
 	}
 
 	.info__row{
@@ -407,5 +500,60 @@ export default {
 	
 	.info__row--pay-btn:active{
 		background-color: rgb(22, 194, 88);
+	}
+
+
+
+	/* anims */
+
+
+	
+	.invoiceApear-enter-active, .invoiceApear-leave-active {
+		transition: opacity .6s;
+	}
+	.invoiceApear-enter, .invoiceApear-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+		opacity: 0;
+	}
+
+	.invoiceApear-enter-active .openInvoice__title{
+		transition: transform .2s .4s ease;
+	}
+
+	.invoiceApear-enter .openInvoice__title{
+		transform-origin: center left;
+		transform: translateY(-50px) rotate(10deg);
+	}
+
+	.invoiceApear-enter-active .openInvoice__cost{
+		transition:
+			transform .2s .3s ease,
+			opacity .2s .4s ease;
+	}
+
+	.invoiceApear-enter .openInvoice__cost{
+		opacity: 0;
+		transform-origin: center left;
+		transform: translateY(-50px) rotate(10deg);
+	}
+
+	.opencloud-enter-active .openInvoice__info{
+		transition:
+			transform .2s .4s ease,
+			opacity .2s .2s ease;
+	}
+
+	.opencloud-enter .openInvoice__info{
+		transform: translateY(200px);
+		opacity: 0;
+	}
+	.invoiceApear-enter-active .info__footer{
+		transition:
+			transform .3s .3s ease,
+			opacity .2s .4s ease;
+	}
+
+	.invoiceApear-enter .info__footer{
+		transform: translateY(50px);
+		opacity: 0;
 	}
 </style>
