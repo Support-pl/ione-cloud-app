@@ -11,7 +11,7 @@
 				<textarea name="question" id="question" cols="30" rows="10" class="addTicket__message-input"  v-model="ticketMessage"></textarea>
 			</div>
 			<div class="addTicket__buttons">
-				<button class="addTicket__button addTicket__button--cancel" @click="changeAddTicketStatus()">Отмена</button>
+				<button class="addTicket__button addTicket__button--cancel" @click="closeFields()">Отмена</button>
 				<button class="addTicket__button addTicket__button--send" @click="sendNewTicket()">
 					<template v-if="!isSending">Отправить</template>
 					<a-icon v-else type="loading" />
@@ -42,8 +42,11 @@ export default {
 	methods: {
 		clickOutOfBlock(){
 			if(event.target.classList.contains("addTicket__wrapper")){
-				this.$store.commit('support/inverseAddTicketState')
+				this.closeFields();
 			}
+		},
+		closeFields(){
+			this.$store.commit('support/inverseAddTicketState')
 		},
 		sendNewTicket(){
 			// console.log('sending')
