@@ -17,9 +17,9 @@ export default {
 		appMain
 	},
 	created(){
-		const user = JSON.parse(this.$store.getters.getCookie('CloudUser'));
+		const user = this.$store.getters.getCookie('CloudUser');
 		if(user !== undefined) {
-			this.$store.commit("setUser", user)
+			this.$store.commit("setUser", JSON.parse(user));
 		};
 
 		this.$router.beforeEach((to, from, next) => {
