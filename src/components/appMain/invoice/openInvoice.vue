@@ -13,7 +13,7 @@
 					</div>
 					<div class="openInvoice__title">
 						<div class="openInvoice__title-color" :style="{'background-color': statusColor}"></div>
-						{{$t('singleInvoice')+'#'+this.$route.params.pathMatch}}
+						{{$t('singleInvoice')+'#'+parseInt(this.$route.params.pathMatch, 10)}}
 					</div>
 				</div>
 			</div>
@@ -166,7 +166,8 @@ export default {
 		},
 		showPayModal() {
 			if(this.payMethods.length == 1){
-				window.open(this.inv.paytoken.checkout.redirect_url, '_blank');
+				// window.open(this.inv.paytoken.checkout.redirect_url);
+				window.location.href = this.inv.paytoken.checkout.redirect_url;
 				return;
 			}
 			this.PayVisible = true;
