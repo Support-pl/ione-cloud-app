@@ -110,11 +110,11 @@ export default {
 						user.currency_code = resp.data.currency_code;
 
 						this.$store.dispatch("onLoadUser", user);
-						
 						// this.setCookie('CloudUser', JSON.stringify(user), {
 						// 	'max-age': '2592000'
 						// });
-						this.$router.push("cloud")
+						this.$router.push("cloud");
+						location.reload() //костыль, починить позже
 					})
 				}
 				else if(data.result == "error"){
