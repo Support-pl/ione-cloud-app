@@ -107,10 +107,10 @@
 								<div class="block__title">CPU</div>
 								<div class="block__value">{{SingleCloud.CPU}}</div>
 							</div>
-							<div class="block__column">
+							<!-- <div class="block__column">
 								<div class="block__title">VCPU</div>
 								<div class="block__value">{{SingleCloud.VCPU}}</div>
-							</div>
+							</div> -->
 							<div class="block__column">
 								<div class="block__title">Memory</div>
 								<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
