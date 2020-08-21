@@ -2,10 +2,10 @@
 	<div class="invoice" @click="clickOnInvoice(invoice.id)">
 		<div class="invoice__header flex-between">
 			<div class="invoice__id">#{{invoice.id}}</div>
-			<div class="invoice__status" :style="{color: statusColor}">{{invoice.status}}</div>
+			<div class="invoice__status" :style="{color: statusColor}">{{$t('invoice_'+invoice.status)}}</div>
 		</div>
 		<div class="invoice__middle flex-between">
-			<div class="invoice__cost">{{invoice.subtotal}} {{invoice.currencyprefix}}</div>
+			<div class="invoice__cost">{{invoice.subtotal}} {{invoice.currencycode}}</div>
 			<div class="invoice__date-item invoice__invDate">
 				<div class="invoice__date-title">
 					{{$t("invoiceDate")}}

@@ -32,9 +32,13 @@
   "dueDate": "Due date",
   "Choice payment": "Choice payment",
   "Information": "Information",
-  "There is empty...": "There is empty...",
+	"There is empty...": "There is empty...",
+	
   "invoice_Description": "Description",
-  "invoice_Price": "Price",
+	"invoice_Price": "Price",
+	"invoice_Paid": "Paid",
+	"invoice_Unpaid": "Unpaid",
+	
   "cloud_StartTime": "Start time",
   "cloud_Capacity": "Capacity",
   "cloud_Storage": "Storage",

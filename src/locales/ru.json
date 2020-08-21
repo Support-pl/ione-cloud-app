@@ -36,6 +36,8 @@
 	
   "invoice_Description": "Описание",
 	"invoice_Price": "Сумма",
+	"invoice_Paid": "Оплачен",
+	"invoice_Unpaid": "Не оплачен",
 	
   "cloud_StartTime": "Время запуска",
 	"cloud_Capacity": "Вместимость",
