@@ -32,8 +32,8 @@
 				<a-icon v-if="reply.sending" type="loading" class="msgStatus loading"></a-icon>
 				<a-popover v-if="reply.error" title="Ошибка отправления">
 					<template slot="content">
-						<a class="popover-link" slot="content" @click="messageDelete(reply)">Удалить сообщение</a>
-						<a class="popover-link" slot="content" @click="messageResend(reply)">Повторить отправку</a>
+						<a class="popover-link" slot="content" @click="messageDelete(reply)">{{$t('chat_Delete_message')}}</a>
+						<a class="popover-link" slot="content" @click="messageResend(reply)">{{$t('chat_Resend_message')}}</a>
 					</template>
 					<a-icon type="exclamation-circle" class="msgStatus error"></a-icon>
 				</a-popover>

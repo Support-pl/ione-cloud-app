@@ -31,5 +31,30 @@
   "invoiceDate": "Дата счёта",
   "dueDate": "Срок оплаты",
   "Choice payment": "Способ оплаты",
-  "There is empty...": "Тут пока ничего нет..."
+  "Information": "Информация",
+	"There is empty...": "Тут пока ничего нет...",
+	
+  "invoice_Description": "Описание",
+	"invoice_Price": "Сумма",
+	
+  "cloud_StartTime": "Время запуска",
+	"cloud_Capacity": "Вместимость",
+	"cloud_Storage": "Хранилище",
+	"cloud_Memory": "Память",
+	"cloud_Type": "Тип",
+	"cloud_Size": "Размер",
+	"cloud_Shutdown": "отключение",
+	"cloud_Regular": "обычное",
+	"cloud_Shutdown_invite": "Выберите настройку отключения системы:",
+	"cloud_Reboot_invite": "Выберите настройку перезапуска системы:",
+
+	"support_Create_ticket": "Создать обращение",
+	"support_Question_subject": "support_Create_ticket",
+	"support_Question": "Вопрос",
+
+	"Cancel": "Отмена",
+	"Send": "Отправить",
+
+	"chat_Resend_message": "Повторить отправку",
+	"chat_Delete_message": "Удалить сообщение"
 }

@@ -34,12 +34,12 @@
 							<a-icon type="redo" />
 						</div>
 						<div class="Fcloud__BTN-title">Reboot</div>
-						<a-modal v-model="modal.reboot" title="reboot option" @ok="handleOk('reboot')">
-							<p>Выберите настройку перезапуска системы:</p>
+						<a-modal v-model="modal.reboot" title="Reboot option" @ok="handleOk('reboot')">
+							<p>{{$t('cloud_Reboot_invite')}}</p>
 							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
 								<a-radio :value="0">
 									<a-tag color="green" :style="{'margin-bottom': '10px'}">
-										обычный
+										{{$t('cloud_Regular')}}
 									</a-tag>
 									перезапуск
 								</a-radio>
@@ -59,17 +59,17 @@
 						</div>
 						<div class="Fcloud__BTN-title">Shutdown</div>
 						<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
-							<p>Выберите настройку перезапуска системы: <b>(пока что оба варианты вызывают просто метод shudown поскольку у него нет параметра HARD)</b></p>
+							<p>{{$t('cloud_Shutdown_invite')}}</p>
 							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
 								<a-radio :value="0" :style="{'margin-bottom': '10px'}">
-									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">обычное</a-tag>
-									отключение
+									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">{{$t('cloud_Regular')}}</a-tag>
+									{{$t('cloud_Shutdown')}}
 								</a-radio>
 								<a-radio :value="1">
 									<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
 										HARD
 									</a-tag>
-									отключение
+									{{$t('cloud_Shutdown')}}
 								</a-radio>
 							</a-radio-group>
 						</a-modal>
@@ -79,14 +79,14 @@
 				
 				<div class="Fcloud__info">
 					<div class="Fcloud__info-header">
-						<div class="Fcloud__info-title">Infomation</div>
+						<div class="Fcloud__info-title">{{$t('Information')}}</div>
 					</div>
 
 					<div class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
 								<tr>
-									<td>Start time</td>
+									<td>{{$t('cloud_StartTime')}}</td>
 									<td>{{SingleCloud.STIME}}</td>
 								</tr>
 								<tr>
@@ -100,7 +100,7 @@
 					<div class="Fcloud__info-block block">
 						<div class="Fcloud__block-header">
 							<a-icon type="setting" theme="filled" />
-							Capacity
+							{{$t('cloud_Capacity')}}
 						</div>
 						<div class="Fcloud__block-content">
 							<div class="block__column">
@@ -112,7 +112,7 @@
 								<div class="block__value">{{SingleCloud.VCPU}}</div>
 							</div> -->
 							<div class="block__column">
-								<div class="block__title">Memory</div>
+								<div class="block__title">{{$t('cloud_Memory')}}</div>
 								<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
 							</div>
 						</div>
@@ -121,15 +121,15 @@
 					<div class="Fcloud__info-block block">
 						<div class="Fcloud__block-header">
 							<a-icon type="database" theme="filled" />
-							Storage
+							{{$t('cloud_Storage')}}
 						</div>
 						<div class="Fcloud__block-content">
 							<div class="block__column">
-								<div class="block__title">Type</div>
+								<div class="block__title">{{$t('cloud_Type')}}</div>
 								<div class="block__value">{{SingleCloud.DRIVE}}</div>
 							</div>
 							<div class="block__column">
-								<div class="block__title">Size</div>
+								<div class="block__title">{{$t('cloud_Size')}}</div>
 								<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
 							</div>
 						</div>

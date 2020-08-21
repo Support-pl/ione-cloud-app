@@ -8,7 +8,7 @@
 			<div class="invoice__cost">{{invoice.subtotal}} {{invoice.currencyprefix}}</div>
 			<div class="invoice__date-item invoice__invDate">
 				<div class="invoice__date-title">
-					Invoice Date
+					{{$t("invoiceDate")}}
 				</div>
 				<div class="invoice__date">
 					{{invoice.date}}
@@ -16,7 +16,7 @@
 			</div>
 			<div class="invoice__date-item invoice__dueDate">
 				<div class="invoice__date-title">
-					Due Date
+					{{$t("dueDate")}}
 				</div>
 				<div class="invoice__date">
 					{{invoice.duedate}}

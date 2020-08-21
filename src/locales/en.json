@@ -14,10 +14,10 @@
   "Cloud": "Cloud",
   "Support": "Support",
   "Invoice": "Invoice",
-  "settings": "settings",
   "cloud": "cloud",
   "support": "support",
   "invoice": "invoice",
+  "settings": "settings",
   "Balance": "Balance",
   "Exit": "Exit",
   "I have a password": "I have a password",
@@ -31,5 +31,28 @@
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
   "Choice payment": "Choice payment",
-  "There is empty...": "There is empty..."
+  "Information": "Information",
+  "There is empty...": "There is empty...",
+  "invoice_Description": "Description",
+  "invoice_Price": "Price",
+  "cloud_StartTime": "Start time",
+  "cloud_Capacity": "Capacity",
+  "cloud_Storage": "Storage",
+  "cloud_Memory": "Memory",
+  "cloud_Type": "Type",
+  "cloud_Size": "Size",
+  "cloud_Shutdown": "shutdown",
+  "cloud_Regular": "regular",
+	"cloud_Shutdown_invite": "Select the system shutdown setting:",
+	"cloud_Reboot_invite": "Select the system reboot setting:",
+
+	"support_Create_ticket": "Create ticket",
+	"support_Question_subject": "Question subject",
+	"support_Question": "Question",
+
+	"Cancel": "Cancel",
+	"Send": "Send",
+
+	"chat_Resend_message": "Resend message",
+	"chat_Delete_message": "Delete message"
 }

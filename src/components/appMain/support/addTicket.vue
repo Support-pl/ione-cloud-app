@@ -1,19 +1,19 @@
 <template>
 	<div class="addTicket__wrapper" @click="clickOutOfBlock(this)">
 		<div class="addTicket">
-			<div class="addTicket__header">Создать обращение</div>
+			<div class="addTicket__header">{{$t('support_Create_ticket')}}</div>
 			<div class="addTicket__title">
-				<div class="addTicket__title-name row__name">Тема вопроса</div>
+				<div class="addTicket__title-name row__name">{{$t('support_Question_subject')}}</div>
 				<input type="text" class="addTicket__title-input" v-model="ticketTitle">
 			</div>
 			<div class="addTicket__message">
-				<div class="addTicket__message-name row__name">Вопрос</div>
+				<div class="addTicket__message-name row__name">{{$t('support_Question')}}</div>
 				<textarea name="question" id="question" cols="30" rows="10" class="addTicket__message-input"  v-model="ticketMessage"></textarea>
 			</div>
 			<div class="addTicket__buttons">
-				<button class="addTicket__button addTicket__button--cancel" @click="closeFields()">Отмена</button>
+				<button class="addTicket__button addTicket__button--cancel" @click="closeFields()">{{$t('Cancel')}}</button>
 				<button class="addTicket__button addTicket__button--send" @click="sendNewTicket()">
-					<template v-if="!isSending">Отправить</template>
+					<template v-if="!isSending">{{$t('Send')}}</template>
 					<a-icon v-else type="loading" />
 				</button>
 			</div>

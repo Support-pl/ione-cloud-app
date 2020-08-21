@@ -30,7 +30,7 @@
 						<!-- {{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}} -->
 					</div>
 					<div class="openInvoice__info">
-						<div class="info__header-title">Information</div>
+						<div class="info__header-title">{{$t('Information')}}</div>
 
 						<div class="info__main">
 							<div class="info__dates">
@@ -47,10 +47,10 @@
 							<div class="info__table table">
 								<div class="table__header">
 									<div class="table__header-item">
-										Description
+											{{$t('invoice_Description')}}
 									</div>
 									<div class="table__header-item">
-										Price
+											{{$t('invoice_Price')}}
 									</div>
 								</div>
 								<div class="table__wrapper">
