@@ -12,6 +12,13 @@ module.exports = {
 		appleMobileWebAppCapable: 'yes',
 		appleMobileWebAppStatusBarStyle: 'black',
 
+		//опции воркбокса
+		workboxPluginMode: 'InjectManifest',
+		workboxOptions: {
+			// navigateFallback: 'index.html',
+			swSrc: './public/service-worker.js'
+		},
+
 		// настройки манифеста
 		manifestOptions: {
 			display: 'standalone',
