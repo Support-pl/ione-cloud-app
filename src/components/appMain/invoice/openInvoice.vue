@@ -178,11 +178,11 @@ export default {
       setTimeout(() => {
         this.visible.pay = false;
 				this.confirmLoading.pay = false;
-				console.log(this.elem);
+				// console.log(this.elem);
       }, 2000);
     },
     handlePayCancel(e) {
-      console.log('Clicked cancel button');
+      // console.log('Clicked cancel button');
       this.visible.pay = false;
 		},
 		showConfirm() {
@@ -193,10 +193,10 @@ export default {
         okText: 'Да',
 				cancelText: 'Отмена',
         onOk() {
-					console.log('Да');
+					// console.log('Да');
         },
         onCancel() {
-          console.log('Отмена');
+          // console.log('Отмена');
         },
         class: 'test',
       });
@@ -206,18 +206,18 @@ export default {
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
 		const url = `https://my.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
-		console.log(url)
+		// console.log(url)
 		axios.get(url)
 		.then(res => {
-			console.log(res);
+			// console.log(res);
 			this.inv = res.data;
 			this.loading = false;
 		})
 		axios.get('https://my.support.by/app_cloud_mobile/GetPaymentMethods.php')
 		.then(res => {
-			console.log('methods:', res);
+			// console.log('methods:', res);
 			this.payMethods = res.data.paymentmethods.paymentmethod;
-			console.log(this.payMethods);
+			// console.log(this.payMethods);
 		})
 
 

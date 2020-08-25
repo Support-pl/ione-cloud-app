@@ -118,11 +118,11 @@ export default {
 			const params = this.objectToParams(object);
 
 			const url = `https://my.support.by/app_cloud_mobile/ticketreply.php?${params}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 			.then(res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == "success")
 					this.replies[--this.sendingMessagesCount].sending = false;
 				else {

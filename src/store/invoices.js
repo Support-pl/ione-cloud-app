@@ -23,11 +23,11 @@ export default {
 
 			const close_your_eyes = md5('invoices' + user.id + user.secret);
 			const url = `https://my.support.by/app_cloud_mobile/invoices.php?id=${user.id}&secret=${close_your_eyes}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
-					console.log("vuex action invoices responsive: ", resp);
+					// console.log("vuex action invoices responsive: ", resp);
 					ctx.commit("updateInvoices", resp.data.invoices.invoice)
 					ctx.commit('makeLoadingIs', false)
 				})

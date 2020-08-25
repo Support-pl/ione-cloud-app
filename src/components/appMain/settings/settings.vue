@@ -45,7 +45,7 @@ export default {
 			localStorage.setItem("lang", this.$i18n.locale);
 		},
 		logoutFunc(){
-			console.log('logout Func');
+			// console.log('logout Func');
 			this.$router.push('/login')
 			this.$store.commit('logout')
 		}

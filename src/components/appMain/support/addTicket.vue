@@ -69,8 +69,8 @@ export default {
 
 			axios.get(url)
 				.then(resp => {
-					console.log(resp)
-					console.log(url)
+					// console.log(resp)
+					// console.log(url)
 					if(resp.data.result == "success"){
 						this.ticketTitle = "";
 						this.ticketMessage = "";

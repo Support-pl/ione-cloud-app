@@ -32,11 +32,11 @@ export default {
 
 			const close_your_eyes = md5('tickets' + user.id + user.secret);
 			const url = `https://my.support.by/app_cloud_mobile/tickets.php?id=${user.id}&secret=${close_your_eyes}${closed?"&closed=true":''}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
-					console.log("vuex action: ", resp);
+					// console.log("vuex action: ", resp);
 					if (resp.data.numreturned == 0) {
 						ctx.commit("updateTickets", [])
 					} else {

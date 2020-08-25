@@ -45,11 +45,11 @@ export default {
 
 			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}`;
 			const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
-					console.log("vuex got clouds: ", resp);
+					// console.log("vuex got clouds: ", resp);
 					ctx.commit("updateClouds", resp.data.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)
@@ -64,11 +64,11 @@ export default {
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
 
 			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
-					console.log("RETURN OPENNED CLOUD: ", resp);
+					// console.log("RETURN OPENNED CLOUD: ", resp);
 					ctx.commit("updateOpenedCloud", resp.data.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeSingleLoadingIs', false)
@@ -81,11 +81,11 @@ export default {
 			const user = ctx.rootGetters.getUser;
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
 			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
-			console.log(url)
+			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
-					console.log("silent update: ", resp);
+					// console.log("silent update: ", resp);
 					ctx.commit("updateOpenedCloud", resp.data.data)
 					if(resp.data.data.STATE == 3 && resp.data.data.LCM_STATE != 3) {
 						setTimeout(() => {

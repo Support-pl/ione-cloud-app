@@ -144,9 +144,6 @@ export default {
 		}
 	},
 	methods: {
-		reload(){
-			console.log('reload');
-		},
 		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
 		...mapActions('invoices', ['fetchInvoices']),
 		...mapActions('cloud', ['fetchClouds']),

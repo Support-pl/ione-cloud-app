@@ -101,7 +101,7 @@ export default {
 					
 					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
 					const url = `https://my.support.by/app_cloud_mobile/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
-					console.log(url)
+					// console.log(url)
 					axios.get(url)
 					.then(resp => {
 						user.firstname = resp.data.firstname;
@@ -130,8 +130,8 @@ export default {
 		
 	},
 	mounted(){
-		console.log('this.$store');
-		console.log(this.$store);
+		// console.log('this.$store');
+		// console.log(this.$store);
 	}
 }
 </script>
