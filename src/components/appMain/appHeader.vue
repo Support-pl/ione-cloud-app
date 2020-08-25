@@ -1,6 +1,7 @@
 <template>
 	<div class="header__container">
 		<div class="container">
+			<template v-if="!beta">
 			<div class="header__content">
 				<div v-if="active == 'cloud'" class="header__wrapper">
 			<div class="header__left clickable" @click="inverseSearch">
@@ -28,8 +29,8 @@
 					<a-icon class="header__icon" type="reload"/>
 				</div>
 			</div>
-			<div class="header__right clickable" @click="inverseAddTicketState" :class="{ticketActive: isAddTicketState}">
-				<div class="icon__wrapper">
+			<div class="header__right clickable" @click="inverseAddTicketState">
+				<div class="icon__wrapper"  :class="{active__btn: isAddTicketState}">
 					<a-icon class="header__icon" type="plus" />
 				</div>
 			</div>
@@ -56,6 +57,22 @@
 			<div class="header__right"></div>
 		</div>
 			</div>
+		</template>
+
+		<div v-else class="header__wrapper">
+			<div class="header__title">
+				{{headers[active].title}}
+			</div>
+			<div class="header__buttons" >
+				<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon" @click="button.onClickFuncion">
+					<div class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+						<a-icon class="header__icon" :type="button.icon"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 		</div>
 		
 	</div>
@@ -63,9 +80,69 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-
 export default {
 	name: "appHeader",
+	data(){
+		return {
+			beta: true,
+			headers: {
+				'cloud': {
+					title: this.$t('Cloud'),
+					buttons: [
+						{
+							name: 'cloud_search',
+							icon: 'search',
+							onClickFuncion: this.inverseSearch,
+							isActiveState: this.isSearch
+						},
+						{
+							name: 'cloud_reload',
+							icon: 'reload',
+							onClickFuncion: this.fetchClouds
+						},
+					]
+				},
+				'support': {
+					title: this.$t('Support'),
+					buttons: [
+						{
+							name: 'support_filter',
+							icon: 'filter',
+							onClickFuncion: this.fetchTicketsThatClosed,
+							isActiveState: this.isOnlyClosedTickets
+						},
+						{
+							name: 'support_plus',
+							icon: 'plus',
+							onClickFuncion: this.inverseAddTicketState,
+							isActiveState: this.isAddTicketState,
+							additionalClass: ['active-rotate']
+						},
+						{
+							name: 'support_reload',
+							icon: 'reload',
+							onClickFuncion: this.fetchTickets
+						},
+					]
+				},
+				'invoice': {
+					title: this.$t('Invoice'),
+					buttons: [
+						{
+							name: 'invoice_filter',
+							icon: 'reload',
+							onClickFuncion: this.fetchInvoices,
+						},
+					]
+				},
+				'settings': {
+					title: this.$t('Settings'),
+					buttons: []
+				}
+
+			}
+		}
+	},
 	methods: {
 		reload(){
 			console.log('reload');
@@ -74,7 +151,23 @@ export default {
 		...mapActions('invoices', ['fetchInvoices']),
 		...mapActions('cloud', ['fetchClouds']),
 		...mapMutations('support', ['inverseAddTicketState']),
-		...mapMutations('cloud', ['inverseSearch'])
+		...mapMutations('cloud', ['inverseSearch']),
+		getState(name){
+			switch (name) {
+				case 'cloud_search':
+					return this.isSearch;
+					break;
+				case 'support_filter':
+					return this.isOnlyClosedTickets;
+					break;
+				case 'support_plus':
+					return this.isAddTicketState;
+					break;
+			
+				default:
+					break;
+			}
+		}
 	},
 	computed:{
 		user(){
@@ -155,7 +248,22 @@ export default {
 		transform: scale(1.1);
 	}
 	
-	.ticketActive{
+	.active-rotate.active__btn{
 		transform: rotate(45deg);
+	}
+
+	.header__wrapper{
+		display: flex;
+		justify-content: space-between;
+		padding: 0 15px;
+	}
+
+	.header__buttons{
+		display: flex;
+		justify-content: space-around;
+	}
+	
+	.header__button:not(:last-child){
+		margin-right: 15px;
 	}
 </style>
