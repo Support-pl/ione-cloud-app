@@ -7,7 +7,7 @@
 				<div class="ticket__status-text">{{ticket.status}}</div>
 			</div>
 			<div class="ticket__lower">
-				<div class="ticket__message">{{beauty(ticket.lastmessage.message)}}</div>
+				<div class="ticket__message">{{beauty(ticket.message)}}</div>
 				<div class="ticket__time">{{ticket.lastreply}}</div>
 			</div>
 		</div>
