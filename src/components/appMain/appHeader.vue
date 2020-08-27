@@ -61,7 +61,7 @@
 
 		<div v-else class="header__wrapper">
 			<div class="header__title">
-				{{headers[active].title}}
+				{{this.$t(headers[active].title)}}
 			</div>
 			<div class="header__buttons" >
 				<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon" @click="button.onClickFuncion">
@@ -87,7 +87,7 @@ export default {
 			beta: true,
 			headers: {
 				'cloud': {
-					title: this.$t('Cloud'),
+					title: 'Cloud',
 					buttons: [
 						{
 							name: 'cloud_search',
@@ -103,7 +103,7 @@ export default {
 					]
 				},
 				'support': {
-					title: this.$t('Support'),
+					title: 'Support',
 					buttons: [
 						{
 							name: 'support_filter',
@@ -126,7 +126,7 @@ export default {
 					]
 				},
 				'invoice': {
-					title: this.$t('Invoice'),
+					title: 'Invoice',
 					buttons: [
 						{
 							name: 'invoice_filter',
@@ -136,7 +136,7 @@ export default {
 					]
 				},
 				'settings': {
-					title: this.$t('Settings'),
+					title: 'Settings',
 					buttons: []
 				}
 
