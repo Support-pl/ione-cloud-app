@@ -104,8 +104,12 @@ export default {
 		// 	}, 700);
 	},
 	getters: {
-		getClouds(state) {
-			return state.clouds;
+		getClouds: state => textToSearch => {
+			if (state.isSearch){
+				return state.clouds.filter(cloud => cloud.NAME.search(textToSearch) != -1 || cloud.STATE.search(textToSearch) != -1);
+			} else {
+				return state.clouds
+			}
 		},
 		isLoading(state) {
 			return state.loading;
