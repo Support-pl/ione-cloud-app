@@ -7,11 +7,15 @@ export default {
 		loading: false,
 		tickets: [],
 		onlyClosedTickets: false,
-		addTicketState: false
+		addTicketState: false,
+		filter: ['all']
 	},
 	mutations: {
 		updateTickets(state, value){
 			state.tickets = value;
+		},
+		updateFilter(state, value){
+			state.filter = value;
 		},
 		makeLoadingIs(state, value){
 			state.loading = value;
@@ -53,8 +57,15 @@ export default {
 		}
 	},
 	getters: {
-		getTickets(state){
+		getAllTickets(state){
 			return state.tickets;
+		},
+		getTickets(state){
+			if(state.filter[0] == 'all'){
+				return state.tickets;
+			} else {
+				return state.tickets.filter(ticket => state.filter.includes(ticket.status))
+			}
 		},
 		isLoading(state){
 			return state.loading;

@@ -64,9 +64,29 @@
 				{{this.$t(headers[active].title)}}
 			</div>
 			<div class="header__buttons" >
-				<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon" @click="button.onClickFuncion">
-					<div class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+				<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
+					<div v-if="button.onClickFuncion" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
 						<a-icon class="header__icon" :type="button.icon"/>
+					</div>
+					<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+						<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+						<a-popover v-else placement="bottomRight">
+							<template slot="content">
+								<div>
+									<div :style="{ borderBottom: '1px solid #E9E9E9' }">
+										<a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
+											Check all
+										</a-checkbox>
+									</div>
+									<br>
+									<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
+								</div>
+							</template>
+							<template slot="title">
+								<span>{{$t('Filter')}}</span>
+							</template>
+							<a-icon class="header__icon" :type="button.icon"/>
+						</a-popover>
 					</div>
 				</div>
 			</div>
@@ -85,6 +105,9 @@ export default {
 	data(){
 		return {
 			beta: true,
+			indeterminate: true,
+			checkAll: false,
+			checkedList: [],
 			headers: {
 				'cloud': {
 					title: 'Cloud',
@@ -108,8 +131,8 @@ export default {
 						{
 							name: 'support_filter',
 							icon: 'filter',
-							onClickFuncion: this.fetchTicketsThatClosed,
-							isActiveState: this.isOnlyClosedTickets
+							isActiveState: this.isOnlyClosedTickets,
+							popover: true
 						},
 						{
 							name: 'support_plus',
@@ -147,7 +170,7 @@ export default {
 		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
 		...mapActions('invoices', ['fetchInvoices']),
 		...mapActions('cloud', ['fetchClouds']),
-		...mapMutations('support', ['inverseAddTicketState']),
+		...mapMutations('support', ['inverseAddTicketState', 'updateFilter']),
 		...mapMutations('cloud', ['inverseSearch']),
 		getState(name){
 			switch (name) {
@@ -164,19 +187,48 @@ export default {
 				default:
 					break;
 			}
-		}
+		},
+		onChange(checkedList) {
+      this.indeterminate = !!this.checkedList.length && checkedList.length < this.plainOptions.length;
+			this.checkAll = this.checkedList.length === this.plainOptions.length;
+			this.updateFilter(this.checkedList);
+    },
+    onCheckAllChange(e) {
+      Object.assign(this, {
+        checkedList: e.target.checked ? this.plainOptions : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      });
+			this.updateFilter(this.checkedList);
+    },
 	},
 	computed:{
 		user(){
 			return this.$store.getters.getUser
 		},
-		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets']),
+		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets', 'getTickets', 'getAllTickets']),
 		...mapGetters('app', ['getActiveTab']),
 		...mapGetters('cloud', ['isSearch']),
 		active(){
 			return this.getActiveTab.title
+		},
+		plainOptions(){
+			function arrayUnique(arr){
+				return arr.filter((e,i,a)=>a.indexOf(e)==i)
+			}
+			
+			const tickets = this.getAllTickets;
+			let statuses = tickets.map(el => el.status);
+			statuses = arrayUnique(statuses);
+			Object.assign(this, {
+        checkedList: statuses,
+        indeterminate: false,
+        checkAll: true,
+      });
+			return statuses;
 		}
 	}
+	
 }
 </script>
 

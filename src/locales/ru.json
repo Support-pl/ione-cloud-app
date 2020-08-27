@@ -56,6 +56,8 @@
 
 	"Cancel": "Отмена",
 	"Send": "Отправить",
+	"Filter": "Фильтр",
+	"Check all": "Выбрать всё",
 
 	"chat_Resend_message": "Повторить отправку",
 	"chat_Delete_message": "Удалить сообщение"
