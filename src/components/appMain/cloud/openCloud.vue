@@ -86,10 +86,6 @@
 						<table class="Fcloud__table">
 							<tbody>
 								<tr>
-									<td>{{$t('cloud_StartTime')}}</td>
-									<td>{{SingleCloud.STIME}}</td>
-								</tr>
-								<tr>
 									<td>IP</td>
 									<td>{{SingleCloud.IP}}</td>
 								</tr>
