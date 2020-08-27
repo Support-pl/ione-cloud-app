@@ -53,6 +53,7 @@ export default {
 	background-color: #fdfdfd;
 	position: relative;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
+	user-select: none;
 }
 
 .footer__content{
