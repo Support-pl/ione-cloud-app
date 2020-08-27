@@ -1,6 +1,6 @@
 <template>
-	<div class="cloud__item-wrapper">
-		<div class="cloud__item" @click="cloudClick(cloud.ID)">
+	<div class="cloud__item-wrapper" @click="cloudClick(cloud.ID)">
+		<div class="cloud__item">
 			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
 				<div class="item__title">{{title}}</div>
