@@ -105,8 +105,9 @@ export default {
 	},
 	getters: {
 		getClouds: state => textToSearch => {
+			const regexp = new RegExp(textToSearch, "i");
 			if (state.isSearch){
-				return state.clouds.filter(cloud => cloud.NAME.search(textToSearch) != -1 || cloud.STATE.search(textToSearch) != -1);
+				return state.clouds.filter(cloud => cloud.NAME.search(regexp) != -1 || cloud.STATE.search(regexp) != -1);
 			} else {
 				return state.clouds
 			}
@@ -162,14 +163,14 @@ export default {
 				reboot: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				shutdown: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				start: [...commonParams, cloud.STATE !== 3],
-				stop: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
+				recover: [...commonParams],
 			}
 
 			return {
 				reboot: !params.reboot.every( el => el ),
 				shutdown: !params.shutdown.every( el => el ),
 				start: !params.start.every( el => el ),
-				stop: !params.stop.every( el => el ),
+				recover: !params.recover.every( el => el ),
 			}
 		},
 		singleLoading(state){
