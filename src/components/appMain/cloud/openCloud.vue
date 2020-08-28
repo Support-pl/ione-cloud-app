@@ -16,12 +16,34 @@
 					</div>
 				</div>
 				<div class="Fcloud__buttons">
-					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
+					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
+						<div class="Fcloud__BTN-icon">
+							<!-- <a-icon type="stop" /> -->
+							<div class="cloud__icon cloud__icon--stop"></div>
+						</div>
+						<div class="Fcloud__BTN-title">Power off</div>
+						<a-modal v-model="modal.shutdown" :title="$t('cloud_Shutdown_modal')" @ok="handleOk('shutdown')">
+							<p>{{$t('cloud_Shutdown_invite')}}</p>
+							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
+								<a-radio :value="0" :style="{'margin-bottom': '10px'}">
+									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">{{$t('cloud_Regular')}}</a-tag>
+									{{$t('cloud_Shutdown')}}
+								</a-radio>
+								<a-radio :value="1">
+									<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
+										HARD
+									</a-tag>
+									{{$t('cloud_Shutdown')}}
+								</a-radio>
+							</a-radio-group>
+						</a-modal>
+					</div>
+					<!-- <div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="pause" />
 						</div>
 						<div class="Fcloud__BTN-title">Stop</div>
-					</div>
+					</div> -->
 					<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="caret-right" />
@@ -34,7 +56,7 @@
 							<a-icon type="redo" />
 						</div>
 						<div class="Fcloud__BTN-title">Reboot</div>
-						<a-modal v-model="modal.reboot" title="Reboot option" @ok="handleOk('reboot')">
+						<a-modal v-model="modal.reboot" :title="$t('cloud_Reboot_modal')" @ok="handleOk('reboot')">
 							<p>{{$t('cloud_Reboot_invite')}}</p>
 							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
 								<a-radio :value="0">
@@ -53,23 +75,22 @@
 						</a-modal>
 					</div>
 					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'> -->
-					<div class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
+					<div class="Fcloud__button" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='openModal("recover")'>
 						<div class="Fcloud__BTN-icon">
-							<a-icon type="stop" />
+							<a-icon type="backward" />
 						</div>
-						<div class="Fcloud__BTN-title">Shutdown</div>
-						<a-modal v-model="modal.shutdown" title="reboot option" @ok="handleOk('shutdown')">
-							<p>{{$t('cloud_Shutdown_invite')}}</p>
-							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
-								<a-radio :value="0" :style="{'margin-bottom': '10px'}">
-									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">{{$t('cloud_Regular')}}</a-tag>
-									{{$t('cloud_Shutdown')}}
+						<div class="Fcloud__BTN-title">Recover</div>
+						<a-modal v-model="modal.recover" :title="$t('cloud_Recover_modal')" @ok="handleOk('recover')">
+							<p>{{$t('cloud_Recover_invite_line1')}}</p>
+							<p>{{$t('cloud_Recover_invite_line2')}}</p>
+							<p>{{$t('cloud_Recover_invite_line3')}}</p>
+							<p>{{$t('cloud_Recover_invite')}}</p>
+							<a-radio-group v-model="option.recover" name="recover" :default-value="1">
+								<a-radio :value="0">
+									Вчера
 								</a-radio>
 								<a-radio :value="1">
-									<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
-										HARD
-									</a-tag>
-									{{$t('cloud_Shutdown')}}
+									Сегодня
 								</a-radio>
 							</a-radio-group>
 						</a-modal>
@@ -176,7 +197,7 @@
 			v-else
 			color="#fff"
 			:style="{'position': 'absolute', 'height': '100%', 'width': '100%'}"
-			:key="loading"
+			key="loading"
 			duration: 
 		/>
 		</transition>
@@ -202,11 +223,13 @@ export default {
 			// updating: true
 			modal: {
 				reboot: false,
-				shutdown: false
+				shutdown: false,
+				recover: false
 			},
 			option: {
 				reboot: 0,
-				shutdown: 0
+				shutdown: 0,
+				recover: 0,
 			}
 
 		}
@@ -288,6 +311,30 @@ export default {
 					}
 					this.modal.shutdown = false;
 					break;
+
+				case "recover":
+					const me = this;
+					let trigger = this.modal;
+					let opt = this.option;
+					this.$confirm({
+						title: 'Вы хотите загрузить бэкап?',
+						maskClosable: true,
+						content: h => <div>Весь несохраненный прогресс будет утерян, вы уверены?</div>,
+						okText: me.$t('Yes'),
+						cancelText: me.$t('Cancel'),
+						onOk() {
+							if(me.option.recover){
+								me.sendAction('recoverToday');
+							} else {
+								me.sendAction('recoverYesterday');
+							}
+							me.modal.recover = false;
+						},
+						onCancel() {
+							// console.log('Отмена');
+						}
+					});
+					break;
 			}
 		},
 		openModal(name){
@@ -300,6 +347,9 @@ export default {
 					if(this.permissions.shutdown) return;
 					break;
 				case 'reboot':
+					if(this.permissions.reboot) return;
+					break;
+				case 'recover':
 					if(this.permissions.reboot) return;
 					break;
 			}
@@ -583,6 +633,13 @@ export default {
 	.opencloud-enter .Fcloud__button{
 		transform: scale(.5) rotate(15deg);
 		opacity: 0;
+	}
+
+	.cloud__icon{
+		height: .8em;
+		width: .8em;
+		background: rgba(0,0,0,.65);
+		border-radius: 2px;
 	}
 
 /* disabled button animation */
