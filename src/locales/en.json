@@ -47,14 +47,23 @@
   "cloud_Size": "Size",
   "cloud_Shutdown": "shutdown",
   "cloud_Regular": "regular",
+  "cloud_Shutdown_modal": "Shutdown",
+  "cloud_Reboot_modal": "Reboot",
+  "cloud_Recover_modal": "Recover",
 	"cloud_Shutdown_invite": "Select the system shutdown setting:",
 	"cloud_Reboot_invite": "Select the system reboot setting:",
+	"cloud_Recover_invite": "Select the system recover setting:",
+	
+	"cloud_Recover_invite_line1": "WARNING! Virtual machine will be rebooted during the recovering!",
+	"cloud_Recover_invite_line2": "Backups are creating every day at 4:00 AM.",
+	"cloud_Recover_invite_line3": "50GB Disk Recovery takes approximately 1 hour.",
 
 	"support_Create_ticket": "Create ticket",
 	"support_Question_subject": "Question subject",
 	"support_Question": "Question",
 
 	"Cancel": "Cancel",
+	"Yes": "Yes",
 	"Send": "Send",
 	"Filter": "Filter",
 	"Check all": "Check all",

@@ -47,14 +47,23 @@
 	"cloud_Size": "Размер",
 	"cloud_Shutdown": "отключение",
 	"cloud_Regular": "обычное",
+	"cloud_Shutdown_modal": "Выключение",
+	"cloud_Reboot_modal": "Перезагрузка",
+	"cloud_Recover_modal": "Восстановление",
 	"cloud_Shutdown_invite": "Выберите настройку отключения системы:",
 	"cloud_Reboot_invite": "Выберите настройку перезапуска системы:",
+	"cloud_Recover_invite": "Выберите бэкап для восстановления системы:",
+
+	"cloud_Recover_invite_line1": "Внимание! Вируальная машина будет перезапущена во время восстановления!",
+	"cloud_Recover_invite_line2": "Бэкапы делаются каждый день в 4:00.",
+	"cloud_Recover_invite_line3": "Восстановление 50Гб дискового пространства занимает примерно 1 час.",
 
 	"support_Create_ticket": "Создать обращение",
 	"support_Question_subject": "support_Create_ticket",
 	"support_Question": "Вопрос",
 
 	"Cancel": "Отмена",
+	"Yes": "Да",
 	"Send": "Отправить",
 	"Filter": "Фильтр",
 	"Check all": "Выбрать всё",
