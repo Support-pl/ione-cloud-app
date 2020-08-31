@@ -73,12 +73,12 @@
 						<a-popover v-else placement="bottomRight">
 							<template slot="content">
 								<div>
-									<div :style="{ borderBottom: '1px solid #E9E9E9' }">
+									<!-- <div :style="{ borderBottom: '1px solid #E9E9E9' }">
 										<a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
 											Check all
 										</a-checkbox>
 									</div>
-									<br>
+									<br> -->
 									<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
 								</div>
 							</template>

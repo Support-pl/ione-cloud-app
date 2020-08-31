@@ -61,7 +61,7 @@ export default {
 			return state.tickets;
 		},
 		getTickets(state){
-			if(state.filter[0] == 'all'){
+			if (state.filter[0] == 'all' || state.filter.length == 0) {
 				return state.tickets;
 			} else {
 				return state.tickets.filter(ticket => state.filter.includes(ticket.status))

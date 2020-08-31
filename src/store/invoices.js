@@ -35,7 +35,7 @@ export default {
 	},
 	getters: {
 		getInvoices(state) {
-			return state.invoices;
+			return state.invoices.sort((a, b) => b.status.length - a.status.length );
 		},
 		isLoading(state) {
 			return state.loading;

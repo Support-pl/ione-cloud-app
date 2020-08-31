@@ -189,6 +189,30 @@
 						</div>
 					</div>
 
+					<div class="Fcloud_snapshots">
+						<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
+							Spanshots
+						</a-button>
+						<a-modal v-model="snapshots.modal" title="Snapshots" on-ok="handleOk" :footer="null">
+							<a-table
+								:columns="snapshots.columns"
+								:row-key="record => record.TIME"
+								:data-source="snapshots.data"
+								:pagination="false"
+								:loading="snapshots.loading"
+							>
+							<template slot="time" slot-scope="time">
+								<!-- {{new Date(time)}} -->
+								{{time}}
+							</template>
+							<template slot="actions" slot-scope="actions">
+								<a-button icon="download" type="primary" shape="round" :style="{'margin-right': '10px'}"></a-button>
+								<a-button icon="close" type="danger" shape="round"></a-button>
+							</template>
+							</a-table>
+							<a-button icon="plus" type="primary" shape="round" size="large" :style="{'margin-top': '10px'}">Take snapshot</a-button>
+						</a-modal>
+					</div>
 
 				</div>
 			</div>
@@ -210,6 +234,26 @@ import axios from 'axios'
 import md5 from 'md5'
 import loading from '../../loading/loading.vue'
 
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'NAME',
+  },
+  {
+    title: 'Time',
+    dataIndex: 'TIME',
+    scopedSlots: { customRender: 'time' },
+  },
+  {
+    title: 'Status',
+    dataIndex: 'ACTION'
+  },
+  {
+    title: 'Actions',
+    scopedSlots: { customRender: 'actions' },
+  },
+];
+
 export default {
 	name: "openCloud",
 	components: {
@@ -224,12 +268,19 @@ export default {
 			modal: {
 				reboot: false,
 				shutdown: false,
-				recover: false
+				recover: false,
+				snapshot: false
 			},
 			option: {
 				reboot: 0,
 				shutdown: 0,
 				recover: 0,
+			},
+			snapshots: {
+				modal: false,
+				loading: true,
+				columns,
+				data: []
 			}
 
 		}
@@ -263,6 +314,9 @@ export default {
 					break;
 				case 'reboot':
 					if(this.permissions.reboot) return;
+					break;
+				case 'recover':
+					if(this.permissions.recover) return;
 					break;
 			}
 
@@ -338,7 +392,6 @@ export default {
 			}
 		},
 		openModal(name){
-
 			switch (name.toLowerCase()){
 				case 'start':
 					if(this.permissions.start) return;
@@ -350,12 +403,32 @@ export default {
 					if(this.permissions.reboot) return;
 					break;
 				case 'recover':
-					if(this.permissions.reboot) return;
+					if(this.permissions.recover) return;
+					break;
+				case 'snapshot':
+					if(this.permissions.snapshot) return;
+					this.snapshotsFetch();
+					this.snapshots.modal = true
 					break;
 			}
 
 			this.modal[name] = true;
 			// console.log(this.permissions)
+		},
+		snapshotsFetch(){
+				const user = this.$store.getters.getUser;
+				const userid = user.id;
+				const vmid = this.SingleCloud.ID;
+
+
+				const close_your_eyes = md5('getSnaps' + userid + user.secret);
+				const url = `https://my.support.by/app_cloud_mobile/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
+				axios.get(url)
+				.then(res => {
+					console.log(res);
+					this.snapshots.data = res.data.response;
+					this.snapshots.loading = false;
+				})
 		}
 	}
 }
@@ -642,6 +715,10 @@ export default {
 		border-radius: 2px;
 	}
 
+
+	.Fcloud_snapshots{
+		margin-top: 20px;
+	}
 /* disabled button animation */
 
 .disabled:active {

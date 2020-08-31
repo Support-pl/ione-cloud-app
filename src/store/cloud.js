@@ -163,15 +163,16 @@ export default {
 				reboot: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				shutdown: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				start: [...commonParams, cloud.STATE !== 3],
-				recover: [...commonParams],
+				recover: [...commonParams, cloud.STATE == 3],
 			}
 
-			return {
-				reboot: !params.reboot.every( el => el ),
-				shutdown: !params.shutdown.every( el => el ),
-				start: !params.start.every( el => el ),
-				recover: !params.recover.every( el => el ),
+			const result = {
+				reboot: !params.reboot.every(el => el),
+				shutdown: !params.shutdown.every(el => el),
+				start: !params.start.every(el => el),
+				recover: !params.recover.every(el => el),
 			}
+			return result;
 		},
 		singleLoading(state){
 			// const ans = Object.keys(state.opennedCloud).length == 0
