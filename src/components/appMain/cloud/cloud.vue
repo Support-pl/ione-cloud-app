@@ -13,10 +13,13 @@
 
 		<template v-else>
 		
-		<empty v-if="getClouds.length == 0"/>
+		<!-- <empty v-if="getClouds.length == 0"/> -->
 
 		<div class="cloud__wrapper">
 			<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
+			<div class="cloud__new-btn" @click="createVDC()">
+				<a-icon type="plus"></a-icon>
+			</div>
 		</div>
 		</template>
 	</div>
@@ -45,7 +48,10 @@ export default {
 	methods: {
 		SearchClear(){
 			this.textToSearch = '';
-		}
+		},
+		createVDC(){
+			this.$router.push('/cloud/new');
+		},
 	},
 	created(){
 		this.$store.dispatch('cloud/fetchClouds');
@@ -106,6 +112,28 @@ export default {
 	right: 10px;
 	transform: translateY(-50%);
 	cursor: pointer;
+}
+
+.cloud__new-btn{
+	position: relative;
+	box-shadow: 5px 8px 10px rgba(0, 0, 0, .05);
+	border-radius: 15px;
+	min-height: 70px;
+	/* background-color: #fff; */
+	border: 2px solid rgba(0, 0, 0, .1);
+	color:rgba(0, 0, 0, .7);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.cloud__new-btn:hover{
+	transform: translateY(2px);
+	box-shadow:
+		2px 2px 5px rgba(0, 0, 0, .00),
+		inset 2px 4px 5px rgba(0, 0, 0, .05);
 }
 
 @media screen and (min-width: 768px){
