@@ -39,6 +39,11 @@ Vue.use(VueRouter)
 				path: 'settings',
 				name: 'settings',
 				component: () => import('../components/appMain/settings/settings.vue')
+			},
+			{
+				path: 'cloud/new',
+				name: 'newVDC',
+				component: () => import('../components/appMain/newVDC.vue')
 			}
 		]
 	},
