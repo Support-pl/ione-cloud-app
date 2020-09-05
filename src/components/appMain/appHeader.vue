@@ -161,6 +161,10 @@ export default {
 				'settings': {
 					title: 'Settings',
 					buttons: []
+				},
+				'newVDC': {
+					title: 'newVDC',
+					buttons: []
 				}
 
 			}
@@ -183,10 +187,16 @@ export default {
 				case 'support_plus':
 					return this.isAddTicketState;
 					break;
+				case 'cloud_plus':
+					return false;
+					break;
 			
 				default:
 					break;
 			}
+		},
+		createVDC(){
+			this.$router.push('/cloud/new');
 		},
 		onChange(checkedList) {
       this.indeterminate = !!this.checkedList.length && checkedList.length < this.plainOptions.length;
