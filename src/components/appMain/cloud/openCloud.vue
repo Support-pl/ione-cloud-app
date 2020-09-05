@@ -14,6 +14,14 @@
 						<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
 						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
 					</div>
+					<div class="Fcloud__menu-wrapper">
+						<div class="Fcloud__menu-btn icon__wrapper">
+							<a-icon type="more" @click='openModal("menu")'/>
+							<a-modal v-model="modal.menu" title='Menu' :footer="null">
+								<a-button v-for="btn in menuOptions" :key="btn.title" block @click="btn.onclick()" :icon="btn.icon" class="menu__button">{{btn.title}}</a-button>
+							</a-modal>
+						</div>
+					</div>
 				</div>
 				<div class="Fcloud__buttons">
 					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
@@ -191,26 +199,38 @@
 
 					<div class="Fcloud_snapshots">
 						<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
-							Spanshots
+							Snapshots
 						</a-button>
-						<a-modal v-model="snapshots.modal" title="Snapshots" on-ok="handleOk" :footer="null">
+						<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
 							<a-table
 								:columns="snapshots.columns"
-								:row-key="record => record.TIME"
 								:data-source="snapshots.data"
 								:pagination="false"
 								:loading="snapshots.loading"
 							>
 							<template slot="time" slot-scope="time">
 								<!-- {{new Date(time)}} -->
-								{{time}}
+								<!-- {{new Date(time).toLocaleString()}} -->
+								{{getFormatedDate(time)}}
 							</template>
 							<template slot="actions" slot-scope="actions">
-								<a-button icon="download" type="primary" shape="round" :style="{'margin-right': '10px'}"></a-button>
-								<a-button icon="close" type="danger" shape="round"></a-button>
+								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
 							</template>
 							</a-table>
-							<a-button icon="plus" type="primary" shape="round" size="large" :style="{'margin-top': '10px'}">Take snapshot</a-button>
+							<div class="modal__buttons">
+								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading" @click="openModal('createSnapshot')">Take snapshot</a-button>
+							</div>
+							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
+								<p>Вы можете иметь одновременно только 3 снапшота.</p>
+								<p>Каждый снапшот существует 24 часа, после чего удаляется.</p>
+								<p>Выберите имя для нового снапшота:</p>
+								<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
+								<div class="modal__buttons">
+									<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
+									<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1" :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
+								</div>
+							</a-modal>
 						</a-modal>
 					</div>
 
@@ -245,10 +265,6 @@ const columns = [
     scopedSlots: { customRender: 'time' },
   },
   {
-    title: 'Status',
-    dataIndex: 'ACTION'
-  },
-  {
     title: 'Actions',
     scopedSlots: { customRender: 'actions' },
   },
@@ -269,7 +285,8 @@ export default {
 				reboot: false,
 				shutdown: false,
 				recover: false,
-				snapshot: false
+				snapshot: false,
+				menu: false
 			},
 			option: {
 				reboot: 0,
@@ -280,8 +297,21 @@ export default {
 				modal: false,
 				loading: true,
 				columns,
-				data: []
-			}
+				data: [],
+				loadingSnaps: [],
+				addSnap: {
+					modal: false,
+					snapname: "Snapshot",
+					loading: false
+				}
+			},
+			menuOptions: [
+				{
+					title: "Reinstall",
+					onclick: this.sendReinstall,
+					icon: "exclamation"
+				},
+			]
 
 		}
 	},
@@ -318,6 +348,9 @@ export default {
 				case 'recover':
 					if(this.permissions.recover) return;
 					break;
+				case 'reinstall':
+					if(this.permissions.reinstall) return;
+					break;
 			}
 
 			const user = this.$store.getters.getUser;
@@ -347,10 +380,10 @@ export default {
 				case "reboot":
 					if(this.option.reboot){
 						this.sendAction('RebootHard')
-						console.log("HARD REBOOT");
+						// console.log("HARD REBOOT");
 					} else {
 						this.sendAction('Reboot')
-						console.log("JUST REBOOT")
+						// console.log("JUST REBOOT")
 					}
 					this.modal.reboot = false;
 					break;
@@ -358,10 +391,10 @@ export default {
 				case "shutdown":
 					if(this.option.shutdown){
 						this.sendAction('PoweroffHard')
-						console.log("HARD SHUTDOWN");
+						// console.log("HARD SHUTDOWN");
 					} else {
 						this.sendAction('Poweroff')
-						console.log("JUST SHUTDOWN")
+						// console.log("JUST SHUTDOWN")
 					}
 					this.modal.shutdown = false;
 					break;
@@ -391,7 +424,31 @@ export default {
 					break;
 			}
 		},
+		newsnap(){
+			if(this.snapshots.data.lenght >= 3){
+				this.$error({
+        title: 'You can\'t have more than 3 snaps at the same time',
+        content: 'remove or commit old ones to create new',
+      });
+			}
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
+			const snapname = encodeURI(this.snapshots.addSnap.snapname);
+
+			const close_your_eyes = md5('vmaction' + userid + user.secret);
+			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=newSnapshot&snapname=${snapname}&vmid=${vmid}&secret=${close_your_eyes}`
+			this.snapshots.addSnap.loading = true;
+			axios.get(url)
+			.then(res => {
+				// console.log("sending new snap", res);
+				this.snapshots.addSnap.loading = false;
+				this.snapshots.addSnap.modal = false;
+				this.snapshotsFetch();
+			})
+		},
 		openModal(name){
+			// console.log(name);
 			switch (name.toLowerCase()){
 				case 'start':
 					if(this.permissions.start) return;
@@ -410,10 +467,65 @@ export default {
 					this.snapshotsFetch();
 					this.snapshots.modal = true
 					break;
+				case 'createsnapshot':
+					if(this.permissions.createSnapshot) return;
+					this.snapshots.addSnap.modal = true;
+					const me = this;
+					setTimeout(() => {
+						const element = me.$refs.snapNameInput.$el;
+						// console.log("timeout", element);
+						element.select();
+					}, 0);
+					break;
 			}
 
 			this.modal[name] = true;
 			// console.log(this.permissions)
+		},
+		closeModal(name){
+			switch (name.toLowerCase()){
+				case 'createsnapshot':
+					this.snapshots.addSnap.modal = false
+					break;
+			}
+		},
+		RMSnapshot(object){
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
+			const snapid = object.SNAPSHOT_ID;
+
+			const close_your_eyes = md5('vmaction' + userid + user.secret);
+			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=RMSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
+			this.snapshots.data.find( el => el.SNAPSHOT_ID == snapid).loading = true;
+			this.snapshots.loadingSnaps.push(snapid);
+			axios.get(url)
+			.then(res => {
+				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
+				if(ind > -1){
+					this.snapshots.loadingSnaps.splice(ind, 1);
+				}
+				// this.snapshots.modal = false
+			})
+		},
+		revToShapshot(object){
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
+			const snapid = object.SNAPSHOT_ID;
+
+			const close_your_eyes = md5('vmaction' + userid + user.secret);
+			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=RevSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
+			this.snapshots.data.find( el => el.SNAPSHOT_ID == snapid).loading = true;
+			this.snapshots.loadingSnaps.push(snapid);
+			axios.get(url)
+			.then(res => {
+				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
+				if(ind > -1){
+					this.snapshots.loadingSnaps.splice(ind, 1);
+				}
+				// this.snapshots.modal = false
+			})
 		},
 		snapshotsFetch(){
 				const user = this.$store.getters.getUser;
@@ -425,10 +537,31 @@ export default {
 				const url = `https://my.support.by/app_cloud_mobile/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				axios.get(url)
 				.then(res => {
-					console.log(res);
+					// console.log(res);
+					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
 					this.snapshots.data = res.data.response;
 					this.snapshots.loading = false;
 				})
+		},
+		getFormatedDate(dstring){
+			const date = new Date(+(dstring + "000"));
+			return date.toLocaleString();
+		},
+		sendReinstall(){
+			const me = this;
+			this.$confirm({
+        title: 'Do you want to reinstall this virtual machine?',
+        okType: 'danger',
+        content: h => <div style="color:red;">All data will be deleted!</div>,
+        onOk() {
+					// console.log('OK');
+					me.sendAction("Reinstall");
+					me.modal.menu = false;
+        },
+        onCancel() {
+          // console.log('Cancel');
+        },
+      });
 		}
 	}
 }
@@ -583,6 +716,10 @@ export default {
 		font-size: 1.4rem;
 	}
 
+	.Fcloud__menu-btn{
+		font-size: 1.4rem;
+	}
+
 	.Fcloud__info-title{
 		font-weight: bold;
 		text-align: center;
@@ -719,10 +856,20 @@ export default {
 	.Fcloud_snapshots{
 		margin-top: 20px;
 	}
+	
+	.modal__buttons{
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 10px;
+	}
 /* disabled button animation */
 
 .disabled:active {
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.menu__button:not(:last-child){
+	margin-bottom: 10px;
 }
 
 @keyframes shake {
