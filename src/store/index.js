@@ -5,6 +5,7 @@ import user from './user'
 import cloud from './cloud'
 import support from './support'
 import invoices from './invoices'
+import newVDC from './newVDC'
 
 Vue.use(vuex)
 
@@ -14,6 +15,7 @@ export default new vuex.Store({
 		user,
 		cloud,
 		support,
-		invoices
+		invoices,
+		newVDC
 	}
 })

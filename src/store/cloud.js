@@ -49,7 +49,7 @@ export default {
 
 			axios.get(url)
 				.then(resp => {
-					// console.log("vuex got clouds: ", resp);
+					console.log("vuex got clouds: ", resp);
 					ctx.commit("updateClouds", resp.data.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)

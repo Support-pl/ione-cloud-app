@@ -537,7 +537,7 @@ export default {
 				const url = `https://my.support.by/app_cloud_mobile/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				axios.get(url)
 				.then(res => {
-					// console.log(res);
+					console.log("snap",res);
 					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
 					this.snapshots.data = res.data.response;
 					this.snapshots.loading = false;

@@ -31,11 +31,10 @@ export default {
 		fetchTickets(ctx) {
 			if (ctx.getters.isLoading) return;
 			ctx.commit('makeLoadingIs', true);
-			const closed = ctx.getters.isOnlyClosedTickets;
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('tickets' + user.id + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/tickets.php?id=${user.id}&secret=${close_your_eyes}${closed?"&closed=true":''}`;
+			const url = `https://my.support.by/app_cloud_mobile/tickets.php?id=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
 			axios.get(url)
