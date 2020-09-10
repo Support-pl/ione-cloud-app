@@ -224,7 +224,10 @@ export default {
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
 			console.log(elements);
-			this.activeOS = elements[0].id;
+			if(elements.lenght > 0){
+				this.activeOS = elements[0].id;
+			}
+			this.activeOS = 532;
 			return elements;
 		}
 	}
