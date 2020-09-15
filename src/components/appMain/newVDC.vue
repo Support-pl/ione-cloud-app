@@ -171,7 +171,7 @@
 					
 				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
 					<a-col :span="22">
-						<a-select default-value="minute" :value="period" style="width: 100%" @change="changePeriod">
+						<a-select default-value="hour" :value="period" style="width: 100%" @change="changePeriod">
 							<a-select-option value="minute">
 								Стоимость/Минута
 							</a-select-option>
