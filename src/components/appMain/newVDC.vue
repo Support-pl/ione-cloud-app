@@ -88,7 +88,7 @@
 												<a-slider v-model="options.disk.size" :min="1" :max="1024" />
 											</a-col>
 											<a-col :span="8">
-												<a-input-number v-model="options.disk.size" min=0 class="max-width" default-value="1" />
+												<a-input-number v-model="options.disk.size" min="0" class="max-width" default-value="1" />
 											</a-col>
 											<a-col :span="8">
 												<a-select v-model="options.disk.units" class="max-width" default-value="GB">
@@ -232,7 +232,15 @@
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
-						{{calculateFullPrice()}}BYN
+						{{calculateFullPrice()}}BYN/{{toShow[period]}}
+					</a-col>
+				</a-row>
+
+				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
+					<a-col :span="22">
+						<a-button type="primary" block shape="round" @click="createVDC">
+							Создать
+						</a-button>
 					</a-col>
 				</a-row>
 
@@ -247,6 +255,12 @@ export default {
 	data(){
 		return {
 			period: "hour",
+			toShow: {
+				minute: "мин.",
+				hour: "час",
+				day: "день",
+				month: "мес."
+			},
 			options: {
 				os: {
 					id: 532,
@@ -326,6 +340,9 @@ export default {
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size
 				]
 			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(3);
+		},
+		createVDC(){
+			console.log(this.options)
 		}
 	},
 	computed: {
