@@ -3,7 +3,14 @@
 		<div class="ticket__status" :style="{'background-color': statusColor}"></div>
 		<div class="ticket__content">
 			<div class="ticket__upper">
-				<div class="ticket__title">#{{ticket.tid}} - {{ticket.title}}</div>
+				<div class="ticket__title">
+					<a-badge v-if="ticket.status == 'Answered'" dot>
+						#{{ticket.tid}} - {{ticket.title}}
+					</a-badge>
+					<template v-else>
+						#{{ticket.tid}} - {{ticket.title}}
+					</template>
+				</div>
 				<div class="ticket__status-text">{{ticket.status}}</div>
 			</div>
 			<div class="ticket__lower">
