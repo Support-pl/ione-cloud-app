@@ -18,7 +18,15 @@
 						<div class="Fcloud__menu-btn icon__wrapper">
 							<a-icon type="more" @click='openModal("menu")'/>
 							<a-modal v-model="modal.menu" title='Menu' :footer="null">
-								<a-button v-for="btn in menuOptions" :key="btn.title" block @click="btn.onclick()" :icon="btn.icon" class="menu__button">{{btn.title}}</a-button>
+								<a-button v-for="btn in menuOptions" :key="btn.title" block @click="btn.onclick(...btn.params)" :icon="btn.icon" class="menu__button">{{btn.title}}</a-button>
+								
+							</a-modal>
+							
+							<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
+								<p>Enter new password</p>
+								<a-input-password v-model="reinstallPass" placeholder="input password">
+
+								</a-input-password>
 							</a-modal>
 						</div>
 					</div>
@@ -280,13 +288,15 @@ export default {
 			status: 'running',
 			name: 'test3',
 			showPermissions: false,
+			reinstallPass: '',
 			// updating: true
 			modal: {
 				reboot: false,
 				shutdown: false,
 				recover: false,
 				snapshot: false,
-				menu: false
+				menu: false,
+				reinstall: false
 			},
 			option: {
 				reboot: 0,
@@ -308,7 +318,8 @@ export default {
 			menuOptions: [
 				{
 					title: "Reinstall",
-					onclick: this.sendReinstall,
+					onclick: this.openModal,
+					params: ['reinstall'],
 					icon: "exclamation"
 				},
 			]
@@ -359,7 +370,11 @@ export default {
 
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			let url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			if(action.toLowerCase()=='reinstall'){
+				url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
+
+			}
 			// console.log(action)
 			// console.log(url);
 			axios.get(url)
@@ -557,6 +572,7 @@ export default {
 					// console.log('OK');
 					me.sendAction("Reinstall");
 					me.modal.menu = false;
+					me.modal.reinstall = false;
         },
         onCancel() {
           // console.log('Cancel');
