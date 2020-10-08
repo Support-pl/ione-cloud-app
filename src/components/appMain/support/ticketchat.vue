@@ -46,7 +46,7 @@
 			<div class="chat__send" @click="sendMessage">
 				<a-icon type="arrow-up" />
 			</div>
-			<div class="chat__send">
+			<div v-if="showSendFiles" class="chat__send">
 				<a-icon type="plus" />
 			</div>
 		</div>
@@ -71,7 +71,8 @@ export default {
 			messageInput: "",
 			loading: true,
 			chatid: this.$route.params.pathMatch,
-			sendingMessagesCount: 0
+			sendingMessagesCount: 0,
+			showSendFiles: false
 		}
 	},
 	computed: {

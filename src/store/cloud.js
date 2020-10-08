@@ -16,6 +16,15 @@ export default {
 	},
 	mutations: {
 		updateClouds(state, value) {
+			for(let i = 0; i < value.length; i++){
+				value[i].IP = value[i].IPS[0].IP;
+				if (value[i]['LCM_STATE'] == 3)
+					value[i]['STATE'] = lcm_states[value[i]['LCM_STATE']];
+				else if (value[i]['LCM_STATE'] == 3 && value[i]['STATE'] == 3)
+					value[i]['STATE'] = lcm_states[value[i]['LCM_STATE']];
+				else
+					value[i]['STATE'] = states[value[i]['STATE']];
+			}
 			state.clouds = value;
 		},
 		makeLoadingIs(state, value) {
@@ -41,16 +50,19 @@ export default {
 			ctx.commit('makeLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
-			const close_your_eyes = md5('orders' + user.id + user.secret);
+			// const close_your_eyes = md5('orders' + user.id + user.secret);
+			const close_your_eyes = md5('getVMS' + user.id + user.secret);
 
 			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}`;
-			const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
+			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
+			const url = `https://my.support.by/app_cloud_mobile/getVMS.php?userid=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
 			axios.get(url)
 				.then(resp => {
 					console.log("vuex got clouds: ", resp);
-					ctx.commit("updateClouds", resp.data.data)
+					// ctx.commit("updateClouds", resp.data.data)
+					ctx.commit("updateClouds", resp.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)
 				})

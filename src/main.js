@@ -6,19 +6,23 @@ import i18n from './i18n'
 import store from './store'
 import router from './router'
 import './registerServiceWorker'
+import axios from 'axios';
+
+var axiosInstance = axios.create({
+	baseURL: 'https://my.support.by/app_cloud_mobile',
+});
 
 Vue.config.productionTip = false
 Vue.use(Antd)
 
-// @ts-ignore
-// BX24.init( () => {
+Vue.prototype.$axios = axiosInstance;
+
 new Vue({
   i18n,
 	router,
 	store,
   render: h => h(App)
 }).$mount('#app')
-// })
 
 // window.addEventListener('load', () => {
 

@@ -82,13 +82,15 @@ export default {
 		// 	}
 		// )
 	},
-	watch: {
-		$route(to, from){
-			this.activeName = to.name == 'cloudHome' ? 'cloud' : to.name;
-		},
-	},
 	created(){
-		this.$store.dispatch('app/setTabByName', this.$router.currentRoute.name)
+		this.$router.onReady(() => {
+			this.$store.dispatch('app/setTabByNameNoRoute', this.$router.currentRoute.name)
+		});
+		this.$router.beforeEach((to, from, next) => {
+			this.activeName = to.name == 'cloudHome' ? 'cloud' : to.name;
+			this.$store.dispatch('app/setTabByNameNoRoute', to.name)
+			next();
+		})
 	}
 }
 </script>

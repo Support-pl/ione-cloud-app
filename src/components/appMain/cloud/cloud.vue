@@ -50,7 +50,8 @@ export default {
 			this.textToSearch = '';
 		},
 		createVDC(){
-			this.$router.push('/cloud/new');
+			this.$store.dispatch("app/setTabByName", "newVDC");
+			// this.$router.push('/cloud/new');
 		},
 	},
 	created(){

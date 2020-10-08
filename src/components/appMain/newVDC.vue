@@ -3,12 +3,12 @@
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 				<div class="newCloud__field-header">
-					Создание VM
+					{{$t('VM create')}}
 				</div>
 
 				<div class="newCloud_option">
-					<a-collapse accordion :style="{'border-radius': '25px'}">
-						<a-collapse-panel key="1" header="Выберите ОС:">
+					<a-collapse accordion :style="{'border-radius': '25px'}" @change="collapseChange">
+						<a-collapse-panel key="OS" header="Выберите ОС:">
 					<div class="newCloud__option-field">
 						<!-- <a-divider orientation="left">
 							Выберите ОС:
@@ -23,7 +23,7 @@
 						</div>
 					</div>
 						</a-collapse-panel>
-						<a-collapse-panel key="2" header="CPU + RAM:" :disabled="false">
+						<a-collapse-panel key="CPURAM" header="CPU + RAM:" :disabled="false">
 					<div class="newCloud__option-field">
 
 						<!-- <a-divider orientation="left">
@@ -35,22 +35,12 @@
 								<a-row>
 									<a-col  :sm="8" :span="10">
 									<!-- <div style="margin-bottom: 16px"> -->
-										RAM: 
+										RAM (GB): 
 									</a-col>
 									<a-col  :sm="13" :span="14">
 										<a-row>
-											<a-col :span="14">
-												<a-input-number v-model="options.ram.size" class="max-width" min=0 default-value="1" />
-											</a-col>
-											<a-col :span="10">
-												<a-select v-model="options.ram.units" class="max-width" default-value="GB">
-													<a-select-option value="GB">
-														GB
-													</a-select-option>
-													<a-select-option value="MB">
-														MB
-													</a-select-option>
-												</a-select>
+											<a-col :span="24">
+												<a-input-number v-model="options.ram.size" class="max-width" :min="0" default-value="1" />
 											</a-col>
 										</a-row>
 									</a-col>
@@ -63,7 +53,7 @@
 										CPU: 
 									</a-col>
 									<a-col :sm="13" :span="14">
-										<a-input-number v-model="options.cpu.count" class="max-width" min=0 default-value="1" />
+										<a-input-number v-model="options.cpu.count" class="max-width" :min='0' default-value="1" />
 									</a-col>
 								</a-row>
 							</a-col>
@@ -71,7 +61,7 @@
 						</a-row>
 					</div>
 					</a-collapse-panel>
-					<a-collapse-panel key="3" header="Диски:">
+					<a-collapse-panel key="drive" header="Диски:">
 					<div class="newCloud__option-field">
 						<!-- <a-divider orientation="left">
 							Диски:
@@ -80,26 +70,23 @@
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col  :sm="8" :span="10">
-										Диск: 
+										{{$t('Drive')}}: 
 									</a-col>
 									<a-col  :sm="13" :span="14">
-										<a-row>
-											<a-col :span="8">
-												<a-slider v-model="options.disk.size" :min="1" :max="1024" />
+										<a-row type="flex" justify="space-between">
+											<!-- <a-col :span="12"> -->
+											<a-col :span="3">
+												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
-											<a-col :span="8">
-												<a-input-number v-model="options.disk.size" min="0" class="max-width" default-value="1" />
+											<a-col :span="18">
+												<a-slider v-model="options.disk.size" :min="10" :max="1020" :tooltip-visible="collapseKey == 'drive'" :step="10" />
 											</a-col>
-											<a-col :span="8">
-												<a-select v-model="options.disk.units" class="max-width" default-value="GB">
-													<a-select-option value="GB">
-														GB
-													</a-select-option>
-													<a-select-option value="MB">
-														MB
-													</a-select-option>
-												</a-select>
+											<a-col :span="3">
+												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
 											</a-col>
+											<!-- <a-col :span="12">
+												<a-input-number v-model="options.disk.size" :min="0" class="max-width" default-value="1" />
+											</a-col> -->
 										</a-row>
 									</a-col>
 								</a-row>
@@ -108,7 +95,7 @@
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col :sm="8" :span="10">
-										Тип диска: 
+										{{$t('Drive type')}}: 
 									</a-col>
 									<a-col :sm="13" :span="14">
 										<a-select v-model="options.disk.type" class="max-width" default-value="SSD">
@@ -127,7 +114,7 @@
 					</div>
 					</a-collapse-panel>
 
-					<a-collapse-panel key="4" header="Сеть:" :style="{'border-radius': '0 0 25px 25px'}">
+					<a-collapse-panel key="network" header="Сеть:" :style="{'border-radius': '0 0 25px 25px'}">
 					<div class="newCloud__option-field">
 						<!-- <a-divider orientation="left">
 							Сеть:
@@ -136,7 +123,7 @@
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col  :sm="10" :span="12">
-										Публичная сеть: 
+										{{$t("Public network")}}:
 									</a-col>
 									<a-col  :sm="12" :span="12">
 										<a-switch v-model="options.network.public.status"/>
@@ -148,11 +135,11 @@
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col :sm="10" :span="12">
-										Локальная сеть: 
+										{{$t("Local network")}}:
 									</a-col>
 									<a-col :sm="12" :span="12">
 										<a-switch v-model="options.network.local.status" />
-										<a-input-number v-model="options.network.local.count" :min="1" :max="10" :disabled="!options.network.local.status" :style="{'margin-left': '10px'}"/>
+										<a-input-number v-model="options.network.local.count" :min="0" :max="10" :disabled="!options.network.local.status" :style="{'margin-left': '10px'}"/>
 									</a-col>
 								</a-row>
 							</a-col>
@@ -166,23 +153,26 @@
 			
 			<div class="newCloud__calculate newCloud__field">
 				<div class="newCloud__field-header">
-					Результат
+					{{$t("Result")}}
 				</div>
 					
 				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
 					<a-col :span="22">
-						<a-select default-value="hour" :value="period" style="width: 100%" @change="changePeriod">
-							<a-select-option value="minute">
+						<a-select default-value="hour" :disabled="options.tarification" :value="periodToShow" style="width: 100%" @change="changePeriod">
+							<!-- <a-select-option value="minute">
 								Стоимость/Минута
-							</a-select-option>
+							</a-select-option> -->
 							<a-select-option value="hour">
-								Стоимость/Час
+								{{$t("Cost")}}/{{$t("hour")}}
 							</a-select-option>
 							<a-select-option value="day">
-								Стоимость/День
+								{{$t("Cost")}}/{{$t("day")}}
+							</a-select-option>
+							<a-select-option value="week">
+								{{$t("Cost")}}/{{$t("week")}}
 							</a-select-option>
 							<a-select-option value="month">
-								Стоимость/Месяц
+								{{$t("Cost")}}/{{$t("month")}}
 							</a-select-option>
 						</a-select>
 					</a-col>
@@ -208,7 +198,7 @@
 
 				<a-row type="flex" justify="space-between">
 					<a-col>
-						Диск {{options.disk.type}}: {{options.disk.size}} {{options.disk.units}}
+						{{$t('Drive')}} {{options.disk.type}}: {{options.disk.size}} {{options.disk.units}}
 					</a-col>
 					<a-col>
 						{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}}BYN
@@ -218,7 +208,7 @@
 				<transition name="networkApear">
 					<a-row v-if="options.network.public.status" type="flex" justify="space-between">
 						<a-col>
-							Сеть:
+							{{$t("Network")}}:
 						</a-col>
 						<a-col>
 							{{(calculatePrice(options.network.price)*options.network.public.count).toFixed(3)}}BYN
@@ -227,20 +217,73 @@
 				</transition>
 				
 				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-					Итого:
+					{{$t('Total')}}:
 				</a-divider>
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
-						{{calculateFullPrice()}}BYN/{{toShow[period]}}
+						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+							<template slot="title">
+								{{$t('Actual price may vary')}}
+							</template>
+							~{{calculateFullPrice()}}BYN/{{toShow[periodToShow]}}
+						</a-tooltip>
 					</a-col>
 				</a-row>
+				
+				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
+					{{$t('Tarification')}}:
+				</a-divider>
+
+				<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
+					<a-col>
+						<div style="text-align: center">
+							{{$t('When paying per month - save up to 15%')}}
+						</div>
+					</a-col>
+				</a-row>
+				
+				<a-row type="flex" justify="space-around">
+					<a-col>
+						{{$t('Monthly payment')}}
+					</a-col>
+					<a-col>
+						<a-switch v-model="options.tarification"></a-switch>
+					</a-col>
+				</a-row>
+
+
+				<!-- <a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
+					<a-col>
+						<p>Ежемесячная оплата</p>
+						<p>
+							<a-switch default-checked />
+						</p>
+					</a-col>
+				</a-row> -->
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">
 						<a-button type="primary" block shape="round" @click="createVDC">
-							Создать
+							{{$t("Create")}}
 						</a-button>
+						<a-modal
+							:title="$t('Confirm')"
+							:visible="modal.confirmCreate"
+							:confirm-loading="modal.confirmLoading"
+							:cancel-text="$t('Cancel')"
+							@ok="handleOk"
+							@cancel="handleCancel"
+						>
+							<p>
+								{{$t("Enter VM name")}}:
+								<a-input v-model="options.vmname" />
+							</p>
+							<p>
+								{{$t("Enter OS password")}}:
+								<a-input-password v-model="options.password" />
+							</p>
+						</a-modal>
 					</a-col>
 				</a-row>
 
@@ -250,18 +293,29 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import md5 from 'md5'
 export default {
 	name: "newVDC",
 	data(){
 		return {
+			collapseKey: "",
 			period: "hour",
 			toShow: {
 				minute: "мин.",
 				hour: "час",
 				day: "день",
+				week: "неделя",
 				month: "мес."
 			},
+			modal: {
+				confirmCreate: false,
+				confirmLoading: false
+			},
 			options: {
+				tarification: false,
+				vmname: '',
+				password: '',
 				os: {
 					id: 532,
 					name: "CentOS 7",
@@ -276,7 +330,7 @@ export default {
 					price: 10
 				},
 				disk: {
-					size: 1,
+					size: 10,
 					units: "GB",
 					type: "SSD",
 					price: {
@@ -287,12 +341,12 @@ export default {
 				},
 				network: {
 					public: {
-						status: false,
+						status: true,
 						count: 1
 					},
 					local: {
 						status: false,
-						count: 1
+						count: 0
 					},
 					price: 9
 				}
@@ -301,6 +355,13 @@ export default {
 	},
 	mounted(){
 		this.$store.dispatch("newVDC/fetchTemplates");
+		
+		const user = this.$store.getters.getUser;
+		const userinfo = {
+			clientid: user.id,
+			secret: md5('createVDC' + user.id + user.secret)
+		}
+		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 	},
 	methods: {
 		onSlideChange(){
@@ -317,6 +378,9 @@ export default {
 			this.period = value;
 		},
 		calculatePrice(price){
+			if(this.options.tarification){
+				return price * 0.85;	
+			}
 			switch (this.period) {
 				case "minute":
 					price = price / 60;
@@ -325,9 +389,12 @@ export default {
 				case "day":
 					price = price / 30;
 				case "month":
-					price = price;
+					break
+				case "week":
+					price = price / 30 * 7;
 					break
 				default:
+					console.error("[VDC Calculator]: Wrong price in calc.");
 					return undefined
 					break;
 			}
@@ -342,13 +409,95 @@ export default {
 			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(3);
 		},
 		createVDC(){
-			console.log(this.options)
+			this.modal.confirmCreate = true;
+		},
+		handleOk(){
+			if(this.options.password.length < 6) {
+				this.$message.error(this.$t("Password is too short"));
+				return 0
+			}
+			this.modal.confirmLoading = true;
+			this.send()
+				.then( responce => {
+					console.log(responce.data)
+					this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
+					this.options.password = '';
+					this.modal.confirmCreate = false;
+					this.modal.confirmLoading = false;
+					this.$store.dispatch("app/setTabByName", "cloud");
+				})
+				.catch( err => {
+					console.error(err)
+					this.$message.error(this.$t("Unknown error."));
+				});
+
+		},
+		handleCancel(){
+			this.modal.confirmCreate = false;
+		},
+		getPopupContainer(trigger) {
+			const elem = trigger.parentElement.parentElement.parentElement;
+      return elem;
+		},
+		send(){
+			const user = this.$store.getters.getUser;
+			const userinfo = {
+				userid: user.id,
+				secret: md5('createVM' + user.id + user.secret)
+			}
+			const vmOptions = {
+				'publicIPs': this.options.network.public.count,
+				'cpu': this.options.cpu.count,
+				'drivesize': this.options.disk.size,
+				'drive': this.options.disk.type,
+				'driveunits': this.options.disk.units,
+				'memory': this.options.ram.size,
+				'memoryunits': this.options.ram.units,
+				'templateid': this.options.os.id,
+				'vmname': this.options.vmname,
+				'password': this.options.password
+			}
+			if(this.options.network.local.status){
+				vmOptions['localIPs'] = this.options.network.local.count;
+			}
+			console.log(vmOptions);
+			return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
+		},
+		URLparameter(obj, outer = ''){
+			var str = "";
+			for (var key in obj) {
+				if(key == "price") continue;
+				if (str != "") {
+						str += "&";
+				}
+				if(typeof obj[key] == 'object') {
+					str += this.URLparameter(obj[key], outer+key);
+				} else {
+					str += outer + key + "=" + encodeURIComponent(obj[key]);
+				}
+			}
+			return str;
+		},
+		collapseChange(key){
+			this.collapseKey = key;
+		},
+		changeValue(variable, val){
+			if(variable == 'disksize'){
+				this.options.disk.size += val;
+			}
 		}
 	},
 	computed: {
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
 			return elements;
+		},
+		periodToShow(){
+			if(this.options.tarification){
+				return 'month';
+			} else {
+				return this.period
+			}
 		}
 	}
 }
@@ -462,6 +611,14 @@ export default {
 
 	.max-width{
 		width: 100%;
+	}
+
+	.ant-collapse-item:last-of-type .ant-collapse-content{
+		border-radius: 0 0 28px 28px;
+	}
+
+	.slider_btn{
+		cursor: pointer;
 	}
 
 	@media screen and (max-width: 1024px) {

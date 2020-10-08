@@ -1,93 +1,37 @@
 <template>
 	<div class="header__container">
 		<div class="container">
-			<template v-if="!beta">
-			<div class="header__content">
-				<div v-if="active == 'cloud'" class="header__wrapper">
-			<div class="header__left clickable" @click="inverseSearch">
-				<div class="icon__wrapper" :class="{ active__btn:isSearch }">
-					<a-icon class="header__icon" type="search"/>
-				</div>
-			</div>
-			<div class="header__title">{{$t('Cloud')}}</div>
-			<div class="header__right clickable" @click="fetchClouds">
-				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="reload"/>
-				</div>
-			</div>
-		</div>
-
-		<div v-if="active == 'support'"  class="header__wrapper header__wrapper--four">
-			<div class="header__left clickable" @click="fetchTicketsThatClosed">
-				<div class="icon__wrapper" :class="{ active__btn:isOnlyClosedTickets  }">
-					<a-icon class="header__icon" type="filter"/>
-				</div>
-			</div>
-			<div class="header__title">{{$t('Support')}}</div>
-			<div class="header__right clickable" @click="fetchTickets">
-				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="reload"/>
-				</div>
-			</div>
-			<div class="header__right clickable" @click="inverseAddTicketState">
-				<div class="icon__wrapper"  :class="{active__btn: isAddTicketState}">
-					<a-icon class="header__icon" type="plus" />
-				</div>
-			</div>
-		</div>
-
-		<div v-if="active == 'invoice'"  class="header__wrapper header__wrapper--four">
-			<div class="header__left clickable">
-				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="plus" />
-				</div>
-			</div>
-			<div class="header__title">{{$t('Invoice')}}</div>
-			<div class="header__right clickable" @click="fetchInvoices">
-				<div class="icon__wrapper">
-					<a-icon class="header__icon" type="reload"/>
-				</div>
-			</div>
-			<div class="header__right">${{user.balance?user.balance:0}}</div>
-		</div>
-
-		<div v-if="active == 'settings'"  class="header__wrapper">
-			<div class="header__left"></div>
-			<div class="header__title">{{$t('Settings')}}</div>
-			<div class="header__right"></div>
-		</div>
-			</div>
-		</template>
-
-		<div v-else class="header__wrapper">
+			<div class="header__wrapper">
 			<div class="header__title">
+				<div v-if="headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
+					<a-icon type="left"/>
+				</div>
 				{{this.$t(headers[active].title)}}
 			</div>
-			<div class="header__buttons" >
-				<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
-					<div v-if="button.onClickFuncion" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-						<a-icon class="header__icon" :type="button.icon"/>
-					</div>
-					<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
-						<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
-						<a-popover v-else placement="bottomRight">
-							<template slot="content">
-								<div>
-									<!-- <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-										<a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
-											Check all
-										</a-checkbox>
-									</div>
-									<br> -->
-									<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
-								</div>
-							</template>
-							<template slot="title">
-								<span>{{$t('Filter')}}</span>
-							</template>
+			<div class="header__right-side">
+				<div class="header__buttons" >
+					<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
+						<div v-if="button.onClickFuncion" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
 							<a-icon class="header__icon" :type="button.icon"/>
-						</a-popover>
+						</div>
+						<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+							<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+							<a-popover v-else placement="bottomRight">
+								<template slot="content">
+									<div>
+										<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
+									</div>
+								</template>
+								<template slot="title">
+									<span>{{$t('Filter')}}</span>
+								</template>
+								<a-icon class="header__icon" :type="button.icon"/>
+							</a-popover>
+						</div>
 					</div>
+				</div>
+				<div v-if="headers[active].needBalance" class="header__balance">
+					{{getUser.balance}} {{getUser.currency_code}}
 				</div>
 			</div>
 		</div>
@@ -104,7 +48,6 @@ export default {
 	name: "appHeader",
 	data(){
 		return {
-			beta: true,
 			indeterminate: true,
 			checkAll: false,
 			checkedList: [],
@@ -163,7 +106,9 @@ export default {
 					buttons: []
 				},
 				'newVDC': {
-					title: 'newVDC',
+					title: 'Create new VDC',
+					notmain: true,
+					needBalance: true,
 					buttons: []
 				}
 
@@ -210,7 +155,10 @@ export default {
         checkAll: e.target.checked,
       });
 			this.updateFilter(this.checkedList);
-    },
+		},
+		routeBack(){
+			this.$router.go(-1)
+		}
 	},
 	computed:{
 		user(){
@@ -219,6 +167,7 @@ export default {
 		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets', 'getTickets', 'getAllTickets']),
 		...mapGetters('app', ['getActiveTab']),
 		...mapGetters('cloud', ['isSearch']),
+		...mapGetters(['getUser']),
 		active(){
 			return this.getActiveTab.title
 		},
@@ -237,6 +186,9 @@ export default {
       });
 			return statuses;
 		}
+	},
+	created(){
+		
 	}
 	
 }
@@ -248,6 +200,7 @@ export default {
 		grid-template-columns: 20% 1fr 20%;
 		justify-items: center;
 		align-items: center;
+		font-size: 1.1rem;
 	}
 
 	.header__wrapper--four{
@@ -265,6 +218,13 @@ export default {
 	.header__title{
 		font-weight: bold;
 		font-size: 1.1rem;
+		display: flex;
+		align-items: center;
+	}
+
+	.header_back_btn{
+		font-size: 1.4rem;
+		margin-right: 20px;
 	}
 
 	.header__right{
@@ -324,5 +284,14 @@ export default {
 	
 	.header__button:not(:last-child){
 		margin-right: 15px;
+	}
+
+	.header__right-side{
+		display: flex;
+		align-items: center;
+	}
+
+	.header__balance{
+		margin-left: 10px;
 	}
 </style>

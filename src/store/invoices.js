@@ -28,7 +28,11 @@ export default {
 			axios.get(url)
 				.then(resp => {
 					// console.log("vuex action invoices responsive: ", resp);
-					ctx.commit("updateInvoices", resp.data.invoices.invoice)
+					if (Object.keys(resp.data.invoices).length > 0){
+						ctx.commit("updateInvoices", resp.data.invoices.invoice);
+					} else {
+						ctx.commit("updateInvoices", []);
+					}
 					ctx.commit('makeLoadingIs', false)
 				})
 		},

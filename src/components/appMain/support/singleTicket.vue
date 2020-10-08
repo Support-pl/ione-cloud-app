@@ -15,7 +15,7 @@
 			</div>
 			<div class="ticket__lower">
 				<div class="ticket__message">{{beauty(ticket.message)}}</div>
-				<div class="ticket__time">{{formatDate(ticket.lastreply)}}</div>
+				<div class="ticket__time">{{formatDate(ticket.date)}}</div>
 			</div>
 		</div>
 	</div>
