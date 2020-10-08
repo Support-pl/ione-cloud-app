@@ -122,9 +122,9 @@
 					<div class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
-								<tr>
+								<tr v-for="nic in SingleCloud.NIC" :key="nic.NAME">
 									<td>IP</td>
-									<td>{{SingleCloud.IP}}</td>
+									<td>{{nic.IP}}</td>
 								</tr>
 							</tbody>
 						</table>
