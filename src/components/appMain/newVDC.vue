@@ -357,11 +357,23 @@ export default {
 		this.$store.dispatch("newVDC/fetchTemplates");
 		
 		const user = this.$store.getters.getUser;
-		const userinfo = {
+		let userinfo = {
 			clientid: user.id,
 			secret: md5('createVDC' + user.id + user.secret)
 		}
 		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
+
+		userinfo = {
+			userid: user.id,
+			secret: md5('getBalance' + user.id + user.secret)
+		}
+		this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
+			.then( res => {
+				if(user.id == res.data.userid){
+					this.$store.dispatch("updateBalance", res.data.balance);
+				}
+			})
+			.catch( err => console.error(err));
 	},
 	methods: {
 		onSlideChange(){

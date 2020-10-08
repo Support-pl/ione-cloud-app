@@ -11,6 +11,12 @@ export default {
 				'max-age': '2592000'
 			})
 		},
+		setBalance(state, {value, getters}){
+			state.user.balance = value
+			setCookie('CloudUser', JSON.stringify(getters.getUser), {
+				'max-age': '2592000'
+			}) // странная штука, вероятно потом надо будет переделать, но пока побудет так 08.10.2020
+		},
 		logout(state){
 			state.user = null
 			state.logged = false
@@ -26,6 +32,10 @@ export default {
 		},
 		deleteCookie(ctx, name) {
 			deleteCookie(name)
+		},
+		updateBalance(ctx, value){
+			const getters = ctx.getters;
+			ctx.commit("setBalance", {value, getters})
 		}
 	},
 	getters: {

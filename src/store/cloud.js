@@ -166,6 +166,7 @@ export default {
 		},
 		permissions(state){
 			const cloud = state.opennedCloud;
+			if (cloud.PERMISSIONS == undefined) return
 			const updating = state.updating;
 			const isLoaded = Object.keys(cloud).length !== 0
 
