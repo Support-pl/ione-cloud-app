@@ -18,7 +18,17 @@
 						<div class="Fcloud__menu-btn icon__wrapper">
 							<a-icon type="more" @click='openModal("menu")'/>
 							<a-modal v-model="modal.menu" title='Menu' :footer="null">
-								<a-button v-for="btn in menuOptions" :key="btn.title" block @click="btn.onclick(...btn.params)" :icon="btn.icon" class="menu__button">{{btn.title}}</a-button>
+								<a-button
+									v-for="btn in menuOptions"
+									:key="btn.title"
+									:icon="btn.icon"
+									@click="btn.onclick(...btn.params)"
+									block
+									class="menu__button"
+									:type="btn.type || 'default'"
+								>
+									{{btn.title}}
+								</a-button>
 								
 							</a-modal>
 							
@@ -296,7 +306,8 @@ export default {
 				recover: false,
 				snapshot: false,
 				menu: false,
-				reinstall: false
+				reinstall: false,
+				delete: false
 			},
 			option: {
 				reboot: 0,
@@ -321,6 +332,12 @@ export default {
 					onclick: this.openModal,
 					params: ['reinstall'],
 					icon: "exclamation"
+				},
+				{
+					title: "Delete",
+					onclick: this.sendDelete,
+					icon: "delete",
+					type: "danger"
 				},
 			]
 
@@ -369,19 +386,33 @@ export default {
 			const vmid = this.SingleCloud.ID;
 
 
-			const close_your_eyes = md5('vmaction' + userid + user.secret);
+			let close_your_eyes = md5('vmaction' + userid + user.secret);
 			let url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
 			if(action.toLowerCase()=='reinstall'){
 				url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
-
+			}
+			if(action.toLowerCase()=='delete'){
+				close_your_eyes = md5('VMremove' + userid + user.secret);
+				url = `https://my.support.by/app_cloud_mobile/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
 			// console.log(action)
 			// console.log(url);
 			axios.get(url)
 			.then(res => {
 				// console.log(res);
-				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+				
+				if(action.toLowerCase()=='delete'){
+					if(res.data.result == "success"){
+						this.$message.success(res.data.message);
+						this.$router.replace({name: "cloud"})
+					} else {
+						this.$message.error(res.data.message);
+					}
+				} else {
+					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+				}
 				// this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
+				
 			})
 
 		},
@@ -473,6 +504,9 @@ export default {
 					break;
 				case 'reboot':
 					if(this.permissions.reboot) return;
+					break;
+				case 'delete':
+					if(this.permissions.delete) return;
 					break;
 				case 'recover':
 					if(this.permissions.recover) return;
@@ -576,6 +610,25 @@ export default {
         },
         onCancel() {
           // console.log('Cancel');
+					me.modal.reinstall = false;
+        },
+      });
+		},
+		sendDelete(){
+			const me = this;
+			this.$confirm({
+        title: 'Do you want to delete this virtual machine?',
+        okType: 'danger',
+        content: h => <div style="color:red;">All data will be deleted!</div>,
+        onOk() {
+					// console.log('OK');
+					me.sendAction("Delete");
+					me.modal.menu = false;
+					me.modal.delete = false;
+        },
+        onCancel() {
+          // console.log('Cancel');
+					me.modal.delete = false;
         },
       });
 		}
