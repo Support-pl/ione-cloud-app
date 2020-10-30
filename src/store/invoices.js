@@ -39,7 +39,21 @@ export default {
 	},
 	getters: {
 		getInvoices(state) {
-			return state.invoices.sort((a, b) => b.status.length - a.status.length );
+			return state.invoices.sort((a, b) => {
+				const dictionary = {
+					Cancelled: 1,
+					Paid: 1,
+					Unpaid: 2,
+				}
+				let astatus = dictionary[a.status];
+				let bstatus = dictionary[b.status];
+				if(astatus != bstatus){
+					return bstatus - astatus;
+				}
+				let aid = parseInt(a.id, 10);
+				let bid = parseInt(b.id, 10);
+				return bid - aid;
+			});
 		},
 		isLoading(state) {
 			return state.loading;

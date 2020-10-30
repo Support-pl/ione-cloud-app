@@ -2,28 +2,72 @@
 	<div class="newCloud_wrapper">
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
-				<div class="newCloud__field-header">
-					{{$t('VM create')}}
-				</div>
+				<!-- <div class="newCloud__field-header">
+					{{$t('Parameters')}}
+				</div> -->
+
+				<a-row type="flex" justify="center" :style="{'margin-bottom': '15px'}" :gutter="[10, 10]">
+					<a-col>
+						{{$t('Ready made servers')}}
+					</a-col>
+					<a-col>
+						<a-switch v-model="custom" @click="closeAllTabs"></a-switch>
+					</a-col>
+					<a-col>
+						{{$t('Pay as you Go')}}
+					</a-col>
+				</a-row>
 
 				<div class="newCloud_option">
-					<a-collapse accordion :style="{'border-radius': '25px'}" @change="collapseChange">
-						<a-collapse-panel key="OS" header="Выберите ОС:">
-					<div class="newCloud__option-field">
-						<!-- <a-divider orientation="left">
-							Выберите ОС:
-						</a-divider> -->
-						<div class="newCloud__template">
-							<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
-								<div class="newCloud__template-image">
-									<img :src="'https://vcloud.support.by/' + OS.logo" :alt="OS.name">
+					<a-collapse accordion :style="{'border-radius': '25px'}" @change="collapseChange" :activeKey="collapseKey">
+						<a-collapse-panel key="Template" :header="$t('Choose a tariff') + ' (' + options.rate.name + '):'" v-if="!custom">
+							<div class="newCloud__option-field">
+								<div class="newCloud__template one-line">
+									<div v-for="rate in ratesArray" class="newCloud__template-item" :class="{ active: options.rate.id==rate.pid }" @click='setRate(rate.pid)' :key="rate.pid">
+										<div class="newCloud__template-image newCloud__template-image__rate">
+											<!-- <img :src="'https://vcloud.support.by/' + OS.logo" :alt="OS.name"> -->
+											{{rate.name.replace('SVDS ', "")}}
+										</div>
+										<!-- <div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div> -->
+										<div class="newCloud__template-name">
+											<div class="newCloud__template-type">
+												{{rate.name.replace('SVDS ', "VDC ")}}
+											</div>
+											<ul style="margin: 0; padding: 0; font-size: .75rem">
+												<template v-for="element in rate.description.properties">
+													<li v-if="!dontshowattarrifs.includes(element.GROUP)" :key="element.GROUP">
+														<!-- {{element.GROUP}}:  -->
+														{{element.TITLE}}
+														</li>
+												</template>
+											</ul>
+										</div>
+									</div>
+									<!-- <div class="newCloud__template-item" :class="{ active: options.rate.id==0 }" @click='setRate(0)'>
+										<div class="newCloud__template-image newCloud__template-image__rate">
+											С
+										</div>
+										<div class="newCloud__template-name">Custom</div>
+									</div> -->
 								</div>
-								<div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div>
 							</div>
-						</div>
-					</div>
 						</a-collapse-panel>
-						<a-collapse-panel key="CPURAM" header="CPU + RAM:" :disabled="false">
+						<a-collapse-panel key="OS" :header="$t('Choose OS') + ' (' + options.os.name + '):'">
+							<div class="newCloud__option-field">
+								<!-- <a-divider orientation="left">
+									Выберите ОС:
+								</a-divider> -->
+								<div class="newCloud__template">
+									<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
+										<div class="newCloud__template-image">
+											<img :src="'https://vcloud.support.by/' + OS.logo" :alt="OS.name">
+										</div>
+										<div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div>
+									</div>
+								</div>
+							</div>
+						</a-collapse-panel>
+						<a-collapse-panel key="CPURAM" header="CPU + RAM:" :disabled="disableNotCustom" v-if="custom">
 					<div class="newCloud__option-field">
 
 						<!-- <a-divider orientation="left">
@@ -40,7 +84,17 @@
 									<a-col  :sm="13" :span="14">
 										<a-row>
 											<a-col :span="24">
-												<a-input-number v-model="options.ram.size" class="max-width" :min="0" default-value="1" />
+												<a-row type="flex" justify="space-between" align="middle">
+													<a-col :span="3">
+														<a-icon type="minus" class="slider_btn" @click="changeValue('ramsize', -1)"></a-icon>
+													</a-col>
+													<a-col :span="18">
+														<a-input-number v-model="options.ram.size" class="max-width" :min="0" default-value="1" :disabled="disableNotCustom" />
+													</a-col>
+													<a-col :span="3">
+														<a-icon type="plus" class="slider_btn" @click="changeValue('ramsize', 1)"></a-icon>
+													</a-col>
+												</a-row>
 											</a-col>
 										</a-row>
 									</a-col>
@@ -53,7 +107,17 @@
 										CPU: 
 									</a-col>
 									<a-col :sm="13" :span="14">
-										<a-input-number v-model="options.cpu.count" class="max-width" :min='0' default-value="1" />
+										<a-row type="flex" justify="space-between" align="middle">
+											<a-col :span="3">
+												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
+											</a-col>
+											<a-col :span="18">
+												<a-input-number v-model="options.cpu.count" class="max-width" :min='0' default-value="1" :disabled="disableNotCustom" />
+											</a-col>
+											<a-col :span="3">
+												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
+											</a-col>
+										</a-row>
 									</a-col>
 								</a-row>
 							</a-col>
@@ -61,7 +125,7 @@
 						</a-row>
 					</div>
 					</a-collapse-panel>
-					<a-collapse-panel key="drive" header="Диски:">
+					<a-collapse-panel key="drive" :header="$t('Drives')+':'">
 					<div class="newCloud__option-field">
 						<!-- <a-divider orientation="left">
 							Диски:
@@ -73,20 +137,16 @@
 										{{$t('Drive')}}: 
 									</a-col>
 									<a-col  :sm="13" :span="14">
-										<a-row type="flex" justify="space-between">
-											<!-- <a-col :span="12"> -->
+										<a-row type="flex" justify="space-between" align="middle">
 											<a-col :span="3">
 												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-slider v-model="options.disk.size" :min="10" :max="1020" :tooltip-visible="collapseKey == 'drive'" :step="10" />
+												<a-slider v-model="options.disk.size" :min="10" :max="1020" :tooltip-visible="showTooltip" :step="10" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
 											</a-col>
-											<!-- <a-col :span="12">
-												<a-input-number v-model="options.disk.size" :min="0" class="max-width" default-value="1" />
-											</a-col> -->
 										</a-row>
 									</a-col>
 								</a-row>
@@ -114,7 +174,7 @@
 					</div>
 					</a-collapse-panel>
 
-					<a-collapse-panel key="network" header="Сеть:" :style="{'border-radius': '0 0 25px 25px'}">
+					<a-collapse-panel key="network" :header="$t('Network')+':'" :style="{'border-radius': '0 0 25px 25px'}">
 					<div class="newCloud__option-field">
 						<!-- <a-divider orientation="left">
 							Сеть:
@@ -152,9 +212,9 @@
 			</div>
 			
 			<div class="newCloud__calculate newCloud__field">
-				<div class="newCloud__field-header">
+				<!-- <div class="newCloud__field-header">
 					{{$t("Result")}}
-				</div>
+				</div> -->
 					
 				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
 					<a-col :span="22">
@@ -248,7 +308,7 @@
 						{{$t('Monthly payment')}}
 					</a-col>
 					<a-col>
-						<a-switch v-model="options.tarification"></a-switch>
+						<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
 					</a-col>
 				</a-row>
 
@@ -299,6 +359,10 @@ export default {
 	name: "newVDC",
 	data(){
 		return {
+			savedRateId: 0,
+			custom: false,
+			showTooltip: false,
+			dontshowattarrifs: ['hdd', 'traffic', 'address'],
 			collapseKey: "",
 			period: "hour",
 			toShow: {
@@ -316,6 +380,10 @@ export default {
 				tarification: false,
 				vmname: '',
 				password: '',
+				rate: {
+					id: 0,
+					name: 'Custom'
+				},
 				os: {
 					id: 532,
 					name: "CentOS 7",
@@ -355,6 +423,7 @@ export default {
 	},
 	mounted(){
 		this.$store.dispatch("newVDC/fetchTemplates");
+		this.$store.dispatch("newVDC/fetchRates");
 		
 		const user = this.$store.getters.getUser;
 		let userinfo = {
@@ -385,6 +454,40 @@ export default {
 		setOS(id){
 			this.options.os.id = id;
 			this.options.os.name = this.templatesArray.find( el=>el.id==id ).description.replace(' Template', "");
+			if(this.options.rate.id == 0){
+				this.collapseKey = "CPURAM"
+			} else {
+				this.collapseKey = "drive"
+			}
+		},
+		setRate(id){
+			this.options.rate.id = id;
+			this.savedRateId = id;
+			if(id != 0){
+				const rate = this.ratesArray.find( el=>el.pid==id );
+				this.options.rate.name = rate.name;
+				let props = rate.description.properties;
+				console.log(props);
+				props.forEach(el => {
+					let val = el.VALUE.match(/\d+/);
+					if(el.GROUP == "hdd"){
+						this.options.disk.type = el.GROUP.toUpperCase();
+						this.options.disk.size = parseInt(val[0], 10);
+					}
+					if(el.GROUP == "ssd"){
+						this.options.disk.type = el.GROUP.toUpperCase();
+						this.options.disk.size = parseInt(val[0], 10);
+					}
+					if(el.GROUP == "cpu_core"){
+						this.options.cpu.count = parseInt(val[0], 10);
+					}
+					if(el.GROUP == "ram"){
+						this.options.ram.size = parseInt(val[0], 10);
+					}
+				});
+			} else 
+				this.options.rate.name = "Custom";
+			this.collapseKey = "OS";
 		},
 		changePeriod(value){
 			this.period = value;
@@ -413,6 +516,11 @@ export default {
 			return price;
 		},
 		calculateFullPrice(){
+			if(this.options.rate.id != 0){
+				const user = this.$store.getters.getUser;
+				this.options.tarification = true;
+				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
+			}
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
@@ -421,7 +529,11 @@ export default {
 			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(3);
 		},
 		createVDC(){
-			this.modal.confirmCreate = true;
+			if(!this.custom && this.options.rate.id == 0){
+				this.$message.error("select tariff");
+			} else {
+				this.modal.confirmCreate = true;
+			}
 		},
 		handleOk(){
 			if(this.options.password.length < 6) {
@@ -497,6 +609,20 @@ export default {
 			if(variable == 'disksize'){
 				this.options.disk.size += val;
 			}
+			if(variable == 'ramsize'){
+				this.options.ram.size += val;
+			}
+			if(variable == 'cpucount'){
+				this.options.cpu.count += val;
+			}
+		},
+		closeAllTabs(val){
+			if(val){
+				this.options.rate.id = 0
+			} else {
+				this.options.rate.id = this.savedRateId;
+			}
+			this.collapseKey = '';
 		}
 	},
 	computed: {
@@ -504,11 +630,29 @@ export default {
 			const elements = this.$store.getters["newVDC/getTemplates"];
 			return elements;
 		},
+		ratesArray(){
+			const elements = this.$store.getters["newVDC/getRates"];
+			return elements;
+		},
 		periodToShow(){
 			if(this.options.tarification){
 				return 'month';
 			} else {
 				return this.period
+			}
+		},
+		disableNotCustom(){
+			return this.options.rate.id != 0;
+		}
+	},
+	watch: {
+		collapseKey: function(val) {
+			if(val == 'drive'){
+				setTimeout(() => {
+					this.showTooltip = true
+				}, 250);
+			} else {
+					this.showTooltip = false
 			}
 		}
 	}
@@ -574,9 +718,13 @@ export default {
 		justify-content: flex-start;
 	}
 
+	.newCloud__template.one-line{
+		flex-wrap: nowrap;
+		justify-content: space-between;
+	}
+
 	.newCloud__template-item{
 		width: 116px;
-		margin-right: 10px;
 		margin-bottom: 10px;
 		background-color: #fff;
 		/* padding: 10px; */
@@ -592,6 +740,10 @@ export default {
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: max-content auto;
+	}
+	
+	.newCloud__template-item:not(:last-child){
+		margin-right: 10px;
 	}
 
 	.newCloud__template-item:hover{
@@ -610,6 +762,10 @@ export default {
 
 	.newCloud__template-image{
 		padding: 10px;
+	}
+
+	.newCloud__template-image__rate{
+		font-size: 2rem;
 	}
 
 	.newCloud__template-name{
@@ -667,10 +823,17 @@ export default {
 			width: auto;
 			height: 50px;
 		}
+		.newCloud__template-item:not(:last-child){
+			margin-right: 0px;
+		}
 		.newCloud__template-image{
 			width: 50px;
 			height: 50px;
 			padding: 4px;
+		}
+		.newCloud__template-image__rate{
+			line-height: 42px;
+			font-size: 1.4rem;
 		}
 		.newCloud__template-image img{
 			object-fit: contain;
@@ -680,6 +843,19 @@ export default {
 		.newCloud__template-name{
 			text-align: left;
 			line-height: 30px;
+			display: flex;
+		}
+		.newCloud__template-type{
+			width: 56px;
+		}
+		.newCloud__template-name ul{
+			display: flex;
+			justify-content: space-around;
+			list-style: none;
+			flex: 1
+		}
+		.newCloud__template-name ul li{
+			margin-left: 20px;
 		}
 	}
 

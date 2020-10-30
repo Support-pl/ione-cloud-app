@@ -17,6 +17,12 @@ export default {
 				'max-age': '2592000'
 			}) // странная штука, вероятно потом надо будет переделать, но пока побудет так 08.10.2020
 		},
+		setCurrency(state, {value, getters}){
+			state.user.currency_code = value
+			setCookie('CloudUser', JSON.stringify(getters.getUser), {
+				'max-age': '2592000'
+			}) // странная штука, вероятно потом надо будет переделать, но пока побудет так 08.10.2020
+		},
 		logout(state){
 			state.user = null
 			state.logged = false
@@ -36,6 +42,10 @@ export default {
 		updateBalance(ctx, value){
 			const getters = ctx.getters;
 			ctx.commit("setBalance", {value, getters})
+		},
+		updateCurrency(ctx, value){
+			const getters = ctx.getters;
+			ctx.commit("setCurrency", {value, getters})
 		}
 	},
 	getters: {

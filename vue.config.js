@@ -16,7 +16,8 @@ module.exports = {
 		workboxPluginMode: 'InjectManifest',
 		workboxOptions: {
 			// navigateFallback: 'index.html',
-			swSrc: './public/service-worker.js'
+			swSrc: './public/service-worker.js',
+			exclude: [/\.map$/, /.htaccess/],
 		},
 
 		// настройки манифеста

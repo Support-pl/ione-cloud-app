@@ -18,7 +18,10 @@
 		<div class="cloud__wrapper">
 			<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 			<div class="cloud__new-btn" @click="createVDC()">
-				<a-icon type="plus"></a-icon>
+				<!-- <a-icon type="plus"></a-icon> -->
+				<span style="font-size: 1.2rem">
+					{{$t('Create VM')}}
+				</span>
 			</div>
 		</div>
 		</template>

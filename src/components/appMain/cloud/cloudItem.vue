@@ -7,7 +7,10 @@
 				<div class="item__status">{{cloud.STATE}}</div>
 			</div>
 			<div class="cloud__lower">
-				HOST: {{cloud.HOST}}, IP: {{cloud.IP}}
+				<template v-if="cloud.HOST != '' && cloud.HOST != undefined">
+					HOST: {{cloud.HOST}},
+				</template>
+					IP: {{cloud.IP}}
 			</div>
 		</div>
 	</div>

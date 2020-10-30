@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<div v-if="headers[active].needBalance" class="header__balance">
-					{{getUser.balance}} {{getUser.currency_code}}
+					<balance/>
 				</div>
 			</div>
 		</div>
@@ -44,8 +44,13 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import balance from "../balance/balance.vue";
+
 export default {
 	name: "appHeader",
+	components: {
+		balance
+	},
 	data(){
 		return {
 			indeterminate: true,
@@ -54,6 +59,7 @@ export default {
 			headers: {
 				'cloud': {
 					title: 'Cloud',
+					needBalance: true,
 					buttons: [
 						{
 							name: 'cloud_search',
@@ -70,6 +76,7 @@ export default {
 				},
 				'support': {
 					title: 'Support',
+					needBalance: true,
 					buttons: [
 						{
 							name: 'support_filter',
@@ -93,6 +100,7 @@ export default {
 				},
 				'invoice': {
 					title: 'Invoice',
+					needBalance: true,
 					buttons: [
 						{
 							name: 'invoice_filter',
@@ -106,7 +114,7 @@ export default {
 					buttons: []
 				},
 				'newVDC': {
-					title: 'Create new VDC',
+					title: 'Create VM',
 					notmain: true,
 					needBalance: true,
 					buttons: []

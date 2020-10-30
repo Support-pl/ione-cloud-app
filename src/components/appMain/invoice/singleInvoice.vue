@@ -39,7 +39,18 @@ export default {
 	},
 	computed: {
 		statusColor(){
-			return this.invoice.status.toLowerCase() == 'paid'? '#0fd058' : '#e82f3b';
+			switch (this.invoice.status.toLowerCase()) {
+				case 'paid':
+					return '#0fd058';
+					break;
+				case 'cancelled':
+					return '#e82f3b';
+					break;
+			
+				default:
+					return '#e82f3b';
+					break;
+			}
 		}
 	},
 	methods: {

@@ -1,10 +1,11 @@
 import md5 from 'md5';
-import axios from 'axios';
+import axios from '../axios';
 export default {
 	namespaced: true,
 
 	state: {
 		templates: [],
+		rates: [],
 		loading: false
 	},
 	mutations: {
@@ -13,6 +14,9 @@ export default {
 		},
 		updateTemplates(state, value){
 			state.templates = value;
+		},
+		updateRates(state, value){
+			state.rates = value;
 		}
 	},
 	actions: {
@@ -21,7 +25,7 @@ export default {
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('getTemplates' + user.id + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/getTemplates.php?id=${user.id}&secret=${close_your_eyes}`;
+			const url = `getTemplates.php?id=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
 			axios.get(url)
@@ -29,7 +33,18 @@ export default {
 					ctx.commit("updateTemplates", resp.data.response)
 					ctx.commit('makeLoadingIs', false)
 				})
-		}
+		},
+		fetchRates(ctx) {
+			ctx.commit('makeLoadingIs', true);
+			const url = `/getVMSTemplates.php`;
+
+			axios.get(url)
+				.then(resp => {
+					ctx.commit("updateRates", resp.data)
+					ctx.commit('makeLoadingIs', false)
+					console.log(resp);
+				})
+		},
 	},
 	getters: {
 		getTemplates(state){
@@ -42,6 +57,9 @@ export default {
 					return 1
 				return 0
 			});
+		},
+		getRates(state){
+			return state.rates;
 		}
 	}
 }
