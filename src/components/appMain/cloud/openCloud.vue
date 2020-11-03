@@ -387,17 +387,17 @@ export default {
 
 
 			let close_your_eyes = md5('vmaction' + userid + user.secret);
-			let url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
+			let url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
 			if(action.toLowerCase()=='reinstall'){
-				url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
+				url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
 			if(action.toLowerCase()=='delete'){
 				close_your_eyes = md5('VMremove' + userid + user.secret);
-				url = `https://my.support.by/app_cloud_mobile/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
+				url = `/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
 			// console.log(action)
 			// console.log(url);
-			axios.get(url)
+			this.$axios.get(url)
 			.then(res => {
 				// console.log(res);
 				
@@ -483,9 +483,9 @@ export default {
 			const snapname = encodeURI(this.snapshots.addSnap.snapname);
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=newSnapshot&snapname=${snapname}&vmid=${vmid}&secret=${close_your_eyes}`
+			const url = `/vmaction.php?userid=${userid}&action=newSnapshot&snapname=${snapname}&vmid=${vmid}&secret=${close_your_eyes}`
 			this.snapshots.addSnap.loading = true;
-			axios.get(url)
+			this.$axios.get(url)
 			.then(res => {
 				// console.log("sending new snap", res);
 				this.snapshots.addSnap.loading = false;
@@ -545,10 +545,10 @@ export default {
 			const snapid = object.SNAPSHOT_ID;
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=RMSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
+			const url = `/vmaction.php?userid=${userid}&action=RMSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
 			this.snapshots.data.find( el => el.SNAPSHOT_ID == snapid).loading = true;
 			this.snapshots.loadingSnaps.push(snapid);
-			axios.get(url)
+			this.$axios.get(url)
 			.then(res => {
 				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
 				if(ind > -1){
@@ -564,10 +564,10 @@ export default {
 			const snapid = object.SNAPSHOT_ID;
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/vmaction.php?userid=${userid}&action=RevSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
+			const url = `/vmaction.php?userid=${userid}&action=RevSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
 			this.snapshots.data.find( el => el.SNAPSHOT_ID == snapid).loading = true;
 			this.snapshots.loadingSnaps.push(snapid);
-			axios.get(url)
+			this.$axios.get(url)
 			.then(res => {
 				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
 				if(ind > -1){
@@ -583,8 +583,8 @@ export default {
 
 
 				const close_your_eyes = md5('getSnaps' + userid + user.secret);
-				const url = `https://my.support.by/app_cloud_mobile/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
-				axios.get(url)
+				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
+				this.$axios.get(url)
 				.then(res => {
 					console.log("snap",res);
 					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);

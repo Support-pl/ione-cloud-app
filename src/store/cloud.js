@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import axios from 'axios';
+import axios from '../axios';
 
 
 
@@ -50,37 +50,29 @@ export default {
 			ctx.commit('makeLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
-			// const close_your_eyes = md5('orders' + user.id + user.secret);
 			const close_your_eyes = md5('getVMS' + user.id + user.secret);
 
-			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}`;
-			// const url = `https://my.support.by/app_cloud_mobile/orders.php?id=${user.id}&secret=${close_your_eyes}`;
-			const url = `https://my.support.by/app_cloud_mobile/getVMS.php?userid=${user.id}&secret=${close_your_eyes}`;
-			// console.log(url)
+			const url = `/getVMS.php?userid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {
 					console.log("vuex got clouds: ", resp);
-					// ctx.commit("updateClouds", resp.data.data)
 					ctx.commit("updateClouds", resp.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeLoadingIs', false)
 				})
 		},
 		fetchSingleCloud(ctx, vmid){
-			// if (ctx.getters.isLoading) return;
 			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
 			ctx.commit('makeSingleLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
 
-			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
-			// console.log(url)
+			const url = `/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {
-					// console.log("RETURN OPENNED CLOUD: ", resp);
 					ctx.commit("updateOpenedCloud", resp.data.data)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeSingleLoadingIs', false)
@@ -92,12 +84,10 @@ export default {
 			ctx.commit('makeUpdatingIs', true)
 			const user = ctx.rootGetters.getUser;
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
-			const url = `https://my.support.by/app_cloud_mobile/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
-			// console.log(url)
+			const url = `/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {
-					// console.log("silent update: ", resp);
 					ctx.commit("updateOpenedCloud", resp.data.data)
 					if(resp.data.data.STATE == 3 && resp.data.data.LCM_STATE != 3) {
 						setTimeout(() => {

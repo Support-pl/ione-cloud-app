@@ -54,7 +54,6 @@
 </template>
 
 <script>
-const axios = require('axios');
 const md5 = require('md5');
 
 import load from '../../loading/loading.vue';
@@ -118,10 +117,10 @@ export default {
 
 			const params = this.objectToParams(object);
 
-			const url = `https://my.support.by/app_cloud_mobile/ticketreply.php?${params}`;
+			const url = `/ticketreply.php?${params}`;
 			// console.log(url)
 
-			axios.get(url)
+			this.$axios.get(url)
 			.then(res => {
 				// console.log(res);
 				if(res.data.result == "success")
@@ -146,10 +145,10 @@ export default {
 			// парсим объект в GET параметры
 			const params = this.objectToParams(object);
 
-			const url = `https://my.support.by/app_cloud_mobile/ticket.php?${params}`;
+			const url = `/ticket.php?${params}`;
 			// console.log(url)
 
-			axios.get(url)
+			this.$axios.get(url)
 			.then(resp => {
 				// console.log(resp);
 				this.replies = resp.data.replies.reply;

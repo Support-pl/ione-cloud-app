@@ -118,7 +118,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import md5 from "md5";
 import loading from '../../loading/loading.vue'
 import { mapGetters } from 'vuex';
@@ -205,15 +204,15 @@ export default {
 	mounted(){
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
-		const url = `https://my.support.by/app_cloud_mobile/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
+		const url = `/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
 		// console.log(url)
-		axios.get(url)
+		this.$axios.get(url)
 		.then(res => {
 			// console.log(res);
 			this.inv = res.data;
 			this.loading = false;
 		})
-		axios.get('https://my.support.by/app_cloud_mobile/GetPaymentMethods.php')
+		this.$axios.get('/GetPaymentMethods.php')
 		.then(res => {
 			// console.log('methods:', res);
 			this.payMethods = res.data.paymentmethods.paymentmethod;
