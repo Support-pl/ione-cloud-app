@@ -142,7 +142,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-slider v-model="options.disk.size" :min="10" :max="1020" :tooltip-visible="showTooltip" :step="10" />
+												<a-slider v-model="options.disk.size" :min="options.disk.type == 'SSD' ? 20 : 50" :max="1020" :tooltip-visible="showTooltip" :step="10" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
