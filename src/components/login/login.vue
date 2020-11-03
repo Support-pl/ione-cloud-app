@@ -157,11 +157,21 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: linear-gradient(90deg, #2074f5, #367ff2);
+	/* background: linear-gradient(90deg, #2074f5, #367ff2); */
+	background: var(--main);
 	clip-path: url(#myCurve);
-	color: #fff;
+	color: var(--bright_font);
 	font-size: 36px;
 	font-weight: bold;
+}
+
+.login__title::selection{
+	color: var(--main);
+	background: var(--bright_font);
+}
+.login__title::moz-selection{
+	color: var(--main);
+	background: var(--bright_font);
 }
 
 .login__UI{
