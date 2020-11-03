@@ -8,7 +8,7 @@
 						<div class="settings__name">{{user.firstname}} {{user.lastname}}</div>
 						<div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div>
 					</div>
-					<div class="settings__user-btn">
+					<div class="settings__user-btn" v-if="user_btn">
 						<a-icon type="right" />
 					</div>
 				</div>
@@ -51,11 +51,7 @@ export default {
     return {
       modalVisible: false,
 			confirmLoading: false,
-			amount: 10,
-			btns: [
-				5, 10, 50, 100, 500, 1000
-			],
-			stay: false
+			user_btn: false
     };
 	},
 	components: {
@@ -147,6 +143,7 @@ export default {
 
 	.settings__exit{
 		background-color: #ee5854;
+		/* background-color: var(--err); */
 		border: none;
 		outline: none;
 		color: #fff;
@@ -156,14 +153,17 @@ export default {
 		border-radius: 12px;
 		margin-top: 40px;
 		cursor: pointer;
+		transition: filter .2s ease;
 	}
 
 	.settings__exit:hover{
 		background-color: #f76964;
+		/* filter: brightness(1.05) */
 	}
 
 	.settings__exit:active{
 		background-color: #d8504b;
+		/* filter: brightness(.95) */
 	}
 
 	.settings__item{

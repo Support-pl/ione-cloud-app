@@ -41,14 +41,14 @@ export default {
 		statusColor(){
 			switch (this.invoice.status.toLowerCase()) {
 				case 'paid':
-					return '#0fd058';
+					return this.$config.colors.success;
 					break;
 				case 'cancelled':
-					return '#e82f3b';
+					return this.$config.colors.err;
 					break;
 			
 				default:
-					return '#e82f3b';
+					return this.$config.colors.err;
 					break;
 			}
 		}
@@ -86,7 +86,7 @@ export default {
 
 	.invoice__cost{
 		font-size: 28px;
-		color: #2590eb;
+		color: var(--main);
 	}
 
 	.horisontal-line{

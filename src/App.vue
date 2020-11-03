@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" :style="cssVars">
 		<transition name="slide">
 			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}"></router-view>
 		</transition>
@@ -39,7 +39,13 @@ export default {
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 			this.$router.replace("login");
 		}
-	}
+		console.log(this.$config);
+	},
+	computed: {
+    cssVars() {
+      return Object.fromEntries(Object.entries(this.$config.colors).map( ([key, val]) => ([`--${key}`, val])));
+    }
+  }
 };
 </script>
 

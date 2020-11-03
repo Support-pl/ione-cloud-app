@@ -774,8 +774,8 @@ export default {
 	}
 
 	.newCloud__template-item.active .newCloud__template-name{
-		background-color: #427cf7;
-		color: #fff;
+		background-color: var(--main);
+		color: var(--bright_font);
 	}
 
 	.max-width{

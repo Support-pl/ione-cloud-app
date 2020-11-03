@@ -134,7 +134,7 @@ export default {
 		width: 100%;
 		border: none;
 		outline: none;
-		background-color: rgb(243, 243, 243);
+		background-color: var(--bright_bg);
 		border-radius: 25px;
 		padding: 10px 15px;
 	}
@@ -167,12 +167,12 @@ export default {
 	}
 
 	.addTicket__button--cancel{
-		background-color: #f9383b;
+		background-color: var(--err);
 		border-radius: 0 0 0 25px;
 	}
 
 	.addTicket__button--send{
-		background-color: #0fd058;
+		background-color: var(--success);
 		border-radius: 0 0 25px 0;
 	}
 </style>

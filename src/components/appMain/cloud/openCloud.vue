@@ -646,7 +646,7 @@ export default {
 	}
 
 	.cloud__fullscreen{
-		background: #468aff;
+		background: var(--main);
 		display: flex;
 	}
 
@@ -660,9 +660,9 @@ export default {
 	.Fcloud__header{
 		position: sticky;
 		padding-top: 10px;
-		color: #fff;
+		color: var(--bright_font);
 		top: 0;
-		background-color: #468aff;
+		background-color: var(--main);
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;
 		justify-items: center;
@@ -684,14 +684,15 @@ export default {
 		text-transform: uppercase;
 		font-weight: bold;
 		font-size: 14px;
-		color: rgba(255,255,255,.7)
+		color: var(--bright_font);
+		opacity: .7;
 	}
 
 	.Fcloud__status-color{
 		position: absolute;
 		height: 15px;
 		width: 15px;
-		background-color: #fff;
+		background-color: var(--bright_font);
 		border-radius: 50%;
 		top: 50%;
 		left: -25px;
@@ -716,7 +717,7 @@ export default {
 
 	.Fcloud__BTN-icon{
 		padding: 10px;
-		background: #f3f3f3;
+		background: var(--bright_bg);
 		border-radius: 14px;
 		height: 40px;
 		width: 40px;
@@ -731,12 +732,14 @@ export default {
 	}
 
 	.Fcloud__BTN-title{
-		color: rgba(255,255,255,.8);
+		color: var(--bright_font);
+		opacity: .8;
 		font-weight: 600;
 		text-shadow: 1px 1px 2px rgba(0, 0, 0, .2);
 		transition:
 			color .1s ease,
-			text-shadow .1s ease;
+			text-shadow .1s ease,
+			opacity .1s ease;
 	}
 
 	.Fcloud__button:hover .Fcloud__BTN-icon{
@@ -747,6 +750,7 @@ export default {
 	.Fcloud__button:hover .Fcloud__BTN-title{		
 		text-shadow: 2px 2px 5px rgba(0, 0, 0, .2);
 		color: rgba(255,255,255,1);
+		opacity: 1;
 	}
 
 	.Fcloud__button:active{
@@ -760,7 +764,8 @@ export default {
 	}
 
 	.Fcloud__button.disabled .Fcloud__BTN-title{
-		color: rgba(255,255,255,.4)
+		color: var(--bright_font);
+		opacity: .8;
 	}
 
 	.Fcloud__button.disabled:hover{
@@ -768,7 +773,7 @@ export default {
 	}
 
 	.Fcloud__info{
-		background: #f0f3f6;
+		background: var(--bright_bg);
 		flex: 1 0;
 		border-radius: 35px 35px 0 0;
 		margin-top: 30px;

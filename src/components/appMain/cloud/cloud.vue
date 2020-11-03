@@ -83,7 +83,7 @@ export default {
 }
 
 .search{
-	background: #427cf7;
+	background: var(--main);
 	padding: 4px;
 	position: absolute;
 	display: flex;

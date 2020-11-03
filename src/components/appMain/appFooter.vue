@@ -53,7 +53,8 @@ export default {
 <style>
 
 .footer{
-	background-color: #fdfdfd;
+	/* background-color: #fdfdfd; */
+	background-color:	var(--bright_bg);
 	position: relative;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
 	user-select: none;
@@ -83,7 +84,7 @@ export default {
 
 .button__icon{
 	font-size: 1.2rem;
-	color: #919191;
+	color: var(--gray);
 	position: relative;
 	z-index: 2;
 	translate: color .2s ease;
@@ -92,37 +93,11 @@ export default {
 }
 
 .button:hover .button__icon{
-	color: #7c7c7c;
+	/* color: #7c7c7c; */
+	filter: brightness(0.8517);
 }
-/* 
 .footer__active{
-	background-color: #fdfdfd;
-	width: 60px;
-	height: 60px;
-	position: absolute;
-	top: -30px;
-	left: 15px;
-	border-radius: 50%;
-	z-index: 1;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
-	color: #fff;
-}
-
-.footer__active::before{
-	content: '';
-	display: block;
-	height: 52px;
-	width: 52px;
-	background-color: #427cf7;
-	border-radius: 50%;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%,-50%);
-	z-index: 1;
-} */
-.footer__active{
-	background-color: #427cf7;
+	background-color: var(--main);
 	height: 52px;
 	width: 52px;
 	position: absolute;
@@ -130,7 +105,7 @@ export default {
 	left: 47px;
 	border-radius: 50%;
 	z-index: 2;
-	color: #fff;
+	color: var(--bright_font);
 	transform: translateX(-50%);
 }
 
@@ -139,7 +114,7 @@ export default {
 	display: block;
 	width: 60px;
 	height: 60px;
-	background-color: #fdfdfd;
+	background-color: var(--bright_bg);
 	border-radius: 50%;
 	position: absolute;
 	top: 50%;
@@ -149,13 +124,14 @@ export default {
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
 }
 
-/* temp */
 .button.active{
-	background-color: #427cf7;
+	/* background-color: #427cf7; */
+	background-color: var(--main);
 }
 
+/* temp */
 .bg{
-	background-color: #427cf7;
+	background-color: var(--main);
 	position: absolute;
 	z-index: 1;
 	height: 100%;
@@ -164,12 +140,12 @@ export default {
 }
 
 .button.active .button__icon{
-	color: #fff;
+	color: var(--bright_font);
 	transform: translateY(5px);
 }
 
 .button.active .button__title{
 	transform: none;
-	color: #fff
+	color: var(--bright_font);
 }
 </style>

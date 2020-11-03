@@ -243,9 +243,9 @@ export default {
 		font-size: 1.4rem;
 	}
 
-	.clickable:hover{
-		/* cursor: pointer; */
-	}
+	/* .clickable:hover{
+		cursor: pointer;
+	} */
 
 	.icon__wrapper{
 		width: 44px;
@@ -262,13 +262,13 @@ export default {
 	}
 
 	.icon__wrapper:hover{
-		background-color: #fff;
-		color: #427cf7;
+		background-color: var(--bright_bg);
+		color: var(--main);
 		transform: scale(1.2);
 	}
 	.icon__wrapper.active__btn{
-		background-color: #fff;
-		color: #427cf7;
+		background-color: var(--bright_bg);
+		color: var(--main);
 	}
 
 	.icon__wrapper:active{

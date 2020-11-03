@@ -1,10 +1,10 @@
 <template>
 	<div class="application">
 		<a-layout>
-			<a-layout-header :style="{'background-color': '#427cf7', color: '#fff', padding: 0}">
+			<a-layout-header :style="{'background-color': $config.colors.main, color: $config.colors.bright_font, padding: 0}">
 				<appHeader/>
 			</a-layout-header>
-			<a-layout-content :style="{'background-color': '#f7f7f7', 'position': 'relative'}">
+			<a-layout-content :style="{'background-color': $config.colors.bright_bg, 'position': 'relative'}">
 				<!-- <cloud v-if="active == 0"></cloud>
 				<support v-if="active == 1"></support>
 				<invoice v-if="active == 2"></invoice>

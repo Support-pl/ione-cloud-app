@@ -130,15 +130,6 @@ export default {
 	data(){
 		return {
 			loading: true,
-			inv: {
-				// id: '124',
-				// cost: '50',
-				// currency: 'USD',
-				// status: 'Unpaid',
-				// invoiceDate: '07/01/2020',
-				// dueDate: '17/01/2020',
-				// service: 'CRM+ (Cloud)'
-			},
 			payment: [
 				'visa',
 				'mastercard',
@@ -226,7 +217,7 @@ export default {
 			return this.$store.getters.getUser;
 		},
 		statusColor(){
-			return this.inv.status.toLowerCase() == 'paid' ? '#0fd058' : '#e82f3b';
+			return this.inv.status.toLowerCase() == 'paid' ? this.$config.colors.success : this.$config.colors.err;
 		}
 	}
 
@@ -235,7 +226,7 @@ export default {
 
 <style>
 	.openInvoice__fullscreen{
-		background: #468aff;
+		background: var(--main);
 	}
 	.openInvoice{
 		height: 100%;
@@ -247,7 +238,7 @@ export default {
 	.openInvoice__header {
 		height: 64px;
 		line-height: 64px;
-		background-color: rgb(66, 124, 247);
+		background-color: var(--main);
 		color: #fff;
 		padding: 0;
 	}
@@ -283,7 +274,7 @@ export default {
 
 	.openInvoice__main{
 		flex: 1 0;
-		background-color: rgb(66, 124, 247);
+		background-color: var(--main);
 		/* padding: 6px 15px; */
 	}
 
@@ -424,11 +415,20 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #0fd058;
+		background-color: var(--success);
 		border-radius: 24px;
 		font-weight: 600;
-		color: #fff;
+		color: var(--bright_font);
 		cursor: pointer;
+		transition: filter .2s ease;
+	}
+
+	.info__button--pay:hover{
+		filter: brightness(1.05)
+	}
+
+	.info__button--pay:active{
+		filter: brightness(.95)
 	}
 
 	.info__row{
@@ -496,6 +496,7 @@ export default {
 	
 	.info__row--pay-btn:hover{
 		background-color: #18da62;
+		filter: brightness(.8);
 	}
 	
 	.info__row--pay-btn:active{

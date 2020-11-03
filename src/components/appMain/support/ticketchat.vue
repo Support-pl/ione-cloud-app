@@ -204,8 +204,8 @@ export default {
 		right: 0;
 		height: 64px;
 		line-height: 64px;
-		background-color: rgb(66, 124, 247);
-		color: #fff;
+		background-color: var(--main);
+		color: var(--bright_font);
 		padding: 0;
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;
@@ -228,7 +228,7 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #ececec;
+		background-color: var(--bright_bg);;
 		padding: 10px;
 		position: absolute;
 		bottom: 0;
@@ -245,8 +245,8 @@ export default {
 	}
 
 	.chat__send{
-		background-color: #1b7ee4;
-		color: #fff;
+		background-color: var(--main);
+		color: var(--bright_font);
 		border-radius: 50%;
 		height: 35px;
 		width: 35px;
@@ -255,16 +255,18 @@ export default {
 		align-items: center;
 		margin-left: 10px;
 		font-size: 1.2rem;
-		transition: background-color .2s ease;
+		transition: filter .2s ease;
 		cursor: pointer;
 	}
 
 	.chat__send:hover{
-		background-color: #2387eb;
+		/* background-color: #2387eb; */
+		filter: brightness(1.05)
 	}
 
 	.chat__send:active{
-		background-color: #1f7cda;
+		/* background-color: #1f7cda; */
+		filter: brightness(.95)
 	}
 
 	.chat__content{
@@ -308,7 +310,7 @@ export default {
 		left: -25px;
 		top: 50%;
 		transform: translateY(-50%);
-		background: #e41b1b;
+		background: var(--err);
 		border-radius: 50%;
 		color: #fff;
 		width: 20px;

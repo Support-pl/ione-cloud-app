@@ -60,16 +60,16 @@ export default {
 			let color = '';
 			switch (this.ticket.status.toLowerCase()) {
 				case 'open':
-					color = '#58f938';
+					color = this.$config.colors.success;
 					break;
 				case 'customer-reply':
-					color = '#f9f038';
+					color = this.$config.colors.warn;
 					break;
 				case 'closed':
-					color = '#f9383b';
+					color = this.$config.colors.err;
 					break;
 				default:
-					color = '#f9f038';
+					color = this.$config.colors.warn;
 					break;
 			}
 			return color;
