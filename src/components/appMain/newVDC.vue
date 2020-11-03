@@ -494,7 +494,8 @@ export default {
 		},
 		calculatePrice(price){
 			if(this.options.tarification){
-				return price * 0.85;	
+				// return price * 0.85;	
+				return price;	
 			}
 			switch (this.period) {
 				case "minute":
