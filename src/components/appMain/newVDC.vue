@@ -458,10 +458,10 @@ export default {
 	},
 	methods: {
 		onSlideChange(){
-			console.log("change");
+			// console.log("change");
 		},
 		onSwiper(){
-			console.log("swiper");
+			// console.log("swiper");
 		},
 		setOS(id){
 			this.options.os.id = id;
@@ -479,7 +479,7 @@ export default {
 				const rate = this.ratesArray.find( el=>el.pid==id );
 				this.options.rate.name = rate.name;
 				let props = rate.description.properties;
-				console.log(props);
+				// console.log(props);
 				props.forEach(el => {
 					let val = el.VALUE.match(/\d+/);
 					if(el.GROUP == "hdd"){
@@ -564,7 +564,7 @@ export default {
 			this.modal.confirmLoading = true;
 			this.send()
 				.then( responce => {
-					console.log(responce.data)
+					// console.log(responce.data)
 					if(responce.data.result == 'error'){
 						this.$message.error(responce.data.message);
 					} else {
@@ -614,7 +614,7 @@ export default {
 			if(this.options.network.local.status){
 				vmOptions['localIPs'] = this.options.network.local.count;
 			}
-			console.log(vmOptions);
+			// console.log(vmOptions);
 			return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
 		},
 		URLparameter(obj, outer = ''){

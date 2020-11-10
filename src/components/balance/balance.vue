@@ -45,7 +45,7 @@ export default {
 		}
 		this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(this.user.id == res.data.userid){
 					this.$store.dispatch("updateBalance", res.data.balance);
 					this.$store.dispatch("updateCurrency", res.data.currency_code);

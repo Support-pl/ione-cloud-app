@@ -39,7 +39,7 @@ export default {
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 			this.$router.replace("login");
 		}
-		console.log(this.$config);
+		// console.log(this.$config);
 	},
 	computed: {
     cssVars() {

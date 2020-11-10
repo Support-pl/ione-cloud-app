@@ -586,7 +586,7 @@ export default {
 				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				this.$axios.get(url)
 				.then(res => {
-					console.log("snap",res);
+					// console.log("snap",res);
 					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
 					this.snapshots.data = res.data.response;
 					this.snapshots.loading = false;
