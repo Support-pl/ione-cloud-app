@@ -89,13 +89,13 @@
 									<a-tag color="green" :style="{'margin-bottom': '10px'}">
 										{{$t('cloud_Regular')}}
 									</a-tag>
-									перезапуск
+									{{$t('cloud_Reboot_modal')}}
 								</a-radio>
 								<a-radio :value="1">
 									<a-tag color="red">
 										HARD
 									</a-tag>
-									перезапуск
+									{{$t('cloud_Reboot_modal')}}
 								</a-radio>
 							</a-radio-group>
 						</a-modal>
@@ -113,10 +113,10 @@
 							<p>{{$t('cloud_Recover_invite')}}</p>
 							<a-radio-group v-model="option.recover" name="recover" :default-value="1">
 								<a-radio :value="0">
-									Вчера
+									{{$t('yesterday')}}
 								</a-radio>
 								<a-radio :value="1">
-									Сегодня
+									{{$t('today')}}
 								</a-radio>
 							</a-radio-group>
 						</a-modal>
@@ -240,9 +240,9 @@
 								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading" @click="openModal('createSnapshot')">Take snapshot</a-button>
 							</div>
 							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
-								<p>Вы можете иметь одновременно только 3 снапшота.</p>
-								<p>Каждый снапшот существует 24 часа, после чего удаляется.</p>
-								<p>Выберите имя для нового снапшота:</p>
+								<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
+								<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
+								<p>{{$t('Choose a name for the new snapshot:')}}</p>
 								<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
 								<div class="modal__buttons">
 									<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
@@ -450,9 +450,12 @@ export default {
 					let trigger = this.modal;
 					let opt = this.option;
 					this.$confirm({
-						title: 'Вы хотите загрузить бэкап?',
+						title: me.$t('Do you want to download a backup?'),
 						maskClosable: true,
-						content: h => <div>Весь несохраненный прогресс будет утерян, вы уверены?</div>,
+						content: h => {
+							let string = me.$t('All unsaved progress will be lost, are you sure?');
+							return <div>{string}</div>
+						},
 						okText: me.$t('Yes'),
 						cancelText: me.$t('Cancel'),
 						onOk() {

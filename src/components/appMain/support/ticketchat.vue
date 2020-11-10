@@ -30,7 +30,7 @@
 				:class="[ isAdminSent(reply) ? 'chat__message--in' : 'chat__message--out']">
 				<pre v-html="beauty(reply.message)"></pre>
 				<a-icon v-if="reply.sending" type="loading" class="msgStatus loading"></a-icon>
-				<a-popover v-if="reply.error" title="Ошибка отправления">
+				<a-popover v-if="reply.error" :title="$t('Send error')">
 					<template slot="content">
 						<a class="popover-link" slot="content" @click="messageDelete(reply)">{{$t('chat_Delete_message')}}</a>
 						<a class="popover-link" slot="content" @click="messageResend(reply)">{{$t('chat_Resend_message')}}</a>

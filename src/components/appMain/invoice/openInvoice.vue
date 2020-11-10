@@ -70,7 +70,7 @@
 									</transition>
 								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									Отобразить полный список ({{inv.items.item.length-1}})
+									{{$t('Show full list')}} ({{inv.items.item.length-1}})
 								</div>
 							</div>
 						</div>
@@ -81,16 +81,16 @@
 								</div>
 								<div class="info__button info__button--pay">
 									<div @click='showPayModal' class="info__button">
-										Оплатить
+										{{$t('Pay')}}
 									</div>
 										<a-modal
-											title="Выберите метод оплаты"
+											:title='$t("Choose your payment method")'
 											:visible="visible.pay"
 											:confirm-loading="confirmLoading.pay"
 											@ok="handlePayOk"
 											@cancel="handlePayCancel"
 										>
-											<p>Метод оплаты:</p>
+											<p>{{$t('Payment method')}}:</p>
 											<a-select style="min-width: 100%" v-model="elem"> 
 												<!--attr: default-value="lucy" -->
 												<a-select-option v-for="method in payMethods" :key="method.module" :value="method.module">
@@ -134,7 +134,6 @@ export default {
 				'visa',
 				'mastercard',
 				'yandex.money',
-				'ЕРИП'
 			],
 			payMethods: [],
 			showFullTable: false,
@@ -176,12 +175,13 @@ export default {
       this.visible.pay = false;
 		},
 		showConfirm() {
+			const self = this;
       this.$confirm({
-        title: 'Вы хотите отложить платеж?',
+        title: self.$t('Do you want to defer payment?'),
 				maskClosable: true,
-        content: h => <div>Платеж можно отложить только один раз. Платеж откладывается на 5 дней.</div>,
-        okText: 'Да',
-				cancelText: 'Отмена',
+        content: h => <div>{self.$t('The payment can be postponed only once. The payment is postponed for 5 days.')}</div>,
+        okText: self.$t('Yes'),
+				cancelText: self.$t('Cancel'),
         onOk() {
 					// console.log('Да');
         },

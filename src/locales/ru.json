@@ -50,6 +50,7 @@
 	"Local network": "Локальная сеть",
 	"Result": "Результат",
 	"Cost": "Стоимость",
+	"min": "мин",
 	"hour": "час",
 	"day": "день",
 	"week": "неделя",
@@ -65,12 +66,22 @@
 	"Actual price may vary": "Реальная цена может отличаться",
 	"Choose a tariff": "Выберите тариф",
 	"Choose OS": "Выберите ОС",
+	"today": "сегодня",
+	"yesterday": "вчера",
+	"Send error": "Ошибка отправления",
 	
   "invoice_Description": "Описание",
 	"invoice_Price": "Сумма",
 	"invoice_Paid": "Оплачен",
 	"invoice_Unpaid": "Не оплачен",
 	"invoice_Cancelled": "Отменен",
+
+	"Pay": "Оплатить",
+	"Choose your payment method": "Выберите метод оплаты",
+	"Payment method": "Метод оплаты",
+	"Do you want to defer payment?": "Вы хотите отложить платеж?",
+
+	"Show full list": "Отобразить полный список",
 	
   "cloud_StartTime": "Время запуска",
 	"cloud_Capacity": "Вместимость",
@@ -91,9 +102,17 @@
 	"cloud_Recover_invite_line2": "Бэкапы делаются каждый день в 4:00.",
 	"cloud_Recover_invite_line3": "Восстановление 50Гб дискового пространства занимает примерно 1 час.",
 
+	"You can only have 3 snapshots at a time.": "Вы можете иметь одновременно только 3 снапшота.",
+	"Each snapshot exists for 24 hours and is then deleted.": "Каждый снапшот существует 24 часа, после чего удаляется.",
+	"Choose a name for the new snapshot:": "Выберите имя для нового снапшота:",
+
 	"support_Create_ticket": "Создать обращение",
 	"support_Question_subject": "Тема",
 	"support_Question": "Вопрос",
+
+	"Do you want to download a backup?": "Вы хотите загрузить бэкап?",
+	"The payment can be postponed only once. The payment is postponed for 5 days.": "Платеж можно отложить только один раз. Платеж откладывается на 5 дней.",
+	"All unsaved progress will be lost, are you sure?": "Весь несохраненный прогресс будет утерян, вы уверены?",
 
 	"Cancel": "Отмена",
 	"Yes": "Да",

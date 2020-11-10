@@ -50,6 +50,7 @@
 	"Local network": "Local network",
 	"Result": "Result",
 	"Cost": "Cost",
+	"min": "min",
 	"hour": "hour",
 	"day": "day",
 	"week": "week",
@@ -65,12 +66,22 @@
 	"Actual price may vary": "Actual price may vary",
 	"Choose a tariff": "Choose a tariff",
 	"Choose OS": "Choose OS",
+	"today": "today",
+	"yesterday": "yesterday",
+	"Send error": "Send error",
 	
   "invoice_Description": "Description",
 	"invoice_Price": "Price",
 	"invoice_Paid": "Paid",
 	"invoice_Unpaid": "Unpaid",
 	"invoice_Cancelled": "Cancelled",
+
+	"Pay": "Pay",
+	"Choose your payment method": "Choose your payment method",
+	"Payment method": "Payment method",
+	"Do you want to defer payment?": "Do you want to defer payment?",
+
+	"Show full list": "Show full list",
 	
   "cloud_StartTime": "Start time",
   "cloud_Capacity": "Capacity",
@@ -90,10 +101,18 @@
 	"cloud_Recover_invite_line1": "WARNING! Virtual machine will be rebooted during the recovering!",
 	"cloud_Recover_invite_line2": "Backups are creating every day at 4:00 AM.",
 	"cloud_Recover_invite_line3": "50GB Disk Recovery takes approximately 1 hour.",
+	
+	"You can only have 3 snapshots at a time.": "You can only have 3 snapshots at a time.",
+	"Each snapshot exists for 24 hours and is then deleted.": "Each snapshot exists for 24 hours and is then deleted.",
+	"Choose a name for the new snapshot:": "Choose a name for the new snapshot:",
 
 	"support_Create_ticket": "Create ticket",
 	"support_Question_subject": "Question subject",
 	"support_Question": "Question",
+
+	"Do you want to download a backup?": "Do you want to download a backup?",
+	"The payment can be postponed only once. The payment is postponed for 5 days.": "The payment can be postponed only once. The payment is postponed for 5 days.",
+	"All unsaved progress will be lost, are you sure?": "All unsaved progress will be lost, are you sure?",
 
 	"Cancel": "Cancel",
 	"Yes": "Yes",

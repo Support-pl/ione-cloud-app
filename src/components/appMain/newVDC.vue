@@ -43,20 +43,11 @@
 											</ul>
 										</div>
 									</div>
-									<!-- <div class="newCloud__template-item" :class="{ active: options.rate.id==0 }" @click='setRate(0)'>
-										<div class="newCloud__template-image newCloud__template-image__rate">
-											С
-										</div>
-										<div class="newCloud__template-name">Custom</div>
-									</div> -->
 								</div>
 							</div>
 						</a-collapse-panel>
 						<a-collapse-panel key="OS" :header="$t('Choose OS') + ' (' + options.os.name + '):'">
 							<div class="newCloud__option-field">
-								<!-- <a-divider orientation="left">
-									Выберите ОС:
-								</a-divider> -->
 								<div class="newCloud__template">
 									<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
 										<div class="newCloud__template-image">
@@ -127,9 +118,6 @@
 					</a-collapse-panel>
 					<a-collapse-panel key="drive" :header="$t('Drives')+':'">
 					<div class="newCloud__option-field">
-						<!-- <a-divider orientation="left">
-							Диски:
-						</a-divider> -->
 						<a-row :gutter="[10, 10]">
 							<a-col :sm="12" :span="24">
 								<a-row>
@@ -176,9 +164,6 @@
 
 					<a-collapse-panel key="network" :header="$t('Network')+':'" :style="{'border-radius': '0 0 25px 25px'}">
 					<div class="newCloud__option-field">
-						<!-- <a-divider orientation="left">
-							Сеть:
-						</a-divider> -->
 						<a-row :gutter="[10, 10]">
 							<a-col :sm="12" :span="24">
 								<a-row>
@@ -212,16 +197,10 @@
 			</div>
 			
 			<div class="newCloud__calculate newCloud__field">
-				<!-- <div class="newCloud__field-header">
-					{{$t("Result")}}
-				</div> -->
 					
 				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
 					<a-col :span="22">
 						<a-select default-value="hour" :disabled="options.tarification" :value="periodToShow" style="width: 100%" @change="changePeriod">
-							<!-- <a-select-option value="minute">
-								Стоимость/Минута
-							</a-select-option> -->
 							<a-select-option value="hour">
 								{{$t("Cost")}}/{{$t("hour")}}
 							</a-select-option>
@@ -286,7 +265,7 @@
 							<template slot="title">
 								{{$t('Actual price may vary')}}
 							</template>
-							~{{calculateFullPrice()}}BYN/{{toShow[periodToShow]}}
+							~{{calculateFullPrice()}}BYN/{{$t(toShow[periodToShow])}}
 						</a-tooltip>
 					</a-col>
 				</a-row>
@@ -311,16 +290,6 @@
 						<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
 					</a-col>
 				</a-row>
-
-
-				<!-- <a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
-					<a-col>
-						<p>Ежемесячная оплата</p>
-						<p>
-							<a-switch default-checked />
-						</p>
-					</a-col>
-				</a-row> -->
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">
@@ -366,11 +335,11 @@ export default {
 			collapseKey: "",
 			period: "hour",
 			toShow: {
-				minute: "мин.",
-				hour: "час",
-				day: "день",
-				week: "неделя",
-				month: "мес."
+				minute: "min",
+				hour: "hour",
+				day: "day",
+				week: "week",
+				month: "month"
 			},
 			modal: {
 				confirmCreate: false,
