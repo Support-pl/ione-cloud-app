@@ -89,7 +89,7 @@
 														<a-icon type="minus" class="slider_btn" @click="changeValue('ramsize', -1)"></a-icon>
 													</a-col>
 													<a-col :span="18">
-														<a-input-number v-model="options.ram.size" class="max-width" :min="0" default-value="1" :disabled="disableNotCustom" />
+														<a-input-number v-model="options.ram.size" class="max-width" :min="options.ram.min" :max="options.ram.max" default-value="1" :disabled="disableNotCustom" />
 													</a-col>
 													<a-col :span="3">
 														<a-icon type="plus" class="slider_btn" @click="changeValue('ramsize', 1)"></a-icon>
@@ -112,7 +112,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-input-number v-model="options.cpu.count" class="max-width" :min='0' default-value="1" :disabled="disableNotCustom" />
+												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='options.cpu.max' default-value="1" :disabled="disableNotCustom" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
@@ -142,7 +142,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-slider v-model="options.disk.size" :min="options.disk.type == 'SSD' ? 20 : 50" :max="1020" :tooltip-visible="showTooltip" :step="10" />
+												<a-slider v-model="options.disk.size" :min="options.disk.min[options.disk.type]" :max="options.disk.max[options.disk.type]" :tooltip-visible="showTooltip" :step="10" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
@@ -390,12 +390,16 @@ export default {
 				},
 				cpu: {
 					count: 1,
-					price: 11.5
+					price: 11.5,
+					min: 1,
+					max: 32
 				},
 				ram: {
 					size: 1,
 					units: "GB",
-					price: 10
+					price: 10,
+					min: 1,
+					max: 512
 				},
 				disk: {
 					size: 10,
@@ -404,6 +408,14 @@ export default {
 					price: {
 						HDD: 0.2,
 						SSD: 0.6
+					},
+					min: {
+						HDD: 50,
+						SSD: 20
+					},
+					max: {
+						HDD: 1020,
+						SSD: 1020
 					},
 					backupPrice: 0.15
 				},
@@ -616,13 +628,22 @@ export default {
 			this.collapseKey = key;
 		},
 		changeValue(variable, val){
-			if(variable == 'disksize'){
+			if(variable == 'disksize'
+				&& this.options.disk.size + val <= this.options.disk.max[this.options.disk.type]
+				&& this.options.disk.size + val >= this.options.disk.min[this.options.disk.type])
+			{
 				this.options.disk.size += val;
 			}
-			if(variable == 'ramsize'){
+			if(variable == 'ramsize'
+				&& this.options.ram.size + val <= this.options.ram.max
+				&& this.options.ram.size + val >= this.options.ram.min)
+			{
 				this.options.ram.size += val;
 			}
-			if(variable == 'cpucount'){
+			if(variable == 'cpucount'
+				&& this.options.cpu.count + val <= this.options.cpu.max
+				&& this.options.cpu.count + val >= this.options.cpu.min)
+			{
 				this.options.cpu.count += val;
 			}
 		},
