@@ -20,7 +20,7 @@
 
 				<div class="newCloud_option">
 					<a-collapse accordion :style="{'border-radius': '25px'}" @change="collapseChange" :activeKey="collapseKey">
-						<a-collapse-panel key="Template" :header="$t('Choose a tariff') + ' (' + options.rate.name + '):'" v-if="!custom">
+						<a-collapse-panel key="Template" :header="$t('Choose a tariff') + (options.rate.id == 0 ? ':' : ' (' + options.rate.name + '):')" v-if="!custom">
 							<div class="newCloud__option-field">
 								<div class="newCloud__template one-line">
 									<div v-for="rate in ratesArray" class="newCloud__template-item" :class="{ active: options.rate.id==rate.pid }" @click='setRate(rate.pid)' :key="rate.pid">
@@ -545,11 +545,15 @@ export default {
 			this.send()
 				.then( responce => {
 					console.log(responce.data)
-					this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
+					if(responce.data.result == 'error'){
+						this.$message.error(responce.data.message);
+					} else {
+						this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
+						this.$store.dispatch("app/setTabByName", "cloud");
+					}
 					this.options.password = '';
 					this.modal.confirmCreate = false;
 					this.modal.confirmLoading = false;
-					this.$store.dispatch("app/setTabByName", "cloud");
 				})
 				.catch( err => {
 					console.error(err)
@@ -570,6 +574,10 @@ export default {
 				userid: user.id,
 				secret: md5('createVM' + user.id + user.secret)
 			}
+			let savedPeriod = this.period;
+			this.period = 'month';
+			const price = this.calculateFullPrice();
+			this.period = savedPeriod;
 			const vmOptions = {
 				'publicIPs': this.options.network.public.count,
 				'cpu': this.options.cpu.count,
@@ -580,7 +588,8 @@ export default {
 				'memoryunits': this.options.ram.units,
 				'templateid': this.options.os.id,
 				'vmname': this.options.vmname,
-				'password': this.options.password
+				'password': this.options.password,
+				'calculatedPrice': price
 			}
 			if(this.options.network.local.status){
 				vmOptions['localIPs'] = this.options.network.local.count;
