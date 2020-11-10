@@ -158,7 +158,7 @@
 										{{$t('Drive type')}}: 
 									</a-col>
 									<a-col :sm="13" :span="14">
-										<a-select v-model="options.disk.type" class="max-width" default-value="SSD">
+										<a-select v-model="options.disk.type" class="max-width" default-value="SSD" @change='diskChange()'>
 											<a-select-option value="SSD">
 												SSD
 											</a-select-option>
@@ -546,6 +546,14 @@ export default {
 				this.$message.error("select tariff");
 			} else {
 				this.modal.confirmCreate = true;
+			}
+		},
+		diskChange(){
+			if([
+				this.options.disk.min.SSD,
+				this.options.disk.min.HDD
+			].includes(this.options.disk.size)){
+				this.options.disk.size = this.options.disk.min[this.options.disk.type];
 			}
 		},
 		handleOk(){
