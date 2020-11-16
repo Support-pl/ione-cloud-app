@@ -7,5 +7,6 @@ export default {
 		gray: '#919191',
 		bright_font: '#fff',
 		bright_bg: '#f7f7f7',
-	}
+	},
+	WHMCSsiteurl: 'https://my.support.by/'
 }

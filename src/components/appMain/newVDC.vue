@@ -45,7 +45,7 @@
 								<div class="newCloud__template">
 									<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
 										<div class="newCloud__template-image">
-											<img :src="'https://vcloud.support.by/' + OS.logo" :alt="OS.name">
+											<img :src="OS.logo.replace('images/', 'img/')" :alt="OS.name">
 										</div>
 										<div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div>
 									</div>
@@ -313,6 +313,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import md5 from 'md5'
+import config from '../../appconfig'
 export default {
 	name: "newVDC",
 	data(){
@@ -360,7 +361,7 @@ export default {
 					max: 512
 				},
 				disk: {
-					size: 10,
+					size: 20,
 					units: "GB",
 					type: "SSD",
 					price: {
@@ -492,6 +493,11 @@ export default {
 			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(3);
 		},
 		createVDC(){
+			if(!~this.options.os.id){
+				this.$message.error("select OS");
+				this.collapseKey = "OS";
+				return;
+			}
 			if(!this.custom && this.options.rate.id == 0){
 				this.$message.error("select tariff");
 			} else {

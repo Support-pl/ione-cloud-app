@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from './appconfig.js'
 export default axios.create({
-	baseURL: 'https://my.support.by/app_cloud_mobile',
+	baseURL: config.WHMCSsiteurl + 'app_cloud_mobile',
 });
