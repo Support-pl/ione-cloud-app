@@ -2,7 +2,7 @@
   	<div class="none">
 		<div class="smile">:(</div>
 		<!-- {{$t('Тут пока ничего нет...')}} -->
-		{{$t('There is empty...')}}
+		{{$t('It’s empty...')}}
 	</div>
 </template>
 
