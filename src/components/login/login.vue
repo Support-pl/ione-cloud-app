@@ -82,8 +82,8 @@ export default {
 			// })
 
 
-			const email = encodeURI(this.email);
-			const password = encodeURI(this.password);
+			const email = encodeURIComponent(this.email);
+			const password = encodeURIComponent(this.password);
 			// const email = encodeURI('trestsadasds@tsdas.er');
 			// const password = encodeURI('trestsadasds');
 
