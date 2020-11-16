@@ -70,23 +70,8 @@ export default {
 			this.send(this);
 		},
 		send(context){
-			// return new Promise((reslove, reject) =>{
-			// 	setInterval(() => {
-			// 		context.tryingLogin = false;
-			// 		// DEBUG
-			// 		reslove({
-			// 			name: "test",
-			// 			balance: 222
-			// 		});
-			// 	}, 2000);
-			// })
-
-
 			const email = encodeURIComponent(this.email);
 			const password = encodeURIComponent(this.password);
-			// const email = encodeURI('trestsadasds@tsdas.er');
-			// const password = encodeURI('trestsadasds');
-
 			
 			this.$axios.get(`/login.php?email=${email}&password=${password}`)
 			.then(Response => {
@@ -101,7 +86,6 @@ export default {
 					
 					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
 					const url = `/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
-					// console.log(url)
 					this.$axios.get(url)
 					.then(resp => {
 						user.firstname = resp.data.firstname;
@@ -110,9 +94,6 @@ export default {
 						user.currency_code = resp.data.currency_code;
 
 						this.$store.dispatch("onLoadUser", user);
-						// this.setCookie('CloudUser', JSON.stringify(user), {
-						// 	'max-age': '2592000'
-						// });
 						this.$router.push("cloud");
 						location.reload() //костыль, починить позже
 					})
@@ -129,10 +110,6 @@ export default {
 		},
 		
 	},
-	mounted(){
-		// console.log('this.$store');
-		// console.log(this.$store);
-	}
 }
 </script>
 
@@ -157,7 +134,6 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	/* background: linear-gradient(90deg, #2074f5, #367ff2); */
 	background: var(--main);
 	clip-path: url(#myCurve);
 	color: var(--bright_font);
@@ -234,10 +210,7 @@ export default {
 .inputs__log-pas input{
 	border: none;
 	outline: none;
-	/* height: 60px; */
 	padding: 10px 15px;
-	/* background-color: red;
-	border: 1px dashed gray; */
 }
 
 .login__forgot a{
@@ -282,13 +255,9 @@ export default {
 	50% {transform: scale(.2);}
 }
 
-
-
-
 .login__error{
 	color: tomato;
 	text-align: center;
-	/* padding: 15px 0px; */
 	position: absolute;
 	top: 0px;
 	left: 50%;
@@ -321,8 +290,3 @@ export default {
 }
 
 </style>
-
-
-
-
-// TODO: динамическое обновление баланса

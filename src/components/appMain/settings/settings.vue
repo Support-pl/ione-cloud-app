@@ -63,12 +63,10 @@ export default {
 			this.$router.push("login")
 		},
 		changeLanguage(){
-			// console.log("time to change lang", this.$i18n)
 			this.$i18n.locale = this.$i18n.locale == "ru"? "en" : "ru";
 			localStorage.setItem("lang", this.$i18n.locale);
 		},
 		logoutFunc(){
-			// console.log('logout Func');
 			this.$router.push('/login')
 			this.$store.commit('logout')
 		},
@@ -158,12 +156,10 @@ export default {
 
 	.settings__exit:hover{
 		background-color: #f76964;
-		/* filter: brightness(1.05) */
 	}
 
 	.settings__exit:active{
 		background-color: #d8504b;
-		/* filter: brightness(.95) */
 	}
 
 	.settings__item{

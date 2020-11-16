@@ -48,7 +48,6 @@ export default {
 			this.$store.commit('support/inverseAddTicketState')
 		},
 		sendNewTicket(){
-			// console.log('sending')
 			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3) return;
 			this.isSending = true;
 
@@ -60,16 +59,12 @@ export default {
 				secret: close_your_eyes
 			}
 
-			// парсим объект в GET параметры
 			const params = Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
 
 			const url = `/openticket.php?${params}`;
-			// console.log(url)
 
 			this.$axios.get(url)
 				.then(resp => {
-					// console.log(resp)
-					// console.log(url)
 					if(resp.data.result == "success"){
 						this.ticketTitle = "";
 						this.ticketMessage = "";

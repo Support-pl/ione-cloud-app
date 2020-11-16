@@ -1,6 +1,5 @@
 <template>
 	<div class="chat">
-		<!-- {{this.$route.params.pathMatch}} -->
 		<div class="chat__header">
 			<div class="chat__back">
 				<div class="icon__wrapper" @click="goBack()">
@@ -17,11 +16,6 @@
 			</div>
 		</div>
 
-
-		<!-- <div class="chat__content">
-			<div class="chat__message chat__message--out">Тестовое исходящее сообщение</div>
-			<div class="chat__message chat__message--in">Тестовое входяещее сообщение в ответ</div>
-		</div> -->
 		<load v-if="loading"/>
 		<div v-else class="chat__content">
 			<div
@@ -118,11 +112,9 @@ export default {
 			const params = this.objectToParams(object);
 
 			const url = `/ticketreply.php?${params}`;
-			// console.log(url)
 
 			this.$axios.get(url)
 			.then(res => {
-				// console.log(res);
 				if(res.data.result == "success")
 					this.replies[--this.sendingMessagesCount].sending = false;
 				else {
@@ -141,19 +133,14 @@ export default {
 				secret: close_your_eyes,
 				id: this.chatid,
 			}
-
-			// парсим объект в GET параметры
 			const params = this.objectToParams(object);
 
 			const url = `/ticket.php?${params}`;
-			// console.log(url)
 
 			this.$axios.get(url)
 			.then(resp => {
-				// console.log(resp);
 				this.replies = resp.data.replies.reply;
 				this.theme = resp.data.subject;
-				// console.log(this.replies);
 				this.loading = false;
 			})
 		},
@@ -174,12 +161,9 @@ export default {
 		}
 	},
 	mounted(){
-		// console.log(this.user)
 		this.loadMessages();
 	},
 	beforeRouteUpdate (to, from, next){
-		// console.log(to, from);
-		// console.log(this.$route);
 		this.chatid = to.params.pathMatch;
 		this.loadMessages();
 	}
@@ -260,12 +244,10 @@ export default {
 	}
 
 	.chat__send:hover{
-		/* background-color: #2387eb; */
 		filter: brightness(1.05)
 	}
 
 	.chat__send:active{
-		/* background-color: #1f7cda; */
 		filter: brightness(.95)
 	}
 
@@ -273,8 +255,6 @@ export default {
 		height: 100%;
 		flex: 1 0;
 		display: flex;
-		/* flex-direction: column;
-		justify-content: flex-end; */
 		flex-direction: column-reverse;
 		justify-content: flex-start;
 		padding: 6px 15px;
@@ -323,7 +303,6 @@ export default {
 		content: '';
 		display: block;
 		position: absolute;
-		/* background-color: red; */
 		bottom: 0;
 		border: 9px solid transparent;
 		border-bottom: 10px solid #dcfdbe;

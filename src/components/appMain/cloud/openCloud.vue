@@ -64,19 +64,12 @@
 							</a-radio-group>
 						</a-modal>
 					</div>
-					<!-- <div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': updating }" @click="sendAction('Shutdown')">
-						<div class="Fcloud__BTN-icon">
-							<a-icon type="pause" />
-						</div>
-						<div class="Fcloud__BTN-title">Stop</div>
-					</div> -->
 					<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="caret-right" />
 						</div>
 						<div class="Fcloud__BTN-title">Start</div>
 					</div>
-					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Restart")'> -->
 					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot , 'btn_disabled_wiggle': true}" @click='openModal("reboot")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="redo" />
@@ -100,7 +93,6 @@
 							</a-radio-group>
 						</a-modal>
 					</div>
-					<!-- <div class="Fcloud__button" :class="{ 'disabled': updating }" @click='sendAction("Shutdown")'> -->
 					<div class="Fcloud__button" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='openModal("recover")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="backward" />
@@ -150,10 +142,6 @@
 								<div class="block__title">CPU</div>
 								<div class="block__value">{{SingleCloud.CPU}}</div>
 							</div>
-							<!-- <div class="block__column">
-								<div class="block__title">VCPU</div>
-								<div class="block__value">{{SingleCloud.VCPU}}</div>
-							</div> -->
 							<div class="block__column">
 								<div class="block__title">{{$t('cloud_Memory')}}</div>
 								<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
@@ -227,8 +215,6 @@
 								:loading="snapshots.loading"
 							>
 							<template slot="time" slot-scope="time">
-								<!-- {{new Date(time)}} -->
-								<!-- {{new Date(time).toLocaleString()}} -->
 								{{getFormatedDate(time)}}
 							</template>
 							<template slot="actions" slot-scope="actions">
@@ -395,12 +381,8 @@ export default {
 				close_your_eyes = md5('VMremove' + userid + user.secret);
 				url = `/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
-			// console.log(action)
-			// console.log(url);
 			this.$axios.get(url)
-			.then(res => {
-				// console.log(res);
-				
+			.then(res => {				
 				if(action.toLowerCase()=='delete'){
 					if(res.data.result == "success"){
 						this.$message.success(res.data.message);
@@ -411,7 +393,6 @@ export default {
 				} else {
 					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
 				}
-				// this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 				
 			})
 
@@ -426,10 +407,8 @@ export default {
 				case "reboot":
 					if(this.option.reboot){
 						this.sendAction('RebootHard')
-						// console.log("HARD REBOOT");
 					} else {
 						this.sendAction('Reboot')
-						// console.log("JUST REBOOT")
 					}
 					this.modal.reboot = false;
 					break;
@@ -437,10 +416,8 @@ export default {
 				case "shutdown":
 					if(this.option.shutdown){
 						this.sendAction('PoweroffHard')
-						// console.log("HARD SHUTDOWN");
 					} else {
 						this.sendAction('Poweroff')
-						// console.log("JUST SHUTDOWN")
 					}
 					this.modal.shutdown = false;
 					break;
@@ -467,7 +444,6 @@ export default {
 							me.modal.recover = false;
 						},
 						onCancel() {
-							// console.log('Отмена');
 						}
 					});
 					break;
@@ -490,14 +466,12 @@ export default {
 			this.snapshots.addSnap.loading = true;
 			this.$axios.get(url)
 			.then(res => {
-				// console.log("sending new snap", res);
 				this.snapshots.addSnap.loading = false;
 				this.snapshots.addSnap.modal = false;
 				this.snapshotsFetch();
 			})
 		},
 		openModal(name){
-			// console.log(name);
 			switch (name.toLowerCase()){
 				case 'start':
 					if(this.permissions.start) return;
@@ -525,14 +499,12 @@ export default {
 					const me = this;
 					setTimeout(() => {
 						const element = me.$refs.snapNameInput.$el;
-						// console.log("timeout", element);
 						element.select();
 					}, 0);
 					break;
 			}
 
 			this.modal[name] = true;
-			// console.log(this.permissions)
 		},
 		closeModal(name){
 			switch (name.toLowerCase()){
@@ -557,7 +529,6 @@ export default {
 				if(ind > -1){
 					this.snapshots.loadingSnaps.splice(ind, 1);
 				}
-				// this.snapshots.modal = false
 			})
 		},
 		revToShapshot(object){
@@ -576,7 +547,6 @@ export default {
 				if(ind > -1){
 					this.snapshots.loadingSnaps.splice(ind, 1);
 				}
-				// this.snapshots.modal = false
 			})
 		},
 		snapshotsFetch(){
@@ -589,7 +559,6 @@ export default {
 				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				this.$axios.get(url)
 				.then(res => {
-					// console.log("snap",res);
 					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
 					this.snapshots.data = res.data.response;
 					this.snapshots.loading = false;
@@ -606,13 +575,11 @@ export default {
         okType: 'danger',
         content: h => <div style="color:red;">All data will be deleted!</div>,
         onOk() {
-					// console.log('OK');
 					me.sendAction("Reinstall");
 					me.modal.menu = false;
 					me.modal.reinstall = false;
         },
         onCancel() {
-          // console.log('Cancel');
 					me.modal.reinstall = false;
         },
       });
@@ -624,13 +591,11 @@ export default {
         okType: 'danger',
         content: h => <div style="color:red;">All data will be deleted!</div>,
         onOk() {
-					// console.log('OK');
 					me.sendAction("Delete");
 					me.modal.menu = false;
 					me.modal.delete = false;
         },
         onCancel() {
-          // console.log('Cancel');
 					me.modal.delete = false;
         },
       });
@@ -642,7 +607,6 @@ export default {
 <style>
 
 	.cloud__container{
-		/* max-width: 850px; */
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -854,9 +818,6 @@ export default {
 		color: #919392;
 	}
 
-	/* .permissions *{
-		border: 1px solid black;
-	} */
 	.permissions td:not(:first-child){
 		text-align: center;
 		width: 80px;
@@ -887,7 +848,7 @@ export default {
 	.opencloud-enter-active, .opencloud-leave-active {
 		transition: opacity .6s;
 	}
-	.opencloud-enter, .opencloud-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+	.opencloud-enter, .opencloud-leave-to {
 		opacity: 0;
 	}
 

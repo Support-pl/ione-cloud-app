@@ -243,10 +243,6 @@ export default {
 		font-size: 1.4rem;
 	}
 
-	/* .clickable:hover{
-		cursor: pointer;
-	} */
-
 	.icon__wrapper{
 		width: 44px;
 		height: 44px;

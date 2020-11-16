@@ -2,9 +2,6 @@
 	<div class="newCloud_wrapper">
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
-				<!-- <div class="newCloud__field-header">
-					{{$t('Parameters')}}
-				</div> -->
 
 				<a-row type="flex" justify="center" :style="{'margin-bottom': '15px'}" :gutter="[10, 10]">
 					<a-col>
@@ -25,10 +22,8 @@
 								<div class="newCloud__template one-line">
 									<div v-for="rate in ratesArray" class="newCloud__template-item" :class="{ active: options.rate.id==rate.pid }" @click='setRate(rate.pid)' :key="rate.pid">
 										<div class="newCloud__template-image newCloud__template-image__rate">
-											<!-- <img :src="'https://vcloud.support.by/' + OS.logo" :alt="OS.name"> -->
 											{{rate.name.replace('SVDS ', "")}}
 										</div>
-										<!-- <div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div> -->
 										<div class="newCloud__template-name">
 											<div class="newCloud__template-type">
 												{{rate.name.replace('SVDS ', "VDC ")}}
@@ -36,7 +31,6 @@
 											<ul style="margin: 0; padding: 0; font-size: .75rem">
 												<template v-for="element in rate.description.properties">
 													<li v-if="!dontshowattarrifs.includes(element.GROUP)" :key="element.GROUP">
-														<!-- {{element.GROUP}}:  -->
 														{{element.TITLE}}
 														</li>
 												</template>
@@ -61,15 +55,10 @@
 						<a-collapse-panel key="CPURAM" header="CPU + RAM:" :disabled="disableNotCustom" v-if="custom">
 					<div class="newCloud__option-field">
 
-						<!-- <a-divider orientation="left">
-							CPU + RAM:
-						</a-divider> -->
-						<!-- <a-row :gutter="{sm: [0, 10]}"> -->
 						<a-row :gutter="[10, 10]">
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col  :sm="8" :span="10">
-									<!-- <div style="margin-bottom: 16px"> -->
 										RAM (GB): 
 									</a-col>
 									<a-col  :sm="13" :span="14">
@@ -426,12 +415,6 @@ export default {
 			.catch( err => console.error(err));
 	},
 	methods: {
-		onSlideChange(){
-			// console.log("change");
-		},
-		onSwiper(){
-			// console.log("swiper");
-		},
 		setOS(id){
 			this.options.os.id = id;
 			this.options.os.name = this.templatesArray.find( el=>el.id==id ).description.replace(' Template', "");
@@ -448,7 +431,6 @@ export default {
 				const rate = this.ratesArray.find( el=>el.pid==id );
 				this.options.rate.name = rate.name;
 				let props = rate.description.properties;
-				// console.log(props);
 				props.forEach(el => {
 					let val = el.VALUE.match(/\d+/);
 					if(el.GROUP == "hdd"){
@@ -475,7 +457,6 @@ export default {
 		},
 		calculatePrice(price){
 			if(this.options.tarification){
-				// return price * 0.85;	
 				return price;	
 			}
 			switch (this.period) {
@@ -533,7 +514,6 @@ export default {
 			this.modal.confirmLoading = true;
 			this.send()
 				.then( responce => {
-					// console.log(responce.data)
 					if(responce.data.result == 'error'){
 						this.$message.error(responce.data.message);
 					} else {
@@ -583,7 +563,6 @@ export default {
 			if(this.options.network.local.status){
 				vmOptions['localIPs'] = this.options.network.local.count;
 			}
-			// console.log(vmOptions);
 			return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
 		},
 		URLparameter(obj, outer = ''){
@@ -685,9 +664,7 @@ export default {
 	}
 
 	.newCloud__inputs{
-		/* background: green; */
 		margin-right: 20px;
-		/* flex-grow: 72; */
 		width: 72%;
 	}
 
@@ -702,7 +679,6 @@ export default {
 	}
 
 	.newCloud__calculate{
-		/* flex-grow: 28; */
 		width: 28%;
 		font-size: 1.1rem;
 		padding: 10px 15px 10px;
@@ -716,11 +692,6 @@ export default {
 	}
 
 	.newCloud__template{
-    /* display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min-content, 90px));
-    grid-auto-rows: min-content;
-    grid-gap: 15px;
-		justify-content: space-between; */
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;
@@ -735,7 +706,6 @@ export default {
 		width: 116px;
 		margin-bottom: 10px;
 		background-color: #fff;
-		/* padding: 10px; */
 		box-shadow:
 			3px 2px 6px rgba(0, 0, 0, .08),
 			0px 0px 8px rgba(0, 0, 0, .05);
@@ -758,7 +728,6 @@ export default {
 		box-shadow:
 			5px 8px 10px rgba(0, 0, 0, .08),
 			0px 0px 12px rgba(0, 0, 0, .05);
-		/* transform: scale(1.02); */
 	}
 
 	.newCloud__template-item.active{
@@ -871,7 +840,7 @@ export default {
 		transition: opacity .5s, height .5s;
 		height: 26px;
 	}
-	.networkApear-enter, .networkApear-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+	.networkApear-enter, .networkApear-leave-to {
 		opacity: 0;
 		height: 0;
 	}

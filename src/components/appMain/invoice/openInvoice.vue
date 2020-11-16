@@ -2,7 +2,6 @@
 	<div class="openInvoice__fullscreen">
 		<transition name="invoiceApear">
 		<div v-if="!loading" class="openInvoice">
-		<!-- {{this.$route.params.pathMatch}} -->
 		<div class="openInvoice__header">
 			<div class="container full-height">
 				<div class="openInvoice__header--content">
@@ -27,7 +26,6 @@
 						<svg viewBox="0 0 95 20">
 							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}</text>
 						</svg>
-						<!-- {{inv.total}} {{inv.currency == undefined ? "USD" : inv.currency}} -->
 					</div>
 					<div class="openInvoice__info">
 						<div class="info__header-title">{{$t('Information')}}</div>
@@ -92,7 +90,6 @@
 										>
 											<p>{{$t('Payment method')}}:</p>
 											<a-select style="min-width: 100%" v-model="elem"> 
-												<!--attr: default-value="lucy" -->
 												<a-select-option v-for="method in payMethods" :key="method.module" :value="method.module">
 													{{method.displayname}}
 												</a-select-option>
@@ -155,7 +152,6 @@ export default {
 		},
 		showPayModal() {
 			if(this.payMethods.length == 1){
-				// window.open(this.inv.paytoken.checkout.redirect_url);
 				window.location.href = this.inv.paytoken.checkout.redirect_url;
 				return;
 			}
@@ -167,11 +163,9 @@ export default {
       setTimeout(() => {
         this.visible.pay = false;
 				this.confirmLoading.pay = false;
-				// console.log(this.elem);
       }, 2000);
     },
     handlePayCancel(e) {
-      // console.log('Clicked cancel button');
       this.visible.pay = false;
 		},
 		showConfirm() {
@@ -183,10 +177,8 @@ export default {
         okText: self.$t('Yes'),
 				cancelText: self.$t('Cancel'),
         onOk() {
-					// console.log('Да');
         },
         onCancel() {
-          // console.log('Отмена');
         },
         class: 'test',
       });
@@ -196,18 +188,14 @@ export default {
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
 		const url = `/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
-		// console.log(url)
 		this.$axios.get(url)
 		.then(res => {
-			// console.log(res);
 			this.inv = res.data;
 			this.loading = false;
 		})
 		this.$axios.get('/GetPaymentMethods.php')
 		.then(res => {
-			// console.log('methods:', res);
 			this.payMethods = res.data.paymentmethods.paymentmethod;
-			// console.log(this.payMethods);
 		})
 
 
@@ -232,7 +220,6 @@ export default {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		/* overflow: hidden; */
 	}
 
 	.openInvoice__header {
@@ -275,7 +262,6 @@ export default {
 	.openInvoice__main{
 		flex: 1 0;
 		background-color: var(--main);
-		/* padding: 6px 15px; */
 	}
 
 	.openInvoice__main-content{
@@ -433,7 +419,6 @@ export default {
 
 	.info__row{
 		display: flex;
-		/* margin-top: 10px; */
 		border-top: 1px solid rgb(230, 230, 230);
 	}
 
@@ -512,7 +497,7 @@ export default {
 	.invoiceApear-enter-active, .invoiceApear-leave-active {
 		transition: opacity .6s;
 	}
-	.invoiceApear-enter, .invoiceApear-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+	.invoiceApear-enter, .invoiceApear-leave-to{
 		opacity: 0;
 	}
 

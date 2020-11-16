@@ -65,20 +65,17 @@ export default {
 	.ticket__add-leave-active.addTicket__wrapper {
 		transition:
 			opacity .2s ease;
-		/* transform: translateY(150px); */
 	}
 	.ticket__add-enter-active .addTicket,
 	.ticket__add-leave-active .addTicket {
 		transition:
 			opacity .2s ease,
 			transform .3s ease;
-		/* transform: translateY(150px); */
 	}
 	.ticket__add-enter-active,
 	.ticket__add-leave-active {
 		transition:
 			all .4s ease,
-		/* transform: translateY(150px); */
 	}
 
 	.ticket__add-enter.addTicket__wrapper,
@@ -91,5 +88,3 @@ export default {
 		transform: translateX(-50%) translateY(100%) !important;
 	}
 </style>
-
-// todo (not sure): сделать чаты правее от всего

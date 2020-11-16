@@ -2,8 +2,6 @@
 	<div class="footer">
 		<div class="container">
 			<div class="footer__content">
-				<!-- <div class="bg" :style="{transform: 'translateX('+getBiasLeft+'px)'}"></div> -->
-				<!-- <div class="bg"></div> -->
 				<div v-for="(button, index) in getButtons" :key="index" @click="setTabByName(button.title)" class="button" :class="{ active: button.title==active }">
 					<div class="button__icon">
 						<a-icon :type="button.icon" :theme="button.theme" />
@@ -53,7 +51,6 @@ export default {
 <style>
 
 .footer{
-	/* background-color: #fdfdfd; */
 	background-color:	var(--bright_bg);
 	position: relative;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
@@ -93,7 +90,6 @@ export default {
 }
 
 .button:hover .button__icon{
-	/* color: #7c7c7c; */
 	filter: brightness(0.8517);
 }
 .footer__active{
@@ -125,19 +121,9 @@ export default {
 }
 
 .button.active{
-	/* background-color: #427cf7; */
 	background-color: var(--main);
 }
 
-/* temp */
-.bg{
-	background-color: var(--main);
-	position: absolute;
-	z-index: 1;
-	height: 100%;
-	width: 25%;
-	transition: transform .2s ease;
-}
 
 .button.active .button__icon{
 	color: var(--bright_font);

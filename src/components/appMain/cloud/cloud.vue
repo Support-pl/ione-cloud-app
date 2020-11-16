@@ -13,12 +13,9 @@
 
 		<template v-else>
 		
-		<!-- <empty v-if="getClouds.length == 0"/> -->
-
 		<div class="cloud__wrapper">
 			<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 			<div class="cloud__new-btn" @click="createVDC()">
-				<!-- <a-icon type="plus"></a-icon> -->
 				<span style="font-size: 1.2rem">
 					{{$t('Create VM')}}
 				</span>
@@ -54,7 +51,6 @@ export default {
 		},
 		createVDC(){
 			this.$store.dispatch("app/setTabByName", "newVDC");
-			// this.$router.push('/cloud/new');
 		},
 	},
 	created(){
@@ -123,7 +119,6 @@ export default {
 	box-shadow: 5px 8px 10px rgba(0, 0, 0, .05);
 	border-radius: 15px;
 	min-height: 70px;
-	/* background-color: #fff; */
 	border: 2px solid rgba(0, 0, 0, .1);
 	color:rgba(0, 0, 0, .7);
 	cursor: pointer;
