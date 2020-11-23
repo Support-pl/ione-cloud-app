@@ -16,18 +16,17 @@
 			<div class="login__UI">
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
-					<div v-if="remember" v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Login" v-model="email">
-						<span class="login__horisontal-line"></span>
-						<input type="password" placeholder="Password"  v-model="password">
-					</div>
-					<div v-else class="inputs__log-pas inputs__log-pas--remember">
-						<input type="text" placeholder="Email">
+					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
+						<input type="text" placeholder="Email" v-model="email">
+						<template v-if="remember">
+							<span class="login__horisontal-line"></span>
+							<input type="password" placeholder="Password"  v-model="password">
+						</template>
 					</div>
 					<template>
 						<template v-if="!tryingLogin">
-							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login')}}</button>
-							<button v-else @click="restorePass()" class="login__submit">{{$t('Restore')}}</button>
+							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
+							<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
 
 						</template>
 						<div v-else class="login__loading">
@@ -38,7 +37,7 @@
 					</template>
 				</div>
 				<div class="login__forgot">
-					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password')}}</a>
+					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
 				</div>
 			</div>
 		</div>
@@ -99,15 +98,40 @@ export default {
 					})
 				}
 				else if(data.result == "error"){
-					this.loginError = Response.data.message;
+					this.loginError = data.message;
 					this.tryingLogin = false;
 				}
 			})
-			.catch(err => console.error(err))
+			.catch(err => {
+				console.error(err);
+				this.$message.error("Can't connect to the server")
+			})
 		},
 		forgotPass(){
 			this.remember = !this.remember;
 		},
+		restorePass(){
+			const email = encodeURIComponent(this.email);
+			
+			this.$axios.get(`/userResetPassword.php?email=${email}`)
+			.then(res => {
+				const data = res.data;
+				console.log(data);
+				if (data.result == "success"){
+					console.log('succ');
+					this.$message.success(data.message);
+				}
+				else if(data.result == "error"){
+					console.log('err');
+					this.loginError = data.message;
+					this.tryingLogin = false;
+				}
+			})
+			.catch(err => {
+				console.error(err);
+				this.$message.error("Can't connect to the server")
+			})
+		}
 		
 	},
 }
