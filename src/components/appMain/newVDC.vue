@@ -402,6 +402,18 @@ export default {
 			secret: md5('createVDC' + user.id + user.secret)
 		}
 		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
+		this.$axios.get("getSettings.php?filter=cost" )
+			.then( res => {
+				console.log(res);
+				this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 24 * 30
+				this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 24 * 30
+				this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 24 * 30
+				this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 24 * 30
+			})
+			.catch( err => {
+				console.error(err);
+				this.$message.error("Can't load prices. Show saved ones.");
+			} )
 
 		userinfo = {
 			userid: user.id,
