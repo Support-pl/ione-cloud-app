@@ -208,6 +208,7 @@
 							Snapshots
 						</a-button>
 						<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
+							<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
 							<a-table
 								:columns="snapshots.columns"
 								:data-source="snapshots.data"
@@ -218,12 +219,12 @@
 								{{getFormatedDate(time)}}
 							</template>
 							<template slot="actions" slot-scope="actions">
-								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
 							</template>
 							</a-table>
 							<div class="modal__buttons">
-								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading" @click="openModal('createSnapshot')">Take snapshot</a-button>
+								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
 							</div>
 							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
 								<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
@@ -257,6 +258,7 @@ import { mapGetters } from 'vuex'
 import axios from 'axios'
 import md5 from 'md5'
 import loading from '../../loading/loading.vue'
+import config from '../../../appconfig'
 
 const columns = [
   {
@@ -281,6 +283,7 @@ export default {
 	},
 	data(){
 		return {
+			config,
 			status: 'running',
 			name: 'test3',
 			showPermissions: false,

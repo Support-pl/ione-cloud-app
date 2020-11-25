@@ -34,7 +34,7 @@
   "dueDate": "Срок оплаты",
   "Choice payment": "Способ оплаты",
   "Information": "Информация",
-	"There is empty...": "Тут пока ничего нет...",
+	"It’s empty...": "Тут пока ничего нет...",
 	"Unknown error.": "Неизвестная ошибка.",
 	"Password is too short": "Слишком короткий пароль",
 	"Create VM": "Создать VM",
@@ -69,6 +69,7 @@
 	"today": "сегодня",
 	"yesterday": "вчера",
 	"Send error": "Ошибка отправления",
+	"turn on VM to create or load snapshots": "Включите VM чтобы создавать или загружать снапшоты",
 	
   "invoice_Description": "Описание",
 	"invoice_Price": "Сумма",

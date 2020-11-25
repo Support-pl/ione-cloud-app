@@ -34,7 +34,7 @@
   "dueDate": "Due date",
   "Choice payment": "Choice payment",
   "Information": "Information",
-	"There is empty...": "There is empty...",
+	"It’s empty...": "It’s empty...",
 	"Unknown error.": "Unknown error.",
 	"Password is too short": "Password is too short",
 	"Create VM": "Create VM",
@@ -69,6 +69,7 @@
 	"today": "today",
 	"yesterday": "yesterday",
 	"Send error": "Send error",
+	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
 	
   "invoice_Description": "Description",
 	"invoice_Price": "Price",
