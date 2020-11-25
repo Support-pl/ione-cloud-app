@@ -10,7 +10,7 @@
 				</transition>
 			</a-layout-content>
 			<a-layout-footer :style="{padding: 0}">
-				<appFooter :active="active" :changeFunc="changeActive" />
+				<appFooter :active="active" />
 			</a-layout-footer>
     	</a-layout>
 	</div>
