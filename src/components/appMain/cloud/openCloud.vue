@@ -11,8 +11,12 @@
 					</div>
 					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
 						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
-						<div class="Fcloud__title">{{SingleCloud.NAME}}</div>
-						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">{{vmState}}</div>
+						<div class="Fcloud__title">
+							{{SingleCloud.NAME}}
+						</div>
+						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">
+							{{vmState | replace("_", " ")}}
+						</div>
 					</div>
 					<div class="Fcloud__menu-wrapper">
 						<div class="Fcloud__menu-btn icon__wrapper">
@@ -214,17 +218,18 @@
 								:data-source="snapshots.data"
 								:pagination="false"
 								:loading="snapshots.loading"
+								rowKey="TIME"
 							>
 							<template slot="time" slot-scope="time">
 								{{getFormatedDate(time)}}
 							</template>
 							<template slot="actions" slot-scope="actions">
-								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
 							</template>
 							</a-table>
 							<div class="modal__buttons">
-								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 && SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
+								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
 							</div>
 							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
 								<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
@@ -233,7 +238,7 @@
 								<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
 								<div class="modal__buttons">
 									<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
-									<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1" :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
+									<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
 								</div>
 							</a-modal>
 						</a-modal>
@@ -262,16 +267,19 @@ import config from '../../../appconfig'
 
 const columns = [
   {
-    title: 'Name',
+		title: 'Name',
+		key: 'Name',
     dataIndex: 'NAME',
   },
   {
     title: 'Time',
     dataIndex: 'TIME',
+		key: 'Time',
     scopedSlots: { customRender: 'time' },
   },
   {
     title: 'Actions',
+		key: 'Actions',
     scopedSlots: { customRender: 'actions' },
   },
 ];
@@ -455,10 +463,11 @@ export default {
 		newsnap(){
 			if(this.snapshots.data.lenght >= 3){
 				this.$error({
-        title: 'You can\'t have more than 3 snaps at the same time',
-        content: 'remove or commit old ones to create new',
-      });
+					title: 'You can\'t have more than 3 snaps at the same time',
+					content: 'remove or commit old ones to create new',
+				});
 			}
+			
 			const user = this.$store.getters.getUser;
 			const userid = user.id;
 			const vmid = this.SingleCloud.ID;
@@ -471,6 +480,7 @@ export default {
 			.then(res => {
 				this.snapshots.addSnap.loading = false;
 				this.snapshots.addSnap.modal = false;
+				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
 				this.snapshotsFetch();
 			})
 		},
@@ -521,6 +531,7 @@ export default {
 			const userid = user.id;
 			const vmid = this.SingleCloud.ID;
 			const snapid = object.SNAPSHOT_ID;
+			this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
 
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
 			const url = `/vmaction.php?userid=${userid}&action=RMSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
@@ -528,10 +539,16 @@ export default {
 			this.snapshots.loadingSnaps.push(snapid);
 			this.$axios.get(url)
 			.then(res => {
+				if(res.data.result == 'success'){
+					const index = this.snapshots.data.indexOf(object);
+					this.snapshots.data.splice(index, 1);
+					this.$message.success(this.$t('Snapshot successfully deleted'))
+				}
 				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
 				if(ind > -1){
 					this.snapshots.loadingSnaps.splice(ind, 1);
 				}
+				this.snapshotsFetch();
 			})
 		},
 		revToShapshot(object){
@@ -540,16 +557,24 @@ export default {
 			const vmid = this.SingleCloud.ID;
 			const snapid = object.SNAPSHOT_ID;
 
+			this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+
 			const close_your_eyes = md5('vmaction' + userid + user.secret);
 			const url = `/vmaction.php?userid=${userid}&action=RevSnapshot&snapid=${snapid}&vmid=${vmid}&secret=${close_your_eyes}`
 			this.snapshots.data.find( el => el.SNAPSHOT_ID == snapid).loading = true;
 			this.snapshots.loadingSnaps.push(snapid);
 			this.$axios.get(url)
 			.then(res => {
+				if(res.data.result == 'success'){
+					const index = this.snapshots.data.indexOf(object);
+					this.snapshots.data.splice(index, 1);
+					this.$message.success(this.$t('Vm was successfully restored from snapshot'))
+				}
 				const ind = this.snapshots.loadingSnaps.indexOf(snapid);
 				if(ind > -1){
 					this.snapshots.loadingSnaps.splice(ind, 1);
 				}
+				this.snapshotsFetch();
 			})
 		},
 		snapshotsFetch(){
@@ -562,8 +587,18 @@ export default {
 				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				this.$axios.get(url)
 				.then(res => {
+					console.log(res);
+					if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
+						setTimeout(() => {
+							this.snapshotsFetch();
+						}, 10000);
+					}
 					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
-					this.snapshots.data = res.data.response;
+					if(res.data.response[0] == null){
+						this.snapshots.data = []
+					} else {
+						this.snapshots.data = res.data.response;
+					}
 					this.snapshots.loading = false;
 				})
 		},

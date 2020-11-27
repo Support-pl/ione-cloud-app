@@ -70,6 +70,8 @@
 	"yesterday": "вчера",
 	"Send error": "Ошибка отправления",
 	"turn on VM to create or load snapshots": "Включите VM чтобы создавать или загружать снапшоты",
+	"Snapshot successfully deleted": "Снапшот успешно удален",
+	"Vm was successfully restored from snapshot": "Вм успешно восстановлена из снапшота",
 	
   "invoice_Description": "Описание",
 	"invoice_Price": "Сумма",

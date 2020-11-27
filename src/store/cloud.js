@@ -73,7 +73,13 @@ export default {
 
 			axios.get(url)
 				.then(resp => {
-					ctx.commit("updateOpenedCloud", resp.data.data)
+					const vmdata = resp.data.data;
+					if(vmdata.STATE == 3 && vmdata.LCM_STATE != 3){
+						setTimeout(() => {
+							ctx.dispatch('silentUpdate', vmid);
+						}, 500);
+					}
+					ctx.commit("updateOpenedCloud", vmdata)
 					ctx.commit('makeUpdatingIs', false)
 					ctx.commit('makeSingleLoadingIs', false)
 				})
@@ -92,7 +98,7 @@ export default {
 					if(resp.data.data.STATE == 3 && resp.data.data.LCM_STATE != 3) {
 						setTimeout(() => {
 							ctx.dispatch("silentUpdate", vmid)
-						}, 5000); //укажите здесь как часто надо обновлять страницу
+						}, 10000); //укажите здесь как часто надо обновлять страницу
 					} else ctx.commit('makeUpdatingIs', false)
 				})
 				.catch(err => console.error(err))
