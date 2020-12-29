@@ -393,18 +393,22 @@ export default {
 				url = `/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
 			this.$axios.get(url)
-			.then(res => {				
-				if(action.toLowerCase()=='delete'){
+			.then(res => {
+				let lowerAct = action.toLowerCase();
+				if(lowerAct == 'delete' || lowerAct=='reinstall'){
 					if(res.data.result == "success"){
 						this.$message.success(res.data.message);
 						this.$router.replace({name: "cloud"})
 					} else {
 						this.$message.error(res.data.message);
+						console.log(res.data.errorMSG);
 					}
 				} else {
 					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
 				}
-				
+			})
+			.catch(err => {
+				console.error(err);
 			})
 
 		},
@@ -461,10 +465,11 @@ export default {
 			}
 		},
 		newsnap(){
+			const self = this;
 			if(this.snapshots.data.lenght >= 3){
 				this.$error({
-					title: 'You can\'t have more than 3 snaps at the same time',
-					content: 'remove or commit old ones to create new',
+					title: self.$t('You can\'t have more than 3 snaps at the same time'),
+					content: self.$t('remove or commit old ones to create new'),
 				});
 			}
 			
@@ -609,9 +614,9 @@ export default {
 		sendReinstall(){
 			const me = this;
 			this.$confirm({
-        title: 'Do you want to reinstall this virtual machine?',
+        title: me.$t('Do you want to reinstall this virtual machine?'),
         okType: 'danger',
-        content: h => <div style="color:red;">All data will be deleted!</div>,
+        content: h => <div style="color:red;">{me.$t('All data will be deleted!')}</div>,
         onOk() {
 					me.sendAction("Reinstall");
 					me.modal.menu = false;
@@ -625,9 +630,9 @@ export default {
 		sendDelete(){
 			const me = this;
 			this.$confirm({
-        title: 'Do you want to delete this virtual machine?',
+        title: me.$t('Do you want to delete this virtual machine?'),
         okType: 'danger',
-        content: h => <div style="color:red;">All data will be deleted!</div>,
+        content: h => <div style="color:red;">{me.$t('All data will be deleted!')}</div>,
         onOk() {
 					me.sendAction("Delete");
 					me.modal.menu = false;

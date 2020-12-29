@@ -40,7 +40,7 @@
 								</div>
 							</div>
 						</a-collapse-panel>
-						<a-collapse-panel key="OS" :header="$t('Choose OS') + ' (' + options.os.name + '):'">
+						<a-collapse-panel key="OS" :header="$t('Choose OS') + (~options.os.id?' (' + options.os.name + '):':'')">
 							<div class="newCloud__option-field">
 								<div class="newCloud__template">
 									<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
@@ -259,26 +259,28 @@
 					</a-col>
 				</a-row>
 				
-				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-					{{$t('Tarification')}}:
-				</a-divider>
+				<!-- <template v-if="false"> -->
+					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
+						{{$t('Tarification')}}:
+					</a-divider>
 
-				<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
-					<a-col>
-						<div style="text-align: center">
-							{{$t('When paying per month - save up to 15%')}}
-						</div>
-					</a-col>
-				</a-row>
-				
-				<a-row type="flex" justify="space-around">
-					<a-col>
-						{{$t('Monthly payment')}}
-					</a-col>
-					<a-col>
-						<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
-					</a-col>
-				</a-row>
+					<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
+						<a-col>
+							<div style="text-align: center">
+								{{$t('When paying per month - save up to 15%')}}
+							</div>
+						</a-col>
+					</a-row>
+					
+					<a-row type="flex" justify="space-around">
+						<a-col>
+							{{$t('Monthly payment')}}
+						</a-col>
+						<a-col>
+							<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
+						</a-col>
+					</a-row>
+				<!-- </template> -->
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">
@@ -344,19 +346,19 @@ export default {
 					name: 'Custom'
 				},
 				os: {
-					id: 532,
-					name: "CentOS 7",
+					id: -1,
+					name: "",
 				},
 				cpu: {
 					count: 1,
-					price: 11.5,
+					price: 13.5,
 					min: 1,
 					max: 32
 				},
 				ram: {
 					size: 1,
 					units: "GB",
-					price: 10,
+					price: 11.5,
 					min: 1,
 					max: 512
 				},
@@ -365,8 +367,8 @@ export default {
 					units: "GB",
 					type: "SSD",
 					price: {
-						HDD: 0.2,
-						SSD: 0.6
+						HDD: 0.24,
+						SSD: 0.7
 					},
 					min: {
 						HDD: 50,
@@ -471,7 +473,7 @@ export default {
 		calculatePrice(price){
 			if(this.options.tarification){
 				return price;	
-			}
+			} //выключил
 			switch (this.period) {
 				case "minute":
 					price = price / 60;
@@ -496,7 +498,7 @@ export default {
 				const user = this.$store.getters.getUser;
 				this.options.tarification = true;
 				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
-			}
+			} //выключил
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
@@ -506,12 +508,12 @@ export default {
 		},
 		createVDC(){
 			if(!~this.options.os.id){
-				this.$message.error("select OS");
+				this.$message.error(this.$t("select OS"));
 				this.collapseKey = "OS";
 				return;
 			}
 			if(!this.custom && this.options.rate.id == 0){
-				this.$message.error("select tariff");
+				this.$message.error(this.$t("select tariff"));
 			} else {
 				this.modal.confirmCreate = true;
 			}

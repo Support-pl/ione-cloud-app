@@ -125,6 +125,16 @@
 	"Parameters": "Параметры",
 	"Add Funds": "Пополнить баланс",
 
+	"Do you want to delete this virtual machine?": "Вы хотите удалить виртуальную машину?",
+	"Do you want to reinstall this virtual machine?": "Вы хотите переустановить виртуальную машину?",
+	"All data will be deleted!": "Вся информация будет удалена!",
+
+	"You cant have more than 3 snaps at the same time": "Вы не можете иметь больше 3 снапшотов",
+	"remove or commit old ones to create new": "Удалите или вернитесь к снапшоту, чтобы создать новый",
+
+	"select OS": "Выберите ОС",
+	"select tariff": "Выберите тариф",
+
 	"chat_Resend_message": "Повторить отправку",
 	"chat_Delete_message": "Удалить сообщение"
 }
