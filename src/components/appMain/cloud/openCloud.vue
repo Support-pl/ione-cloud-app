@@ -144,7 +144,7 @@
 						<div class="Fcloud__block-content">
 							<div class="block__column">
 								<div class="block__title">CPU</div>
-								<div class="block__value">{{SingleCloud.CPU}}</div>
+								<div class="block__value">{{SingleCloud.VCPU}}</div>
 							</div>
 							<div class="block__column">
 								<div class="block__title">{{$t('cloud_Memory')}}</div>
@@ -170,40 +170,41 @@
 						</div>
 					</div>
 
-					<div v-if="showPermissions" class="Fcloud__info-block block">
+					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
 						<div class="Fcloud__block-header">
-							<a-icon type="user" />
-							Permissions
+							<a-icon type="database" theme="filled" />
+							Network
+							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content">
-							<table class="permissions">
-								<tbody>
-									<tr>
-										<th></th>
-										<th>Use</th>
-										<th>Manage</th>
-										<th>Admin</th>
-									</tr>
-									<tr>
-										<td>Owner</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-									<tr>
-										<td>Group</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-									<tr>
-										<td>Other</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="block__column">
+								<div class="block__title">Inbound</div>
+								<div class="block__value">{{fromBytesTo(chart1Data[chart1Data.length-1][1], checkRange(chart1Data[chart1Data.length-1][1])).toFixed(3)}} {{checkRange(chart1Data[chart1Data.length-1][1])}}</div>
+							</div>
+							<div class="block__column">
+								<div class="block__title">Outgoing</div>
+								<div class="block__value">{{fromBytesTo(chart2Data[chart2Data.length-1][1], checkRange(chart2Data[chart2Data.length-1][1])).toFixed(3)}} {{checkRange(chart2Data[chart2Data.length-1][1])}}</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
+						<div class="Fcloud__block-header">
+							<a-icon type="user" />
+							Graphs 
+							<!-- add translate -->
+						</div>
+						<div class="Fcloud__block-content Fcloud__block-content--charts">
+							<GChart
+								type="LineChart"
+								:data="chart1DataReady"
+								:options="chartOption('Inbound')"
+							/>
+							<GChart
+								type="LineChart"
+								:data="chart2DataReady"
+								:options="chartOption('Outgoing')"
+							/>
 						</div>
 					</div>
 
@@ -284,6 +285,8 @@ const columns = [
   },
 ];
 
+const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
 export default {
 	name: "openCloud",
 	components: {
@@ -291,6 +294,24 @@ export default {
 	},
 	data(){
 		return {
+			chart1Data: [
+        ['Time', ''],
+      ],
+			chart2Data: [
+        ['Time', ''],
+			],
+			chartHead: ['Timestamp'],
+      chartOptions: {
+				title: 'network',
+				curveType: 'function',
+				legend: 'none',
+				width: 300,
+				height: 150,
+				vAxis: {
+					viewWindowMode: "explicit",
+					viewWindow:{ min: 0 }
+				}
+      },
 			config,
 			status: 'running',
 			name: 'test3',
@@ -352,12 +373,84 @@ export default {
 			isLoading: 'isLoading',
 			permissions: 'permissions',
 			singleLoading: 'singleLoading'
-		})
+		}),
+		chart1DataReady(){
+			let data = this.chart1Data;
+			if(data == undefined) {
+				console.error('can\'t get chart1');
+				return [[0],[0]];
+			}
+			if(data[0] == undefined || data[1] == undefined){
+				return [[this.chartHead[0], 'bytes'], [0, 0]]
+			}
+			let range = this.checkRange(data[data.length-1][1]);
+			data = data.map( pair => ([pair[0], this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data.unshift([this.chartHead[0], range]);
+			return data
+		},
+		chart2DataReady(){
+			let data = this.chart2Data;
+			if(data == undefined) {
+				console.error('can\'t get chart2');
+				return [[0],[0]];
+			}
+			if(data[0] == undefined || data[1] == undefined){
+				return [[this.chartHead[0], 'bytes'], [0, 0]]
+			}
+			let range = this.checkRange(data[data.length-1][1]);
+			data = data.map( pair => ([pair[0], this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data.unshift([this.chartHead[0], range]);
+			return data
+		}
 	},
 	created(){
 		this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 	},
+	mounted(){
+		this.$axios.get(`classnebulatest.php?vmid=${this.$route.params.pathMatch}` )
+			.then( res => {
+				if(res.data.NETRX != undefined){
+					this.chart1Data = res.data.NETRX;
+				}
+				if(res.data.NETTX != undefined){
+					this.chart2Data = res.data.NETTX;
+				}
+			})
+			.catch( err => {
+				console.error(err);
+			} )
+	},
 	methods: {
+		checkRange(val){
+			let count = 0;
+			for(let i = 0; val > 1024; count++){
+				val = val / 1024;
+			}
+			return sizes[count];
+		},
+		fromBytesTo(val, newRange){
+			let count = sizes.indexOf(newRange);
+			if(count == -1){
+				console.log('can\'t get such range')
+				return;
+			}
+			while(count > 0){
+				val = val / 1024;
+				count--;
+			}
+			return val;
+		},
+		chartOption(title){
+			const newOpt = JSON.parse(JSON.stringify(this.chartOptions));
+			let range = '';
+			if(title.toLowerCase() == 'inbound'){
+				range = this.checkRange(this.chart1Data[this.chart1Data.length-1][1]);
+			} else if(title.toLowerCase() == 'outgoing'){
+				range = this.checkRange(this.chart2Data[this.chart2Data.length-1][1]);
+			}
+			newOpt.title = `${title} (${range})`;
+			return newOpt;
+		},
 		sendAction(action){
 			switch (action.toLowerCase()){
 				case 'start':
@@ -587,7 +680,7 @@ export default {
 				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 				this.$axios.get(url)
 				.then(res => {
-					console.log(res);
+					// console.log(res);
 					if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
 						setTimeout(() => {
 							this.snapshotsFetch();
@@ -783,6 +876,7 @@ export default {
 		border-radius: 35px 35px 0 0;
 		margin-top: 30px;
 		padding: 10px 30px 0;
+		overflow: auto;
 	}
 
 	.Fcloud__info-header{
@@ -842,6 +936,10 @@ export default {
 		background-color: #fff;
 		border-radius: 20px;
 		padding: 10px 0;
+	}
+
+	.Fcloud__block-content--charts{
+		flex-wrap: wrap;
 	}
 
 	.block__column{
