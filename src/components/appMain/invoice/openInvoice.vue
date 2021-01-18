@@ -74,11 +74,12 @@
 						</div>
 						<div class="info__footer">
 							<template v-if="inv.status == 'Unpaid'">
-								<div class="info__postpone" @click="showConfirm">
+								<!-- <div class="info__postpone" @click="showConfirm">
 									<a-icon type="clock-circle" />
-								</div>
-								<div class="info__button info__button--pay">
-									<div @click='showPayModal' class="info__button">
+								</div> -->
+								<div @click='OpenWHMCSInvoice' class="info__button info__button--pay">
+									<!-- <div @click='showPayModal' class="info__button"> -->
+									<div class="info__button">
 										{{$t('Pay')}}
 									</div>
 										<a-modal
@@ -118,6 +119,7 @@
 import md5 from "md5";
 import loading from '../../loading/loading.vue'
 import { mapGetters } from 'vuex';
+import config from '../../../appconfig';
 
 export default {
 	name: "openInvoice",
@@ -147,6 +149,11 @@ export default {
 		goBack(){
 			this.$router.push("/invoice");
 		},	
+		OpenWHMCSInvoice(){
+			// console.log('work');
+			const close_your_eyes = md5('openInvoiceWHMCS'+this.user.id+this.user.secret);
+			window.open(config.WHMCSsiteurl + `back_app/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
+		},
 		showfull(){
 			this.showFullTable = true;
 		},

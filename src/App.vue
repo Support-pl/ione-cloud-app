@@ -31,7 +31,7 @@ export default {
 		if(lang != undefined)
 			this.$i18n.locale = lang;
 		else {
-			this.$i18n.locale = 'ru'
+			this.$i18n.locale = 'en'
 		}
 		
 	},
