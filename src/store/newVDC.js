@@ -42,7 +42,7 @@ export default {
 				.then(resp => {
 					ctx.commit("updateRates", resp.data)
 					ctx.commit('makeLoadingIs', false)
-					console.log(resp);
+					// console.log(resp);
 				})
 		},
 	},

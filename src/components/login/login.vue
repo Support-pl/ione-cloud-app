@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			Cloud Support.by
+			Cloud icloudfusion.net
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -116,13 +116,13 @@ export default {
 			this.$axios.get(`/userResetPassword.php?email=${email}`)
 			.then(res => {
 				const data = res.data;
-				console.log(data);
+				// console.log(data);
 				if (data.result == "success"){
-					console.log('succ');
+					// console.log('succ');
 					this.$message.success(data.message);
 				}
 				else if(data.result == "error"){
-					console.log('err');
+					// console.log('err');
 					this.loginError = data.message;
 					this.tryingLogin = false;
 				}
