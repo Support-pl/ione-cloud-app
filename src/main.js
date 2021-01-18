@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import VueGoogleCharts from 'vue-google-charts'
 import i18n from './i18n'
 import store from './store'
 import router from './router'
@@ -11,6 +12,7 @@ import config from './appconfig'
 
 Vue.config.productionTip = false
 Vue.use(Antd)
+Vue.use(VueGoogleCharts)
 
 Vue.prototype.$config = config;
 Vue.prototype.$axios = axios;
