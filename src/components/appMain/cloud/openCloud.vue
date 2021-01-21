@@ -208,52 +208,56 @@
 						</div>
 					</div>
 
-					<div class="button--mt20">
-						<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
-							Snapshots
-						</a-button>
-						<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
-							<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
-							<a-table
-								:columns="snapshots.columns"
-								:data-source="snapshots.data"
-								:pagination="false"
-								:loading="snapshots.loading"
-								rowKey="TIME"
-							>
-							<template slot="time" slot-scope="time">
-								{{getFormatedDate(time)}}
-							</template>
-							<template slot="actions" slot-scope="actions">
-								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-							</template>
-							</a-table>
-							<div class="modal__buttons">
-								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
+					<a-row :gutter="[15, 15]" style="margin-top: 20px">
+						<a-col :span='24' :md='12'>
+							<div class="button">
+								<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
+									Snapshots
+								</a-button>
+								<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
+									<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
+									<a-table
+										:columns="snapshots.columns"
+										:data-source="snapshots.data"
+										:pagination="false"
+										:loading="snapshots.loading"
+										rowKey="TIME"
+									>
+									<template slot="time" slot-scope="time">
+										{{getFormatedDate(time)}}
+									</template>
+									<template slot="actions" slot-scope="actions">
+										<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+										<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+									</template>
+									</a-table>
+									<div class="modal__buttons">
+										<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
+									</div>
+									<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
+										<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
+										<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
+										<p>{{$t('Choose a name for the new snapshot:')}}</p>
+										<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
+										<div class="modal__buttons">
+											<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
+											<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
+										</div>
+									</a-modal>
+								</a-modal>
 							</div>
-							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
-								<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
-								<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
-								<p>{{$t('Choose a name for the new snapshot:')}}</p>
-								<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
-								<div class="modal__buttons">
-									<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
-									<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
-								</div>
-							</a-modal>
-						</a-modal>
-						
-					</div>
+						</a-col>
 
-
-					<div class="button--mt20">
-						<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
-							<a-button type="primary" shape="round" block size='large'>
-								VNC
-							</a-button>
-						</router-link>
-					</div>
+						<a-col :span='24' :md='12'>
+							<div class="button">
+								<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
+									<a-button type="primary" shape="round" block size='large'>
+										VNC
+									</a-button>
+								</router-link>
+							</div>
+						</a-col>
+					</a-row>
 				</div>
 			</div>
 		</div>
@@ -393,7 +397,7 @@ export default {
 				return [[this.chartHead[0], 'bytes'], [0, 0]]
 			}
 			let range = this.checkRange(data[data.length-1][1]);
-			data = data.map( pair => ([pair[0], this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data = data.map( pair => ([new Date(pair[0] * 1000), this.fromBytesTo(parseInt(pair[1]), range)]) );
 			data.unshift([this.chartHead[0], range]);
 			return data
 		},
@@ -407,7 +411,7 @@ export default {
 				return [[this.chartHead[0], 'bytes'], [0, 0]]
 			}
 			let range = this.checkRange(data[data.length-1][1]);
-			data = data.map( pair => ([pair[0], this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data = data.map( pair => ([new Date(pair[0] * 1000), this.fromBytesTo(parseInt(pair[1]), range)]) );
 			data.unshift([this.chartHead[0], range]);
 			return data
 		}
