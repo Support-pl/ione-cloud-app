@@ -5,7 +5,7 @@
 			<div class="Fcloud">
 				<div class="Fcloud__header">
 					<div class="Fcloud__back-wrapper">
-						<router-link class="Fcloud__back icon__wrapper" to="cloud">
+						<router-link class="Fcloud__back icon__wrapper" to="/cloud">
 							<a-icon type="left" />
 						</router-link>
 					</div>
@@ -208,7 +208,7 @@
 						</div>
 					</div>
 
-					<div class="Fcloud_snapshots">
+					<div class="button--mt20">
 						<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
 							Snapshots
 						</a-button>
@@ -243,8 +243,17 @@
 								</div>
 							</a-modal>
 						</a-modal>
+						
 					</div>
 
+
+					<div class="button--mt20">
+						<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
+							<a-button type="primary" shape="round" block size='large'>
+								VNC
+							</a-button>
+						</router-link>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1027,7 +1036,7 @@ export default {
 	}
 
 
-	.Fcloud_snapshots{
+	.button--mt20{
 		margin-top: 20px;
 	}
 	

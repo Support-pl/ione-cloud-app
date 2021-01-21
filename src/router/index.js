@@ -49,8 +49,25 @@ Vue.use(VueRouter)
 	},
 	{
 		path: '/cloud-*',
-		name: 'openCloud',
-		component: () => import('../components/appMain/cloud/openCloud.vue')
+		component: () => import('../components/appMain/cloud/cloudRouter.vue'),
+		children: [
+			{
+				path: 'vnc',
+				name: 'VNC',
+				component: () => import('../components/appMain/cloud/vnc.vue')
+			},
+			{
+				path: '*',
+				redirect: to => {
+					return `/cloud-${to.params.pathMatch}`
+				}
+			},
+			{
+				path: '',
+				name: 'openCloud',
+				component: () => import('../components/appMain/cloud/openCloud.vue')
+			},
+		]
 	},
 	{
 		path: '/ticket-*',
