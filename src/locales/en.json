@@ -125,6 +125,10 @@
 	"Parameters": "Parameters",
 	"Add Funds": "Add Funds",
 
+	"inbound": "inbound",
+	"outgoing": "outgoing",
+	"graphs": "graphs",
+
 	"chat_Resend_message": "Resend message",
 	"chat_Delete_message": "Delete message"
 }

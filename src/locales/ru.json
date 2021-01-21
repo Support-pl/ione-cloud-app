@@ -125,6 +125,10 @@
 	"Parameters": "Параметры",
 	"Add Funds": "Пополнить баланс",
 
+	"inbound": "входящий",
+	"outgoing": "исходящий",
+	"graphs": "графики",
+
 	"chat_Resend_message": "Повторить отправку",
 	"chat_Delete_message": "Удалить сообщение"
 }

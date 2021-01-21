@@ -128,7 +128,7 @@
 					<div class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
-								<tr v-for="nic in SingleCloud.NIC" :key="nic.NAME">
+								<tr v-for="nic in IPs" :key="nic.NAME">
 									<td>IP</td>
 									<td>{{nic.IP}}</td>
 								</tr>
@@ -172,17 +172,17 @@
 
 					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
 						<div class="Fcloud__block-header">
-							<a-icon type="database" theme="filled" />
-							Network
+							<a-icon type="apartment" />
+							{{$t('Network')}}
 							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content">
 							<div class="block__column">
-								<div class="block__title">Inbound</div>
+								<div class="block__title">{{$t('inbound') | capitalize}}</div>
 								<div class="block__value">{{fromBytesTo(chart1Data[chart1Data.length-1][1], checkRange(chart1Data[chart1Data.length-1][1])).toFixed(3)}} {{checkRange(chart1Data[chart1Data.length-1][1])}}</div>
 							</div>
 							<div class="block__column">
-								<div class="block__title">Outgoing</div>
+								<div class="block__title">{{$t('outgoing') | capitalize}}</div>
 								<div class="block__value">{{fromBytesTo(chart2Data[chart2Data.length-1][1], checkRange(chart2Data[chart2Data.length-1][1])).toFixed(3)}} {{checkRange(chart2Data[chart2Data.length-1][1])}}</div>
 							</div>
 						</div>
@@ -190,20 +190,20 @@
 
 					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
 						<div class="Fcloud__block-header">
-							<a-icon type="user" />
-							Graphs 
+							<a-icon type="line-chart" />
+							{{$t('graphs') | capitalize}} 
 							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content Fcloud__block-content--charts">
 							<GChart
 								type="LineChart"
-								:data="chart1DataReady"
-								:options="chartOption('Inbound')"
+								:data="inbChartDataReady"
+								:options="chartOption('inbound')"
 							/>
 							<GChart
 								type="LineChart"
-								:data="chart2DataReady"
-								:options="chartOption('Outgoing')"
+								:data="outChartDataReady"
+								:options="chartOption('outgoing')"
 							/>
 						</div>
 					</div>
@@ -387,7 +387,7 @@ export default {
 			permissions: 'permissions',
 			singleLoading: 'singleLoading'
 		}),
-		chart1DataReady(){
+		inbChartDataReady(){
 			let data = this.chart1Data;
 			if(data == undefined) {
 				console.error('can\'t get chart1');
@@ -401,7 +401,7 @@ export default {
 			data.unshift([this.chartHead[0], range]);
 			return data
 		},
-		chart2DataReady(){
+		outChartDataReady(){
 			let data = this.chart2Data;
 			if(data == undefined) {
 				console.error('can\'t get chart2');
@@ -414,6 +414,9 @@ export default {
 			data = data.map( pair => ([new Date(pair[0] * 1000), this.fromBytesTo(parseInt(pair[1]), range)]) );
 			data.unshift([this.chartHead[0], range]);
 			return data
+		},
+		IPs(){
+			return this.SingleCloud.NIC.filter( el => el.IP != undefined );
 		}
 	},
 	created(){
@@ -461,7 +464,9 @@ export default {
 			} else if(title.toLowerCase() == 'outgoing'){
 				range = this.checkRange(this.chart2Data[this.chart2Data.length-1][1]);
 			}
-			newOpt.title = `${title} (${range})`;
+			let localizeTitle = this.$t(title);
+			let capitalized = localizeTitle[0].toUpperCase() + localizeTitle.slice(1);
+			newOpt.title = `${capitalized} (${range})`;
 			return newOpt;
 		},
 		sendAction(action){
