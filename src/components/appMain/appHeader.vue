@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="header__wrapper">
 			<div class="header__title">
-				<div v-if="headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
+				<div v-if="headers[active] && headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
 					<a-icon type="left"/>
 				</div>
 				{{this.$t(headers[active].title)}}
@@ -202,7 +202,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 	.header__wrapper{
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;
