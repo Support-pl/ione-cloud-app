@@ -426,7 +426,7 @@ export default {
 		
 		const user = this.user;
 		let userinfo = {
-			clientid: user.id,
+			userid: user.id,
 			secret: md5('createVDC' + user.id + user.secret)
 		}
 		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );

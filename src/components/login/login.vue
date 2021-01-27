@@ -84,7 +84,7 @@ export default {
 					user.secret = data.secret;
 					
 					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
-					const url = `/clientDetails.php?clientid=${user.id}&secret=${close_your_eyes}`;
+					const url = `/clientDetails.php?userid=${user.id}&secret=${close_your_eyes}`;
 					this.$axios.get(url)
 					.then(resp => {
 						user.firstname = resp.data.firstname;
@@ -94,7 +94,7 @@ export default {
 
 						this.$store.dispatch("onLoadUser", user);
 						this.$router.push("cloud");
-						location.reload() //костыль, починить позже
+						// location.reload() //костыль, починить позже
 					})
 				}
 				else if(data.result == "error"){

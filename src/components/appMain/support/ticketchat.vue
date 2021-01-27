@@ -106,7 +106,7 @@ export default {
 				id: this.$route.params.pathMatch,
 				message: this.messageInput,
 				secret: close_your_eyes,
-				clientid: this.user.id,
+				userid: this.user.id,
 			}
 
 			const params = this.objectToParams(object);
