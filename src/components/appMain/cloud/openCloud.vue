@@ -42,6 +42,24 @@
 
 								</a-input-password>
 							</a-modal>
+							<a-modal v-model="modal.expand" title='Expand VM' @ok="ExpandVM">
+								<a-row :gutter="[10,10]">
+									<a-col :xs="24" :sm="4">
+										CPU
+									</a-col>
+									<a-col :xs="24" :sm="20">
+										<a-input type="number" :min="1" v-model="resize.CPU"/>
+									</a-col>
+								</a-row>
+								<a-row :gutter="[10,10]">
+									<a-col :xs="24" :sm="4">
+										RAM (GB)
+									</a-col>
+									<a-col :xs="24" :sm="20">
+										<a-input type="number" :min="1" v-model="resize.RAM"/>
+									</a-col>
+								</a-row>
+							</a-modal>
 						</div>
 					</div>
 				</div>
@@ -250,11 +268,11 @@
 
 						<a-col :span='24' :md='12'>
 							<div class="button">
-								<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
-									<a-button type="primary" shape="round" block size='large'>
+								<a-button :disabled="SingleCloud.STATE != 3 || SingleCloud.LCM_STATE != 3" type="primary" shape="round" block size='large'>
+									<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
 										VNC
-									</a-button>
-								</router-link>
+									</router-link>
+								</a-button>
 							</div>
 						</a-col>
 					</a-row>
@@ -338,7 +356,8 @@ export default {
 				snapshot: false,
 				menu: false,
 				reinstall: false,
-				delete: false
+				delete: false,
+				expand: false
 			},
 			option: {
 				reboot: 0,
@@ -357,12 +376,22 @@ export default {
 					loading: false
 				}
 			},
+			resize: {
+				CPU: 0,
+				RAM: 0,
+			},
 			menuOptions: [
 				{
 					title: "Reinstall",
 					onclick: this.openModal,
 					params: ['reinstall'],
 					icon: "exclamation"
+				},
+				{
+					title: "Expand VM",
+					onclick: this.changeModal,
+					params: ['expand'],
+					icon: "arrows-alt"
 				},
 				{
 					title: "Delete",
@@ -630,12 +659,88 @@ export default {
 
 			this.modal[name] = true;
 		},
+		changeModal(name){
+			for(let key in this.modal){
+				this.modal[key] = false;
+			}
+			this.modal[name] = true;
+		},
 		closeModal(name){
 			switch (name.toLowerCase()){
 				case 'createsnapshot':
 					this.snapshots.addSnap.modal = false
 					break;
 			}
+		},
+		ExpandVM(){
+
+			const keys = Object.keys(this.resize);
+			const newVmSpecs = {};
+			
+			const specScale = {
+				RAM: 1024,
+				CPU: 1
+			}
+
+			keys.forEach( spec => {
+				const newSpec = (+this.resize[spec]) * specScale[spec];
+				if(this.SingleCloud[spec] != newSpec){
+					newVmSpecs[spec] = newSpec;
+				}
+			});
+
+			console.log(newVmSpecs);
+			if(Object.keys(newVmSpecs).length == 0){
+				this.$message.warning('Can\'t resize to same size');
+				return;
+			}
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
+
+			const close_your_eyes = md5('VMresize' + userid + user.secret);
+
+			let query = {
+				userid,
+				vmid,
+				secret: close_your_eyes
+			}
+			query = Object.assign(newVmSpecs, query);
+
+			let url = `/VMresize.php?${this.URLparameter(query)}`
+			// console.log(url)
+			this.$axios.get(url)
+			.then( result => {
+				if(result.data.result == 'success'){
+					this.$message.success('VM resized successfuly');
+				} else {
+					this.$message.error('Some kind an error during resizing VM');
+					console.log(result.data);
+				}
+			})
+			.catch(er=> {
+				this.$message.error('Some kind an error during resizing VM');
+				console.er(er);
+			})
+			this.closeModal('expand');
+		},
+		changeExpand(){
+			console.log(arguments)
+		},
+		URLparameter(obj, outer = ''){
+			var str = "";
+			for (var key in obj) {
+				if(key == "price") continue;
+				if (str != "") {
+						str += "&";
+				}
+				if(typeof obj[key] == 'object') {
+					str += this.URLparameter(obj[key], outer+key);
+				} else {
+					str += outer + key + "=" + encodeURIComponent(obj[key]);
+				}
+			}
+			return str;
 		},
 		RMSnapshot(object){
 			const user = this.$store.getters.getUser;
@@ -689,29 +794,29 @@ export default {
 			})
 		},
 		snapshotsFetch(){
-				const user = this.$store.getters.getUser;
-				const userid = user.id;
-				const vmid = this.SingleCloud.ID;
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
 
 
-				const close_your_eyes = md5('getSnaps' + userid + user.secret);
-				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
-				this.$axios.get(url)
-				.then(res => {
-					// console.log(res);
-					if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
-						setTimeout(() => {
-							this.snapshotsFetch();
-						}, 10000);
-					}
-					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
-					if(res.data.response[0] == null){
-						this.snapshots.data = []
-					} else {
-						this.snapshots.data = res.data.response;
-					}
-					this.snapshots.loading = false;
-				})
+			const close_your_eyes = md5('getSnaps' + userid + user.secret);
+			const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
+			this.$axios.get(url)
+			.then(res => {
+				// console.log(res);
+				if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
+					setTimeout(() => {
+						this.snapshotsFetch();
+					}, 10000);
+				}
+				this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
+				if(res.data.response[0] == null){
+					this.snapshots.data = []
+				} else {
+					this.snapshots.data = res.data.response;
+				}
+				this.snapshots.loading = false;
+			})
 		},
 		getFormatedDate(dstring){
 			const date = new Date(+(dstring + "000"));
@@ -748,6 +853,12 @@ export default {
 					me.modal.delete = false;
         },
       });
+		},
+	},
+	watch: {
+		SingleCloud(val){
+			this.resize.CPU = +val.CPU;
+			this.resize.RAM = (+val.RAM) / 1024;
 		}
 	}
 }
