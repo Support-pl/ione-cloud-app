@@ -20,19 +20,6 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
 	name: "appFooter",
 	computed: {
-		getBiasLeft(){
-			const btn = document.querySelector(".button");
-			const width = btn.offsetWidth;
-			let ind = -1;
-			
-			for(let i = 0; i < this.getButtons.length; i++){
-				if(this.active == this.getButtons[i].title) ind = i;
-			}
-
-			ind = ind < 0? 0 : ind;
-
-			return width * ind;
-		},
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
