@@ -42,13 +42,14 @@
 
 								</a-input-password>
 							</a-modal>
-							<a-modal v-model="modal.expand" title='Expand VM' @ok="ExpandVM">
+							<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" title='Expand VM' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
+								<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
 								<a-row :gutter="[10,10]">
 									<a-col :xs="24" :sm="4">
 										CPU
 									</a-col>
 									<a-col :xs="24" :sm="20">
-										<a-input type="number" :min="1" v-model="resize.CPU"/>
+										<a-input type="number" :min="1" v-model="resize.VCPU"/>
 									</a-col>
 								</a-row>
 								<a-row :gutter="[10,10]">
@@ -60,6 +61,19 @@
 									</a-col>
 								</a-row>
 							</a-modal>
+							
+							<a-modal v-model="modal.diskControl" title='Disk control' :footer="null">
+								<disk-control/>
+							</a-modal>
+							
+							<a-modal v-model="modal.networkControl" title='Network control' :footer="null">
+								<network-control/>
+							</a-modal>
+							
+							<a-modal v-model="modal.bootOrder" title='Boot order' :footer="null">
+								<boot-order @onEnd="bootOrderNewState"/>
+							</a-modal>
+
 						</div>
 					</div>
 				</div>
@@ -292,10 +306,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import axios from 'axios'
 import md5 from 'md5'
 import loading from '../../loading/loading.vue'
 import config from '../../../appconfig'
+import diskControl from './openCloud/diskControl'
+import bootOrder from './openCloud/bootOrder'
+import networkControl from './openCloud/networkControl'
 
 const columns = [
   {
@@ -321,7 +337,10 @@ const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
 export default {
 	name: "openCloud",
 	components: {
-		loading
+		loading,
+		diskControl,
+		bootOrder,
+		networkControl
 	},
 	data(){
 		return {
@@ -348,7 +367,7 @@ export default {
 			name: 'test3',
 			showPermissions: false,
 			reinstallPass: '',
-			// updating: true
+			loadingResizeVM: false,
 			modal: {
 				reboot: false,
 				shutdown: false,
@@ -357,12 +376,18 @@ export default {
 				menu: false,
 				reinstall: false,
 				delete: false,
-				expand: false
+				expand: false,
+				diskControl: false,
+				bootOrder: false,
+				networkControl: false,
 			},
 			option: {
 				reboot: 0,
 				shutdown: 0,
 				recover: 0,
+			},
+			bootOrder: {
+				loading: false,
 			},
 			snapshots: {
 				modal: false,
@@ -377,7 +402,7 @@ export default {
 				}
 			},
 			resize: {
-				CPU: 0,
+				VCPU: 0,
 				RAM: 0,
 			},
 			menuOptions: [
@@ -388,10 +413,28 @@ export default {
 					icon: "exclamation"
 				},
 				{
-					title: "Expand VM",
+					title: "Resize VM",
 					onclick: this.changeModal,
 					params: ['expand'],
 					icon: "arrows-alt"
+				},
+				{
+					title: "Disk control",
+					onclick: this.changeModal,
+					params: ['diskControl'],
+					icon: "container"
+				},
+				{
+					title: "Network control",
+					onclick: this.changeModal,
+					params: ['networkControl'],
+					icon: "global"
+				},
+				{
+					title: "Boot Order",
+					onclick: this.changeModal,
+					params: ['bootOrder'],
+					icon: "ordered-list"
 				},
 				{
 					title: "Delete",
@@ -670,6 +713,8 @@ export default {
 				case 'createsnapshot':
 					this.snapshots.addSnap.modal = false
 					break;
+				default:
+					this.modal[name] = false;
 			}
 		},
 		ExpandVM(){
@@ -679,7 +724,7 @@ export default {
 			
 			const specScale = {
 				RAM: 1024,
-				CPU: 1
+				VCPU: 1
 			}
 
 			keys.forEach( spec => {
@@ -709,10 +754,11 @@ export default {
 
 			let url = `/VMresize.php?${this.URLparameter(query)}`
 			// console.log(url)
+			this.loadingResizeVM = true;
 			this.$axios.get(url)
 			.then( result => {
 				if(result.data.result == 'success'){
-					this.$message.success('VM resized successfuly');
+					this.$message.success('VM resized successfully');
 				} else {
 					this.$message.error('Some kind an error during resizing VM');
 					console.log(result.data);
@@ -721,8 +767,13 @@ export default {
 			.catch(er=> {
 				this.$message.error('Some kind an error during resizing VM');
 				console.er(er);
+				this.closeModal('expand');
 			})
-			this.closeModal('expand');
+			.finally( () => {
+				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+				this.closeModal('expand');
+				this.loadingResizeVM = false;
+			})
 		},
 		changeExpand(){
 			console.log(arguments)
@@ -854,10 +905,13 @@ export default {
         },
       });
 		},
+		bootOrderNewState(){
+			this.closeModal("bootOrder")
+		}
 	},
 	watch: {
 		SingleCloud(val){
-			this.resize.CPU = +val.CPU;
+			this.resize.VCPU = +val.VCPU;
 			this.resize.RAM = (+val.RAM) / 1024;
 		}
 	}
