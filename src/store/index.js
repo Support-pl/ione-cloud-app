@@ -6,6 +6,7 @@ import cloud from './cloud'
 import support from './support'
 import invoices from './invoices'
 import newVDC from './newVDC'
+import network from './network'
 
 Vue.use(vuex)
 
@@ -16,6 +17,7 @@ export default new vuex.Store({
 		cloud,
 		support,
 		invoices,
-		newVDC
+		newVDC,
+		network
 	}
 })

@@ -202,7 +202,7 @@
 						</div>
 					</div>
 
-					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
+					<div class="Fcloud__info-block block">
 						<div class="Fcloud__block-header">
 							<a-icon type="apartment" />
 							{{$t('Network')}}
@@ -211,11 +211,11 @@
 						<div class="Fcloud__block-content">
 							<div class="block__column">
 								<div class="block__title">{{$t('inbound') | capitalize}}</div>
-								<div class="block__value">{{fromBytesTo(chart1Data[chart1Data.length-1][1], checkRange(chart1Data[chart1Data.length-1][1])).toFixed(3)}} {{checkRange(chart1Data[chart1Data.length-1][1])}}</div>
+								<div class="block__value">{{printWidthRange(chart1Data[chart1Data.length-1][1])}}</div>
 							</div>
 							<div class="block__column">
 								<div class="block__title">{{$t('outgoing') | capitalize}}</div>
-								<div class="block__value">{{fromBytesTo(chart2Data[chart2Data.length-1][1], checkRange(chart2Data[chart2Data.length-1][1])).toFixed(3)}} {{checkRange(chart2Data[chart2Data.length-1][1])}}</div>
+								<div class="block__value">{{printWidthRange(chart2Data[chart2Data.length-1][1])}}</div>
 							</div>
 						</div>
 					</div>
@@ -443,7 +443,6 @@ export default {
 					type: "danger"
 				},
 			]
-
 		}
 	},
 	computed: {
@@ -643,6 +642,14 @@ export default {
 					break;
 			}
 		},
+		printWidthRange(value){
+			let range = this.checkRange(value);
+			let newVal = this.fromBytesTo(value, range);
+			if(newVal){
+				newVal = Math.round(newVal * 1000) / 1000
+			}
+			return `${newVal} ${range}`
+		},
 		newsnap(){
 			if(this.snapshots.data.lenght >= 3){
 				this.$error({
@@ -734,7 +741,7 @@ export default {
 				}
 			});
 
-			console.log(newVmSpecs);
+			// console.log(newVmSpecs);
 			if(Object.keys(newVmSpecs).length == 0){
 				this.$message.warning('Can\'t resize to same size');
 				return;
@@ -774,9 +781,6 @@ export default {
 				this.closeModal('expand');
 				this.loadingResizeVM = false;
 			})
-		},
-		changeExpand(){
-			console.log(arguments)
 		},
 		URLparameter(obj, outer = ''){
 			var str = "";

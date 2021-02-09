@@ -5,10 +5,10 @@
 			<span slot="size" slot-scope="value">{{Math.round(value/1024)}}GB</span>
 
 			<div slot="buttons" slot-scope="value, row">
-				<span v-if="value.DISK_ID != 0" class="disk__button" title="Detach" @click="detachInit(row)">
+				<span v-if="value.DISK_ID != 0" class="modal_table_action_btn" title="Detach" @click="detachInit(row)">
 					<a-icon type="close" />
 				</span>
-				<span class="disk__button" title="Resize" @click="resizeInit(row)">
+				<span class="modal_table_action_btn" title="Resize" @click="resizeInit(row)">
 					<a-icon type="arrows-alt" />
 				</span>
 
@@ -362,20 +362,20 @@ export default {
 
 <style>
 
-.disk__button{
+.modal_table_action_btn{
 	font-size: 1.2rem;
 	cursor: pointer;
 }
 
-.disk__button i{
+.modal_table_action_btn i{
 	transition: color .2s ease, transform .2s .1s ease;
 }
 
-.disk__button:not(:last-child){
+.modal_table_action_btn:not(:last-child){
 	margin-right: 15px;
 }
 
-.disk__button:hover i{
+.modal_table_action_btn:hover i{
 	color: #427cf7;
 	transform: scale(1.25);
 }

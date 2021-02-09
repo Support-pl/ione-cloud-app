@@ -1,7 +1,7 @@
 <template>
 	<div id="app" :style="cssVars">
 		<transition name="slide">
-			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}"></router-view>
+			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}" :key="$route.fullPath"></router-view>
 		</transition>
 	</div>
 </template>
