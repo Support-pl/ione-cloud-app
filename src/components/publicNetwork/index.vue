@@ -9,19 +9,16 @@
 			<div slot="ip" slot-scope="value, row">
 				{{value}}
 				<template v-if="!Array.isArray(row.LEASES)">
-				<router-link v-if="row.LEASES.LEASE['VM'] != $route.params.pathMatch" :to="`/cloud-${row.LEASES.LEASE['VM']}`">
-					<span>
-						{{`(used at VM#${row.LEASES.LEASE['VM']})`}}
-					</span>
-				</router-link>
+				<span class="link--clickable" v-if="row.LEASES.LEASE['VM'] != $route.params.pathMatch" @click="GoToVM(row.LEASES.LEASE['VM'])">
+					{{`(used at VM#${row.LEASES.LEASE['VM']})`}}
+				</span>
 				<span v-else>
 					{{`(used at VM#${row.LEASES.LEASE['VM']})`}}
 				</span>
-
 				</template>
 			</div>
 		</a-table>
-		<a-button style="margin-top: 15px" v-if="!NICloading">Reserve public NIC</a-button>
+		<a-button style="margin-top: 15px" v-if="!NICloading" @click="ReserveNIC">Reserve public NIC</a-button>
 	</div>
 </template>
 
@@ -62,6 +59,21 @@ export default {
 		this.sync();
 	},
 	methods: {
+		URLparameter(obj, outer = ''){
+			var str = "";
+			for (var key in obj) {
+				if(key == "price") continue;
+				if (str != "") {
+						str += "&";
+				}
+				if(typeof obj[key] == 'object') {
+					str += this.URLparameter(obj[key], outer+key);
+				} else {
+					str += outer + key + "=" + encodeURIComponent(obj[key]);
+				}
+			}
+			return str;
+		},
 		sync(){
 			this.$store.dispatch('network/fetchNICs');
 		},
@@ -94,6 +106,38 @@ export default {
 				this.sync();
 			})
 		},
+		ReserveNIC(){
+			const user = this.user;
+			const vmid = this.SingleCloud.ID;
+
+			const close_your_eyes = md5('NICReserve' + user.id + user.secret);
+			const auth = {
+				userid: user.id,
+				vmid,
+				secret: close_your_eyes,
+			};
+			const actionParams = {
+			}
+			const params = Object.assign(auth, actionParams);
+			const url = `/NICReserve.php?${this.URLparameter(params)}`;
+			// this.NICloading = true;
+			this.$store.commit('network/updateValue', 'loading', true)
+			this.$axios.get(url)
+			.then( resp => {
+				console.log()
+			})
+			.catch( err => {
+				console.error(err)
+			})
+			.finally( () => {
+				this.sync();
+			})
+		},
+		GoToVM(vmid){
+			this.$router.push("/cloud-"+vmid);
+			this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
+			this.$emit('killmoals');
+		}
 	},
 	computed: {
 		...mapGetters('cloud', {
@@ -124,5 +168,8 @@ export default {
 </script>
 
 <style>
-
+.link--clickable{
+	color: #1890ff;
+	cursor: pointer;
+}
 </style>

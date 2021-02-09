@@ -1,7 +1,7 @@
 <template>
 	<div id="app" :style="cssVars">
 		<transition name="slide">
-			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}" :key="$route.fullPath"></router-view>
+			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}"></router-view>
 		</transition>
 	</div>
 </template>
@@ -39,6 +39,7 @@ export default {
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 			this.$router.replace("login");
 		}
+		document.title = 'Cloud'
 		// console.log(this.$config);
 	},
 	computed: {
