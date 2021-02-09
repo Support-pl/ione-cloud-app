@@ -136,7 +136,6 @@ export default {
 		GoToVM(vmid){
 			this.$router.push("/cloud-"+vmid);
 			this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
-			this.$emit('killmoals');
 		}
 	},
 	computed: {
