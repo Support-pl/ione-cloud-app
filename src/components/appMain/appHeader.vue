@@ -59,7 +59,7 @@ export default {
 			headers: {
 				'cloud': {
 					title: 'Cloud',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'cloud_search',
@@ -76,7 +76,7 @@ export default {
 				},
 				'support': {
 					title: 'Support',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'support_filter',
@@ -100,7 +100,7 @@ export default {
 				},
 				'invoice': {
 					title: 'Invoice',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'invoice_filter',
@@ -116,7 +116,7 @@ export default {
 				'newVDC': {
 					title: 'Create VM',
 					notmain: true,
-					needBalance: true,
+					// needBalance: true,
 					buttons: []
 				}
 

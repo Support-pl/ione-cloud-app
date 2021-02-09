@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			Cloud icloudfusion.net
+			support.by
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -38,6 +38,9 @@
 				</div>
 				<div class="login__forgot">
 					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
+				</div>
+				<div class="login__forgot" style="margin-top: 5px">
+					use access data from my.support.by
 				</div>
 			</div>
 		</div>
@@ -93,7 +96,7 @@ export default {
 
 						this.$store.dispatch("onLoadUser", user);
 						this.$router.push("cloud");
-						// location.reload() //костыль, починить позже
+						location.reload() //костыль, починить позже
 					})
 				}
 				else if(data.result == "error"){
@@ -104,6 +107,9 @@ export default {
 			.catch(err => {
 				console.error(err);
 				this.$message.error("Can't connect to the server")
+			})
+			.finally( () => {
+				this.tryingLogin = false;
 			})
 		},
 		forgotPass(){
@@ -129,6 +135,9 @@ export default {
 			.catch(err => {
 				console.error(err);
 				this.$message.error("Can't connect to the server")
+			})
+			.finally( () => {
+				this.tryingLogin = false;
 			})
 		}
 		
