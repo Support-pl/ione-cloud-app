@@ -8,5 +8,5 @@ export default {
 		bright_font: '#fff',
 		bright_bg: '#f7f7f7',
 	},
-	WHMCSsiteurl: 'https://dev-whmcs.icloudfusion.net/'
+	WHMCSsiteurl: 'https://my.support.by/'
 }

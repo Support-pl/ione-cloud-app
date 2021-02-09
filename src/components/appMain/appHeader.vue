@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="header__wrapper">
 			<div class="header__title">
-				<div v-if="headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
+				<div v-if="headers[active] && headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
 					<a-icon type="left"/>
 				</div>
 				{{this.$t(headers[active].title)}}
@@ -59,7 +59,7 @@ export default {
 			headers: {
 				'cloud': {
 					title: 'Cloud',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'cloud_search',
@@ -76,7 +76,7 @@ export default {
 				},
 				'support': {
 					title: 'Support',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'support_filter',
@@ -100,7 +100,7 @@ export default {
 				},
 				'invoice': {
 					title: 'Invoice',
-					needBalance: true,
+					// needBalance: true,
 					buttons: [
 						{
 							name: 'invoice_filter',
@@ -116,7 +116,7 @@ export default {
 				'newVDC': {
 					title: 'Create VM',
 					notmain: true,
-					needBalance: true,
+					// needBalance: true,
 					buttons: []
 				}
 
@@ -202,7 +202,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 	.header__wrapper{
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;

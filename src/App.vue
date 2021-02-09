@@ -39,6 +39,7 @@ export default {
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 			this.$router.replace("login");
 		}
+		document.title = 'Cloud'
 		// console.log(this.$config);
 	},
 	computed: {

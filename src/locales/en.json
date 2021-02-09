@@ -134,6 +134,11 @@
 
 	"select OS": "select OS",
 	"select tariff": "select tariff",
+	"inbound": "inbound",
+	"outgoing": "outgoing",
+	"graphs": "graphs",
+
+	"turn of VM to resize it": "turn of VM to resize it",
 
 	"chat_Resend_message": "Resend message",
 	"chat_Delete_message": "Delete message"

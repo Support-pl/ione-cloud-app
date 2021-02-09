@@ -1,5 +1,8 @@
 import axios from 'axios';
 import config from './appconfig.js'
-export default axios.create({
-	baseURL: config.WHMCSsiteurl + 'back_app',
+
+const ax = axios.create({
+	baseURL: config.WHMCSsiteurl + 'app_back',
 });
+
+export default ax;

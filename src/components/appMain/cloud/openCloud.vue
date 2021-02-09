@@ -5,7 +5,7 @@
 			<div class="Fcloud">
 				<div class="Fcloud__header">
 					<div class="Fcloud__back-wrapper">
-						<router-link class="Fcloud__back icon__wrapper" to="cloud">
+						<router-link class="Fcloud__back icon__wrapper" to="/cloud">
 							<a-icon type="left" />
 						</router-link>
 					</div>
@@ -42,6 +42,38 @@
 
 								</a-input-password>
 							</a-modal>
+							<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" title='Expand VM' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
+								<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
+								<a-row :gutter="[10,10]">
+									<a-col :xs="24" :sm="4">
+										CPU
+									</a-col>
+									<a-col :xs="24" :sm="20">
+										<a-input type="number" :min="1" v-model="resize.VCPU"/>
+									</a-col>
+								</a-row>
+								<a-row :gutter="[10,10]">
+									<a-col :xs="24" :sm="4">
+										RAM (GB)
+									</a-col>
+									<a-col :xs="24" :sm="20">
+										<a-input type="number" :min="1" v-model="resize.RAM"/>
+									</a-col>
+								</a-row>
+							</a-modal>
+							
+							<a-modal v-model="modal.diskControl" title='Disk control' :footer="null">
+								<disk-control/>
+							</a-modal>
+							
+							<a-modal v-model="modal.networkControl" title='Network control' :footer="null">
+								<network-control/>
+							</a-modal>
+							
+							<a-modal v-model="modal.bootOrder" title='Boot order' :footer="null">
+								<boot-order @onEnd="bootOrderNewState"/>
+							</a-modal>
+
 						</div>
 					</div>
 				</div>
@@ -128,7 +160,7 @@
 					<div class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
-								<tr v-for="nic in SingleCloud.NIC" :key="nic.NAME">
+								<tr v-for="nic in IPs" :key="nic.NAME">
 									<td>IP</td>
 									<td>{{nic.IP}}</td>
 								</tr>
@@ -144,7 +176,7 @@
 						<div class="Fcloud__block-content">
 							<div class="block__column">
 								<div class="block__title">CPU</div>
-								<div class="block__value">{{SingleCloud.CPU}}</div>
+								<div class="block__value">{{SingleCloud.VCPU}}</div>
 							</div>
 							<div class="block__column">
 								<div class="block__title">{{$t('cloud_Memory')}}</div>
@@ -170,80 +202,94 @@
 						</div>
 					</div>
 
-					<div v-if="showPermissions" class="Fcloud__info-block block">
+					<div class="Fcloud__info-block block">
 						<div class="Fcloud__block-header">
-							<a-icon type="user" />
-							Permissions
+							<a-icon type="apartment" />
+							{{$t('Network')}}
+							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content">
-							<table class="permissions">
-								<tbody>
-									<tr>
-										<th></th>
-										<th>Use</th>
-										<th>Manage</th>
-										<th>Admin</th>
-									</tr>
-									<tr>
-										<td>Owner</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-									<tr>
-										<td>Group</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-									<tr>
-										<td>Other</td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-										<td><input type="checkbox" name="" id=""></td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="block__column">
+								<div class="block__title">{{$t('inbound') | capitalize}}</div>
+								<div class="block__value">{{printWidthRange(chart1Data[chart1Data.length-1][1])}}</div>
+							</div>
+							<div class="block__column">
+								<div class="block__title">{{$t('outgoing') | capitalize}}</div>
+								<div class="block__value">{{printWidthRange(chart2Data[chart2Data.length-1][1])}}</div>
+							</div>
 						</div>
 					</div>
 
-					<div class="Fcloud_snapshots">
-						<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
-							Snapshots
-						</a-button>
-						<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
-							<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
-							<a-table
-								:columns="snapshots.columns"
-								:data-source="snapshots.data"
-								:pagination="false"
-								:loading="snapshots.loading"
-								rowKey="TIME"
-							>
-							<template slot="time" slot-scope="time">
-								{{getFormatedDate(time)}}
-							</template>
-							<template slot="actions" slot-scope="actions">
-								<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-								<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-							</template>
-							</a-table>
-							<div class="modal__buttons">
-								<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
-							</div>
-							<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
-								<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
-								<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
-								<p>{{$t('Choose a name for the new snapshot:')}}</p>
-								<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
-								<div class="modal__buttons">
-									<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
-									<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
-								</div>
-							</a-modal>
-						</a-modal>
+					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
+						<div class="Fcloud__block-header">
+							<a-icon type="line-chart" />
+							{{$t('graphs') | capitalize}} 
+							<!-- add translate -->
+						</div>
+						<div class="Fcloud__block-content Fcloud__block-content--charts">
+							<GChart
+								type="LineChart"
+								:data="inbChartDataReady"
+								:options="chartOption('inbound')"
+							/>
+							<GChart
+								type="LineChart"
+								:data="outChartDataReady"
+								:options="chartOption('outgoing')"
+							/>
+						</div>
 					</div>
 
+					<a-row :gutter="[15, 15]" style="margin-top: 20px">
+						<a-col :span='24' :md='12'>
+							<div class="button">
+								<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
+									Snapshots
+								</a-button>
+								<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
+									<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
+									<a-table
+										:columns="snapshots.columns"
+										:data-source="snapshots.data"
+										:pagination="false"
+										:loading="snapshots.loading"
+										rowKey="TIME"
+									>
+									<template slot="time" slot-scope="time">
+										{{getFormatedDate(time)}}
+									</template>
+									<template slot="actions" slot-scope="actions">
+										<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+										<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+									</template>
+									</a-table>
+									<div class="modal__buttons">
+										<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
+									</div>
+									<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
+										<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
+										<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
+										<p>{{$t('Choose a name for the new snapshot:')}}</p>
+										<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
+										<div class="modal__buttons">
+											<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
+											<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
+										</div>
+									</a-modal>
+								</a-modal>
+							</div>
+						</a-col>
+
+						<a-col :span='24' :md='12'>
+							<div class="button">
+								<a-button :disabled="SingleCloud.STATE != 3 || SingleCloud.LCM_STATE != 3" type="primary" shape="round" block size='large'>
+									<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
+										VNC
+									</router-link>
+								</a-button>
+							</div>
+						</a-col>
+					</a-row>
 				</div>
 			</div>
 		</div>
@@ -260,10 +306,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import axios from 'axios'
 import md5 from 'md5'
 import loading from '../../loading/loading.vue'
 import config from '../../../appconfig'
+import diskControl from './openCloud/diskControl'
+import bootOrder from './openCloud/bootOrder'
+import networkControl from './openCloud/networkControl'
 
 const columns = [
   {
@@ -284,19 +332,42 @@ const columns = [
   },
 ];
 
+const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
 export default {
 	name: "openCloud",
 	components: {
-		loading
+		loading,
+		diskControl,
+		bootOrder,
+		networkControl
 	},
 	data(){
 		return {
+			chart1Data: [
+        ['Time', ''],
+      ],
+			chart2Data: [
+        ['Time', ''],
+			],
+			chartHead: ['Timestamp'],
+      chartOptions: {
+				title: 'network',
+				curveType: 'function',
+				legend: 'none',
+				width: 300,
+				height: 150,
+				vAxis: {
+					viewWindowMode: "explicit",
+					viewWindow:{ min: 0 }
+				}
+      },
 			config,
 			status: 'running',
 			name: 'test3',
 			showPermissions: false,
 			reinstallPass: '',
-			// updating: true
+			loadingResizeVM: false,
 			modal: {
 				reboot: false,
 				shutdown: false,
@@ -304,12 +375,19 @@ export default {
 				snapshot: false,
 				menu: false,
 				reinstall: false,
-				delete: false
+				delete: false,
+				expand: false,
+				diskControl: false,
+				bootOrder: false,
+				networkControl: false,
 			},
 			option: {
 				reboot: 0,
 				shutdown: 0,
 				recover: 0,
+			},
+			bootOrder: {
+				loading: false,
 			},
 			snapshots: {
 				modal: false,
@@ -323,6 +401,10 @@ export default {
 					loading: false
 				}
 			},
+			resize: {
+				VCPU: 0,
+				RAM: 0,
+			},
 			menuOptions: [
 				{
 					title: "Reinstall",
@@ -331,13 +413,36 @@ export default {
 					icon: "exclamation"
 				},
 				{
+					title: "Resize VM",
+					onclick: this.changeModal,
+					params: ['expand'],
+					icon: "arrows-alt"
+				},
+				{
+					title: "Disk control",
+					onclick: this.changeModal,
+					params: ['diskControl'],
+					icon: "container"
+				},
+				{
+					title: "Network control",
+					onclick: this.changeModal,
+					params: ['networkControl'],
+					icon: "global"
+				},
+				{
+					title: "Boot Order",
+					onclick: this.changeModal,
+					params: ['bootOrder'],
+					icon: "ordered-list"
+				},
+				{
 					title: "Delete",
 					onclick: this.sendDelete,
 					icon: "delete",
 					type: "danger"
 				},
 			]
-
 		}
 	},
 	computed: {
@@ -352,12 +457,89 @@ export default {
 			isLoading: 'isLoading',
 			permissions: 'permissions',
 			singleLoading: 'singleLoading'
-		})
+		}),
+		inbChartDataReady(){
+			let data = this.chart1Data;
+			if(data == undefined) {
+				console.error('can\'t get chart1');
+				return [[0],[0]];
+			}
+			if(data[0] == undefined || data[1] == undefined){
+				return [[this.chartHead[0], 'bytes'], [0, 0]]
+			}
+			let range = this.checkRange(data[data.length-1][1]);
+			data = data.map( pair => ([new Date(pair[0] * 1000), this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data.unshift([this.chartHead[0], range]);
+			return data
+		},
+		outChartDataReady(){
+			let data = this.chart2Data;
+			if(data == undefined) {
+				console.error('can\'t get chart2');
+				return [[0],[0]];
+			}
+			if(data[0] == undefined || data[1] == undefined){
+				return [[this.chartHead[0], 'bytes'], [0, 0]]
+			}
+			let range = this.checkRange(data[data.length-1][1]);
+			data = data.map( pair => ([new Date(pair[0] * 1000), this.fromBytesTo(parseInt(pair[1]), range)]) );
+			data.unshift([this.chartHead[0], range]);
+			return data
+		},
+		IPs(){
+			return this.SingleCloud.NIC.filter( el => el.IP != undefined );
+		}
 	},
 	created(){
 		this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
 	},
+	mounted(){
+		this.$axios.get(`classnebulatest.php?vmid=${this.$route.params.pathMatch}` )
+			.then( res => {
+				if(res.data.NETRX != undefined){
+					this.chart1Data = res.data.NETRX;
+				}
+				if(res.data.NETTX != undefined){
+					this.chart2Data = res.data.NETTX;
+				}
+			})
+			.catch( err => {
+				console.error(err);
+			} )
+	},
 	methods: {
+		checkRange(val){
+			let count = 0;
+			for(let i = 0; val > 1024; count++){
+				val = val / 1024;
+			}
+			return sizes[count];
+		},
+		fromBytesTo(val, newRange){
+			let count = sizes.indexOf(newRange);
+			if(count == -1){
+				console.log('can\'t get such range')
+				return;
+			}
+			while(count > 0){
+				val = val / 1024;
+				count--;
+			}
+			return val;
+		},
+		chartOption(title){
+			const newOpt = JSON.parse(JSON.stringify(this.chartOptions));
+			let range = '';
+			if(title.toLowerCase() == 'inbound'){
+				range = this.checkRange(this.chart1Data[this.chart1Data.length-1][1]);
+			} else if(title.toLowerCase() == 'outgoing'){
+				range = this.checkRange(this.chart2Data[this.chart2Data.length-1][1]);
+			}
+			let localizeTitle = this.$t(title);
+			let capitalized = localizeTitle[0].toUpperCase() + localizeTitle.slice(1);
+			newOpt.title = `${capitalized} (${range})`;
+			return newOpt;
+		},
 		sendAction(action){
 			switch (action.toLowerCase()){
 				case 'start':
@@ -464,6 +646,14 @@ export default {
 					break;
 			}
 		},
+		printWidthRange(value){
+			let range = this.checkRange(value);
+			let newVal = this.fromBytesTo(value, range);
+			if(newVal){
+				newVal = Math.round(newVal * 1000) / 1000
+			}
+			return `${newVal} ${range}`
+		},
 		newsnap(){
 			const self = this;
 			if(this.snapshots.data.lenght >= 3){
@@ -524,12 +714,93 @@ export default {
 
 			this.modal[name] = true;
 		},
+		changeModal(name){
+			for(let key in this.modal){
+				this.modal[key] = false;
+			}
+			this.modal[name] = true;
+		},
 		closeModal(name){
 			switch (name.toLowerCase()){
 				case 'createsnapshot':
 					this.snapshots.addSnap.modal = false
 					break;
+				default:
+					this.modal[name] = false;
 			}
+		},
+		ExpandVM(){
+
+			const keys = Object.keys(this.resize);
+			const newVmSpecs = {};
+			
+			const specScale = {
+				RAM: 1024,
+				VCPU: 1
+			}
+
+			keys.forEach( spec => {
+				const newSpec = (+this.resize[spec]) * specScale[spec];
+				if(this.SingleCloud[spec] != newSpec){
+					newVmSpecs[spec] = newSpec;
+				}
+			});
+
+			// console.log(newVmSpecs);
+			if(Object.keys(newVmSpecs).length == 0){
+				this.$message.warning('Can\'t resize to same size');
+				return;
+			}
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
+
+			const close_your_eyes = md5('VMresize' + userid + user.secret);
+
+			let query = {
+				userid,
+				vmid,
+				secret: close_your_eyes
+			}
+			query = Object.assign(newVmSpecs, query);
+
+			let url = `/VMresize.php?${this.URLparameter(query)}`
+			// console.log(url)
+			this.loadingResizeVM = true;
+			this.$axios.get(url)
+			.then( result => {
+				if(result.data.result == 'success'){
+					this.$message.success('VM resized successfully');
+				} else {
+					this.$message.error('Some kind an error during resizing VM');
+					console.log(result.data);
+				}
+			})
+			.catch(er=> {
+				this.$message.error('Some kind an error during resizing VM');
+				console.er(er);
+				this.closeModal('expand');
+			})
+			.finally( () => {
+				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+				this.closeModal('expand');
+				this.loadingResizeVM = false;
+			})
+		},
+		URLparameter(obj, outer = ''){
+			var str = "";
+			for (var key in obj) {
+				if(key == "price") continue;
+				if (str != "") {
+						str += "&";
+				}
+				if(typeof obj[key] == 'object') {
+					str += this.URLparameter(obj[key], outer+key);
+				} else {
+					str += outer + key + "=" + encodeURIComponent(obj[key]);
+				}
+			}
+			return str;
 		},
 		RMSnapshot(object){
 			const user = this.$store.getters.getUser;
@@ -583,29 +854,29 @@ export default {
 			})
 		},
 		snapshotsFetch(){
-				const user = this.$store.getters.getUser;
-				const userid = user.id;
-				const vmid = this.SingleCloud.ID;
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+			const vmid = this.SingleCloud.ID;
 
 
-				const close_your_eyes = md5('getSnaps' + userid + user.secret);
-				const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
-				this.$axios.get(url)
-				.then(res => {
-					console.log(res);
-					if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
-						setTimeout(() => {
-							this.snapshotsFetch();
-						}, 10000);
-					}
-					this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
-					if(res.data.response[0] == null){
-						this.snapshots.data = []
-					} else {
-						this.snapshots.data = res.data.response;
-					}
-					this.snapshots.loading = false;
-				})
+			const close_your_eyes = md5('getSnaps' + userid + user.secret);
+			const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
+			this.$axios.get(url)
+			.then(res => {
+				// console.log(res);
+				if(res.data.response[0] != null && res.data.response.some( element => element.ACTION != undefined)){
+					setTimeout(() => {
+						this.snapshotsFetch();
+					}, 10000);
+				}
+				this.snapshots.loadingSnaps.splice(0, this.snapshots.loadingSnaps.lenght);
+				if(res.data.response[0] == null){
+					this.snapshots.data = []
+				} else {
+					this.snapshots.data = res.data.response;
+				}
+				this.snapshots.loading = false;
+			})
 		},
 		getFormatedDate(dstring){
 			const date = new Date(+(dstring + "000"));
@@ -642,6 +913,15 @@ export default {
 					me.modal.delete = false;
         },
       });
+		},
+		bootOrderNewState(){
+			this.closeModal("bootOrder")
+		}
+	},
+	watch: {
+		SingleCloud(val){
+			this.resize.VCPU = +val.VCPU;
+			this.resize.RAM = (+val.RAM) / 1024;
 		}
 	}
 }
@@ -788,6 +1068,7 @@ export default {
 		border-radius: 35px 35px 0 0;
 		margin-top: 30px;
 		padding: 10px 30px 0;
+		overflow: auto;
 	}
 
 	.Fcloud__info-header{
@@ -847,6 +1128,10 @@ export default {
 		background-color: #fff;
 		border-radius: 20px;
 		padding: 10px 0;
+	}
+
+	.Fcloud__block-content--charts{
+		flex-wrap: wrap;
 	}
 
 	.block__column{
@@ -934,7 +1219,7 @@ export default {
 	}
 
 
-	.Fcloud_snapshots{
+	.button--mt20{
 		margin-top: 20px;
 	}
 	

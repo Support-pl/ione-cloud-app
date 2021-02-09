@@ -134,6 +134,11 @@
 
 	"select OS": "Выберите ОС",
 	"select tariff": "Выберите тариф",
+	"inbound": "входящий",
+	"outgoing": "исходящий",
+	"graphs": "графики",
+
+	"turn of VM to resize it": "выключите VM для изменения параметров",
 
 	"chat_Resend_message": "Повторить отправку",
 	"chat_Delete_message": "Удалить сообщение"

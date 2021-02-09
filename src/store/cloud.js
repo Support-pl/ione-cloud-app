@@ -69,7 +69,7 @@ export default {
 
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
 
-			const url = `/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
+			const url = `/getVmHash.php?id=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {
@@ -90,7 +90,7 @@ export default {
 			ctx.commit('makeUpdatingIs', true)
 			const user = ctx.rootGetters.getUser;
 			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
-			const url = `/getVmHash.php?id=${vmid}&clientid=${user.id}&secret=${close_your_eyes}`;
+			const url = `/getVmHash.php?id=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {

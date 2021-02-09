@@ -3,7 +3,7 @@
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 
-				<a-row type="flex" justify="center" :style="{'margin-bottom': '15px'}" :gutter="[10, 10]">
+				<a-row v-if='false' type="flex" justify="center" :style="{'margin-bottom': '15px'}" :gutter="[10, 10]">
 					<a-col>
 						{{$t('Ready made servers')}}
 					</a-col>
@@ -22,11 +22,11 @@
 								<div class="newCloud__template one-line">
 									<div v-for="rate in ratesArray" class="newCloud__template-item" :class="{ active: options.rate.id==rate.pid }" @click='setRate(rate.pid)' :key="rate.pid">
 										<div class="newCloud__template-image newCloud__template-image__rate">
-											{{rate.name.replace('SVDS ', "")}}
+											{{rate.name}}
 										</div>
 										<div class="newCloud__template-name">
 											<div class="newCloud__template-type">
-												{{rate.name.replace('SVDS ', "VDC ")}}
+												{{rate.name}}
 											</div>
 											<ul style="margin: 0; padding: 0; font-size: .75rem">
 												<template v-for="element in rate.description.properties">
@@ -40,14 +40,14 @@
 								</div>
 							</div>
 						</a-collapse-panel>
-						<a-collapse-panel key="OS" :header="$t('Choose OS') + (~options.os.id?' (' + options.os.name + '):':'')">
+						<a-collapse-panel key="OS" :header="$t('Choose OS') + (options.os.name == '' ? ':' : ' (' + options.os.name + '):')">
 							<div class="newCloud__option-field">
 								<div class="newCloud__template">
 									<div v-for="OS in templatesArray" class="newCloud__template-item" :class="{ active: options.os.id==OS.id }" @click='setOS(OS.id)' :key="OS.id">
 										<div class="newCloud__template-image">
 											<img :src="OS.logo.replace('images/', 'img/')" :alt="OS.name">
 										</div>
-										<div class="newCloud__template-name">{{OS.description.replace(' Template', "")}}</div>
+										<div class="newCloud__template-name">{{OS.description}}</div>
 									</div>
 								</div>
 							</div>
@@ -135,12 +135,12 @@
 										{{$t('Drive type')}}: 
 									</a-col>
 									<a-col :sm="13" :span="14">
-										<a-select v-model="options.disk.type" class="max-width" default-value="SSD" @change='diskChange()'>
-											<a-select-option value="SSD">
+										<a-select v-model="options.disk.type" class="max-width" :default-value="diskTypes[0]" @change='diskChange()'>
+											<!-- <a-select-option value="SSD">
 												SSD
-											</a-select-option>
-											<a-select-option value="HDD">
-												HDD
+											</a-select-option> -->
+											<a-select-option v-for="type of diskTypes" :key="type" :value="type">
+												{{type}}
 											</a-select-option>
 										</a-select>
 									</a-col>
@@ -211,7 +211,9 @@
 						CPU: {{options.cpu.count}}
 					</a-col>
 					<a-col>
-						{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}}BYN
+						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
+							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{user.currency_code}}
+						</a-skeleton>
 					</a-col>
 				</a-row>
 
@@ -220,7 +222,9 @@
 						RAM: {{options.ram.size}} {{options.ram.units}}
 					</a-col>
 					<a-col>
-						{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}}BYN
+						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
+							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{user.currency_code}}
+						</a-skeleton>
 					</a-col>
 				</a-row>
 
@@ -229,20 +233,24 @@
 						{{$t('Drive')}} {{options.disk.type}}: {{options.disk.size}} {{options.disk.units}}
 					</a-col>
 					<a-col>
-						{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}}BYN
+						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
+							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{user.currency_code}}
+						</a-skeleton>
 					</a-col>
 				</a-row>
 
-				<transition name="networkApear">
+				<!-- <transition name="networkApear">
 					<a-row v-if="options.network.public.status" type="flex" justify="space-between">
 						<a-col>
 							{{$t("Network")}}:
 						</a-col>
 						<a-col>
-							{{(calculatePrice(options.network.price)*options.network.public.count).toFixed(3)}}BYN
+							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
+								{{(calculatePrice(options.network.price)*options.network.public.count).toFixed(3)}}USD
+							</a-skeleton>
 						</a-col>
 					</a-row>
-				</transition>
+				</transition> -->
 				
 				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 					{{$t('Total')}}:
@@ -254,10 +262,27 @@
 							<template slot="title">
 								{{$t('Actual price may vary')}}
 							</template>
-							~{{calculateFullPrice()}}BYN/{{$t(toShow[periodToShow])}}
+							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
+								~{{calculateFullPrice()}} {{user.currency_code}}/{{$t(toShow[periodToShow])}}
+							</a-skeleton>
 						</a-tooltip>
 					</a-col>
 				</a-row>
+
+				<transition name="networkApear">
+					<a-row v-if="options.network.public.status" type="flex" justify="space-around" :style="{'font-size': '1.2rem'}">
+						<a-col>
+							<!-- <a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+								<template slot="title">
+									{{$t('Actual price may vary')}}
+								</template>
+							</a-tooltip> -->
+							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
+								+ Public IPv4: {{options.network.public.count * options.network.price}} {{user.currency_code}}/month
+							</a-skeleton>
+						</a-col>
+					</a-row>
+				</transition>
 				
 				<!-- <template v-if="false"> -->
 					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
@@ -320,12 +345,14 @@ export default {
 	name: "newVDC",
 	data(){
 		return {
+			diskTypes: [],
 			savedRateId: 0,
-			custom: false,
+			custom: true,
 			showTooltip: false,
 			dontshowattarrifs: ['hdd', 'traffic', 'address'],
 			collapseKey: "",
 			period: "hour",
+			pricesLoaded: false,
 			toShow: {
 				minute: "min",
 				hour: "hour",
@@ -346,29 +373,29 @@ export default {
 					name: 'Custom'
 				},
 				os: {
-					id: -1,
+					id: 0,
 					name: "",
 				},
 				cpu: {
 					count: 1,
-					price: 13.5,
+					price: 0,
 					min: 1,
 					max: 32
 				},
 				ram: {
 					size: 1,
 					units: "GB",
-					price: 11.5,
+					price: 0,
 					min: 1,
 					max: 512
 				},
 				disk: {
 					size: 20,
 					units: "GB",
-					type: "SSD",
+					type: "",
 					price: {
-						HDD: 0.24,
-						SSD: 0.7
+						HDD: 0,
+						SSD: 0
 					},
 					min: {
 						HDD: 50,
@@ -378,7 +405,7 @@ export default {
 						HDD: 1020,
 						SSD: 1020
 					},
-					backupPrice: 0.15
+					backupPrice: 0
 				},
 				network: {
 					public: {
@@ -389,28 +416,33 @@ export default {
 						status: false,
 						count: 0
 					},
-					price: 9
+					price: 0
 				}
 			}
 		}
 	},
 	mounted(){
+		// console.log(this.user);
 		this.$store.dispatch("newVDC/fetchTemplates");
 		this.$store.dispatch("newVDC/fetchRates");
 		
-		const user = this.$store.getters.getUser;
+		const user = this.user;
 		let userinfo = {
-			clientid: user.id,
+			userid: user.id,
 			secret: md5('createVDC' + user.id + user.secret)
 		}
 		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
-		this.$axios.get("getSettings.php?filter=cost" )
+		this.$axios.get("getSettings.php?filter=cost,disktypes" )
 			.then( res => {
-				console.log(res);
-				this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 24 * 30
-				this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 24 * 30
-				this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 24 * 30
-				this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 24 * 30
+				// console.log(res);
+				this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 30 * 3600 * 24
+				this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 30 * 3600 * 24
+				this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 30 * 3600 * 24
+				this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 30 * 3600 * 24
+				this.options.network.price = res.data.PUBLIC_IP_COST;
+				this.diskTypes = res.data.DISK_TYPES.split(',');
+				this.options.disk.type = this.diskTypes[0];
+				this.pricesLoaded = true;
 			})
 			.catch( err => {
 				console.error(err);
@@ -432,7 +464,7 @@ export default {
 	methods: {
 		setOS(id){
 			this.options.os.id = id;
-			this.options.os.name = this.templatesArray.find( el=>el.id==id ).description.replace(' Template', "");
+			this.options.os.name = this.templatesArray.find( el=>el.id==id ).description;
 			if(this.options.rate.id == 0){
 				this.collapseKey = "CPURAM"
 			} else {
@@ -470,11 +502,11 @@ export default {
 		changePeriod(value){
 			this.period = value;
 		},
-		calculatePrice(price){
+		calculatePrice(price, period = this.period){
 			if(this.options.tarification){
 				return price;	
-			} //выключил
-			switch (this.period) {
+			}
+			switch (period) {
 				case "minute":
 					price = price / 60;
 				case "hour":
@@ -495,18 +527,30 @@ export default {
 		},
 		calculateFullPrice(){
 			if(this.options.rate.id != 0){
-				const user = this.$store.getters.getUser;
+				const user = this.user;
 				this.options.tarification = true;
 				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
 			} //выключил
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
-				this.options.disk.price[this.options.disk.type] * this.options.disk.size
+				this.options.disk.price[this.options.disk.type] * this.options.disk.size,
+				// this.options.network.price * this.options.network.public.count
 				]
-			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(3);
+			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(2);
 		},
 		createVDC(){
+			const user = this.user;
+			let parts = [
+				this.options.cpu.price*this.options.cpu.count,
+				this.options.ram.price*this.options.ram.size,
+				this.options.disk.price[this.options.disk.type] * this.options.disk.size
+				]
+			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(3);
+			if(+price > +user.balance){
+				this.$message.error('You don\'t have enough money for a day of use');
+				return;
+			}
 			if(!~this.options.os.id){
 				this.$message.error(this.$t("select OS"));
 				this.collapseKey = "OS";
@@ -558,7 +602,7 @@ export default {
       return elem;
 		},
 		send(){
-			const user = this.$store.getters.getUser;
+			const user = this.user;
 			const userinfo = {
 				userid: user.id,
 				secret: md5('createVM' + user.id + user.secret)
@@ -650,6 +694,10 @@ export default {
 		},
 		disableNotCustom(){
 			return this.options.rate.id != 0;
+		},
+		user(){
+			const user = this.$store.getters.getUser;
+			return user;
 		}
 	},
 	watch: {
@@ -784,6 +832,19 @@ export default {
 
 	.slider_btn{
 		cursor: pointer;
+	}
+
+	.removeMarginSkeleton .ant-skeleton-title{
+		margin: 0;
+		margin-top: 4px;
+	}
+
+	.removeMarginSkeleton{
+		min-width: 75px;
+	}
+
+	.total.removeMarginSkeleton{
+		width: 100%;
 	}
 
 	@media screen and (max-width: 1024px) {
