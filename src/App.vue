@@ -30,9 +30,6 @@ export default {
 		const lang = localStorage.getItem("lang");
 		if(lang != undefined)
 			this.$i18n.locale = lang;
-		else {
-			this.$i18n.locale = 'en'
-		}
 		
 	},
 	mounted(){

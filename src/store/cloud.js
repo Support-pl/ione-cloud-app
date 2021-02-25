@@ -17,7 +17,11 @@ export default {
 	mutations: {
 		updateClouds(state, value) {
 			for(let i = 0; i < value.length; i++){
-				value[i].IP = value[i].IPS[0].IP;
+				if(value[i].IPS.length > 0) {
+					value[i].IP = value[i].IPS.find(el => el.IP!=undefined).IP || false;
+				} else {
+					value.IP = false;
+				}
 				if (value[i]['LCM_STATE'] == 3)
 					value[i]['STATE'] = lcm_states[value[i]['LCM_STATE']];
 				else if (value[i]['LCM_STATE'] == 3 && value[i]['STATE'] == 3)
@@ -67,30 +71,36 @@ export default {
 			ctx.commit('makeSingleLoadingIs', true);
 			const user = ctx.rootGetters.getUser;
 
-			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
+			const close_your_eyes = md5('getVmHash' + user.id + user.secret);
 
-			const url = `/getVmHash.php?id=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
+			const url = `/getVmHash.php?vmid=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
 
-			axios.get(url)
-				.then(resp => {
-					const vmdata = resp.data.data;
-					if(vmdata.STATE == 3 && vmdata.LCM_STATE != 3){
-						setTimeout(() => {
-							ctx.dispatch('silentUpdate', vmid);
-						}, 500);
-					}
-					ctx.commit("updateOpenedCloud", vmdata)
-					ctx.commit('makeUpdatingIs', false)
-					ctx.commit('makeSingleLoadingIs', false)
-				})
-				.catch(err => console.error(err))
+			return new Promise((resolve, reject) => {
+				axios.get(url)
+					.then(resp => {
+						const vmdata = resp.data.data;
+						if(vmdata != undefined && vmdata.STATE == 3 && vmdata.LCM_STATE != 3){
+							setTimeout(() => {
+								ctx.dispatch('silentUpdate', vmid);
+							}, 500);
+						}
+						ctx.commit("updateOpenedCloud", vmdata)
+						ctx.commit('makeUpdatingIs', false)
+						ctx.commit('makeSingleLoadingIs', false)
+						resolve(resp.data)
+					})
+					.catch(err => {
+						console.error(err)
+						reject(err)
+					})
+			})
 
 		},
 		silentUpdate(ctx, vmid) {
 			ctx.commit('makeUpdatingIs', true)
 			const user = ctx.rootGetters.getUser;
-			const close_your_eyes = md5('singleCloud' + user.id + user.secret);
-			const url = `/getVmHash.php?id=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
+			const close_your_eyes = md5('getVmHash' + user.id + user.secret);
+			const url = `/getVmHash.php?vmid=${vmid}&userid=${user.id}&secret=${close_your_eyes}`;
 
 			axios.get(url)
 				.then(resp => {
@@ -172,7 +182,7 @@ export default {
 				reboot: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				shutdown: [...commonParams, cloud.STATE == 3, cloud.LCM_STATE == 3],
 				start: [...commonParams, cloud.STATE !== 3],
-				recover: [...commonParams, cloud.STATE == 3],
+				recover: [...commonParams],
 			}
 
 			const result = {

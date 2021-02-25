@@ -13,6 +13,7 @@
   "Enter value": "Enter value",
   "stay on page": "stay on page",
   "forgotPass": "forgot password?",
+  "Enter new password": "Enter new password",
   "Cloud": "Cloud",
   "Support": "Support",
   "Invoice": "Invoice",
@@ -72,6 +73,24 @@
 	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
 	"Snapshot successfully deleted": "Snapshot successfully deleted",
 	"Vm was successfully restored from snapshot": "Vm was successfully restored from snapshot",
+
+	"Reinstall": "Reinstall",
+	"Resize VM": "Resize VM",
+	"Disk control": "Disk control",
+	"Network control": "Network control",
+	"Boot order": "Boot order",
+	"Delete": "Delete",
+	"Snapshots": "Snapshots",
+	"input password": "input password",
+
+	"Power off": "Power off",
+	"Reboot": "Reboot",
+	"Recover": "Recover",
+	"Start": "Start",
+	"Take snapshot": "Take snapshot",
+	"Personal Area": "Personal Area",
+	"use access data from my.support.by": "use access data from my.support.by",
+	"Use on your phone:": "Use on your phone:",
 	
   "invoice_Description": "Description",
 	"invoice_Price": "Price",
@@ -124,6 +143,8 @@
 	"Check all": "Check all",
 	"Parameters": "Parameters",
 	"Add Funds": "Add Funds",
+
+	"have no": "have no",
 
 	"Do you want to delete this virtual machine?": "Do you want to delete this virtual machine?",
 	"Do you want to reinstall this virtual machine?": "Do you want to reinstall this virtual machine?",

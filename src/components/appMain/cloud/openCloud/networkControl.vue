@@ -2,7 +2,7 @@
 	<div class="network-control">
 		<a-table :columns="columns" :data-source="newtworks" :pagination="false" rowKey='NIC_ID'>
 			<div slot="buttons" slot-scope="value, row">
-				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" title="Detach" @click="detachInit(row)">
+				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" :title="$t('Detach')" @click="detachInit(row)">
 					<a-icon type="close" />
 				</span>
 			</div>
@@ -13,33 +13,33 @@
 		</a-table>
 
 		<a-modal
-			title="NIC detach"
+			:title="$t('NIC detach')"
 			:visible="modal.detach"
 			:confirm-loading='detach.loading'
 			@ok="sendDetach"
 			@cancel="closeModal('detach')"
 		>
-			<p>This will detach the NIC immediately</p>
-			<p>Do you want to proceed?</p>
+			<p>{{$t('This will detach the NIC immediately')}}</p>
+			<p>{{$t('Do you want to proceed?')}}</p>
 		</a-modal>
 
 		<a-modal
-			title="NIC attach"
+			:title="$t('NIC attach')"
 			:visible="modal.attach"
 			:confirm-loading='attach.loading'
 			@ok="sendNewIP"
 			@cancel="closeModal('attach')"
 		>
 			<a-radio-group v-model="attach.type" style="margin-bottom: 20px">
-				<a-radio :value='1'>Private</a-radio>
-				<a-radio :value='2'>Public</a-radio>
+				<a-radio :value='1'>{{$t('Private')}}</a-radio>
+				<a-radio :value='2'>{{$t('Public')}}</a-radio>
 			</a-radio-group>
 			<div v-if="attach.type == 1">
 
-				<p style="margin-bottom: 2px">Available intervals:</p>
+				<p style="margin-bottom: 2px">{{$t('Available intervals:')}}</p>
 				<span v-for="ips in privateIPS" :key="ips.min">{{ips.min}} - {{ips.max}}<br></span>
 
-				<p style="margin-top: 15px">Enter new private IP:</p>
+				<p style="margin-top: 15px">{{$t('Enter new private IP:')}}</p>
 				<a-input v-model="attach.newIP" @change="ipInput">
 					<a-select v-model="attach.mask" slot="addonAfter" style="width: 80px">
 						<a-select-option v-for="mask in possibleMasks" :key="mask" :value="mask">
@@ -53,7 +53,7 @@
 		
 		<a-row style="margin-top: 15px">
 			<a-col>
-				<a-button @click="showModal('attach')" @final="() => this.closeModal('detach')">Attach new NIC</a-button>
+				<a-button @click="showModal('attach')" @final="() => this.closeModal('detach')">{{$t('Attach new NIC')}}</a-button>
 			</a-col>
 		</a-row>
 	</div>

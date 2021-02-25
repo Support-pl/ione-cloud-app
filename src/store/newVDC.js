@@ -25,7 +25,7 @@ export default {
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('getTemplates' + user.id + user.secret);
-			const url = `getTemplates.php?id=${user.id}&secret=${close_your_eyes}`;
+			const url = `getTemplates.php?userid=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
 			axios.get(url)

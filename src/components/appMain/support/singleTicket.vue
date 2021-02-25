@@ -22,8 +22,6 @@
 </template>
 
 <script>
-const axios = require('axios');
-
 export default {
 	name: "ticket",
 	data(){
@@ -45,7 +43,7 @@ export default {
 			return message;
 		},
 		formatDate(date){
-			const d = new Date(date);
+			const d = new Date(date.replace(/-/g, "/"));
 			const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
 			const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
 			const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)

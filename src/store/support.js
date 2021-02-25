@@ -34,7 +34,7 @@ export default {
 			const user = ctx.rootGetters.getUser;
 
 			const close_your_eyes = md5('tickets' + user.id + user.secret);
-			const url = `/tickets.php?id=${user.id}&secret=${close_your_eyes}`;
+			const url = `/tickets.php?userid=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
 			axios.get(url)

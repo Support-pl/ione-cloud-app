@@ -130,6 +130,7 @@ export default {
 
 			const close_your_eyes = md5('ticket'+this.user.id+this.user.secret);
 			const object = {
+				userid: this.user.id,
 				secret: close_your_eyes,
 				id: this.chatid,
 			}

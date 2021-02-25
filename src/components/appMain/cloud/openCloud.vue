@@ -23,7 +23,7 @@
 							<a-icon type="more" @click='openModal("menu")'/>
 							<a-modal v-model="modal.menu" title='Menu' :footer="null">
 								<a-button
-									v-for="btn in menuOptions"
+									v-for="btn in menuOptions.filter(el => !el.forVNC || SingleCloud.GNAME == 'VDC')"
 									:key="btn.title"
 									:icon="btn.icon"
 									@click="btn.onclick(...btn.params)"
@@ -31,18 +31,18 @@
 									class="menu__button"
 									:type="btn.type || 'default'"
 								>
-									{{btn.title}}
+									{{$t(btn.title)}}
 								</a-button>
 								
 							</a-modal>
 							
 							<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
-								<p>Enter new password</p>
-								<a-input-password v-model="reinstallPass" placeholder="input password">
+								<p>{{$t('Enter new password')}}</p>
+								<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
 
 								</a-input-password>
 							</a-modal>
-							<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" title='Expand VM' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
+							<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" :title='$t("Resize VM")' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
 								<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
 								<a-row :gutter="[10,10]">
 									<a-col :xs="24" :sm="4">
@@ -62,15 +62,15 @@
 								</a-row>
 							</a-modal>
 							
-							<a-modal v-model="modal.diskControl" title='Disk control' :footer="null">
+							<a-modal v-model="modal.diskControl" :title='$t("Disk control")' :footer="null">
 								<disk-control/>
 							</a-modal>
 							
-							<a-modal v-model="modal.networkControl" title='Network control' :footer="null">
+							<a-modal v-model="modal.networkControl" :title='$t("Network control")' :footer="null">
 								<network-control/>
 							</a-modal>
 							
-							<a-modal v-model="modal.bootOrder" title='Boot order' :footer="null">
+							<a-modal v-model="modal.bootOrder" :title='$t("Boot order")' :footer="null">
 								<boot-order @onEnd="bootOrderNewState"/>
 							</a-modal>
 
@@ -83,7 +83,7 @@
 							<!-- <a-icon type="stop" /> -->
 							<div class="cloud__icon cloud__icon--stop"></div>
 						</div>
-						<div class="Fcloud__BTN-title">Power off</div>
+						<div class="Fcloud__BTN-title">{{$t('Power off')}}</div>
 						<a-modal v-model="modal.shutdown" :title="$t('cloud_Shutdown_modal')" @ok="handleOk('shutdown')">
 							<p>{{$t('cloud_Shutdown_invite')}}</p>
 							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
@@ -104,13 +104,13 @@
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="caret-right" />
 						</div>
-						<div class="Fcloud__BTN-title">Start</div>
+						<div class="Fcloud__BTN-title">{{$t('Start')}}</div>
 					</div>
 					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot , 'btn_disabled_wiggle': true}" @click='openModal("reboot")'>
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="redo" />
 						</div>
-						<div class="Fcloud__BTN-title">Reboot</div>
+						<div class="Fcloud__BTN-title">{{$t('Reboot')}}</div>
 						<a-modal v-model="modal.reboot" :title="$t('cloud_Reboot_modal')" @ok="handleOk('reboot')">
 							<p>{{$t('cloud_Reboot_invite')}}</p>
 							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
@@ -133,7 +133,7 @@
 						<div class="Fcloud__BTN-icon">
 							<a-icon type="backward" />
 						</div>
-						<div class="Fcloud__BTN-title">Recover</div>
+						<div class="Fcloud__BTN-title">{{$t('Recover')}}</div>
 						<a-modal v-model="modal.recover" :title="$t('cloud_Recover_modal')" @ok="handleOk('recover')">
 							<p>{{$t('cloud_Recover_invite_line1')}}</p>
 							<p>{{$t('cloud_Recover_invite_line2')}}</p>
@@ -202,7 +202,7 @@
 						</div>
 					</div>
 
-					<div class="Fcloud__info-block block">
+					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
 						<div class="Fcloud__block-header">
 							<a-icon type="apartment" />
 							{{$t('Network')}}
@@ -244,9 +244,9 @@
 						<a-col :span='24' :md='12'>
 							<div class="button">
 								<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
-									Snapshots
+									{{$t('Snapshots')}}
 								</a-button>
-								<a-modal v-model="snapshots.modal" title="Snapshots" :footer="null">
+								<a-modal v-model="snapshots.modal" :title="$t('Snapshots')" :footer="null">
 									<div v-if="SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
 									<a-table
 										:columns="snapshots.columns"
@@ -264,7 +264,7 @@
 									</template>
 									</a-table>
 									<div class="modal__buttons">
-										<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">Take snapshot</a-button>
+										<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">{{$t('Take snapshot')}}</a-button>
 									</div>
 									<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
 										<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
@@ -272,8 +272,8 @@
 										<p>{{$t('Choose a name for the new snapshot:')}}</p>
 										<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
 										<div class="modal__buttons">
-											<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">Cancel</a-button>
-											<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">Take snapshot</a-button>
+											<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">{{$t('Cancel')}}</a-button>
+											<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">{{$t('Take snapshot')}}</a-button>
 										</div>
 									</a-modal>
 								</a-modal>
@@ -416,31 +416,36 @@ export default {
 					title: "Resize VM",
 					onclick: this.changeModal,
 					params: ['expand'],
-					icon: "arrows-alt"
+					icon: "arrows-alt",
+					forVNC: true
 				},
 				{
 					title: "Disk control",
 					onclick: this.changeModal,
 					params: ['diskControl'],
-					icon: "container"
+					icon: "container",
+					forVNC: true
 				},
 				{
 					title: "Network control",
 					onclick: this.changeModal,
 					params: ['networkControl'],
-					icon: "global"
+					icon: "global",
+					forVNC: true
 				},
 				{
-					title: "Boot Order",
+					title: "Boot order",
 					onclick: this.changeModal,
 					params: ['bootOrder'],
-					icon: "ordered-list"
+					icon: "ordered-list",
+					forVNC: true
 				},
 				{
 					title: "Delete",
 					onclick: this.sendDelete,
 					icon: "delete",
-					type: "danger"
+					type: "danger",
+					forVNC: true
 				},
 			]
 		}
@@ -491,23 +496,33 @@ export default {
 		}
 	},
 	created(){
-		this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch);
-	},
-	mounted(){
-		this.$axios.get(`classnebulatest.php?vmid=${this.$route.params.pathMatch}` )
-			.then( res => {
-				if(res.data.NETRX != undefined){
-					this.chart1Data = res.data.NETRX;
-				}
-				if(res.data.NETTX != undefined){
-					this.chart2Data = res.data.NETTX;
-				}
-			})
-			.catch( err => {
-				console.error(err);
-			} )
+		// this.sync(); //он вызывается ниже, в вотче изменения роута
 	},
 	methods: {
+		sync(vmid = null){
+			if(vmid == null){
+				vmid = this.$route.params.pathMatch;
+			}
+			this.$store.dispatch('cloud/fetchSingleCloud', vmid)
+			.then( res => {
+				if(res.result == 'error' && res.message == 'Not your VM.'){
+					this.$router.replace('/cloud');
+				}
+			}),
+			this.$axios.get(`VMMonitorting.php?vmid=${vmid}` )
+				.then( res => {
+					if(res.data.NETRX != undefined){
+						this.chart1Data = res.data.NETRX;
+					}
+					if(res.data.NETTX != undefined){
+						this.chart2Data = res.data.NETTX;
+					}
+				})
+				.catch( err => {
+					console.error(err);
+				} )
+
+		},
 		checkRange(val){
 			let count = 0;
 			for(let i = 0; val > 1024; count++){
@@ -859,7 +874,7 @@ export default {
 			const vmid = this.SingleCloud.ID;
 
 
-			const close_your_eyes = md5('getSnaps' + userid + user.secret);
+			const close_your_eyes = md5('getSnapshots' + userid + user.secret);
 			const url = `/getSnapshots.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`;
 			this.$axios.get(url)
 			.then(res => {
@@ -922,7 +937,14 @@ export default {
 		SingleCloud(val){
 			this.resize.VCPU = +val.VCPU;
 			this.resize.RAM = (+val.RAM) / 1024;
-		}
+		},
+		'$route.params': {
+			handler(newValue) {
+				const { pathMatch } = newValue;
+				this.sync(pathMatch);
+			},
+			immediate: true,
+    }
 	}
 }
 </script>

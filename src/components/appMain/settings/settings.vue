@@ -13,6 +13,15 @@
 					</div>
 				</div>
 
+				<div class="settings__item" @click="GoToPersonalArea()">
+					<div class="settings__logo">
+						<a-icon type="user" />
+					</div>
+					<div class="settings__title">
+						{{$t('Personal Area')}}
+					</div>
+				</div>
+
 				<div class="settings__item" @click="changeLanguage()">
 					<div class="settings__logo">
 						<a-icon type="global" />
@@ -45,6 +54,7 @@
 import md5 from 'md5'
 import balance from "../../balance/balance.vue";
 import addFunds from "../../balance/addFunds.vue";
+import config from '../../../appconfig';
 export default {
 	name: 'settings',
   data() {
@@ -94,6 +104,10 @@ export default {
 		addAmount(amount){
 			if(this.amount == "") this.amount = 0
 			this.amount += amount;
+		},
+		GoToPersonalArea(){
+			const close_your_eyes = md5('openWHMCSclientDetails'+this.user.id+this.user.secret);
+			window.open(config.WHMCSsiteurl + `app_back/openWHMCSclientDetails.php?userid=${this.user.id}&secret=${close_your_eyes}`);
 		}
 	},
 	computed: {

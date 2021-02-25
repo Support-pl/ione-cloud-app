@@ -167,7 +167,18 @@ export default {
 		},
 	},
 	mounted() {
-		this.$axios.get('getImages.php')
+			const user = this.user;
+			const vmid = this.SingleCloud.ID;
+
+			const close_your_eyes = md5('getImages' + user.id + user.secret);
+
+			let query = {
+				userid: user.id,
+				vmid,
+				secret: close_your_eyes
+			};
+
+		this.$axios.get(`getImages.php?${this.URLparameter(query)}`)
 		.then( res => {
 			this.images = res.data.IMAGE_POOL.IMAGE;
 		})

@@ -152,7 +152,7 @@ export default {
 		OpenWHMCSInvoice(){
 			// console.log('work');
 			const close_your_eyes = md5('openInvoiceWHMCS'+this.user.id+this.user.secret);
-			window.open(config.WHMCSsiteurl + `back_app/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
+			window.open(config.WHMCSsiteurl + `app_back/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
 		},
 		showfull(){
 			this.showFullTable = true;
@@ -194,7 +194,7 @@ export default {
 	mounted(){
 
 		const close_your_eyes = md5('invoice'+this.user.id+this.user.secret);
-		const url = `/invoice.php?id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
+		const url = `/invoice.php?userid=${this.user.id}&id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
 		this.$axios.get(url)
 		.then(res => {
 			this.inv = res.data;

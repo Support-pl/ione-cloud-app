@@ -40,7 +40,11 @@
 					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
 				</div>
 				<div class="login__forgot" style="margin-top: 5px">
-					use access data from my.support.by
+					{{$t('use access data from my.support.by')}}
+				</div>
+				<div id="qrcode" style="margin-top: 50px; text-align: center">
+					<p>{{$t('Use on your phone:')}}</p>
+					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px">
 				</div>
 			</div>
 		</div>
@@ -59,7 +63,8 @@ export default {
 			loginError: "",
 			remember: true,
 			password: '',
-			email: ''
+			email: '',
+			qrcode: null
 		}
 	},
 	props: {
@@ -141,7 +146,7 @@ export default {
 			})
 		}
 		
-	},
+	}
 }
 </script>
 
@@ -227,6 +232,9 @@ export default {
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
+}
+#qrcode{
+	display: none;
 }
 
 .login__submit:hover{
@@ -318,6 +326,10 @@ export default {
 	.login__error{
 		top: 50%;
 		transform: translateX(-50%) translateY(-750%);
+	}
+
+	#qrcode{
+		display: inline-block;
 	}
 }
 

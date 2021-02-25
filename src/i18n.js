@@ -19,7 +19,7 @@ function loadLocaleMessages() {
 const AppLangs = ['ru', 'en'];
 const SystemLangs = navigator.languages;
 
-const lang = AppLangs.find( el => ~SystemLangs.indexOf(el) );
+const lang = AppLangs.find( el => ~SystemLangs.map(el => el.replace(/-[a-z]{2}/i, '')).indexOf(el) );
 export default new VueI18n({
 	// locale: process.env.VUE_APP_I18N_LOCALE || 'en',
 	locale: lang,
