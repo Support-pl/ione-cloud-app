@@ -1,14 +1,16 @@
 <template>
-	<div id="app" :style="cssVars">
+	<div id="app" :style="false && cssVars">
 		<transition name="slide">
 			<router-view :style="{'position': 'absolute', 'width': '100%', 'height': '100%'}"></router-view>
 		</transition>
+		<update-notification />
 	</div>
 </template>
 
 <script>
 import login from './components/login/login.vue';
 import appMain from './components/appMain/appMain.vue';
+import updateNotification from './components/updateNotification/index.vue';
 
 export default {
 	name: "app",
@@ -37,7 +39,8 @@ export default {
 			this.$router.replace("login");
 		}
 		document.title = 'Cloud'
-		// console.log(this.$config);
+		const bodyCSS = Object.entries(this.cssVars).map(([k, v]) => `${k}:${v}`).join(';')
+		document.body.setAttribute('style', bodyCSS)
 	},
 	computed: {
     cssVars() {

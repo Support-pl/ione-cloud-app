@@ -8,5 +8,7 @@ export default {
 		bright_font: '#fff',
 		bright_bg: '#f7f7f7',
 	},
-	WHMCSsiteurl: 'https://my.support.by/'
+	languages: ['en', 'ru'],
+	WHMCSsiteurl: 'https://my.support.by/',
+	appFolder: 'app_back/v1'
 }

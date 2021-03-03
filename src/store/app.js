@@ -26,7 +26,11 @@ export default {
 				title: 'settings',
 				theme: 'filled'
 			},
-		]
+		],
+		update: {
+			worker: null,
+			status: false
+		}
 	},
 	mutations: {
 		setActiveTabName(state, value){
@@ -34,6 +38,9 @@ export default {
 		},
 		setActiveTabNum(state, value) {
 			state.activeTabNum = value;
+		},
+		setUpdate(state, value) {
+			state.update = value;
 		}
 	},
 	actions: {
@@ -63,6 +70,9 @@ export default {
 	getters: {
 		getButtons(state){
 			return state.buttons;
+		},
+		isNeedReloadToBeUpdated(state){
+			return state.update;
 		},
 		getActiveTab(state){
 			return {
