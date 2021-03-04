@@ -1,7 +1,7 @@
 <template>
 	<div class="header__container">
 		<div class="container">
-			<div class="header__wrapper">
+			<div v-if="headers[active]" class="header__wrapper">
 			<div class="header__title">
 				<div v-if="headers[active] && headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
 					<a-icon type="left"/>
@@ -11,8 +11,11 @@
 			<div class="header__right-side">
 				<div class="header__buttons" >
 					<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
-						<div v-if="button.onClickFuncion" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+						<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
 							<a-icon class="header__icon" :type="button.icon"/>
+						</div>
+						<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper order__btn" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+							<div class="header__order-btn">{{button.name}}</div>
 						</div>
 						<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
 							<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
@@ -61,6 +64,11 @@ export default {
 					title: 'Cloud',
 					// needBalance: true,
 					buttons: [
+						{
+							name: 'Order VM',
+							type: 'main action',
+							onClickFuncion: this.orderVM
+						},
 						{
 							name: 'cloud_search',
 							icon: 'search',
@@ -118,6 +126,12 @@ export default {
 					notmain: true,
 					// needBalance: true,
 					buttons: []
+				},
+				'newPaaS': {
+					title: 'Create VM',
+					notmain: true,
+					// needBalance: true,
+					buttons: []
 				}
 
 			}
@@ -166,6 +180,9 @@ export default {
 		},
 		routeBack(){
 			this.$router.go(-1)
+		},
+		orderVM(){
+			this.$router.push({name: 'newPaaS'});
 		}
 	},
 	computed:{
@@ -255,6 +272,17 @@ export default {
 			background-color .2s ease,
 			color .1s ease,
 			transform .2s ease;
+	}
+	
+	.order__btn{
+		min-width: 44px;
+		width: auto;
+		border-radius: 30px;
+		padding: 2px 10px;
+	}
+
+	.header__order-btn{
+		font-size: 1rem;
 	}
 
 	.icon__wrapper:hover{

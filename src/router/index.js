@@ -42,9 +42,14 @@ Vue.use(VueRouter)
 			},
 			{
 				path: 'cloud/new',
-				name: 'newVDC',
-				component: () => import('../components/appMain/newVDC.vue')
-			}
+				name: 'newPaaS',
+				component: () => import('../components/appMain/newPaaS.vue')
+			},
+			// {
+			// 	path: 'cloud/new',
+			// 	name: 'newVDC',
+			// 	component: () => import('../components/appMain/newVDC.vue')
+			// }
 		]
 	},
 	{

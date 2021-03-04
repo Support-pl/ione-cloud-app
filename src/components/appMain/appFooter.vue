@@ -23,7 +23,7 @@ export default {
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
-			if(this.getActiveTab.title=="newVDC"){
+			if(this.getActiveTab.title=="newVDC" || this.getActiveTab.title=="newPaaS"){
 				return "cloud"
 			}
 			return this.getActiveTab.title

@@ -16,7 +16,8 @@ export default {
 	name: "app",
 	components: {
 		login,
-		appMain
+		appMain,
+		updateNotification
 	},
 	created(){
 		const user = this.$store.getters.getCookie('CloudUser');
