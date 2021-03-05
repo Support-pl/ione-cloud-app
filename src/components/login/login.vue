@@ -103,6 +103,9 @@ export default {
 						this.$router.push("cloud");
 						location.reload() //костыль, починить позже
 					})
+					.finally( () => {
+						this.tryingLogin = false;
+					})
 				}
 				else if(data.result == "error"){
 					this.loginError = data.message;
@@ -112,9 +115,6 @@ export default {
 			.catch(err => {
 				console.error(err);
 				this.$message.error("Can't connect to the server")
-			})
-			.finally( () => {
-				this.tryingLogin = false;
 			})
 		},
 		forgotPass(){
@@ -201,6 +201,7 @@ export default {
 	flex-direction: column;
 	width: 80%;
 	max-width: 500px;
+	position: relative;
 }
 
 .login__horisontal-line{
@@ -299,7 +300,7 @@ export default {
 	color: tomato;
 	text-align: center;
 	position: absolute;
-	top: 0px;
+	top: -35px;
 	left: 50%;
 	transform: translateX(-50%);
 	width: 90%;
@@ -321,11 +322,6 @@ export default {
 
 	.login__forgot{
 		margin-top: 40px;
-	}
-
-	.login__error{
-		top: 50%;
-		transform: translateX(-50%) translateY(-750%);
 	}
 
 	#qrcode{
