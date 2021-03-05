@@ -227,16 +227,22 @@
 							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content Fcloud__block-content--charts">
-							<GChart
-								type="LineChart"
-								:data="inbChartDataReady"
-								:options="chartOption('inbound')"
-							/>
-							<GChart
-								type="LineChart"
-								:data="outChartDataReady"
-								:options="chartOption('outgoing')"
-							/>
+							<a-row type='flex' justify="space-around" style="width: 100%">
+								<a-col>
+									<GChart
+										type="LineChart"
+										:data="inbChartDataReady"
+										:options="chartOption('inbound')"
+									/>
+								</a-col>
+								<a-col>
+									<GChart
+										type="LineChart"
+										:data="outChartDataReady"
+										:options="chartOption('outgoing')"
+									/>
+								</a-col>
+							</a-row>
 						</div>
 					</div>
 
