@@ -3,18 +3,6 @@
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 
-				<a-row v-if='false' type="flex" justify="center" :style="{'margin-bottom': '15px'}" :gutter="[10, 10]">
-					<a-col>
-						{{$t('Ready made servers')}}
-					</a-col>
-					<a-col>
-						<a-switch v-model="custom" @click="closeAllTabs"></a-switch>
-					</a-col>
-					<a-col>
-						{{$t('Pay as you Go')}}
-					</a-col>
-				</a-row>
-
 				<div class="newCloud_option">
 					<a-collapse accordion :style="{'border-radius': '25px'}" @change="collapseChange" :activeKey="collapseKey">
 						<a-collapse-panel key="Template" :header="$t('Choose a tariff') + (options.rate.id == 0 ? ':' : ' (' + options.rate.name + '):')" v-if="!custom">
