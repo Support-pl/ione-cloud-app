@@ -1,6 +1,6 @@
 <template>
-	<div class="newCloud_wrapper">
-		<div v-if="true" class="newCloud">
+	<div v-if="!isProductsLoading" class="newCloud_wrapper">
+		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 
 				<div class="newCloud_option">
@@ -14,357 +14,160 @@
 							</a-col>
 						</a-radio-group>
 					</a-row>
+
+					<a-row>
+						<a-col span="4">basic {{$t('processor')}}</a-col>
+						<a-col span="2"><a-switch v-model="options.highCPU"></a-switch></a-col>
+						<a-col span='4'>high {{$t('processor')}}</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="4">HDD {{$t('drive')}}</a-col>
+						<a-col span="2"><a-switch v-model="options.drive"></a-switch></a-col>
+						<a-col span='4'>SSD {{$t('drive')}}</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="4">X2CPU</a-col>
+						<a-col span="2"><a-switch :checked="options.kind == 'X2CPU'" @change="controlKindOfVM('X2CPU')"></a-switch></a-col>
+					</a-row>
+					<a-row>
+						<a-col span="4">X2RAM</a-col>
+						<a-col span="2"><a-switch :checked="options.kind == 'X2RAM'" @change="controlKindOfVM('X2RAM')"></a-switch></a-col>
+					</a-row>
 				</div>
+
 			</div>
 			
-			<div class="newCloud__calculate newCloud__field">
-					
-				<a-row type="flex" justify="space-between">
-					<a-col>
-						CPU:
-					</a-col>
-					<a-col>
-					</a-col>
-				</a-row>
-
-				<a-row type="flex" justify="space-between">
-					<a-col>
-						RAM:
-					</a-col>
-					<a-col>
-					</a-col>
-				</a-row>
-
-				<a-row type="flex" justify="space-between">
-					<a-col>
-						{{$t('Drive')}}:
-					</a-col>
-					<a-col>
-					</a-col>
-				</a-row>
-				
-				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-					{{$t('Total')}}:
-				</a-divider>
-
-				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-					<a-col>
-						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
-							<template slot="title">
-								{{$t('Actual price may vary')}}
-							</template>
-						</a-tooltip>
-					</a-col>
-				</a-row>
-
-				<transition name="networkApear">
-					<!-- <a-row v-if="options.network.public.status" type="flex" justify="space-around" :style="{'font-size': '1.2rem'}"> -->
+			<div class="newCloud__calculate newCloud__field result">
+				<a-skeleton :loading="getCurrentProd==null" :active="true">
+					<div class="result__title">
+						{{getCurrentProd!=null ? getCurrentProd.name : ''}}
+					</div>
+					<a-row type="flex" justify="space-between">
 						<a-col>
+							CPU:
 						</a-col>
-					<!-- </a-row> -->
-				</transition>
-				
-				<!-- <template v-if="false"> -->
+						<a-col>
+							{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+						</a-col>
+					</a-row>
+
+					<a-row type="flex" justify="space-between">
+						<a-col>
+							RAM:
+						</a-col>
+						<a-col>
+							{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
+						</a-col>
+					</a-row>
+
+					<a-row type="flex" justify="space-between">
+						<a-col>
+							{{$t('Drive')}}:
+						</a-col>
+						<a-col>
+							{{getCurrentProd!=null ? getCurrentProd.props.drive.TITLE : ''}}
+						</a-col>
+					</a-row>
+					
 					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-						{{$t('Tarification')}}:
+						{{$t('Total')}}:
 					</a-divider>
 
-					<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
+					<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 						<a-col>
-							<div style="text-align: center">
-								{{$t('When paying per month - save up to 15%')}}
-							</div>
+							{{getCurrentProd!=null ? getCurrentProd.pricing.BYN[options.period] : ''}} BYN
 						</a-col>
 					</a-row>
-					
-					<a-row type="flex" justify="space-around">
-						<a-col>
-							{{$t('Monthly payment')}}
-						</a-col>
-						<a-col>
-							<!-- <a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch> -->
-						</a-col>
-					</a-row>
-				<!-- </template> -->
+				</a-skeleton>
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">
-						<a-button type="primary" block shape="round" @click="createVDC">
+						<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
 							{{$t("Create")}}
 						</a-button>
 						<a-modal
-							v-if="false" 
 							:title="$t('Confirm')"
 							:visible="modal.confirmCreate"
 							:confirm-loading="modal.confirmLoading"
 							:cancel-text="$t('Cancel')"
-							@ok="handleOk"
-							@cancel="handleCancel"
+							@ok="handleOkOnCreateOrder"
+							@cancel="() => modal.confirmCreate = false"
 						>
-							<p>
-								{{$t("Enter VM name")}}:
-								<!-- <a-input v-model="options.vmname" /> -->
-							</p>
-							<p>
-								{{$t("Enter OS password")}}:
-								<!-- <a-input-password v-model="options.password" /> -->
-							</p>
+							{{$t('Virtual machine will be available after paying the invoice')}}
+
+							<div>
+								<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
+							</div>
 						</a-modal>
 					</a-col>
 				</a-row>
 
 			</div>
 		</div>
-		<div v-else class="test">kek</div>
 	</div>
 </template>
 
 <script>
+
+const periods = [
+	{
+		count: 1,
+		title: 'month',
+		value: 'monthly'
+	},
+	{
+		count: 3,
+		title: 'month',
+		value: 'quarterly'
+	},
+	{
+		count: 6,
+		title: 'month',
+		value: 'semiannually',
+		discount: 5
+	},
+	{
+		count: 1,
+		title: 'year',
+		value: 'annually',
+		discount: 10
+	},
+];
+
+const sizes = ['M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
+
 import { mapGetters } from 'vuex'
-import md5 from 'md5'
 import config from '../../appconfig'
 export default {
 	name: "newPaaS",
 	data(){
 		return {
-			periods: [
-				{
-					count: 1,
-					title: 'month',
-					value: 'monthly'
-				},
-				{
-					count: 3,
-					title: 'month',
-					value: 'quarterly'
-				},
-				{
-					count: 6,
-					title: 'month',
-					value: 'semiannually',
-					discount: 5
-				},
-				{
-					count: 1,
-					title: 'year',
-					value: 'annually',
-					discount: 10
-				},
-			],
+			periods,
+			sizes,
 			options: {
+				kind: 'standart',
 				period: 'monthly',
+				size: 'L',
+				drive: false, // 1 ssd, 0 hdd
+				highCPU: false, // 1 highCPU, 0 basicCPU
+			},
+			modal: {
+				confirmCreate: false,
+				confirmLoading: false,
+				goToInvoice: false
 			}
 		}
 	},
 	mounted(){
-		// console.log(this.user);
 		this.$store.dispatch('newPaaS/fetchProductsAuto');
-		// this.$store.dispatch("newVDC/fetchTemplates");
-		// this.$store.dispatch("newVDC/fetchRates");
-		
-		// const user = this.user;
-		// let userinfo = {
-		// 	userid: user.id,
-		// 	secret: md5('createVDC' + user.id + user.secret)
-		// }
-		// this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
-		// this.$axios.get("getSettings.php?filter=cost,disktypes" )
-		// 	.then( res => {
-		// 		// console.log(res);
-		// 		// this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 30 * 3600 * 24
-		// 		// this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 30 * 3600 * 24
-		// 		// this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 30 * 3600 * 24
-		// 		// this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 30 * 3600 * 24
-		// 		// this.options.network.price = res.data.PUBLIC_IP_COST;
-		// 		this.diskTypes = res.data.DISK_TYPES.split(',');
-		// 		// this.options.disk.type = this.diskTypes[0];
-		// 		this.pricesLoaded = true;
-		// 	})
-		// 	.catch( err => {
-		// 		console.error(err);
-		// 		this.$message.error("Can't load prices. Show saved ones.");
-		// 	} )
-
-		// userinfo = {
-		// 	userid: user.id,
-		// 	secret: md5('getBalance' + user.id + user.secret)
-		// }
-		// this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
-		// 	.then( res => {
-		// 		if(user.id == res.data.userid){
-		// 			this.$store.dispatch("updateBalance", res.data.balance);
-		// 		}
-		// 	})
-		// 	.catch( err => console.error(err));
 	},
 	methods: {
-		// setOS(id){
-		// 	this.options.os.id = id;
-		// 	this.options.os.name = this.templatesArray.find( el=>el.id==id ).description;
-		// 	if(this.options.rate.id == 0){
-		// 		this.collapseKey = "CPURAM"
-		// 	} else {
-		// 		this.collapseKey = "drive"
-		// 	}
-		// },
-		// setRate(id){
-		// 	this.options.rate.id = id;
-		// 	this.savedRateId = id;
-		// 	if(id != 0){
-		// 		const rate = this.ratesArray.find( el=>el.pid==id );
-		// 		this.options.rate.name = rate.name;
-		// 		let props = rate.description.properties;
-		// 		props.forEach(el => {
-		// 			let val = el.VALUE.match(/\d+/);
-		// 			if(el.GROUP == "hdd"){
-		// 				this.options.disk.type = el.GROUP.toUpperCase();
-		// 				this.options.disk.size = parseInt(val[0], 10);
-		// 			}
-		// 			if(el.GROUP == "ssd"){
-		// 				this.options.disk.type = el.GROUP.toUpperCase();
-		// 				this.options.disk.size = parseInt(val[0], 10);
-		// 			}
-		// 			if(el.GROUP == "cpu_core"){
-		// 				this.options.cpu.count = parseInt(val[0], 10);
-		// 			}
-		// 			if(el.GROUP == "ram"){
-		// 				this.options.ram.size = parseInt(val[0], 10);
-		// 			}
-		// 		});
-		// 	} else 
-		// 		this.options.rate.name = "Custom";
-		// 	this.collapseKey = "OS";
-		// },
-		// changePeriod(value){
-		// 	this.period = value;
-		// },
-		// calculatePrice(price, period = this.period){
-		// 	if(this.options.tarification){
-		// 		return price;	
-		// 	}
-		// 	switch (period) {
-		// 		case "minute":
-		// 			price = price / 60;
-		// 		case "hour":
-		// 			price = price / 24;
-		// 		case "day":
-		// 			price = price / 30;
-		// 		case "month":
-		// 			break
-		// 		case "week":
-		// 			price = price / 30 * 7;
-		// 			break
-		// 		default:
-		// 			console.error("[VDC Calculator]: Wrong price in calc.");
-		// 			return undefined
-		// 			break;
-		// 	}
-		// 	return price;
-		// },
-		// calculateFullPrice(){
-		// 	if(this.options.rate.id != 0){
-		// 		const user = this.user;
-		// 		this.options.tarification = true;
-		// 		return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
-		// 	} //выключил
-		// 	let parts = [
-		// 		this.options.cpu.price*this.options.cpu.count,
-		// 		this.options.ram.price*this.options.ram.size,
-		// 		this.options.disk.price[this.options.disk.type] * this.options.disk.size,
-		// 		// this.options.network.price * this.options.network.public.count
-		// 		]
-		// 	return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(2);
-		// },
-		// createVDC(){
-		// 	const user = this.user;
-		// 	let parts = [
-		// 		this.options.cpu.price*this.options.cpu.count,
-		// 		this.options.ram.price*this.options.ram.size,
-		// 		this.options.disk.price[this.options.disk.type] * this.options.disk.size
-		// 		]
-		// 	let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(3);
-		// 	if(+price > +user.balance){
-		// 		this.$message.error('You don\'t have enough money for a day of use');
-		// 		return;
-		// 	}
-		// 	if(!~this.options.os.id){
-		// 		this.$message.error(this.$t("select OS"));
-		// 		this.collapseKey = "OS";
-		// 		return;
-		// 	}
-		// 	if(!this.custom && this.options.rate.id == 0){
-		// 		this.$message.error(this.$t("select tariff"));
-		// 	} else {
-		// 		this.modal.confirmCreate = true;
-		// 	}
-		// },
-		// diskChange(){
-		// 	if([
-		// 		this.options.disk.min.SSD,
-		// 		this.options.disk.min.HDD
-		// 	].includes(this.options.disk.size)){
-		// 		this.options.disk.size = this.options.disk.min[this.options.disk.type];
-		// 	}
-		// },
-		// handleOk(){
-		// 	if(this.options.password.length < 6) {
-		// 		this.$message.error(this.$t("Password is too short"));
-		// 		return 0
-		// 	}
-		// 	this.modal.confirmLoading = true;
-		// 	this.send()
-		// 		.then( responce => {
-		// 			if(responce.data.result == 'error'){
-		// 				this.$message.error(responce.data.message);
-		// 			} else {
-		// 				this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
-		// 				this.$store.dispatch("app/setTabByName", "cloud");
-		// 			}
-		// 			this.options.password = '';
-		// 			this.modal.confirmCreate = false;
-		// 			this.modal.confirmLoading = false;
-		// 		})
-		// 		.catch( err => {
-		// 			console.error(err)
-		// 			this.$message.error(this.$t("Unknown error."));
-		// 		});
-
-		// },
-		// handleCancel(){
-		// 	this.modal.confirmCreate = false;
-		// },
 		getPopupContainer(trigger) {
 			const elem = trigger.parentElement.parentElement.parentElement;
       return elem;
 		},
-		// send(){
-		// 	const user = this.user;
-		// 	const userinfo = {
-		// 		userid: user.id,
-		// 		secret: md5('createVM' + user.id + user.secret)
-		// 	}
-		// 	let savedPeriod = this.period;
-		// 	this.period = 'month';
-		// 	const price = this.calculateFullPrice();
-		// 	this.period = savedPeriod;
-		// 	const vmOptions = {
-		// 		'publicIPs': this.options.network.public.count,
-		// 		'cpu': this.options.cpu.count,
-		// 		'drivesize': this.options.disk.size,
-		// 		'drive': this.options.disk.type,
-		// 		'driveunits': this.options.disk.units,
-		// 		'memory': this.options.ram.size,
-		// 		'memoryunits': this.options.ram.units,
-		// 		'templateid': this.options.os.id,
-		// 		'vmname': this.options.vmname,
-		// 		'password': this.options.password,
-		// 		'calculatedPrice': price
-		// 	}
-		// 	if(this.options.network.local.status){
-		// 		vmOptions['localIPs'] = this.options.network.local.count;
-		// 	}
-		// 	return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
-		// },
 		URLparameter(obj, outer = ''){
 			var str = "";
 			for (var key in obj) {
@@ -380,60 +183,60 @@ export default {
 			}
 			return str;
 		},
-		// collapseChange(key){
-		// 	this.collapseKey = key;
-		// },
-		// changeValue(variable, val){
-		// 	if(variable == 'disksize'
-		// 		&& this.options.disk.size + val <= this.options.disk.max[this.options.disk.type]
-		// 		&& this.options.disk.size + val >= this.options.disk.min[this.options.disk.type])
-		// 	{
-		// 		this.options.disk.size += val;
-		// 	}
-		// 	if(variable == 'ramsize'
-		// 		&& this.options.ram.size + val <= this.options.ram.max
-		// 		&& this.options.ram.size + val >= this.options.ram.min)
-		// 	{
-		// 		this.options.ram.size += val;
-		// 	}
-		// 	if(variable == 'cpucount'
-		// 		&& this.options.cpu.count + val <= this.options.cpu.max
-		// 		&& this.options.cpu.count + val >= this.options.cpu.min)
-		// 	{
-		// 		this.options.cpu.count += val;
-		// 	}
-		// },
-		// closeAllTabs(val){
-		// 	if(val){
-		// 		this.options.rate.id = 0
-		// 	} else {
-		// 		this.options.rate.id = this.savedRateId;
-		// 	}
-		// 	this.collapseKey = '';
-		// }
+		controlKindOfVM(newKind){
+			if(this.options.kind == newKind){
+				this.options.kind = 'standart';
+			}else{
+				this.options.kind = newKind;
+			}
+		},
+		handleOkOnCreateOrder(){
+			this.confirmLoading = true;
+			this.$store.dispatch('newPaaS/sendOrder', this.getCurrentProd.pid)
+			.then( result => {
+				const res = result.data;
+				if(res.result == "success"){
+					this.$message.success(this.$t('Order created successfully.'));
+					if(this.modal.goToInvoice){
+						this.$router.push(`/invoice-${res.invoiceid}`);
+					}
+				} else {
+					throw result.data
+				}
+			})
+			.catch( err => {
+				this.$message.error('Can\'t create order. Try later.');
+				console.error(err);
+			} )
+			.finally( res => {
+				this.confirmLoading = false;
+			} )
+		}
 	},
 	computed: {
-		templatesArray(){
-			const elements = this.$store.getters["newVDC/getTemplates"];
-			return elements;
-		},
-		ratesArray(){
-			const elements = this.$store.getters["newVDC/getRates"];
-			return elements;
-		},
-		// periodToShow(){
-		// 	if(this.options.tarification){
-		// 		return 'month';
-		// 	} else {
-		// 		return this.period
-		// 	}
-		// },
-		// disableNotCustom(){
-		// 	return this.options.rate.id != 0;
-		// },
-		user(){
-			const user = this.$store.getters.getUser;
-			return user;
+		...mapGetters('newPaaS', [
+			'getProducts',
+			'getAddons',
+			'isProductsLoading',
+			'isAddonsLoading',
+		]),
+		getCurrentProd(){
+			const o = this.options;
+			const path =  [o.kind, o.size, +o.drive, +o.highCPU];
+			let current = this.getProducts;
+			if(current == undefined || current.length == 0){
+				return null
+			}
+			for (let index = 0; index < path.length; index++) {
+				if(current[path[index]] != undefined){
+					current = current[path[index]];
+				} else {
+					let pt = path.slice(0, index+1).join('/')
+					console.error(`there is no product with path: ${pt}, there is only: ${Object.keys(current).join(', ')}`);
+					return null;
+				}
+			}
+			return current;
 		}
 	},
 	watch: {
@@ -506,6 +309,12 @@ export default {
 	width: 28%;
 	font-size: 1.1rem;
 	padding: 10px 15px 10px;
+}
+
+.result__title{
+	font-size: 1.5rem;
+	text-align: center;
+	padding: 2px 0 10px;
 }
 
 @media screen and (max-width: 1024px) {

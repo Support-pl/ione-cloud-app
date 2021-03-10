@@ -5,10 +5,10 @@ export default {
 
 	state: {
 		products: [],
-		productsLoading: false,
+		productsLoading: true,
 
 		addons: [],
-		addonsLoading: false,
+		addonsLoading: true,
 	},
 	mutations: {
 		setProducts(state, value){
@@ -30,7 +30,7 @@ export default {
 			
 			axios.get(url)
 				.then(resp => {
-					commit("setProducts", resp.data.response)
+					commit("setProducts", resp.data)
 				})
 		},
 		fetchProducts({commit, dispatch}){
@@ -66,6 +66,27 @@ export default {
 				dispatch('fetchAddons')
 			}
 		},
+
+		sendOrder(ctx, pid){
+			return new Promise( (resolve, reject) => {
+				const user = ctx.rootGetters.getUser;
+				const close_your_eyes = md5('createOrder' + user.id + user.secret);
+				const query = {
+					userid: user.id,
+					secret: close_your_eyes,
+					pid
+				};
+				const url = `/createOrder.php?${URLparameter(query)}`;
+
+				axios.get(url)
+				.then( response => {
+					resolve(response);
+				})
+				.catch( err => {
+					reject(err);
+				})
+			} )
+		}
 	},
 	getters: {
 		getProducts(state){
@@ -82,4 +103,20 @@ export default {
 			return state.addonsLoading;
 		},
 	}
+}
+
+function URLparameter(obj, outer = ''){
+	var str = "";
+	for (var key in obj) {
+		if(key == "price") continue;
+		if (str != "") {
+				str += "&";
+		}
+		if(typeof obj[key] == 'object') {
+			str += this.URLparameter(obj[key], outer+key);
+		} else {
+			str += outer + key + "=" + encodeURIComponent(obj[key]);
+		}
+	}
+	return str;
 }
