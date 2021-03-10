@@ -199,11 +199,18 @@ export default {
 		.then(res => {
 			this.inv = res.data;
 			this.loading = false;
+			if(res.data.result == 'error'){
+				throw res.data
+			}
 		})
-		this.$axios.get('/GetPaymentMethods.php')
-		.then(res => {
-			this.payMethods = res.data.paymentmethods.paymentmethod;
+		.catch(err => {
+			this.$router.push('/invoice');
+			console.error(err);
 		})
+		// this.$axios.get('/GetPaymentMethods.php')
+		// .then(res => {
+		// 	this.payMethods = res.data.paymentmethods.paymentmethod;
+		// })
 
 
 	},
