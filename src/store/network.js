@@ -1,22 +1,6 @@
 import md5 from 'md5';
 import axios from '../axios';
 
-function URLparameter(obj, outer = ''){
-	var str = "";
-	for (var key in obj) {
-		if(key == "price") continue;
-		if (str != "") {
-				str += "&";
-		}
-		if(typeof obj[key] == 'object') {
-			str += this.URLparameter(obj[key], outer+key);
-		} else {
-			str += outer + key + "=" + encodeURIComponent(obj[key]);
-		}
-	}
-	return str;
-}
-
 export default {
 	namespaced: true,
 
@@ -77,4 +61,20 @@ export default {
 			return state.loading
 		}
 	}
+}
+
+function URLparameter(obj, outer = ''){
+	var str = "";
+	for (var key in obj) {
+		if(key == "price") continue;
+		if (str != "") {
+				str += "&";
+		}
+		if(typeof obj[key] == 'object') {
+			str += this.URLparameter(obj[key], outer+key);
+		} else {
+			str += outer + key + "=" + encodeURIComponent(obj[key]);
+		}
+	}
+	return str;
 }
