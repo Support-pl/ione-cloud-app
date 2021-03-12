@@ -815,7 +815,6 @@ select:active {
   display: block;
   padding: 4px 4px;
   margin: 10px 0;
-  vertical-align: middle;
   border:1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
 }
@@ -967,8 +966,6 @@ select:active {
 :root:not(.noVNC_connected) #noVNC_power_button {
   display: none;
 }
-#noVNC_power {
-}
 #noVNC_power_buttons {
   display: none;
 }
@@ -991,8 +988,6 @@ select:active {
 }
 
 /* Settings */
-#noVNC_settings {
-}
 #noVNC_settings ul {
   list-style: none;
   margin: 0px;
