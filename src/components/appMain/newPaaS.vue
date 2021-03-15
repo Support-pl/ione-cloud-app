@@ -162,6 +162,7 @@ export default {
 	},
 	mounted(){
 		this.$store.dispatch('newPaaS/fetchProductsAuto');
+		this.$store.dispatch('newPaaS/fetchAddonsAuto');
 	},
 	methods: {
 		getPopupContainer(trigger) {

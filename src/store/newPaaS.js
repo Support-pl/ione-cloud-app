@@ -60,7 +60,7 @@ export default {
 			commit('setAddonsLoading', false);
 		},
 		fetchAddonsAuto({state, dispatch}){
-			if(store.addons.length > 0){
+			if(state.addons.length > 0){
 				dispatch('fetchAddonsSilent')
 			} else {
 				dispatch('fetchAddons')
