@@ -51,7 +51,7 @@ export default {
 			
 			axios.get(url)
 				.then(resp => {
-					commit("setAddons", resp.data.response)
+					commit("setAddons", resp.data)
 				})
 		},
 		fetchAddons({commit, dispatch}){
@@ -60,24 +60,26 @@ export default {
 			commit('setAddonsLoading', false);
 		},
 		fetchAddonsAuto({state, dispatch}){
-			if(store.addons.length > 0){
+			if(state.addons.length > 0){
 				dispatch('fetchAddonsSilent')
 			} else {
 				dispatch('fetchAddons')
 			}
 		},
 
-		sendOrder(ctx, pid){
+		sendOrder(ctx, orderData){
 			return new Promise( (resolve, reject) => {
 				const user = ctx.rootGetters.getUser;
 				const close_your_eyes = md5('createOrder' + user.id + user.secret);
 				const query = {
 					userid: user.id,
 					secret: close_your_eyes,
-					pid
+					pid: orderData.pid
 				};
+				if(orderData.addons.length > 0){
+					query.addons = orderData.addons;
+				}
 				const url = `/createOrder.php?${URLparameter(query)}`;
-
 				axios.get(url)
 				.then( response => {
 					resolve(response);
@@ -113,7 +115,7 @@ function URLparameter(obj, outer = ''){
 				str += "&";
 		}
 		if(typeof obj[key] == 'object') {
-			str += this.URLparameter(obj[key], outer+key);
+			str += URLparameter(obj[key], outer+key);
 		} else {
 			str += outer + key + "=" + encodeURIComponent(obj[key]);
 		}

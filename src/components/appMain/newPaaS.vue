@@ -1,24 +1,24 @@
 <template>
-	<div v-if="!isProductsLoading" class="newCloud_wrapper">
-		<div class="newCloud">
+	<div class="newCloud_wrapper">
+		<div class="newCloud" v-if="!isProductsLoading">
 			<div class="newCloud__inputs newCloud__field">
 
 				<div class="newCloud_option">
 					<a-row>
 						<a-radio-group v-model="options.period" class='period__wrapper'>
 							<a-col v-for="period in periods" :key="period.title+period.count" span='6' class='period__item'>
+								<span v-if="period.discount != undefined" class="period__discount">-{{period.discount}}%</span>
 								<a-radio :value='period.value'>
 									{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
 								</a-radio>
-								<span v-if="period.discount != undefined" class="period__discount">-{{period.discount}}%</span>
 							</a-col>
 						</a-radio-group>
 					</a-row>
 
 					<a-row>
-						<a-col span="4">basic {{$t('processor')}}</a-col>
+						<a-col span="4">{{$t('basic')}} {{$t('processor')}}</a-col>
 						<a-col span="2"><a-switch v-model="options.highCPU"></a-switch></a-col>
-						<a-col span='4'>high {{$t('processor')}}</a-col>
+						<a-col span='4'>{{$t('high')}} {{$t('processor')}}</a-col>
 					</a-row>
 
 					<a-row>
@@ -34,6 +34,63 @@
 					<a-row>
 						<a-col span="4">X2RAM</a-col>
 						<a-col span="2"><a-switch :checked="options.kind == 'X2RAM'" @change="controlKindOfVM('X2RAM')"></a-switch></a-col>
+					</a-row>
+				</div>
+
+				<div class="paas_addons" v-if="!isAddonsLoading">
+					<a-row>
+						<a-col span="8">{{$t(options.drive?'ssd':'hdd') | capitalize}}</a-col>
+						<a-col span="16">
+							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
+								<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
+								<a-select-option
+									v-for="group in getAddons[options.drive?'ssd':'hdd']"
+									:key="group.id"
+									:value="group.id"
+								>
+									{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
+								</a-select-option>
+							</a-select>
+						</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="8">{{$t('traffic') | capitalize}}</a-col>
+						<a-col span="16">
+							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
+								<a-select-option value="-1">{{$t('under 3 Gb per month')}}</a-select-option>
+								<a-select-option v-for="group in getAddons.traffic" :key="group.id">{{group.description.TITLE}}</a-select-option>
+							</a-select>
+						</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="8">{{$t('panel') | capitalize}}</a-col>
+						<a-col span="16">
+							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('panel', +newdata)">
+								<a-select-option value="-1">{{$t('none')}}</a-select-option>
+								<a-select-option v-for="group in getAddons.panel" :key="group.id">{{group.description.TITLE}}</a-select-option>
+							</a-select>
+						</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="8">{{$t('os') | capitalize}}</a-col>
+						<a-col span="16">
+							<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
+								<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.description.TITLE}}</a-select-option>
+							</a-select>
+						</a-col>
+					</a-row>
+
+					<a-row>
+						<a-col span="8">{{$t('backup') | capitalize}}</a-col>
+						<a-col span="16">
+							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
+								<a-select-option value="-1">0 Gb</a-select-option>
+								<a-select-option v-for="group in getAddons.backup" :key="group.id">{{group.description.TITLE}}</a-select-option>
+							</a-select>
+						</a-col>
 					</a-row>
 				</div>
 
@@ -77,7 +134,7 @@
 
 					<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 						<a-col>
-							{{getCurrentProd!=null ? getCurrentProd.pricing.BYN[options.period] : ''}} BYN
+							{{getFullPrice}} BYN
 						</a-col>
 					</a-row>
 				</a-skeleton>
@@ -106,6 +163,7 @@
 
 			</div>
 		</div>
+		<loading v-else></loading>
 	</div>
 </template>
 
@@ -140,6 +198,7 @@ const sizes = ['M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 import { mapGetters } from 'vuex'
 import config from '../../appconfig'
+import loading from '../loading/loading'
 export default {
 	name: "newPaaS",
 	data(){
@@ -152,6 +211,20 @@ export default {
 				size: 'L',
 				drive: false, // 1 ssd, 0 hdd
 				highCPU: false, // 1 highCPU, 0 basicCPU
+				addons: {
+					drive: -1,
+					traffic: -1,
+					panel: -1,
+					os: -1,
+					backup: -1,
+				},
+				addonsObjects: {
+					drive: null,
+					traffic: null,
+					panel: null,
+					os: null,
+					backup: null,
+				}
 			},
 			modal: {
 				confirmCreate: false,
@@ -160,8 +233,12 @@ export default {
 			}
 		}
 	},
+	components: {
+		loading
+	},
 	mounted(){
 		this.$store.dispatch('newPaaS/fetchProductsAuto');
+		this.$store.dispatch('newPaaS/fetchAddonsAuto');
 	},
 	methods: {
 		getPopupContainer(trigger) {
@@ -191,8 +268,13 @@ export default {
 			}
 		},
 		handleOkOnCreateOrder(){
-			this.confirmLoading = true;
-			this.$store.dispatch('newPaaS/sendOrder', this.getCurrentProd.pid)
+			this.modal.confirmLoading = true;
+			const addons = Object.values(this.options.addons).filter( el => el != -1).join(',')
+			const orderData = {
+				pid: this.getCurrentProd.pid,
+				addons 
+			}
+			this.$store.dispatch('newPaaS/sendOrder', orderData)
 			.then( result => {
 				const res = result.data;
 				if(res.result == "success"){
@@ -209,8 +291,19 @@ export default {
 				console.error(err);
 			} )
 			.finally( res => {
-				this.confirmLoading = false;
+				this.modalconfirmLoading = false;
 			} )
+		},
+		setAddon(name, value){
+			this.options.addons[name] = value;
+			let addons = [];
+			if(name == 'drive'){
+				addons = this.getAddons[this.options.drive?'ssd':'hdd'];
+			} else {
+				addons = this.getAddons[name]
+			}
+			const addon = addons.find( el => el.id == value )
+			this.options.addonsObjects[name] = addon !== undefined ? addon : null;
 		}
 	},
 	computed: {
@@ -237,6 +330,28 @@ export default {
 				}
 			}
 			return current;
+		},
+		getFullPrice(){
+			if (this.isAddonsLoading || this.isProductsLoading) {
+				return false
+			}
+			const VMonly = +this.getCurrentProd.pricing.BYN[this.options.period];
+			const addonsName = [
+					"drive",
+					"traffic",
+					"panel",
+					"os",
+					"backup",
+			];
+			const addonsCosts = addonsName.map( name => {
+				if(this.options.addonsObjects[name] == null){
+					return 0;
+				}
+				console.log(this.options.addonsObjects[name], this.options.addonsObjects, name);
+				return this.options.addonsObjects[name].pricing[this.options.period] 
+			});
+			console.log('~~~', addonsCosts);
+			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(2);
 		}
 	},
 	watch: {
