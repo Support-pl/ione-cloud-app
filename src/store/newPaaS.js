@@ -28,18 +28,20 @@ export default {
 		fetchProductsSilent({commit}){
 			const url = `getProducts.php`;
 			
-			axios.get(url)
+			return axios.get(url)
 				.then(resp => {
 					commit("setProducts", resp.data)
 				})
 		},
 		fetchProducts({commit, dispatch}){
 			commit('setProductsLoading', true);
-			dispatch('fetchProductsSilent');
-			commit('setProductsLoading', false);
+			dispatch('fetchProductsSilent')
+			.then( res => {
+				commit('setProductsLoading', false);
+			})
 		},
 		fetchProductsAuto({state, dispatch}){
-			if(state.products.length > 0){
+			if(Object.keys(state.products).length > 0){
 				dispatch('fetchProductsSilent')
 			} else {
 				dispatch('fetchProducts')
@@ -49,15 +51,17 @@ export default {
 		fetchAddonsSilent({commit}){
 			const url = `getAddons.php`;
 			
-			axios.get(url)
+			return axios.get(url)
 				.then(resp => {
 					commit("setAddons", resp.data)
 				})
 		},
 		fetchAddons({commit, dispatch}){
 			commit('setAddonsLoading', true);
-			dispatch('fetchAddonsSilent');
-			commit('setAddonsLoading', false);
+			dispatch('fetchAddonsSilent')
+			.then( res => {
+				commit('setAddonsLoading', false);
+			})
 		},
 		fetchAddonsAuto({state, dispatch}){
 			if(state.addons.length > 0){

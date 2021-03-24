@@ -87,6 +87,7 @@
 	"basic": "обычный",
 	"high": "улучшенный",
 	"processor": "процессор",
+	"Order": "Заказать",
 
 	"Power off": "Выключить",
 	"Reboot": "Перезагрузить",
@@ -151,6 +152,8 @@
 
 	"have no": "Нет",
 
+	"os": "OS",
+	
 	"Do you want to delete this virtual machine?": "Вы хотите удалить виртуальную машину?",
 	"Do you want to reinstall this virtual machine?": "Вы хотите переустановить виртуальную машину?",
 	"All data will be deleted!": "Вся информация будет удалена!",

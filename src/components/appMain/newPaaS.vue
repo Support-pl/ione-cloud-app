@@ -1,169 +1,200 @@
 <template>
 	<div class="newCloud_wrapper">
-		<div class="newCloud" v-if="!isProductsLoading">
-			<div class="newCloud__inputs newCloud__field">
+		<template v-if="options.size != null">
 
-				<div class="newCloud_option">
-					<a-row>
-						<a-radio-group v-model="options.period" class='period__wrapper'>
-							<a-col v-for="period in periods" :key="period.title+period.count" span='6' class='period__item'>
-								<span v-if="period.discount != undefined" class="period__discount">-{{period.discount}}%</span>
-								<a-radio :value='period.value'>
-									{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
-								</a-radio>
+			<div class="newCloud" v-if="!isProductsLoading">
+				<div class="newCloud__inputs field">
+					<span class="newCloud__change-tariff" @click="() => {options.size = null; options.kind = null}">{{$t('Change tariff')}}</span>
+					<div class="newCloud_option">
+						<a-row class="newCloud__prop">
+							<a-radio-group v-model="options.period" class='period__wrapper'>
+								<a-col v-for="period in periods" :key="period.title+period.count" span='6' class='period__item'>
+									<span v-if="period.discount != undefined" class="period__discount">-{{period.discount}}%</span>
+									<a-radio :value='period.value'>
+										{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
+									</a-radio>
+								</a-col>
+							</a-radio-group>
+						</a-row>
+						
+						<a-row class="newCloud__prop">
+							<a-col span="12">
+								<a-row>
+									<a-col span="10">{{$t('basic')}} {{$t('processor')}}</a-col>
+									<a-col span="4"><a-switch v-model="options.highCPU"></a-switch></a-col>
+									<a-col span='10'>{{$t('high')}} {{$t('processor')}}</a-col>
+								</a-row>
 							</a-col>
-						</a-radio-group>
-					</a-row>
 
-					<a-row>
-						<a-col span="4">{{$t('basic')}} {{$t('processor')}}</a-col>
-						<a-col span="2"><a-switch v-model="options.highCPU"></a-switch></a-col>
-						<a-col span='4'>{{$t('high')}} {{$t('processor')}}</a-col>
-					</a-row>
+							<a-col span="12">
+								<a-row>
+									<a-col span="10">HDD {{$t('drive')}}</a-col>
+									<a-col span="4"><a-switch v-model="options.drive"></a-switch></a-col>
+									<a-col span='10'>SSD {{$t('drive')}}</a-col>
+								</a-row>
+							</a-col>
+						</a-row>
 
-					<a-row>
-						<a-col span="4">HDD {{$t('drive')}}</a-col>
-						<a-col span="2"><a-switch v-model="options.drive"></a-switch></a-col>
-						<a-col span='4'>SSD {{$t('drive')}}</a-col>
-					</a-row>
-
-					<a-row>
-						<a-col span="4">X2CPU</a-col>
-						<a-col span="2"><a-switch :checked="options.kind == 'X2CPU'" @change="controlKindOfVM('X2CPU')"></a-switch></a-col>
-					</a-row>
-					<a-row>
-						<a-col span="4">X2RAM</a-col>
-						<a-col span="2"><a-switch :checked="options.kind == 'X2RAM'" @change="controlKindOfVM('X2RAM')"></a-switch></a-col>
-					</a-row>
-				</div>
-
-				<div class="paas_addons" v-if="!isAddonsLoading">
-					<a-row>
-						<a-col span="8">{{$t(options.drive?'ssd':'hdd') | capitalize}}</a-col>
-						<a-col span="16">
-							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
-								<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
-								<a-select-option
-									v-for="group in getAddons[options.drive?'ssd':'hdd']"
-									:key="group.id"
-									:value="group.id"
-								>
-									{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
-								</a-select-option>
-							</a-select>
-						</a-col>
-					</a-row>
-
-					<a-row>
-						<a-col span="8">{{$t('traffic') | capitalize}}</a-col>
-						<a-col span="16">
-							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
-								<a-select-option value="-1">{{$t('under 3 Gb per month')}}</a-select-option>
-								<a-select-option v-for="group in getAddons.traffic" :key="group.id">{{group.description.TITLE}}</a-select-option>
-							</a-select>
-						</a-col>
-					</a-row>
-
-					<a-row>
-						<a-col span="8">{{$t('panel') | capitalize}}</a-col>
-						<a-col span="16">
-							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('panel', +newdata)">
-								<a-select-option value="-1">{{$t('none')}}</a-select-option>
-								<a-select-option v-for="group in getAddons.panel" :key="group.id">{{group.description.TITLE}}</a-select-option>
-							</a-select>
-						</a-col>
-					</a-row>
-
-					<a-row>
-						<a-col span="8">{{$t('os') | capitalize}}</a-col>
-						<a-col span="16">
-							<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
-								<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.description.TITLE}}</a-select-option>
-							</a-select>
-						</a-col>
-					</a-row>
-
-					<a-row>
-						<a-col span="8">{{$t('backup') | capitalize}}</a-col>
-						<a-col span="16">
-							<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
-								<a-select-option value="-1">0 Gb</a-select-option>
-								<a-select-option v-for="group in getAddons.backup" :key="group.id">{{group.description.TITLE}}</a-select-option>
-							</a-select>
-						</a-col>
-					</a-row>
-				</div>
-
-			</div>
-			
-			<div class="newCloud__calculate newCloud__field result">
-				<a-skeleton :loading="getCurrentProd==null" :active="true">
-					<div class="result__title">
-						{{getCurrentProd!=null ? getCurrentProd.name : ''}}
 					</div>
-					<a-row type="flex" justify="space-between">
-						<a-col>
-							CPU:
-						</a-col>
-						<a-col>
-							{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+
+					<div class="paas_addons" v-if="!isAddonsLoading">
+						<a-row class="newCloud__prop">
+							<a-col span="8">{{$t(options.drive?'ssd':'hdd') | capitalize}}</a-col>
+							<a-col span="16">
+								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
+									<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
+									<a-select-option
+										v-for="group in getAddons[options.drive?'ssd':'hdd']"
+										:key="group.id"
+										:value="group.id"
+									>
+										{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
+									</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+
+						<a-row class="newCloud__prop">
+							<a-col span="8">{{$t('traffic') | capitalize}}</a-col>
+							<a-col span="16">
+								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
+									<a-select-option value="-1">{{$t('under 3 Gb per month')}}</a-select-option>
+									<a-select-option v-for="group in getAddons.traffic" :key="group.id">{{group.description.TITLE}}</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+
+						<a-row class="newCloud__prop">
+							<a-col span="8">{{$t('panel') | capitalize}}</a-col>
+							<a-col span="16">
+								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('panel', +newdata)">
+									<a-select-option value="-1">{{$t('none')}}</a-select-option>
+									<a-select-option v-for="group in getAddons.panel" :key="group.id">{{group.description.TITLE}}</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+
+						<a-row class="newCloud__prop">
+							<a-col span="8">{{$t('os')}}</a-col>
+							<a-col span="16">
+								<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
+									<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.description.TITLE}}</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+
+						<a-row class="newCloud__prop">
+							<a-col span="8">{{$t('backup') | capitalize}}</a-col>
+							<a-col span="16">
+								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
+									<a-select-option value="-1">0 Gb</a-select-option>
+									<a-select-option v-for="group in getAddons.backup" :key="group.id">{{group.description.TITLE}}</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+					</div>
+
+				</div>
+				
+				<div class="newCloud__calculate field result">
+					<a-skeleton :loading="getCurrentProd==null" :active="true">
+						<div class="result__title">
+							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
+						</div>
+						<a-row type="flex" justify="space-between">
+							<a-col>
+								CPU:
+							</a-col>
+							<a-col>
+								{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+							</a-col>
+						</a-row>
+
+						<a-row type="flex" justify="space-between">
+							<a-col>
+								RAM:
+							</a-col>
+							<a-col>
+								{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
+							</a-col>
+						</a-row>
+
+						<a-row type="flex" justify="space-between">
+							<a-col>
+								{{$t('Drive')}}:
+							</a-col>
+							<a-col>
+								{{getCurrentProd!=null ? getCurrentProd.props.drive.TITLE : ''}}
+							</a-col>
+						</a-row>
+						
+						<a-divider orientation="left" :style="{'margin-bottom': '0'}">
+							{{$t('Total')}}:
+						</a-divider>
+
+						<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
+							<a-col>
+								{{getFullPrice}} BYN
+							</a-col>
+						</a-row>
+					</a-skeleton>
+
+					<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
+						<a-col :span="22">
+							<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
+								{{$t("Create")}}
+							</a-button>
+							<a-modal
+								:title="$t('Confirm')"
+								:visible="modal.confirmCreate"
+								:confirm-loading="modal.confirmLoading"
+								:cancel-text="$t('Cancel')"
+								@ok="handleOkOnCreateOrder"
+								@cancel="() => modal.confirmCreate = false"
+							>
+								{{$t('Virtual machine will be available after paying the invoice')}}
+
+								<div>
+									<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
+								</div>
+							</a-modal>
 						</a-col>
 					</a-row>
 
-					<a-row type="flex" justify="space-between">
-						<a-col>
-							RAM:
-						</a-col>
-						<a-col>
-							{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
-						</a-col>
-					</a-row>
+				</div>
+			</div>
+			<loading v-else></loading>
+		</template>
+		<div v-else class="newCloud tariff">
+			<div class="field field--fluid">
+				<div class="tariff--header">
+					Choose your tariff
+				</div>
 
-					<a-row type="flex" justify="space-between">
-						<a-col>
-							{{$t('Drive')}}:
-						</a-col>
-						<a-col>
-							{{getCurrentProd!=null ? getCurrentProd.props.drive.TITLE : ''}}
-						</a-col>
-					</a-row>
-					
-					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-						{{$t('Total')}}:
-					</a-divider>
+				<div class="tariff--wrapper" v-for="tariff in tariffs" :key="tariff">
+					<div class="tariff-group--title">{{tariff}}</div>
 
-					<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-						<a-col>
-							{{getFullPrice}} BYN
-						</a-col>
-					</a-row>
-				</a-skeleton>
-
-				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
-					<a-col :span="22">
-						<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
-							{{$t("Create")}}
-						</a-button>
-						<a-modal
-							:title="$t('Confirm')"
-							:visible="modal.confirmCreate"
-							:confirm-loading="modal.confirmLoading"
-							:cancel-text="$t('Cancel')"
-							@ok="handleOkOnCreateOrder"
-							@cancel="() => modal.confirmCreate = false"
-						>
-							{{$t('Virtual machine will be available after paying the invoice')}}
-
-							<div>
-								<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
+					<div class="tariff--sizes">
+						<div class="tariff--item" v-for="size in sizes" :key="size" @click="() => {options.size = size; options.kind = tariff}">
+							<div class="tariff--title">{{size}}</div>
+							<div class="tariff--body">
+								<loading v-if="isProductsLoading"/>
+								<div v-else>
+									<ul>
+										<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index">
+											<a-icon :type="spec == 'ram' ? 'hdd' : 'cloud-server'" />
+											<span class="tariff--body-value">
+												{{getProducts[tariff][size][0][0].props[spec].VALUE}}
+											</span>
+										</li>
+									</ul>
+								</div>
 							</div>
-						</a-modal>
-					</a-col>
-				</a-row>
-
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<loading v-else></loading>
 	</div>
 </template>
 
@@ -194,6 +225,7 @@ const periods = [
 	},
 ];
 
+const tariffs = ['standart', 'X2CPU', 'X2RAM'];
 const sizes = ['M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 import { mapGetters } from 'vuex'
@@ -205,10 +237,11 @@ export default {
 		return {
 			periods,
 			sizes,
+			tariffs,
 			options: {
 				kind: 'standart',
 				period: 'monthly',
-				size: 'L',
+				size: null,
 				drive: false, // 1 ssd, 0 hdd
 				highCPU: false, // 1 highCPU, 0 basicCPU
 				addons: {
@@ -259,13 +292,6 @@ export default {
 				}
 			}
 			return str;
-		},
-		controlKindOfVM(newKind){
-			if(this.options.kind == newKind){
-				this.options.kind = 'standart';
-			}else{
-				this.options.kind = newKind;
-			}
 		},
 		handleOkOnCreateOrder(){
 			this.modal.confirmLoading = true;
@@ -370,6 +396,10 @@ export default {
 
 <style>
 
+.newCloud__prop{
+	margin-bottom: 15px;
+}
+
 .period__wrapper{
 	display: block;
 	padding: 15px 0 0;
@@ -411,13 +441,26 @@ export default {
 	padding: 20px;
 }
 
-.newCloud__field{
+.newCloud__change-tariff{
+	color: var(--main);
+	cursor: pointer;
+}
+
+.newCloud__change-tariff:hover{
+}
+
+.field{
 	border-radius: 20px;
 	box-shadow:
 		5px 8px 10px rgba(0, 0, 0, .08),
 		0px 0px 12px rgba(0, 0, 0, .05);
 	background-color: #fff;
 	height: max-content;
+}
+
+.field--fluid{
+	width: 100%;
+	padding: 10px 15px;
 }
 
 .newCloud__calculate{
@@ -432,6 +475,84 @@ export default {
 	padding: 2px 0 10px;
 }
 
+.tariff--header{
+	text-align: center;
+	padding: 5px 0;
+	font-size: 1.6rem;
+}
+
+/* .tariff--wrapper:not(:last-child){ */
+.tariff--wrapper{
+	margin-bottom: 20px; 
+}
+
+.tariff--sizes{
+	display: flex;
+	justify-content: space-between;
+	/* flex-wrap: wrap; */
+	overflow-x: scroll;
+}
+
+.tariff-group--title{
+	font-size: 1.4rem;
+	text-transform: uppercase;
+	padding-left: 12px;
+}
+
+.tariff--item{
+	cursor: pointer;
+	width: 200px;
+	/* border: 1px solid lightgray; */
+	border-radius: 20px;
+	overflow: hidden;
+	margin-bottom: 15px;
+	flex-shrink: 0;
+	box-shadow:
+		5px 8px 10px rgba(0, 0, 0, .08),
+		0px 0px 12px rgba(0, 0, 0, .05);
+}
+
+.tariff--item:not(:last-child){
+	margin-right: 15px;
+}
+
+.tariff--title{
+	background-color: var(--main);
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 5px;
+	font-size: 1.4rem;
+}
+.tariff--body{
+	padding: 5px 12px 15px;
+}
+
+.tariff--body ul{
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+.tariff--body-value{
+	margin-left: 5px;
+}
+
+/* .tariff--order{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 0;
+	border-top: 1px solid lightgray;
+	transition: background-color .2s ease;
+} */
+
+.tariff--order:hover {
+	background-color: rgba(0,0,0,.05);
+}
+
+
 @media screen and (max-width: 1024px) {
 	.newCloud{
 		flex-direction: column;
@@ -444,7 +565,7 @@ export default {
 		border-radius: 20px 20px 0 0;
 		width: auto;
 	}
-	.newCloud__field{
+	.field{
 		box-shadow: none;
 		flex-grow: 0;
 	}
