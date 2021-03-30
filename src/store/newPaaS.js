@@ -53,7 +53,13 @@ export default {
 			
 			return axios.get(url)
 				.then(resp => {
-					commit("setAddons", resp.data)
+					let data = resp.data;
+					data.ssd = data.ssd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					data.hdd = data.hdd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					data.backup = data.backup.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					data.os = data.os.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					data.panel = data.panel.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					commit("setAddons", data);
 				})
 		},
 		fetchAddons({commit, dispatch}){

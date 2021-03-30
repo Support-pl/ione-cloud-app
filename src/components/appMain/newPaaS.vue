@@ -1,11 +1,66 @@
 <template>
 	<div class="newCloud_wrapper">
-		<template v-if="options.size != null">
+		<template v-if="true">
 
 			<div class="newCloud" v-if="!isProductsLoading">
+
 				<div class="newCloud__inputs field">
-					<span class="newCloud__change-tariff" @click="() => {options.size = null; options.kind = null}">{{$t('Change tariff')}}</span>
-					<div class="newCloud_option">
+
+					<a-slider :marks="{...sizes}" :value="sizes.indexOf(options.size)" :tip-formatter="null" :max="sizes.length-1" :min="0" @change="(newval) => options.size = sizes[newval]"></a-slider>
+
+					<a-skeleton :loading="getCurrentProd==null" :active="true">
+						<div class="result__title">
+							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
+						</div>
+						<a-row type="flex" justify="space-between">
+							<a-col>
+								<span style="display: inline-block; width: 70px">CPU:</span> <a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
+									<span slot="checkedChildren">x2</span>
+									<span slot="unCheckedChildren">x1</span>
+								</a-switch>
+								
+							</a-col>
+							<a-col>
+								{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+							</a-col>
+						</a-row>
+						<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed CPU')}}</a-checkbox>
+
+						<a-row type="flex" justify="space-between" class="newCloud__prop">
+							<a-col>
+								<span style="display: inline-block; width: 70px">RAM:</span> <a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
+									<span slot="checkedChildren">x2</span>
+									<span slot="unCheckedChildren">x1</span>
+								</a-switch>
+							</a-col>
+							<a-col>
+								{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
+							</a-col>
+						</a-row>
+
+						<a-row type="flex" justify="space-between" class="newCloud__prop">
+							<a-col>
+								<span style="display: inline-block; width: 70px">{{$t('Drive')}}:</span> <a-switch v-model="options.drive" style="width: 60px">
+									<span slot="checkedChildren">SSD</span>
+									<span slot="unCheckedChildren">HDD</span>
+								</a-switch>
+							</a-col>
+							<a-col>
+								<a-select default-value="-1" style="width: 90px" @change="(newdata)=> setAddon('drive', +newdata)">
+									<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
+									<a-select-option
+										v-for="group in getAddons[options.drive?'ssd':'hdd']"
+										:key="group.id"
+										:value="group.id"
+									>
+										{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
+									</a-select-option>
+								</a-select>
+							</a-col>
+						</a-row>
+					</a-skeleton>
+
+					<!-- <div class="newCloud_option">
 						<a-row class="newCloud__prop">
 							<a-radio-group v-model="options.period" class='period__wrapper'>
 								<a-col v-for="period in periods" :key="period.title+period.count" span='6' class='period__item'>
@@ -35,10 +90,10 @@
 							</a-col>
 						</a-row>
 
-					</div>
+					</div> -->
 
 					<div class="paas_addons" v-if="!isAddonsLoading">
-						<a-row class="newCloud__prop">
+						<!-- <a-row class="newCloud__prop">
 							<a-col span="8">{{$t(options.drive?'ssd':'hdd') | capitalize}}</a-col>
 							<a-col span="16">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
@@ -52,7 +107,7 @@
 									</a-select-option>
 								</a-select>
 							</a-col>
-						</a-row>
+						</a-row> -->
 
 						<a-row class="newCloud__prop">
 							<a-col span="8">{{$t('traffic') | capitalize}}</a-col>
@@ -93,12 +148,11 @@
 							</a-col>
 						</a-row>
 					</div>
-
 				</div>
 				
 				<div class="newCloud__calculate field result">
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
-						<div class="result__title">
+						<!-- <div class="result__title">
 							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
 						</div>
 						<a-row type="flex" justify="space-between">
@@ -126,8 +180,19 @@
 							<a-col>
 								{{getCurrentProd!=null ? getCurrentProd.props.drive.TITLE : ''}}
 							</a-col>
-						</a-row>
+						</a-row> -->
 						
+
+						<a-divider orientation="left" :style="{'margin-bottom': '0'}">
+							{{$t('Pay peroiod')}}:
+						</a-divider>
+
+						<a-select :default-value="periods[0].value" style="width: 100%">
+							<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period.value'>
+								{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
+							</a-select-option>
+						</a-select>
+
 						<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 							{{$t('Total')}}:
 						</a-divider>
@@ -167,29 +232,46 @@
 		</template>
 		<div v-else class="newCloud tariff">
 			<div class="field field--fluid">
-				<div class="tariff--header">
+				<div class="tariff__header">
 					Choose your tariff
 				</div>
+				
+				<div class="tariff__wrapper">
+					<div class="tariff__cards">
+						<div class="tariff__items">
 
-				<div class="tariff--wrapper" v-for="tariff in tariffs" :key="tariff">
-					<div class="tariff-group--title">{{tariff}}</div>
-
-					<div class="tariff--sizes">
-						<div class="tariff--item" v-for="size in sizes" :key="size" @click="() => {options.size = size; options.kind = tariff}">
-							<div class="tariff--title">{{size}}</div>
-							<div class="tariff--body">
-								<loading v-if="isProductsLoading"/>
-								<div v-else>
-									<ul>
-										<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index">
-											<a-icon :type="spec == 'ram' ? 'hdd' : 'cloud-server'" />
-											<span class="tariff--body-value">
-												{{getProducts[tariff][size][0][0].props[spec].VALUE}}
-											</span>
-										</li>
-									</ul>
+							<div class="tariff__item" v-for="tariff in tariffs" :key="tariff" @click="() => {options.isOnCalc = true; options.kind = tariff; options.size = sizes[options.slide]}">
+								<div class="tariff__title">
+									{{getProducts[tariff][sizes[options.slide]][0][0].name | replace('SVDS', '')}}
+								</div>
+								<div class="tariff__body">
+									<loading v-if="isProductsLoading"/>
+									<div v-else>
+										<ul>
+											<li class="tariff__property">
+												<span class="tariff__body-value">
+													{{getProducts[tariff][sizes[options.slide]][0][0].pricing.BYN.monthly}} <span class="tariff__currency">BYN</span>
+												</span>
+											</li>
+											<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index" class="tariff__property">
+												<!-- <a-icon :type="spec == 'ram' ? 'hdd' : 'cloud-server'" /> -->
+												<span class="tariff__body-value">
+													{{getProducts[tariff][sizes[options.slide]][0][0].props[spec].VALUE}}
+												</span>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
+						</div>
+
+						<div class="tariff__nav">
+							<span class="tariff__nav-item tariff__nav-item_prev" :class="[sliderIsCanPrev ? 'tariff__nav-item_active' : 'tariff__nav-item_disabled']" @click='sliderNavPrev'>
+								<a-icon type="left" />
+							</span>
+							<span class="tariff__nav-item tariff__nav-item_next" :class="[sliderIsCanNext ? 'tariff__nav-item_active' : 'tariff__nav-item_disabled']" @click='sliderNavNext'>
+								<a-icon type="right" />
+							</span>
 						</div>
 					</div>
 				</div>
@@ -241,9 +323,11 @@ export default {
 			options: {
 				kind: 'standart',
 				period: 'monthly',
-				size: null,
+				size: "L",
+				isOnCalc: false,
 				drive: false, // 1 ssd, 0 hdd
 				highCPU: false, // 1 highCPU, 0 basicCPU
+				slide: 1,
 				addons: {
 					drive: -1,
 					traffic: -1,
@@ -330,7 +414,17 @@ export default {
 			}
 			const addon = addons.find( el => el.id == value )
 			this.options.addonsObjects[name] = addon !== undefined ? addon : null;
-		}
+		},
+		sliderNavNext(){
+			if(this.sliderIsCanNext){
+				this.options.slide += 1;
+			}
+		},
+		sliderNavPrev(){
+			if(this.sliderIsCanPrev){
+				this.options.slide -= 1;
+			}
+		},
 	},
 	computed: {
 		...mapGetters('newPaaS', [
@@ -343,6 +437,7 @@ export default {
 			const o = this.options;
 			const path =  [o.kind, o.size, +o.drive, +o.highCPU];
 			let current = this.getProducts;
+			console.log(current);
 			if(current == undefined || current.length == 0){
 				return null
 			}
@@ -378,6 +473,12 @@ export default {
 			});
 			console.log('~~~', addonsCosts);
 			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(2);
+		},
+		sliderIsCanNext(){
+			return this.options.slide < this.sizes.length - 1;
+		},
+		sliderIsCanPrev(){
+			return this.options.slide > 0;
 		}
 	},
 	watch: {
@@ -475,18 +576,72 @@ export default {
 	padding: 2px 0 10px;
 }
 
-.tariff--header{
+.tariff__header{
 	text-align: center;
 	padding: 5px 0;
 	font-size: 1.6rem;
 }
 
-/* .tariff--wrapper:not(:last-child){ */
-.tariff--wrapper{
-	margin-bottom: 20px; 
+/* .tariff__wrapper:not(:last-child){ */
+.tariff__wrapper{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
 }
 
-.tariff--sizes{
+.tariff__nav-item{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 3rem;
+	color: var(--main);
+	opacity: .7;
+	--step: -55px;
+	cursor: pointer;
+	transition:
+		opacity .2s ease,
+		font-size .2s ease,
+		transform .2s ease;
+	user-select: none;
+
+}
+
+.tariff__nav-item_active:hover{
+	opacity: 1;
+	transform: translateY(-50%) scale(1.1);
+}
+
+.tariff__nav-item_active:active{
+	opacity: 1;
+	transform: translateY(-50%) scale(0.8);
+}
+
+.tariff__nav-item_prev{
+	left: var(--step);
+}
+
+.tariff__nav-item_next{
+	right: var(--step);
+}
+
+.tariff__nav-item_disabled{
+	color: rgba(0, 0, 0, .6);
+	font-size: 2.5rem;
+}
+
+.tariff__cards{
+	display: flex;
+	position: relative;
+}
+
+.tariff__items{
+	display: flex;
+}
+
+.tariff__sizes{
 	display: flex;
 	justify-content: space-between;
 	/* flex-wrap: wrap; */
@@ -499,7 +654,7 @@ export default {
 	padding-left: 12px;
 }
 
-.tariff--item{
+.tariff__item{
 	cursor: pointer;
 	width: 200px;
 	/* border: 1px solid lightgray; */
@@ -512,34 +667,51 @@ export default {
 		0px 0px 12px rgba(0, 0, 0, .05);
 }
 
-.tariff--item:not(:last-child){
+.tariff__item:not(:last-of-type){
 	margin-right: 15px;
 }
 
-.tariff--title{
+.tariff__title{
 	background-color: var(--main);
 	color: #fff;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	padding: 10px 5px;
-	font-size: 1.4rem;
+	font-size: 1.6rem;
 }
-.tariff--body{
+.tariff__body{
 	padding: 5px 12px 15px;
 }
 
-.tariff--body ul{
+.tariff__body ul{
 	padding: 0;
 	margin: 0;
 	list-style-type: none;
 }
 
-.tariff--body-value{
+.tariff__currency{
+	font-size: 1rem;
+	opacity: .8;
+	transition: font .2s ease;
+}
+
+.tariff__property:hover .tariff__currency{
+	opacity: 9;
+	font-size: 1.1rem;
+}
+
+.tariff__property{
+	margin: 10px 0;
+	font-size: 1.3rem;
+	text-align: center;
+}
+
+.tariff__body-value{
 	margin-left: 5px;
 }
 
-/* .tariff--order{
+/* .tariff__order{
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -548,14 +720,14 @@ export default {
 	transition: background-color .2s ease;
 } */
 
-.tariff--order:hover {
+.tariff__order:hover {
 	background-color: rgba(0,0,0,.05);
 }
 
 
 @media screen and (max-width: 1024px) {
 	.newCloud{
-		flex-direction: column;
+		flex-direction: column-reverse;
 		padding: 10px;
 		margin-top: 0px;
 		overflow: auto;
@@ -572,6 +744,12 @@ export default {
 	.newCloud__calculate{
 		border-radius: 0 0 20px 20px;
 		width: auto;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.tariff__items{
+		flex-direction: column;
 	}
 }
 
