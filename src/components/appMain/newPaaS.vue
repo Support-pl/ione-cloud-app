@@ -12,41 +12,51 @@
 						<div class="result__title">
 							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
 						</div>
-						<a-row type="flex" justify="space-between">
-							<a-col>
-								<span style="display: inline-block; width: 70px">CPU:</span> <a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
+						<a-row justify="space-between">
+							<a-col span="8" :xs="6">
+								<span style="display: inline-block; width: 70px">CPU:</span>								
+							</a-col>
+							<a-col span="4" :xs="6">
+								<a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
 									<span slot="checkedChildren">x2</span>
 									<span slot="unCheckedChildren">x1</span>
 								</a-switch>
-								
 							</a-col>
-							<a-col>
+							<a-col span="8">
+								<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed CPU')}}</a-checkbox>
+							</a-col>
+							<a-col span="4" style="text-align: right">
 								{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
 							</a-col>
 						</a-row>
-						<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed CPU')}}</a-checkbox>
 
-						<a-row type="flex" justify="space-between" class="newCloud__prop">
-							<a-col>
-								<span style="display: inline-block; width: 70px">RAM:</span> <a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
+						<a-row justify="space-between" class="newCloud__prop">
+							<a-col span="8" :xs="6">
+								<span style="display: inline-block; width: 70px">RAM:</span> 
+							</a-col>
+							<a-col span="12">
+								<a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
 									<span slot="checkedChildren">x2</span>
 									<span slot="unCheckedChildren">x1</span>
 								</a-switch>
 							</a-col>
-							<a-col>
+							<a-col span="4" :xs="6" style="text-align: right">
 								{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
 							</a-col>
 						</a-row>
 
-						<a-row type="flex" justify="space-between" class="newCloud__prop">
-							<a-col>
-								<span style="display: inline-block; width: 70px">{{$t('Drive')}}:</span> <a-switch v-model="options.drive" style="width: 60px">
+						<a-row class="newCloud__prop">
+							<a-col span="8" :xs="6">
+								<span style="display: inline-block; width: 70px">{{$t('Drive')}}:</span>
+							</a-col>
+							<a-col :xs="10" :sm="14">
+								 <a-switch v-model="options.drive" style="width: 60px">
 									<span slot="checkedChildren">SSD</span>
 									<span slot="unCheckedChildren">HDD</span>
 								</a-switch>
 							</a-col>
-							<a-col>
-								<a-select default-value="-1" style="width: 90px" @change="(newdata)=> setAddon('drive', +newdata)">
+							<a-col :xs="8" :sm="4">
+								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
 									<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
 									<a-select-option
 										v-for="group in getAddons[options.drive?'ssd':'hdd']"
@@ -110,8 +120,8 @@
 						</a-row> -->
 
 						<a-row class="newCloud__prop">
-							<a-col span="8">{{$t('traffic') | capitalize}}</a-col>
-							<a-col span="16">
+							<a-col span="8" :xs="6">{{$t('traffic') | capitalize}}:</a-col>
+							<a-col span="16" :xs="18">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
 									<a-select-option value="-1">{{$t('under 3 Gb per month')}}</a-select-option>
 									<a-select-option v-for="group in getAddons.traffic" :key="group.id">{{group.description.TITLE}}</a-select-option>
@@ -120,8 +130,8 @@
 						</a-row>
 
 						<a-row class="newCloud__prop">
-							<a-col span="8">{{$t('panel') | capitalize}}</a-col>
-							<a-col span="16">
+							<a-col span="8" :xs="6">{{$t('panel') | capitalize}}:</a-col>
+							<a-col span="16" :xs="18">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('panel', +newdata)">
 									<a-select-option value="-1">{{$t('none')}}</a-select-option>
 									<a-select-option v-for="group in getAddons.panel" :key="group.id">{{group.description.TITLE}}</a-select-option>
@@ -130,8 +140,8 @@
 						</a-row>
 
 						<a-row class="newCloud__prop">
-							<a-col span="8">{{$t('os')}}</a-col>
-							<a-col span="16">
+							<a-col span="8" :xs="6">{{$t('os')}}:</a-col>
+							<a-col span="16" :xs="18">
 								<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
 									<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.description.TITLE}}</a-select-option>
 								</a-select>
@@ -139,12 +149,36 @@
 						</a-row>
 
 						<a-row class="newCloud__prop">
-							<a-col span="8">{{$t('backup') | capitalize}}</a-col>
-							<a-col span="16">
+							<a-col span="8" :xs="6">{{$t('backup') | capitalize}}:</a-col>
+							<a-col span="16" :xs="18">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
 									<a-select-option value="-1">0 Gb</a-select-option>
 									<a-select-option v-for="group in getAddons.backup" :key="group.id">{{group.description.TITLE}}</a-select-option>
 								</a-select>
+							</a-col>
+						</a-row>
+
+						
+
+						<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
+							<a-col :xs="22" :lg="0">
+								<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
+									<a-icon type="shopping-cart" />{{getFullPrice}} BYN
+								</a-button>
+								<a-modal
+									:title="$t('Confirm')"
+									:visible="modal.confirmCreate"
+									:confirm-loading="modal.confirmLoading"
+									:cancel-text="$t('Cancel')"
+									@ok="handleOkOnCreateOrder"
+									@cancel="() => modal.confirmCreate = false"
+								>
+									{{$t('Virtual machine will be available after paying the invoice')}}
+
+									<div>
+										<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
+									</div>
+								</a-modal>
 							</a-col>
 						</a-row>
 					</div>
@@ -205,7 +239,7 @@
 					</a-skeleton>
 
 					<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
-						<a-col :span="22">
+						<a-col :xs="0" :lg="22">
 							<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
 								{{$t("Create")}}
 							</a-button>
@@ -725,7 +759,7 @@ export default {
 }
 
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 991px) {
 	.newCloud{
 		flex-direction: column-reverse;
 		padding: 10px;
