@@ -9,9 +9,11 @@
 					<a-slider :marks="{...sizes}" :value="sizes.indexOf(options.size)" :tip-formatter="null" :max="sizes.length-1" :min="0" @change="(newval) => options.size = sizes[newval]"></a-slider>
 
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
-						<div class="result__title">
-							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
-						</div>
+						<transition name="textchange" mode="out-in">
+							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
+								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
+							</div>
+						</transition>
 						<a-row justify="space-between">
 							<a-col span="8" :xs="6">
 								<span style="display: inline-block; width: 70px">CPU:</span>								
@@ -25,9 +27,11 @@
 							<a-col span="8">
 								<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed CPU')}}</a-checkbox>
 							</a-col>
-							<a-col span="4" style="text-align: right">
-								{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
-							</a-col>
+							<transition name="textchange" mode="out-in">
+								<a-col span="4" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : "DefaultKey"'>
+									{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+								</a-col>
+							</transition>
 						</a-row>
 
 						<a-row justify="space-between" class="newCloud__prop">
@@ -40,9 +44,11 @@
 									<span slot="unCheckedChildren">x1</span>
 								</a-switch>
 							</a-col>
-							<a-col span="4" :xs="6" style="text-align: right">
-								{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
-							</a-col>
+							<transition name="textchange" mode="out-in">
+								<a-col span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : "DefaultKeyForRAM"'>
+									{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
+								</a-col>
+							</transition>
 						</a-row>
 
 						<a-row class="newCloud__prop">
@@ -232,9 +238,15 @@
 						</a-divider>
 
 						<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-							<a-col>
+							<!-- <a-col>
 								{{getFullPrice}} BYN
-							</a-col>
+							</a-col> -->
+							
+							<transition name="textchange" mode="out-in">
+								<a-col :key='getFullPrice'>
+									{{getFullPrice}} BYN
+								</a-col>
+							</transition>
 						</a-row>
 					</a-skeleton>
 
@@ -581,9 +593,6 @@ export default {
 	cursor: pointer;
 }
 
-.newCloud__change-tariff:hover{
-}
-
 .field{
 	border-radius: 20px;
 	box-shadow:
@@ -833,5 +842,20 @@ export default {
 	.newCloud__template-name ul li{
 		margin-left: 20px;
 	}
+}
+
+.textchange-enter-active,
+.textchange-leave-active {
+  transition: all .15s ease;
+}
+
+.textchange-enter{
+  transform: translateY(-0.5em);
+  opacity: 0;
+}
+
+.textchange-leave-to{
+  transform: translateY(0.5em);
+  opacity: 0;
 }
 </style>
