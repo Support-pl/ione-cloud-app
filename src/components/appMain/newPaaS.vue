@@ -6,15 +6,23 @@
 
 				<div class="newCloud__inputs field">
 
-					<a-slider :marks="{...sizes}" :value="sizes.indexOf(options.size)" :tip-formatter="null" :max="sizes.length-1" :min="0" @change="(newval) => options.size = sizes[newval]"></a-slider>
+					<a-slider
+						:marks="{...sizes}"
+						:value="sizes.indexOf(options.size)"
+						:tip-formatter="null"
+						:max="sizes.length-1"
+						:min="0"
+						@change="(newval) => options.size = sizes[newval]"
+					>
+					</a-slider>
 
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
-						<transition name="textchange" mode="out-in">
+						<!-- <transition name="textchange" mode="out-in">
 							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
 								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
 							</div>
-						</transition>
-						<a-row justify="space-between">
+						</transition> -->
+						<a-row justify="space-between" style="margin-top:50px">
 							<a-col span="8" :xs="6">
 								<span style="display: inline-block; width: 70px">CPU:</span>								
 							</a-col>
@@ -76,54 +84,7 @@
 						</a-row>
 					</a-skeleton>
 
-					<!-- <div class="newCloud_option">
-						<a-row class="newCloud__prop">
-							<a-radio-group v-model="options.period" class='period__wrapper'>
-								<a-col v-for="period in periods" :key="period.title+period.count" span='6' class='period__item'>
-									<span v-if="period.discount != undefined" class="period__discount">-{{period.discount}}%</span>
-									<a-radio :value='period.value'>
-										{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
-									</a-radio>
-								</a-col>
-							</a-radio-group>
-						</a-row>
-						
-						<a-row class="newCloud__prop">
-							<a-col span="12">
-								<a-row>
-									<a-col span="10">{{$t('basic')}} {{$t('processor')}}</a-col>
-									<a-col span="4"><a-switch v-model="options.highCPU"></a-switch></a-col>
-									<a-col span='10'>{{$t('high')}} {{$t('processor')}}</a-col>
-								</a-row>
-							</a-col>
-
-							<a-col span="12">
-								<a-row>
-									<a-col span="10">HDD {{$t('drive')}}</a-col>
-									<a-col span="4"><a-switch v-model="options.drive"></a-switch></a-col>
-									<a-col span='10'>SSD {{$t('drive')}}</a-col>
-								</a-row>
-							</a-col>
-						</a-row>
-
-					</div> -->
-
 					<div class="paas_addons" v-if="!isAddonsLoading">
-						<!-- <a-row class="newCloud__prop">
-							<a-col span="8">{{$t(options.drive?'ssd':'hdd') | capitalize}}</a-col>
-							<a-col span="16">
-								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
-									<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
-									<a-select-option
-										v-for="group in getAddons[options.drive?'ssd':'hdd']"
-										:key="group.id"
-										:value="group.id"
-									>
-										{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
-									</a-select-option>
-								</a-select>
-							</a-col>
-						</a-row> -->
 
 						<a-row class="newCloud__prop">
 							<a-col span="8" :xs="6">{{$t('traffic') | capitalize}}:</a-col>
@@ -165,93 +126,43 @@
 						</a-row>
 
 						
-
-						<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
-							<a-col :xs="22" :lg="0">
-								<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
-									<a-icon type="shopping-cart" />{{getFullPrice}} BYN
-								</a-button>
-								<a-modal
-									:title="$t('Confirm')"
-									:visible="modal.confirmCreate"
-									:confirm-loading="modal.confirmLoading"
-									:cancel-text="$t('Cancel')"
-									@ok="handleOkOnCreateOrder"
-									@cancel="() => modal.confirmCreate = false"
-								>
-									{{$t('Virtual machine will be available after paying the invoice')}}
-
-									<div>
-										<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
-									</div>
-								</a-modal>
-							</a-col>
-						</a-row>
 					</div>
 				</div>
 				
 				<div class="newCloud__calculate field result">
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
-						<!-- <div class="result__title">
-							{{getCurrentProd!=null ? getCurrentProd.name : ''}}
-						</div>
-						<a-row type="flex" justify="space-between">
-							<a-col>
-								CPU:
+					
+						<a-row type="flex" justify="space-around">
+							<a-col :xs="10" :sm="6" :lg='12'>
+								{{$t('Pay peroiod')}}:
 							</a-col>
-							<a-col>
-								{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+
+							<a-col :xs="12" :sm="18" :lg='12'>
+								<!-- <a-select :default-value="periods[0].value"  style="width: 100%"> -->
+								<a-select v-model="options.period"  style="width: 100%">
+									<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period.value'>
+										{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
+									</a-select-option>
+								</a-select>
 							</a-col>
 						</a-row>
-
-						<a-row type="flex" justify="space-between">
-							<a-col>
-								RAM:
-							</a-col>
-							<a-col>
-								{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
-							</a-col>
-						</a-row>
-
-						<a-row type="flex" justify="space-between">
-							<a-col>
-								{{$t('Drive')}}:
-							</a-col>
-							<a-col>
-								{{getCurrentProd!=null ? getCurrentProd.props.drive.TITLE : ''}}
-							</a-col>
-						</a-row> -->
-						
-
-						<a-divider orientation="left" :style="{'margin-bottom': '0'}">
-							{{$t('Pay peroiod')}}:
-						</a-divider>
-
-						<a-select :default-value="periods[0].value" style="width: 100%">
-							<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period.value'>
-								{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
-							</a-select-option>
-						</a-select>
 
 						<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 							{{$t('Total')}}:
 						</a-divider>
 
 						<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-							<!-- <a-col>
-								{{getFullPrice}} BYN
-							</a-col> -->
-							
 							<transition name="textchange" mode="out-in">
 								<a-col :key='getFullPrice'>
 									{{getFullPrice}} BYN
 								</a-col>
 							</transition>
 						</a-row>
+
 					</a-skeleton>
 
 					<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
-						<a-col :xs="0" :lg="22">
+						<a-col :span="22">
 							<a-button type="primary" block shape="round" @click="() => modal.confirmCreate=true" :loading="getCurrentProd==null">
 								{{$t("Create")}}
 							</a-button>
@@ -300,7 +211,6 @@
 												</span>
 											</li>
 											<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index" class="tariff__property">
-												<!-- <a-icon :type="spec == 'ram' ? 'hdd' : 'cloud-server'" /> -->
 												<span class="tariff__body-value">
 													{{getProducts[tariff][sizes[options.slide]][0][0].props[spec].VALUE}}
 												</span>
@@ -770,7 +680,7 @@ export default {
 
 @media screen and (max-width: 991px) {
 	.newCloud{
-		flex-direction: column-reverse;
+		flex-direction: column;
 		padding: 10px;
 		margin-top: 0px;
 		overflow: auto;
@@ -779,7 +689,13 @@ export default {
 		margin: 0;
 		border-radius: 20px 20px 0 0;
 		width: auto;
+		padding-bottom: 0;
 	}
+
+	/* .newCloud__calculate{
+		padding-top: 0;
+	} */
+
 	.field{
 		box-shadow: none;
 		flex-grow: 0;
