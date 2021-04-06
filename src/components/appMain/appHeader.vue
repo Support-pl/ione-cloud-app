@@ -65,7 +65,7 @@ export default {
 					// needBalance: true,
 					buttons: [
 						{
-							name: 'Order VM',
+							name: this.$t('Order'),
 							type: 'main action',
 							onClickFuncion: this.orderVM
 						},

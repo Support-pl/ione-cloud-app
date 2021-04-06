@@ -17,11 +17,6 @@
 					</a-slider>
 
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
-						<!-- <transition name="textchange" mode="out-in">
-							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
-								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
-							</div>
-						</transition> -->
 						<a-row justify="space-between" style="margin-top:50px">
 							<a-col span="8" :xs="6">
 								<span style="display: inline-block; width: 70px">CPU:</span>								
@@ -33,10 +28,15 @@
 								</a-switch>
 							</a-col>
 							<a-col span="8">
-								<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed CPU')}}</a-checkbox>
+								<a-tooltip>
+									<template slot="title">
+										{{$t('increases core frequency from 2.4 GHz to 3.7 GHz')}}
+									</template>
+									<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed')}}</a-checkbox>
+								</a-tooltip>
 							</a-col>
 							<transition name="textchange" mode="out-in">
-								<a-col span="4" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : "DefaultKey"'>
+								<a-col class="changing__field" span="4" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : "DefaultKey"'>
 									{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
 								</a-col>
 							</transition>
@@ -53,7 +53,7 @@
 								</a-switch>
 							</a-col>
 							<transition name="textchange" mode="out-in">
-								<a-col span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : "DefaultKeyForRAM"'>
+								<a-col class="changing__field" span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : "DefaultKeyForRAM"'>
 									{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
 								</a-col>
 							</transition>
@@ -132,8 +132,15 @@
 				<div class="newCloud__calculate field result">
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
 					
+						
+						<transition name="textchange" mode="out-in">
+							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
+								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
+							</div>
+						</transition>
+
 						<a-row type="flex" justify="space-around">
-							<a-col :xs="10" :sm="6" :lg='12'>
+							<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
 								{{$t('Pay peroiod')}}:
 							</a-col>
 
@@ -176,9 +183,11 @@
 							>
 								{{$t('Virtual machine will be available after paying the invoice')}}
 
-								<div>
-									<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice')}}
-								</div>
+								<a-row style="margin-top: 20px">
+									<a-col>
+										<a-checkbox :checked="modal.goToInvoice" @change="(e) => modal.goToInvoice = e.target.checked"/> {{$t('go to invoice') | capitalize}}
+									</a-col>
+								</a-row>
 							</a-modal>
 						</a-col>
 					</a-row>
@@ -393,7 +402,7 @@ export default {
 			const o = this.options;
 			const path =  [o.kind, o.size, +o.drive, +o.highCPU];
 			let current = this.getProducts;
-			console.log(current);
+			// console.log(current);
 			if(current == undefined || current.length == 0){
 				return null
 			}
@@ -424,10 +433,10 @@ export default {
 				if(this.options.addonsObjects[name] == null){
 					return 0;
 				}
-				console.log(this.options.addonsObjects[name], this.options.addonsObjects, name);
+				// console.log(this.options.addonsObjects[name], this.options.addonsObjects, name);
 				return this.options.addonsObjects[name].pricing[this.options.period] 
 			});
-			console.log('~~~', addonsCosts);
+			// console.log('~~~', addonsCosts);
 			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(2);
 		},
 		sliderIsCanNext(){
@@ -675,6 +684,10 @@ export default {
 
 .tariff__order:hover {
 	background-color: rgba(0,0,0,.05);
+}
+
+.changing__field{
+	font-weight: 600;
 }
 
 

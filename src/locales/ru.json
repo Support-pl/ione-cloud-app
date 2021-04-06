@@ -89,6 +89,17 @@
 	"processor": "процессор",
 	"Order": "Заказать",
 
+	"High speed": "Улучшенный",
+	"traffic": "Трафик",
+	"under 3 Gb per month": "До 3 Гб в месяц",
+	"panel": "Панель",
+	"none": "Никакая",
+	"backup": "Бэкап",
+	"Pay peroiod": "Период оплаты",
+	"go to invoice": "перейти к счёту",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "Повышает частоту процессора с 2.4 ГГц до 3.7 ГГц",
+	"Virtual machine will be available after paying the invoice": "Виртуальная машина будет доступна после оплаты счёта",
+
 	"Power off": "Выключить",
 	"Reboot": "Перезагрузить",
 	"Recover": "Восстановить",

@@ -89,6 +89,17 @@
 	"processor": "processor",
 	"Order": "Order",
 
+	"High speed": "High speed",
+	"traffic": "traffic",
+	"under 3 Gb per month": "under 3 Gb per month",
+	"panel": "panel",
+	"none": "none",
+	"backup": "backup",
+	"Pay peroiod": "Pay peroiod",
+	"go to invoice": "go to invoice",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "increases core frequency from 2.4 GHz to 3.7 GHz",
+	"Virtual machine will be available after paying the invoice": "Virtual machine will be available after paying the invoice",
+
 	"Power off": "Power off",
 	"Reboot": "Reboot",
 	"Recover": "Recover",

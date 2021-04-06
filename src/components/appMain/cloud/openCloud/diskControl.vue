@@ -203,12 +203,12 @@ export default {
 			return str;
 		},
 		detachInit(disk){
-			console.log(disk)
+			// console.log(disk)
 			this.detach.diskID = disk.DISK_ID;
 			this.showModal('detach');
 		},
 		resizeInit(disk){
-			console.log(disk)
+			// console.log(disk)
 			this.resize.currentdisk = disk.DISK_ID;
 			this.resize.currentdiskIndex = this.disks.indexOf(disk);
 			this.resize.newsize = disk.SIZE / 1024
@@ -228,7 +228,7 @@ export default {
 			} else {
 				newDiskSizeInMB = this.resize.newsize;
 			}
-			console.log(newDiskSizeInMB)
+			// console.log(newDiskSizeInMB)
 			if(newDiskSizeInMB <= this.disks[currentdisk].SIZE){
 				this.$message.warning('You can\'t resize disk to the same size');
 				return;
@@ -308,7 +308,7 @@ export default {
 			this.attach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`Disk attached`);
 				else{
@@ -326,7 +326,7 @@ export default {
 			})
 		},
 		sendDetach(disk){
-			console.log(disk)
+			// console.log(disk)
 			if(this.detach.imageID == 0){
 				this.$message.warning('You can\' remove main OS disk');
 				return;
@@ -350,7 +350,7 @@ export default {
 			this.detach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`Disk detached`);
 				else{
