@@ -91,7 +91,9 @@
 							<a-col span="16" :xs="18">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
 									<a-select-option value="-1">{{$t('under 3 Gb per month')}}</a-select-option>
-									<a-select-option v-for="group in getAddons.traffic" :key="group.id">{{group.description.TITLE}}</a-select-option>
+									<a-select-option v-for="group in getAddons.traffic" :key="group.id">
+										{{group.description.TITLE.replace('Безлимитный, скорость канала не менее', 'Безлимит, от ')}}
+										</a-select-option>
 								</a-select>
 							</a-col>
 						</a-row>
@@ -116,7 +118,7 @@
 						</a-row>
 
 						<a-row class="newCloud__prop">
-							<a-col span="8" :xs="6">{{$t('backup') | capitalize}}:</a-col>
+							<a-col span="8" :xs="6">{{$t('backup HDD') | capitalize}}:</a-col>
 							<a-col span="16" :xs="18">
 								<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
 									<a-select-option value="-1">0 Gb</a-select-option>
@@ -133,13 +135,13 @@
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
 					
 						
-						<transition name="textchange" mode="out-in">
+						<!-- <transition name="textchange" mode="out-in">
 							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
 								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
 							</div>
-						</transition>
+						</transition> -->
 
-						<a-row type="flex" justify="space-around">
+						<a-row type="flex" justify="space-around" style="margin-top: 20px">
 							<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
 								{{$t('Pay peroiod')}}:
 							</a-col>
