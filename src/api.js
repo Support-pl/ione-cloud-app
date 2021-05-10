@@ -1,0 +1,58 @@
+import axios from './axios';
+import store from './store/index.js'
+import md5 from 'md5'
+
+export default {
+	sendVMaction(method, params){
+		const vmid = {
+			vmid: store.getters['cloud/getOpenedCloud'].ID
+		};
+		const query = Object.assign(params, vmid);
+
+		return this.sendAsUser(method, query);
+	},
+	sendAsUser(method, params = {}){
+		const user = store.getters['getUser'];
+		const secret = md5(method + user.id + user.secret);
+		const auth = {
+			userid: user.id,
+			secret
+		};
+
+		const query = Object.assign(params, auth);
+		return this.getWithParams(method, query);
+	},
+	getWithParams(method, params){
+		let rawUrl = `/${method}.php`;
+		let url = '';
+		if(params != undefined){
+			url = rawUrl + `?${URLparameter(params)}`;
+		}
+		return this.getRaw(url);
+	},
+	getRaw(url){
+		return new Promise((resolve, reject) => {
+			axios.get(url)
+			.then( res => resolve(res.data))
+			.catch( err => {
+				reject(err);
+				console.error(err)
+			})
+		})
+	}
+}
+function URLparameter(obj, outer = ''){
+	var str = "";
+	for (var key in obj) {
+		if(key == "price") continue;
+		if (str != "") {
+				str += "&";
+		}
+		if(typeof obj[key] == 'object') {
+			str += this.URLparameter(obj[key], outer+key);
+		} else {
+			str += outer + key + "=" + encodeURIComponent(obj[key]);
+		}
+	}
+	return str;
+}

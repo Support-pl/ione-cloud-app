@@ -74,6 +74,10 @@
 	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
 	"Snapshot successfully deleted": "Snapshot successfully deleted",
 	"Vm was successfully restored from snapshot": "Vm was successfully restored from snapshot",
+	
+	"Recover sended. Wait please": "Recover sended. Wait please",
+	"There was a problem while restoring. Please contact support": "There was a problem while restoring. Please contact support",
+	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots",
 
 	"Reinstall": "Reinstall",
 	"Resize VM": "Resize VM",

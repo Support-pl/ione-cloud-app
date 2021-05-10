@@ -585,19 +585,54 @@ export default {
 			const userid = user.id;
 			const vmid = this.SingleCloud.ID;
 
+			let lowerAct = action.toLowerCase();
 
 			let close_your_eyes = md5('vmaction' + userid + user.secret);
 			let url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
-			if(action.toLowerCase()=='reinstall'){
+			if(lowerAct == 'reinstall'){
 				url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
-			if(action.toLowerCase()=='delete'){
+			if(lowerAct == 'delete'){
 				close_your_eyes = md5('VMremove' + userid + user.secret);
 				url = `/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
+			if(lowerAct == 'recovertoday' || lowerAct == 'recoveryesterday'){
+				this.$message.warning(this.$t("Recover sended. Wait please"));
+			}
 			this.$axios.get(url)
 			.then(res => {
-				let lowerAct = action.toLowerCase();
+				if(lowerAct == 'recovertoday' || lowerAct == 'recoveryesterday'){
+					let self = this;
+					console.log('started wait for ans');
+					setTimeout(() => {
+						self.$store.dispatch('cloud/fetchAnsible', res.data.id)
+						.then( res => {
+							console.log(res);
+							if(res.response.status == 'FAILED'){
+								console.log(res.response.error.message_type);
+								console.log(res.response.error);
+								switch (res.response.error.message_type) {
+									case 1:
+										self.$message.error(self.$t('There was a problem while recovering. Please contact support'));
+										break;
+
+									case 2:
+										self.$message.error(self.$t('Before restoring from a service copy, please delete manually created snapshots'));
+										break;
+								
+									default:
+										self.$message.error(res.response.error.msg);
+										break;
+								}
+							}
+							this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+						})
+						.catch( err => {
+							console.error(err);
+						})
+					}, 10000);
+				}
+
 				if(lowerAct == 'delete' || lowerAct=='reinstall'){
 					if(res.data.result == "success"){
 						this.$message.success(res.data.message);

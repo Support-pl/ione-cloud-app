@@ -12,7 +12,8 @@ export default {
 		isSearch: false,
 		clouds: [],
 		updating: false,
-		opennedCloud: {}
+		opennedCloud: {},
+		ansible: {}
 	},
 	mutations: {
 		updateClouds(state, value) {
@@ -46,6 +47,9 @@ export default {
 		makeSingleLoadingIs(state, value) {
 			state.singleLoading = value
 		},
+		setAnsible(state, value){
+			state.ansible = value;
+		}
 	},
 	actions: {
 		fetchClouds(ctx) {
@@ -112,14 +116,22 @@ export default {
 					} else ctx.commit('makeUpdatingIs', false)
 				})
 				.catch(err => console.error(err))
+		},
+		fetchAnsible(ctx, id) {
+			const user = ctx.rootGetters.getUser;
+			const close_your_eyes = md5('ansibleTestForErrors' + user.id + user.secret);
+			const url = `/ansibleTestForErrors.php?procId=${id}&userid=${user.id}&secret=${close_your_eyes}`;
+
+			return new Promise( (resolve, reject) => {
+				axios.get(url)
+					.then( response => {
+						let result = response.data;
+						ctx.commit('setAnsible', result);
+						resolve(result);
+					})
+					.catch( err => reject(err))
+			})
 		}
-		// fetchClouds(ctx) {
-		// 	if (ctx.getters.isLoading) return;
-		// 	ctx.commit('makeLoadingIs', true);
-		// 	setTimeout(() => {
-		// 		ctx.commit('updateClouds', clouds);
-		// 		ctx.commit('makeLoadingIs', false);
-		// 	}, 700);
 	},
 	getters: {
 		getClouds: state => textToSearch => {
