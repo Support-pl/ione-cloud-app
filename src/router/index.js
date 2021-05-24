@@ -50,7 +50,7 @@ Vue.use(VueRouter)
 				component: () => import('../components/appMain/settings/settings.vue')
 			},
 			{
-				path: 'cloud/new',
+				path: 'cloud/newPaaS',
 				name: 'newPaaS',
 				component: () => import('../components/appMain/newPaaS.vue')
 			},

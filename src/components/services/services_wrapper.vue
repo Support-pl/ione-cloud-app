@@ -19,26 +19,26 @@ export default {
 		return {
 			services: [
 				{
-					title: 'PaaS',
+					title: 'Servers',
 					icon: 'database',
 					onclick: {
 						function: this.routeTo,
-						paramsArr: [{name: 'newPaaS'}],
+						paramsArr: [{name: 'cloud', query: {type: 'PaaS'}}],
 					}
 				},
 				{
-					title: 'IaaS',
+					title: 'Clouds',
 					icon: 'database',
 					onclick: {
 						function: this.routeTo,
-						paramsArr: [{name: 'newVDC'}],
+						paramsArr: [{name: 'cloud', query: {type: 'IaaS'}}],
 					}
 				},
 				{
 					title: 'SSL',
 					icon: 'database',
 					onclick: {
-						function: this.routeTo,
+						function: this.openNotification,
 						paramsArr: [{name: 'services'}],
 					}
 				},
@@ -48,7 +48,18 @@ export default {
 	methods: {
 		routeTo(param){
 			this.$router.push(param);
-		}
+		},
+		openNotification() {
+      this.$notification['info']({
+				key: 'coming soon',
+        message: 'Coming soon',
+        // description:
+        //   'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+        onClick: () => {
+          console.log('Notification Clicked!');
+        },
+      });
+    },
 	}
 }
 </script>

@@ -10,7 +10,7 @@
 				<div v-if="domain !== null" class="product__domain">{{domain}}</div>
 			</div>
 			<div class="product__column">
-				<div class="product__date">{{date}}</div>
+				<div class="product__date">{{localDate}}</div>
 				<div class="product__cost">
 					{{user.currency_code === '$' || user.currency_code.toUpperCase() === 'USD'
 						? `$${cost}`
@@ -46,6 +46,9 @@ export default {
 	computed: {
 		user(){
 			return this.$store.getters['getUser'];
+		},
+		localDate(){
+			return new Intl.DateTimeFormat().format(this.date);
 		}
 	}
 }

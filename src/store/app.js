@@ -56,7 +56,7 @@ export default {
 			if (value == 'cloudHome') value = 'cloud'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
-			if (router.currentRoute.name != ctx.getters.getActiveTab.title)
+			if (router.currentRoute.name != ctx.getters.getActiveTab.title || Object.keys(router.currentRoute.query).length > 0)
 				router.push({
 					name: ctx.getters.getActiveTab.title
 				})

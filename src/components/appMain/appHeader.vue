@@ -64,11 +64,11 @@ export default {
 					title: 'Cloud',
 					// needBalance: true,
 					buttons: [
-						{
-							name: this.$t('Order'),
-							type: 'main action',
-							onClickFuncion: this.orderVM
-						},
+						// {
+						// 	name: this.$t('Order'),
+						// 	type: 'main action',
+						// 	onClickFuncion: this.orderVM
+						// },
 						{
 							name: 'cloud_search',
 							icon: 'search',
@@ -84,7 +84,7 @@ export default {
 				},
 				'support': {
 					title: 'Support',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
 						{
 							name: 'support_filter',
@@ -114,7 +114,7 @@ export default {
 				},
 				'invoice': {
 					title: 'Invoice',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
 						{
 							name: 'invoice_filter',
@@ -130,13 +130,13 @@ export default {
 				'newVDC': {
 					title: 'Create VM',
 					notmain: true,
-					// needBalance: true,
+					needBalance: true,
 					buttons: []
 				},
 				'newPaaS': {
 					title: 'Create VM',
 					notmain: true,
-					// needBalance: true,
+					needBalance: true,
 					buttons: []
 				}
 

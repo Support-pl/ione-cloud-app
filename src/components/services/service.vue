@@ -28,9 +28,9 @@ export default {
 	cursor: pointer;
 }
 
-.service__item:not(:last-of-type){
-	/* margin-right: 10px; */
-}
+/* .service__item:not(:last-of-type){
+	margin-right: 10px;
+} */
 
 .service__item:hover{
 	background-color: #fff;

@@ -6,7 +6,7 @@
 				<div class="settings__info">
 					<div class="settings__user">
 						<div class="settings__name">{{user.firstname}} {{user.lastname}}</div>
-						<!-- <div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div> -->
+						<div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div>
 					</div>
 					<div class="settings__user-btn" v-if="user_btn">
 						<a-icon type="right" />
@@ -31,7 +31,7 @@
 					</div>
 				</div>
 
-				<!-- <div class="settings__item" @click="showModal()">
+				<div class="settings__item" @click="showModal()">
 					<div class="settings__logo">
 						<a-icon type="pound" />
 					</div>
@@ -39,7 +39,7 @@
 						{{$t('Add Funds')}}
 					</div>
 					<add-funds :modalVisible="modalVisible" :hideModal="hideModal"/>
-				</div> -->
+				</div>
 
 				<button class="settings__exit" @click="logoutFunc()">
 					{{$t('Exit')}}

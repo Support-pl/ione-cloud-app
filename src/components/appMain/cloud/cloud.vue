@@ -12,12 +12,13 @@
 		<loading v-if="isLoading" />
 
 		<template v-else>
-			<empty v-if="getClouds.length == 0"/>	
-			<div v-else class="cloud__wrapper">
+			<!-- <empty v-if="getClouds.length == 0"/>	 -->
+			<!-- <div v-else class="cloud__wrapper"> -->
+			<div class="cloud__wrapper">
 				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-				<div class="cloud__new-btn" @click="createVDC()">
+				<div v-if="$route.query.type != undefined" class="cloud__new-btn" @click="createVM()">
 					<span style="font-size: 1.2rem">
-						{{$t('Create VM')}}
+						{{$t('Create VM')}}: {{$route.query.type}}
 					</span>
 				</div>
 			</div>
@@ -49,8 +50,15 @@ export default {
 		SearchClear(){
 			this.textToSearch = '';
 		},
-		createVDC(){
-			this.$store.dispatch("app/setTabByName", "newVDC");
+		createVM(){
+			let newRouteName;
+			if(this.$route.query.type == 'IaaS'){
+				newRouteName = 'newVDC'
+			}
+			if(this.$route.query.type == 'PaaS'){
+				newRouteName = 'newPaaS'
+			}
+			this.$store.dispatch("app/setTabByName", newRouteName);
 		},
 	},
 	created(){
@@ -59,7 +67,16 @@ export default {
 	computed: {
 		...mapGetters('cloud', ['isLoading', 'isSearch']),
 		getClouds(){
-			return this.$store.getters['cloud/getClouds'](this.textToSearch);
+			console.log(this.$route.query);
+			const clouds = this.$store.getters['cloud/getClouds'](this.textToSearch);
+			if(this.$route.query.type == 'IaaS'){
+				return clouds.filter(el => +el.VDC);
+			}
+			if(this.$route.query.type == 'PaaS'){
+				return clouds.filter(el => !+el.VDC);
+			}
+
+			return clouds;
 		}
 	}
 

@@ -3,34 +3,42 @@
 		<div class="products__header">
 			<div class="products__title">
 				Ваши услуги
-				<span class="products__count">
-					всего: {{products.length || 'xxx'}}
-				</span>
+				<transition name="fade-in">
+					<span v-if="loaded" class="products__count">
+						всего: {{products.length || '0'}}
+					</span>
+				</transition>
 			</div>
 			<div class="products__all">
 				все
 			</div>
 		</div>
-		<div class="products__wrapper">
-			<product
-				v-for="product in productsCuted"
-				:key="product.title"
-				:title="product.title"
-				:date="product.date"
-				:cost="product.cost"
-				:domain="product.domain"
-			/>
+		<div class="products__wrapper" :class="{ 'products__wrapper--loading': !loaded }">
+			<template v-if="loaded">
+				<product
+					v-for="product in productsCuted"
+					:key="product.id"
+					:title="product.name"
+					:date="new Date(product.regdate)"
+					:cost="product.firstpaymentamount"
+					:domain="product.domain"
+				/>
+			</template>
+			<loading v-else/>
 		</div>
 	</div>
 </template>
 
 <script>
 import product from './product.vue'
+import loading from '../loading/loading.vue'
+import api from '../../api.js'
 
 export default {
 	name: 'products-block',
 	components: {
 		product,
+		loading
 	},
 	data(){
 		return {
@@ -58,8 +66,17 @@ export default {
 					date: '20.11.2021',
 					cost: 1.25
 				},
-			]
+			],
+			loaded: false,
 		}
+	},
+	mounted(){
+		api.sendAsUser('get.user.products')
+		.then(res => {
+			this.products = res.products;
+			this.loaded = true;
+		})
+		.catch(error => console.error(error))
 	},
 	computed: {
 		productsCuted(){
@@ -84,6 +101,13 @@ export default {
 	margin-bottom: 15px;
 }
 
+.products__wrapper--loading{
+	min-height: 170px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .products__title{
 	font-size: 18px
 }
@@ -100,5 +124,14 @@ export default {
 
 .products__all:hover{
 	text-decoration: underline;
+}
+
+/* animations */
+
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: opacity .5s ease;
+}
+.fade-in-enter, .fade-in-leave-to {
+  opacity: 0;
 }
 </style>
