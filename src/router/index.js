@@ -17,25 +17,34 @@ Vue.use(VueRouter)
 		component: appMain,
 		children: [
 			{
+				path: 'services',
+				name: 'services',
+				component: () => import('../routes/services.vue')
+			},
+			{
 				path: 'cloud',
 				name: 'cloud',
 				component: Cloud
-			}, {
+			},
+			{
 				path: '/',
 				name: 'cloudHome',
 				component: Cloud
-			}, {
+			},
+			{
 				path: 'support',
 				name: 'support',
 				// route level code-splitting
 				// this generates a separate chunk (about.[hash].js) for this route
 				// which is lazy-loaded when the route is visited.
 				component: () => import( /* webpackChunkName: "about" */ '../components/appMain/support/support.vue')
-			}, {
+			},
+			{
 				path: 'invoice',
 				name: 'invoice',
 				component: () => import('../components/appMain/invoice/invoice.vue')
-			}, {
+			},
+			{
 				path: 'settings',
 				name: 'settings',
 				component: () => import('../components/appMain/settings/settings.vue')
@@ -45,11 +54,11 @@ Vue.use(VueRouter)
 				name: 'newPaaS',
 				component: () => import('../components/appMain/newPaaS.vue')
 			},
-			// {
-			// 	path: 'cloud/new',
-			// 	name: 'newVDC',
-			// 	component: () => import('../components/appMain/newVDC.vue')
-			// }
+			{
+				path: 'cloud/newVDC',
+				name: 'newVDC',
+				component: () => import('../components/appMain/newVDC.vue')
+			}
 		]
 	},
 	{

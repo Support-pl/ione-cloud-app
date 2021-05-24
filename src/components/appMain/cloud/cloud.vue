@@ -15,11 +15,11 @@
 			<empty v-if="getClouds.length == 0"/>	
 			<div v-else class="cloud__wrapper">
 				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-				<!-- <div class="cloud__new-btn" @click="createVDC()">
+				<div class="cloud__new-btn" @click="createVDC()">
 					<span style="font-size: 1.2rem">
 						{{$t('Create VM')}}
 					</span>
-				</div> -->
+				</div>
 			</div>
 		</template>
 	</div>

@@ -106,6 +106,12 @@ export default {
 						},
 					]
 				},
+				'services': {
+					title: 'Services',
+					needBalance: true,
+					buttons: [
+					]
+				},
 				'invoice': {
 					title: 'Invoice',
 					// needBalance: true,
