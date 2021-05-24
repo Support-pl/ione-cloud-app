@@ -200,7 +200,7 @@
 								{{$t("Cost")}}/{{$t("week")}}
 							</a-select-option>
 							<a-select-option value="month">
-								{{$t("Cost")}}/{{$t("month")}}
+								{{$t("Cost")}}/{{$tc("month")}}
 							</a-select-option>
 						</a-select>
 					</a-col>

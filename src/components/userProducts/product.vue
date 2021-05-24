@@ -1,6 +1,6 @@
 <template>
 	<div class="product">
-		<div class="product__icon">
+		<div class="product__icon" :style="{'background-color': `var(--${iconColor})`}">
 			icon
 		</div>
 
@@ -41,7 +41,8 @@ export default {
 		domain: {
 			type: String,
 			default: null
-		}
+		},
+		wholeProduct: Object
 	},
 	computed: {
 		user(){
@@ -49,6 +50,27 @@ export default {
 		},
 		localDate(){
 			return new Intl.DateTimeFormat().format(this.date);
+		},
+		iconColor(){
+			const status = this.wholeProduct.status;
+			let colorVariableName = '';
+
+			switch (status.toLowerCase()) {
+				case 'active':
+					colorVariableName = 'success';
+					break;
+				case 'suspended':
+					colorVariableName = 'warn';
+					break;
+				case 'cancelled':
+					colorVariableName = 'gray';
+					break;
+			
+				default:
+					colorVariableName = 'gray'
+					break;
+			}
+			return colorVariableName;
 		}
 	}
 }

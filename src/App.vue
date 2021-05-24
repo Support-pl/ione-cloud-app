@@ -34,6 +34,8 @@ export default {
 		if(lang != undefined)
 			this.$i18n.locale = lang;
 		
+		
+		this.$store.dispatch('cloud/fetchClouds');
 	},
 	mounted(){
 		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {

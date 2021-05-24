@@ -53,7 +53,7 @@ export default {
 	},
 	actions: {
 		setTabByName(ctx, value){
-			if (value == 'cloudHome') value = 'cloud'
+			if (value == 'root') value = 'services'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
 			if (router.currentRoute.name != ctx.getters.getActiveTab.title || Object.keys(router.currentRoute.query).length > 0)
@@ -70,7 +70,7 @@ export default {
 				})
 		},
 		setTabByNameNoRoute(ctx, value) {
-			if (value == 'cloudHome') value = 'cloud'
+			if (value == 'root') value = 'services'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
 		}

@@ -17,11 +17,13 @@
 			<template v-if="loaded">
 				<product
 					v-for="product in productsCuted"
+					@click.native="testFunc(product)"
 					:key="product.id"
 					:title="product.name"
 					:date="new Date(product.regdate)"
 					:cost="product.firstpaymentamount"
 					:domain="product.domain"
+					:wholeProduct="product"
 				/>
 			</template>
 			<loading v-else/>
@@ -81,6 +83,23 @@ export default {
 	computed: {
 		productsCuted(){
 			return this.products.slice(0, 3);
+		}
+	},
+	methods: {
+		testFunc(product){
+			console.log(product);
+			if(product.groupname === 'IaaS'){
+				this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
+			}
+			if(product.status === "Cancelled"){
+				const key = 'That product cancelled';
+				this.$message.warning(key);
+			}
+			if(product.status === "Active"){
+				const vms = this.$store.getters['cloud/getClouds']();
+				const id = vms.find( vm => vm.id_service == product.id).ID;
+				this.$router.push(`cloud-${id}`);
+			}
 		}
 	}
 }

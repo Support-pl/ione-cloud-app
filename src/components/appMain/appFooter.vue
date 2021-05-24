@@ -26,6 +26,8 @@ export default {
 			if(this.getActiveTab.title=="newVDC" || this.getActiveTab.title=="newPaaS"){
 				return "cloud"
 			}
+			if(this.getActiveTab.title == 'root')
+				return 'services'
 			return this.getActiveTab.title
 		}
 	},

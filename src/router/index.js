@@ -28,8 +28,8 @@ Vue.use(VueRouter)
 			},
 			{
 				path: '/',
-				name: 'cloudHome',
-				component: Cloud
+				name: 'root',
+				component: () => import('../routes/services.vue')
 			},
 			{
 				path: 'support',
