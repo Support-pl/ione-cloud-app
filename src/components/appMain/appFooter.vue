@@ -23,11 +23,10 @@ export default {
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
-			if(this.getActiveTab.title=="newVDC" || this.getActiveTab.title=="newPaaS"){
-				return "cloud"
+			const layoutTile = this.$route.meta?.layoutTile;
+			if(layoutTile){
+				return layoutTile;
 			}
-			if(this.getActiveTab.title == 'root')
-				return 'services'
 			return this.getActiveTab.title
 		}
 	},

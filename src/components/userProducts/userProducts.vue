@@ -1,5 +1,5 @@
 <template>
-	<div class="products">
+	<div class="products_wrapper">
 		<div class="products__header">
 			<div class="products__title">
 				Ваши услуги
@@ -9,14 +9,38 @@
 					</span>
 				</transition>
 			</div>
-			<div class="products__all">
-				все
+			
+			<div v-if="min" class="products__all">
+				<router-link :to="{name: 'products'}">
+					все
+				</router-link>
 			</div>
+			<div v-else class="products__control">
+				<a-popover placement="bottomRight">
+					<template slot="content">
+						<p>coming soon</p>
+					</template>
+					<template slot="title">
+						<span>Filter</span>
+					</template>
+					<a-icon class="products__control-item" type="filter" />
+				</a-popover>
+				<a-popover placement="bottomRight">
+					<template slot="content">
+						<p>coming soon</p>
+					</template>
+					<template slot="title">
+						<span>Sort</span>
+					</template>
+					<a-icon class="products__control-item" type="sort-ascending" />
+				</a-popover>
+			</div>
+
 		</div>
 		<div class="products__wrapper" :class="{ 'products__wrapper--loading': !loaded }">
 			<template v-if="loaded">
 				<product
-					v-for="product in productsCuted"
+					v-for="product in productsPrepared"
 					@click.native="testFunc(product)"
 					:key="product.id"
 					:title="product.name"
@@ -41,6 +65,12 @@ export default {
 	components: {
 		product,
 		loading
+	},
+	props: {
+		min: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data(){
 		return {
@@ -81,8 +111,9 @@ export default {
 		.catch(error => console.error(error))
 	},
 	computed: {
-		productsCuted(){
-			return this.products.slice(0, 3);
+		productsPrepared(){
+			if(this.min) return this.products.slice(0, 3);
+			return this.products
 		}
 	},
 	methods: {
@@ -106,7 +137,7 @@ export default {
 </script>
 
 <style>
-.products{
+.products_wrapper{
 	background: #fff;
 	border-radius: 10px;
 	padding: 10px 10px 15px 10px;
@@ -152,5 +183,13 @@ export default {
 }
 .fade-in-enter, .fade-in-leave-to {
   opacity: 0;
+}
+
+.products__control-item{
+	font-size: 1.4rem;
+}
+
+.products__control-item:not(:last-child){
+	margin-right: 10px;
 }
 </style>

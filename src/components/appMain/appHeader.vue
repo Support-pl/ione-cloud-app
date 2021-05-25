@@ -200,6 +200,10 @@ export default {
 		...mapGetters('cloud', ['isSearch']),
 		...mapGetters(['getUser']),
 		active(){
+			const layoutTile = this.$route.meta?.layoutTile;
+			if(layoutTile){
+				return layoutTile;
+			}
 			return this.getActiveTab.title
 		},
 		plainOptions(){
