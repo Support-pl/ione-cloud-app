@@ -61,7 +61,7 @@ Vue.use(VueRouter)
 				path: 'cloud/newPaaS',
 				name: 'newPaaS',
 				meta: {
-					layoutTile: 'cloud',
+					// layoutTile: 'cloud',
 				},
 				component: () => import('../components/appMain/newPaaS.vue')
 			},
@@ -69,7 +69,7 @@ Vue.use(VueRouter)
 				path: 'cloud/newVDC',
 				name: 'newVDC',
 				meta: {
-					layoutTile: 'cloud',
+					// layoutTile: 'cloud',
 				},
 				component: () => import('../components/appMain/newVDC.vue')
 			}

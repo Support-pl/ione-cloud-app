@@ -81,11 +81,11 @@ export default {
 			return new Promise( (resolve, reject) => {
 				const user = ctx.rootGetters.getUser;
 				const close_your_eyes = md5('createOrder' + user.id + user.secret);
-				const query = {
+				const auth = {
 					userid: user.id,
 					secret: close_your_eyes,
-					pid: orderData.pid
 				};
+				const query = {...auth, ...orderData};
 				if(orderData.addons.length > 0){
 					query.addons = orderData.addons;
 				}

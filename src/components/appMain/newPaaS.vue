@@ -278,7 +278,6 @@ const tariffs = ['standart', 'X2CPU', 'X2RAM'];
 const sizes = ['M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
 
 import { mapGetters } from 'vuex'
-import config from '../../appconfig'
 import loading from '../loading/loading'
 export default {
 	name: "newPaaS",
@@ -349,13 +348,16 @@ export default {
 			const addons = Object.values(this.options.addons).filter( el => el != -1).join(',')
 			const orderData = {
 				pid: this.getCurrentProd.pid,
-				addons 
+				addons,
+				billingcycle: this.options.period,
 			}
+			console.log(orderData);
 			this.$store.dispatch('newPaaS/sendOrder', orderData)
 			.then( result => {
 				const res = result.data;
 				if(res.result == "success"){
 					this.$message.success(this.$t('Order created successfully.'));
+					this.modal.confirmCreate = false;
 					if(this.modal.goToInvoice){
 						this.$router.push(`/invoice-${res.invoiceid}`);
 					}
@@ -368,7 +370,7 @@ export default {
 				console.error(err);
 			} )
 			.finally( res => {
-				this.modalconfirmLoading = false;
+				this.modal.confirmLoading = false;
 			} )
 		},
 		setAddon(name, value){
@@ -449,14 +451,9 @@ export default {
 		}
 	},
 	watch: {
-		collapseKey: function(val) {
-			if(val == 'drive'){
-				setTimeout(() => {
-					this.showTooltip = true
-				}, 250);
-			} else {
-					this.showTooltip = false
-			}
+		getAddons: function(newVal){
+			console.log(newVal);
+			this.options.addons.os = +newVal.os[0].id;
 		}
 	}
 }
