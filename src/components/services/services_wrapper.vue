@@ -28,7 +28,7 @@ export default {
 				},
 				{
 					title: 'Clouds',
-					icon: 'database',
+					icon: 'cloud-server',
 					onclick: {
 						function: this.routeTo,
 						paramsArr: [{name: 'cloud', query: {type: 'IaaS'}}],
@@ -36,7 +36,7 @@ export default {
 				},
 				{
 					title: 'SSL',
-					icon: 'database',
+					icon: 'lock',
 					onclick: {
 						function: this.openNotification,
 						paramsArr: [{name: 'services'}],

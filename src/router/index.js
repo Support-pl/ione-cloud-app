@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Cloud from '../components/appMain/cloud/cloud.vue'
 import appMain from '../components/appMain/appMain.vue'
 import Login from '../components/login/login.vue'
 
@@ -10,6 +9,10 @@ Vue.use(VueRouter)
 	{
 		path: '/login',
 		name: 'login',
+		meta: {
+			mustBeLoggined: false,
+			mustBeUnloggined: true,
+		},
 		component: Login
 	},
 	{
@@ -21,47 +24,66 @@ Vue.use(VueRouter)
 				name: 'root',
 				meta: {
 					layoutTile: 'services',
+					mustBeLoggined: true,
 				},
 				component: () => import('../routes/services.vue')
 			},
 			{
 				path: 'cloud',
 				name: 'cloud',
-				component: Cloud
+				meta: {
+					mustBeLoggined: true,
+				},
+				component: () => import('../routes/cloud.vue')
 			},
 			{
 				path: 'services',
 				name: 'services',
+				meta: {
+					mustBeLoggined: true,
+				},
 				component: () => import('../routes/services.vue')
 			},
 			{
 				path: 'products',
 				name: 'products',
 				meta: {
+					mustBeLoggined: true,
 					layoutTile: 'services',
+					isNeedBackButton: true,
 				},
 				component: () => import('../routes/products.vue')
 			},
 			{
 				path: 'support',
 				name: 'support',
-				component: () => import('../components/appMain/support/support.vue')
+				meta: {
+					mustBeLoggined: true,
+				},
+				component: () => import('../routes/support.vue')
 			},
 			{
 				path: 'invoice',
 				name: 'invoice',
-				component: () => import('../components/appMain/invoice/invoice.vue')
+				meta: {
+					mustBeLoggined: true,
+				},
+				component: () => import('../routes/invoice.vue')
 			},
 			{
 				path: 'settings',
 				name: 'settings',
-				component: () => import('../components/appMain/settings/settings.vue')
+				meta: {
+					mustBeLoggined: true,
+				},
+				component: () => import('../routes/settings.vue')
 			},
 			{
 				path: 'cloud/newPaaS',
 				name: 'newPaaS',
 				meta: {
-					// layoutTile: 'cloud',
+					mustBeLoggined: true,
+					footerTile: 'cloud'
 				},
 				component: () => import('../components/appMain/newPaaS.vue')
 			},
@@ -69,7 +91,8 @@ Vue.use(VueRouter)
 				path: 'cloud/newVDC',
 				name: 'newVDC',
 				meta: {
-					// layoutTile: 'cloud',
+					mustBeLoggined: true,
+					footerTile: 'cloud'
 				},
 				component: () => import('../components/appMain/newVDC.vue')
 			}
@@ -78,6 +101,9 @@ Vue.use(VueRouter)
 	{
 		path: '/cloud-*',
 		component: () => import('../components/appMain/cloud/cloudRouter.vue'),
+		meta: {
+			mustBeLoggined: true,
+		},
 		children: [
 			{
 				path: 'vnc',
@@ -100,11 +126,17 @@ Vue.use(VueRouter)
 	{
 		path: '/ticket-*',
 		name: 'ticket',
+		meta: {
+			mustBeLoggined: true,
+		},
 		component: () => import('../components/appMain/support/ticketchat.vue')
 	},
 	{
 		path: '/invoice-*',
 		name: 'invoiceFS',
+		meta: {
+			mustBeLoggined: true,
+		},
 		component: () => import('../components/appMain/invoice/openInvoice.vue')
 	}
 ]

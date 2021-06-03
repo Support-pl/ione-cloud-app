@@ -100,8 +100,8 @@ export default {
 						user.currency_code = resp.data.currency_code;
 
 						this.$store.dispatch("onLoadUser", user);
-						this.$router.push("cloud");
-						location.reload() //костыль, починить позже
+						this.$router.push({name: 'root'});
+						// location.reload() //костыль, починить позже
 					})
 					.finally( () => {
 						this.tryingLogin = false;

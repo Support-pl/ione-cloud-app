@@ -8,6 +8,7 @@ import invoices from './invoices'
 import newVDC from './newVDC'
 import newPaaS from './newPaaS'
 import network from './network'
+import products from './products'
 
 Vue.use(vuex)
 
@@ -20,6 +21,7 @@ export default new vuex.Store({
 		invoices,
 		newVDC,
 		newPaaS,
-		network
+		network,
+		products
 	}
 })

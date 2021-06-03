@@ -1,27 +1,27 @@
 <template>
 	<div class="tickets">
 		<loading v-if="isLoading" />
+		<div v-else class="container">
 
-		<template v-else>
-			<empty v-if="tickets.length == 0"/>
-			<div class="ticket__wrapper">
-				<singleTicket v-for='(ticket, index) in tickets' :key='index' :ticket='ticket'/>
-			</div>
-		</template>
+			<template>
+				<empty v-if="tickets.length == 0"/>
+				<div class="ticket__wrapper">
+					<singleTicket v-for='(ticket, index) in tickets' :key='index' :ticket='ticket'/>
+				</div>
+			</template>
 
-		<transition name="ticket__add">
-			<addTicketField v-if="addTicketStatus"/>
-		</transition>
+			<transition name="ticket__add">
+				<addTicketField v-if="addTicketStatus"/>
+			</transition>
+		</div>
 	</div>
 </template>
 
 <script>
-import axios from 'axios';
-import md5 from 'md5';
-import singleTicket from "./singleTicket.vue";
-import loading from '../../loading/loading.vue';
-import empty from '../../empty/empty.vue';
-import addTicketField from './addTicket.vue';
+import singleTicket from "../components/appMain/support/singleTicket.vue";
+import loading from '../components/loading/loading.vue';
+import empty from '../components/empty/empty.vue';
+import addTicketField from '../components/appMain/support/addTicket.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -43,7 +43,7 @@ export default {
 		})
 	},
 	mounted(){
-		this.$store.dispatch("support/fetchTickets")
+		this.$store.dispatch("support/autoFetch")
 	},
 }
 </script>
@@ -53,12 +53,13 @@ export default {
 		overflow: hidden;
 		height: 100%;
 		position: relative;
+		padding-top: 20px;
 	}
 
 	.ticket__wrapper{
 		height: 100%;
 		overflow: auto;
-		padding: 20px 10px 0;
+		padding: 0 10px 20px;
 	}
 
 	.ticket__add-enter-active.addTicket__wrapper,

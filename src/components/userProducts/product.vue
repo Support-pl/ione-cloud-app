@@ -5,11 +5,11 @@
 		</div>
 
 		<div class="product__text">
-			<div class="product__column">
+			<div class="product__column product__column--main-info">
 				<div class="product__title">{{title}}</div>
 				<div v-if="domain !== null" class="product__domain">{{domain}}</div>
 			</div>
-			<div class="product__column">
+			<div class="product__column product__column--secondary-info">
 				<div class="product__date">{{localDate}}</div>
 				<div class="product__cost">
 					{{user.currency_code === '$' || user.currency_code.toUpperCase() === 'USD'
@@ -101,6 +101,7 @@ export default {
 	background-color: #c4c4c4;
 	border-radius: 10px;
 	display: flex;
+	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
 	color: #fff;
@@ -111,16 +112,30 @@ export default {
 	flex: 0 1 100%;
 	justify-content: space-between;
 	padding: 5px 0 5px;
+	min-width: 0;
 }
 
 .product__column{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	min-width: 0;
+}
+
+.product__column--main-info{
+	flex-grow: 1;
+	padding-right: 8px;
+}
+
+.product__column--secondary-info{
+	flex-shrink: 0;
 }
 
 .product__title{
 	margin: auto 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .product__date{

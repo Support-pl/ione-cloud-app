@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import cloudItem from './cloudItem.vue';
-import loading from '../../loading/loading.vue';
-import empty from '../../empty/empty.vue';
+import cloudItem from '../components/appMain/cloud/cloudItem.vue';
+import loading from '../components/loading/loading.vue';
+import empty from '../components/empty/empty.vue';
 import { mapGetters } from 'vuex';
 
 
@@ -62,7 +62,7 @@ export default {
 		},
 	},
 	created(){
-		this.$store.dispatch('cloud/fetchClouds');
+		this.$store.dispatch('cloud/autoFetchClouds');
 	},
 	computed: {
 		...mapGetters('cloud', ['isLoading', 'isSearch']),

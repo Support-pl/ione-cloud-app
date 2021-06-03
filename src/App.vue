@@ -26,7 +26,16 @@ export default {
 		};
 
 		this.$router.beforeEach((to, from, next) => {
-			if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
+			const isLogged = this.$store.getters.isLogged;
+			const mustBeLoggined = to.matched.some(el => !!el.meta?.mustBeLoggined);
+			if(mustBeLoggined && !isLogged){
+				// this.$router.replace("login");
+				next({ name: 'login' })
+			}
+			// if((to.meta?.mustBeLoggined === undefined || to.meta?.mustBeLoggined) && !this.$store.getters.isLogged) next({ name: 'login' })
+			// else if((to.meta?.mustBeUnloggined === undefined || to.meta?.mustBeUnloggined) && this.$store.getters.isLogged) next({ name: 'root' })
+			// if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
+			else if (to.name == 'login' && this.$store.getters.isLogged) next({ name: 'root' })
 			else next()
 		})
 
@@ -38,9 +47,17 @@ export default {
 		this.$store.dispatch('cloud/fetchClouds');
 	},
 	mounted(){
-		if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
-			this.$router.replace("login");
-		}
+		this.$router.onReady(route => {
+			const rt = this.$router.currentRoute;
+			const isLogged = this.$store.getters.isLogged;
+			const mustBeLoggined = rt.matched.some(el => !!el.meta?.mustBeLoggined);
+			if(mustBeLoggined && !isLogged){
+				this.$router.replace("login");
+			}
+		})
+		// if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
+		// 	this.$router.replace("login");
+		// }
 		document.title = 'Cloud'
 		const bodyCSS = Object.entries(this.cssVars).map(([k, v]) => `${k}:${v}`).join(';')
 		document.body.setAttribute('style', bodyCSS)

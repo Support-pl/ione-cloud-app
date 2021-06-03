@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import config from './appconfig.js'
 import VueI18n, { LocaleMessages } from 'vue-i18n'
 
 Vue.use(VueI18n)
@@ -16,7 +17,7 @@ function loadLocaleMessages() {
 	return messages
 }
 
-const AppLangs = ['ru', 'en'];
+const AppLangs = config.languages;
 const SystemLangs = navigator.languages;
 
 const lang = AppLangs.find( el => ~SystemLangs.map(el => el.replace(/-[a-z]{2}/i, '')).indexOf(el) );

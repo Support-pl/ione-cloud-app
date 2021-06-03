@@ -4,7 +4,7 @@
 			<div class="products__title">
 				Ваши услуги
 				<transition name="fade-in">
-					<span v-if="loaded" class="products__count">
+					<span v-if="!productsLoading" class="products__count">
 						всего: {{products.length || '0'}}
 					</span>
 				</transition>
@@ -37,8 +37,8 @@
 			</div>
 
 		</div>
-		<div class="products__wrapper" :class="{ 'products__wrapper--loading': !loaded }">
-			<template v-if="loaded">
+		<div class="products__wrapper" :class="{ 'products__wrapper--loading': productsLoading }">
+			<template v-if="!productsLoading">
 				<product
 					v-for="product in productsPrepared"
 					@click.native="testFunc(product)"
@@ -58,7 +58,6 @@
 <script>
 import product from './product.vue'
 import loading from '../loading/loading.vue'
-import api from '../../api.js'
 
 export default {
 	name: 'products-block',
@@ -74,47 +73,22 @@ export default {
 	},
 	data(){
 		return {
-			products: [
-				{
-					title: 'SVDS',
-					date: '20.11.2021',
-					cost: 1.25
-				},
-				{
-					title: 'SVDS L SSD',
-					domain: '192.168.0.15',
-					date: '20.11.2021',
-					cost: 1.25
-				},
-				{
-					title: 'SVDS L SSD',
-					domain: '192.168.0.15',
-					date: '20.11.2021',
-					cost: 1.25
-				},
-				{
-					title: 'SVDS L SSD',
-					domain: '192.168.0.15',
-					date: '20.11.2021',
-					cost: 1.25
-				},
-			],
-			loaded: false,
 		}
 	},
 	mounted(){
-		api.sendAsUser('get.user.products')
-		.then(res => {
-			this.products = res.products;
-			this.loaded = true;
-		})
-		.catch(error => console.error(error))
+		this.$store.dispatch('products/autoFetchProducts');
 	},
 	computed: {
 		productsPrepared(){
 			if(this.min) return this.products.slice(0, 3);
 			return this.products
-		}
+		},
+		products(){
+			return this.$store.getters['products/getProducts'];
+		},
+		productsLoading(){
+			return this.$store.getters['products/getProductsLoading'];
+		},
 	},
 	methods: {
 		testFunc(product){
@@ -187,9 +161,14 @@ export default {
 
 .products__control-item{
 	font-size: 1.4rem;
+	transition: color .2s ease;
 }
 
 .products__control-item:not(:last-child){
 	margin-right: 10px;
+}
+
+.products__control-item:hover{
+	color: var(--main);
 }
 </style>

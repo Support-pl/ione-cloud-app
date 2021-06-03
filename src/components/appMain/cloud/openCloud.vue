@@ -5,9 +5,9 @@
 			<div class="Fcloud">
 				<div class="Fcloud__header">
 					<div class="Fcloud__back-wrapper">
-						<router-link class="Fcloud__back icon__wrapper" to="/cloud">
+						<div class="Fcloud__back icon__wrapper" @click="$router.go(-1)">
 							<a-icon type="left" />
-						</router-link>
+						</div>
 					</div>
 					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
 						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
@@ -1142,6 +1142,7 @@ export default {
 		font-weight: bold;
 		color: #fff;
 		font-size: 1.4rem;
+		cursor: pointer;
 	}
 
 	.Fcloud__menu-btn{

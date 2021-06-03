@@ -24,10 +24,10 @@ export default {
 		...mapGetters('app', ['getActiveTab']),
 		active(){
 			const layoutTile = this.$route.meta?.layoutTile;
-			if(layoutTile){
-				return layoutTile;
-			}
-			return this.getActiveTab.title
+			const footerTile = this.$route.meta?.footerTile;
+			if(layoutTile) return layoutTile;
+			if(footerTile) return footerTile;
+			return this.getActiveTab.title;
 		}
 	},
 	methods: {

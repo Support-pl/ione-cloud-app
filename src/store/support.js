@@ -1,5 +1,5 @@
-import md5 from 'md5';
-import axios from '../axios';
+import api from '../api';
+
 export default {
 	namespaced: true,
 
@@ -28,32 +28,56 @@ export default {
 		}
 	},
 	actions: {
-		fetchTickets(ctx) {
-			if (ctx.getters.isLoading) return;
-			ctx.commit('makeLoadingIs', true);
-			const user = ctx.rootGetters.getUser;
-
-			const close_your_eyes = md5('tickets' + user.id + user.secret);
-			const url = `/tickets.php?userid=${user.id}&secret=${close_your_eyes}`;
-			// console.log(url)
-
-			axios.get(url)
-				.then(resp => {
-					// console.log("vuex action: ", resp);
-					if (resp.data.numreturned == 0) {
-						ctx.commit("updateTickets", [])
-					} else {
-						ctx.commit("updateTickets", resp.data.tickets.ticket)
-					}
-					ctx.commit('makeLoadingIs', false)
+		silentFetch({commit}){
+			return new Promise((resolve, reject) => {
+				api.sendAsUser('tickets')
+				.then(res => {
+					const tickets = res.tickets.ticket;
+					commit('updateTickets', tickets);
+					commit('makeLoadingIs', false);
+					resolve(tickets)
 				})
+				.catch(err => reject(err));
+			});
 		},
-		fetchTicketsThatClosed(ctx){
-			if(ctx.getters.isLoading) return;
-			const curState = ctx.getters.isOnlyClosedTickets;
-			ctx.commit("makeOnlyClosedTicketsIs", !curState);
-			ctx.dispatch("fetchTickets");
+		fetch({dispatch, commit}){
+			commit('makeLoadingIs', true);
+			return dispatch('silentFetch');
+		},
+		autoFetch({state, dispatch}){
+			if(state.tickets.length > 0){
+				return dispatch('silentFetch');
+			} else {
+				return dispatch('fetch');
+			}
 		}
+		
+		// fetchTickets(ctx) {
+		// 	if (ctx.getters.isLoading) return;
+		// 	ctx.commit('makeLoadingIs', true);
+		// 	const user = ctx.rootGetters.getUser;
+
+		// 	const close_your_eyes = md5('tickets' + user.id + user.secret);
+		// 	const url = `/tickets.php?userid=${user.id}&secret=${close_your_eyes}`;
+		// 	// console.log(url)
+
+		// 	axios.get(url)
+		// 		.then(resp => {
+		// 			// console.log("vuex action: ", resp);
+		// 			if (resp.data.numreturned == 0) {
+		// 				ctx.commit("updateTickets", [])
+		// 			} else {
+		// 				ctx.commit("updateTickets", resp.data.tickets.ticket)
+		// 			}
+		// 			ctx.commit('makeLoadingIs', false)
+		// 		})
+		// },
+		// fetchTicketsThatClosed(ctx){
+		// 	if(ctx.getters.isLoading) return;
+		// 	const curState = ctx.getters.isOnlyClosedTickets;
+		// 	ctx.commit("makeOnlyClosedTicketsIs", !curState);
+		// 	ctx.dispatch("fetchTickets");
+		// }
 	},
 	getters: {
 		getAllTickets(state){

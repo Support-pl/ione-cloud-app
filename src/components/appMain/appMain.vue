@@ -19,10 +19,10 @@
 <script>
 import appFooter from './appFooter.vue';
 import appHeader from './appHeader.vue';
-import cloud from './cloud/cloud.vue';
-import support from './support/support.vue';
-import invoice from './invoice/invoice.vue';
-import settings from './settings/settings.vue';
+import cloud from '../../routes/cloud.vue';
+import support from '../../routes/support.vue';
+import invoice from '../../routes/invoice.vue';
+import settings from '../../routes/settings.vue';
 
 export default {
 	name:"appMain",
@@ -77,7 +77,9 @@ export default {
 
 	.container {
 		max-width: 768px;
+		min-height: 100%;
 		margin: 0 auto;
+		position: relative;
 	}
 
 	.frame{

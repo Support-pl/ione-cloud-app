@@ -3,7 +3,7 @@
 		<div class="cloud__item">
 			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
-				<div class="item__title">{{title}}</div>
+				<div class="item__title">{{this.cloud.NAME}}</div>
 				<div class="item__status">{{cloud.STATE}}</div>
 			</div>
 			<div class="cloud__lower">
@@ -29,13 +29,6 @@ export default {
 		statusColor(){
 			const color = this.$store.getters['cloud/getStateColor'](this.cloud.STATE);
 			return color;
-		},
-		title(){
-			const CUT = 24;
-			if(this.cloud.NAME.length > CUT){
-				return this.cloud.NAME.slice(0, CUT) + "..."
-			}
-			return this.cloud.NAME
 		}
 	},
 	methods: {
@@ -86,7 +79,12 @@ export default {
 }
 
 .item__title{
+	flex-grow: 1;
+	padding-right: 10px;
 	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .item__status, .cloud__lower{
@@ -112,5 +110,13 @@ export default {
 	color: #fff;
 	padding: 3px 15px;
 	border-radius: 20px 0px 0px 0px;
+	transition-property: padding, border-radius;
+	transition-duration: .2s;
+	transition-timing-function: ease;
+}
+
+.cloud__item-wrapper:hover .cloud__label{
+	padding: 7px 20px;
+	border-radius: 22px 0px 0px 0px;
 }
 </style>

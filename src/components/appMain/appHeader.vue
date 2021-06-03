@@ -1,9 +1,9 @@
 <template>
 	<div class="header__container">
 		<div class="container">
-			<div v-if="headers[active]" class="header__wrapper">
+			<div v-if="headers[active] || isInSpecialType" class="header__wrapper">
 			<div class="header__title">
-				<div v-if="headers[active] && headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
+				<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
 					<a-icon type="left"/>
 				</div>
 				{{this.$t(headers[active].title)}}
@@ -206,6 +206,9 @@ export default {
 			}
 			return this.getActiveTab.title
 		},
+		isInSpecialType(){
+			return this.$route.query?.type !== undefined; 
+		},
 		plainOptions(){
 			function arrayUnique(arr){
 				return arr.filter((e,i,a)=>a.indexOf(e)==i)
@@ -229,7 +232,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 	.header__wrapper{
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;
@@ -335,5 +338,6 @@ export default {
 
 	.header__balance{
 		margin-left: 10px;
+		padding-right: 10px;
 	}
 </style>

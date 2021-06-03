@@ -1,6 +1,6 @@
 import md5 from 'md5';
 import axios from '../axios';
-
+import api from '../api';
 
 
 export default {
@@ -19,7 +19,7 @@ export default {
 		updateClouds(state, value) {
 			for(let i = 0; i < value.length; i++){
 				if(value[i].IPS.length > 0) {
-					value[i].IP = value[i].IPS.find(el => el.IP!=undefined).IP || false;
+					value[i].IP = value[i].IPS.find(el => el.IP!=undefined)?.IP || 'none';
 				} else {
 					value.IP = false;
 				}
@@ -52,23 +52,46 @@ export default {
 		}
 	},
 	actions: {
-		fetchClouds(ctx) {
-			if (ctx.getters.isLoading) return;
-			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
-			ctx.commit('makeLoadingIs', true);
-			const user = ctx.rootGetters.getUser;
+		// fetchClouds(ctx) {
+		// 	if (ctx.getters.isLoading) return;
+		// 	if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
+		// 	ctx.commit('makeLoadingIs', true);
+		// 	const user = ctx.rootGetters.getUser;
 
-			const close_your_eyes = md5('getVMS' + user.id + user.secret);
+		// 	const close_your_eyes = md5('getVMS' + user.id + user.secret);
 
-			const url = `/getVMS.php?userid=${user.id}&secret=${close_your_eyes}`;
+		// 	const url = `/getVMS.php?userid=${user.id}&secret=${close_your_eyes}`;
 
-			axios.get(url)
-				.then(resp => {
-					// console.log("vuex got clouds: ", resp);
-					ctx.commit("updateClouds", resp.data)
-					ctx.commit('makeUpdatingIs', false)
-					ctx.commit('makeLoadingIs', false)
+		// 	axios.get(url)
+		// 		.then(resp => {
+		// 			// console.log("vuex got clouds: ", resp);
+		// 			ctx.commit("updateClouds", resp.data)
+		// 			ctx.commit('makeUpdatingIs', false)
+		// 			ctx.commit('makeLoadingIs', false)
+		// 		})
+		// },
+		fetchClouds({commit, dispatch}){
+			commit('makeUpdatingIs', true);
+			dispatch('silentFetchClouds');
+		},
+		silentFetchClouds({commit}){
+			return new Promise((resolve, reject) => {
+				api.sendAsUser('getVMS')
+				.then(res => {
+					commit("updateClouds", res)
+					commit('makeUpdatingIs', false)
+					commit('makeLoadingIs', false)
+					resolve(res)
 				})
+				.catch(err => reject(err))
+			})
+		},
+		autoFetchClouds({state, dispatch}){
+			if(state.clouds.length > 0){
+				dispatch('silentFetchClouds');
+			} else {
+				dispatch('fetchClouds');
+			}
 		},
 		fetchSingleCloud(ctx, vmid){
 			if (ctx.getters.getClouds.length != 0) ctx.commit('makeUpdatingIs', true)
