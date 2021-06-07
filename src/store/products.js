@@ -15,11 +15,11 @@ export default {
 		}
 	},
 	actions: {
-		fetchProducts({commit, dispatch}){
+		fetch({commit, dispatch}){
 			commit('setProductsLoading', true);
-			return dispatch('silentFetchProducts');
+			return dispatch('silentFetch');
 		},
-		silentFetchProducts({commit}){
+		silentFetch({commit}){
 			return new Promise((resolve, reject) => {
 				api.sendAsUser('get.user.products')
 				.then(res => {
@@ -30,11 +30,11 @@ export default {
 				.catch(error => reject(error))
 			})
 		},
-		autoFetchProducts({dispatch, state}){
+		autoFetch({dispatch, state}){
 			if(state.products.length > 0){
-				return dispatch('silentFetchProducts');
+				return dispatch('silentFetch');
 			} else {
-				return dispatch('fetchProducts');
+				return dispatch('fetch');
 			}
 		}
 	},

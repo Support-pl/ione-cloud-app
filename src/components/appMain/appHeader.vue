@@ -1,45 +1,45 @@
 <template>
 	<div class="header__container">
 		<div class="container">
-			<div v-if="headers[active] || isInSpecialType" class="header__wrapper">
-			<div class="header__title">
-				<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
-					<a-icon type="left"/>
+			<div v-if="isNeedHeader" class="header__wrapper">
+
+				<div class="header__title">
+					<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
+						<a-icon type="left"/>
+					</div>
+					{{headerTitle}}
 				</div>
-				{{this.$t(headers[active].title)}}
-			</div>
-			<div class="header__right-side">
-				<div class="header__buttons" >
-					<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
-						<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-							<a-icon class="header__icon" :type="button.icon"/>
-						</div>
-						<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper order__btn" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-							<div class="header__order-btn">{{button.name}}</div>
-						</div>
-						<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
-							<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
-							<a-popover v-else placement="bottomRight">
-								<template slot="content">
-									<div>
-										<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
-									</div>
-								</template>
-								<template slot="title">
-									<span>{{$t('Filter')}}</span>
-								</template>
+
+				<div class="header__right-side">
+					<div class="header__buttons" v-if="headers[active]" >
+						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
+							<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
 								<a-icon class="header__icon" :type="button.icon"/>
-							</a-popover>
+							</div>
+							<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper order__btn" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+								<div class="header__order-btn">{{button.name}}</div>
+							</div>
+							<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+								<a-popover v-else placement="bottomRight">
+									<template slot="content">
+										<div>
+											<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
+										</div>
+									</template>
+									<template slot="title">
+										<span>{{$t('Filter')}}</span>
+									</template>
+									<a-icon class="header__icon" :type="button.icon"/>
+								</a-popover>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div v-if="headers[active].needBalance" class="header__balance">
-					<balance/>
+					<div v-if="isNeedBalance" class="header__balance">
+						<balance/>
+					</div>
 				</div>
 			</div>
-		</div>
-
-
 		</div>
 		
 	</div>
@@ -223,6 +223,28 @@ export default {
         checkAll: true,
       });
 			return statuses;
+		},
+		isNeedHeader(){
+			const conditions = [
+				this.headers[this.active],
+				this.isInSpecialType,
+				this.$route.meta.headerTitle
+			]
+			return conditions.some(el => !!el);
+		},
+		isNeedBalance(){
+			if(this.headers[this.active])
+				return this.headers[this.active].needBalance
+			else if(this.$route.meta.isNeedBalance)
+				return this.$route.meta.isNeedBalance
+		},
+		headerTitle(){
+			if(this.headers[this.active])
+				return this.$t(this.headers[this.active].title)
+			else if(this.$route.meta.headerTitle)
+				return this.$route.meta.headerTitle
+			else
+				return ''
 		}
 	},
 	created(){

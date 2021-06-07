@@ -76,7 +76,7 @@ export default {
 		}
 	},
 	mounted(){
-		this.$store.dispatch('products/autoFetchProducts');
+		this.$store.dispatch('products/autoFetch');
 	},
 	computed: {
 		productsPrepared(){

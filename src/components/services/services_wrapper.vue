@@ -38,8 +38,10 @@ export default {
 					title: 'SSL',
 					icon: 'lock',
 					onclick: {
-						function: this.openNotification,
-						paramsArr: [{name: 'services'}],
+						// function: this.openNotification,
+						// paramsArr: [{name: 'services'}],
+						function: this.routeTo,
+						paramsArr: [{name: 'service-ssl'}],
 					}
 				},
 			],

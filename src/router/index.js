@@ -5,7 +5,27 @@ import Login from '../components/login/login.vue'
 
 Vue.use(VueRouter)
 
-  const routes = [
+
+const servicesArray = ['ssl'];
+const services = [
+]
+servicesArray.forEach(service => {
+	const temp = {
+		path: service,
+		name: `service-${service}`,
+		meta: {
+			footerTile: 'services',
+			isNeedBackButton: true,
+			headerTitle: service,
+			componentName: service,
+			productsGroupName: 'GoGet SSL 2.5.6'
+		},
+		component: () => import(`../components/services/userServices.vue`),
+	}
+	services.push(temp);
+})
+
+const routes = [
 	{
 		path: '/login',
 		name: 'login',
@@ -42,8 +62,9 @@ Vue.use(VueRouter)
 				meta: {
 					mustBeLoggined: true,
 				},
-				component: () => import('../routes/services.vue')
+				component: () => import('../routes/services.vue'),
 			},
+			...services,
 			{
 				path: 'products',
 				name: 'products',
