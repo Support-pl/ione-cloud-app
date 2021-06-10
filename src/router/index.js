@@ -2,14 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import appMain from '../components/appMain/appMain.vue'
 import Login from '../components/login/login.vue'
+import config from '../appconfig'
 
 Vue.use(VueRouter)
 
 
-const servicesArray = ['ssl'];
+const servicesArray = config.services;
 const services = [
 ]
-servicesArray.forEach(service => {
+for(let service in servicesArray){
 	const temp = {
 		path: service,
 		name: `service-${service}`,
@@ -18,12 +19,12 @@ servicesArray.forEach(service => {
 			isNeedBackButton: true,
 			headerTitle: service,
 			componentName: service,
-			productsGroupName: 'GoGet SSL 2.5.6'
+			productsGroupName: servicesArray[service].groupname
 		},
 		component: () => import(`../components/services/userServices.vue`),
 	}
 	services.push(temp);
-})
+}
 
 const routes = [
 	{

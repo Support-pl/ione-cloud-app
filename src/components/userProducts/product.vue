@@ -52,7 +52,7 @@ export default {
 			return new Intl.DateTimeFormat().format(this.date);
 		},
 		iconColor(){
-			const status = this.wholeProduct.status;
+			const status = this.wholeProduct?.status;
 			let colorVariableName = '';
 
 			switch (status.toLowerCase()) {

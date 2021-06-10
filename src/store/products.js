@@ -4,7 +4,7 @@ export default {
 
 	state: {
 		products: [],
-		productsLoading: false,
+		productsLoading: false
 	},
 	mutations: {
 		setProducts(state, data){

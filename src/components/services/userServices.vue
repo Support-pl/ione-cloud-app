@@ -1,18 +1,36 @@
 <template>
 	<div class="user-services">
 		<div class="container">
-			<component v-for="prod in serviceProducts" :key="prod.id" :is="componentName"></component>
+			<div class="products_wrapper">
+				<div class="products__header">
+					<div class="products__title">
+						{{componentName}}
+					</div>
+					<div class="products__control">
+						<a-button shape="round" icon="plus">Order</a-button>
+					</div>
+
+				</div>
+				<div class="products__wrapper" :class="{ 'products__wrapper--loading': getProductsLoading }">
+					<template v-if="!getProductsLoading">
+						<component v-for="prod in serviceProducts" :key="prod.id" :is="componentName" :data="prod"></component>
+					</template>
+					<loading v-else/>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import loading from '../loading/loading.vue'
 
 export default {
 	name: 'user-services',
 	components: {
-		ssl: () => import('./ssl/index')
+		loading,
+		SSL: () => import('./ssl/index')
 	},
 	computed: {
 		componentName(){
@@ -33,5 +51,29 @@ export default {
 <style>
 .user-services{
 	padding-top: 20px;
+}
+
+.products_wrapper{
+	background: #fff;
+	border-radius: 10px;
+	padding: 10px 10px 15px 10px;
+}
+
+.products__header{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 5px;
+	margin-bottom: 15px;
+}
+
+.products__wrapper--loading{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.products__title{
+	font-size: 18px
 }
 </style>

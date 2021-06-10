@@ -71,7 +71,7 @@ export default {
 		// 		})
 		// },
 		fetchClouds({commit, dispatch}){
-			commit('makeUpdatingIs', true);
+			commit('makeLoadingIs', true);
 			dispatch('silentFetchClouds');
 		},
 		silentFetchClouds({commit}){

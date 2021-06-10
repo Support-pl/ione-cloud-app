@@ -41,7 +41,7 @@ export default {
 						// function: this.openNotification,
 						// paramsArr: [{name: 'services'}],
 						function: this.routeTo,
-						paramsArr: [{name: 'service-ssl'}],
+						paramsArr: [{name: 'products', query: {type: 'SSL'}}],
 					}
 				},
 			],

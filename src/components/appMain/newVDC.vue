@@ -338,9 +338,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import md5 from 'md5'
-import config from '../../appconfig'
 export default {
 	name: "newVDC",
 	data(){
