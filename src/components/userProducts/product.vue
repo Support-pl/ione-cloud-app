@@ -1,7 +1,7 @@
 <template>
 	<div class="product">
 		<div class="product__icon" :style="{'background-color': `var(--${iconColor})`}">
-			icon
+			<a-icon :type="$config.services[$config.getServiceType(wholeProduct.groupname)].icon"/>
 		</div>
 
 		<div class="product__text">
@@ -72,7 +72,7 @@ export default {
 			}
 			return colorVariableName;
 		}
-	}
+	},
 }
 </script>
 
@@ -95,6 +95,7 @@ export default {
 }
 
 .product__icon{
+	font-size: 1.5rem;
 	margin-right: 10px;
 	height: 50px;
 	width: 50px;

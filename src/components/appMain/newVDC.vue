@@ -263,7 +263,7 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice()}} {{user.currency_code}}/{{$t(toShow[periodToShow])}}
+								~{{calculateFullPrice()}} {{user.currency_code}}/{{$tc(toShow[periodToShow])}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
