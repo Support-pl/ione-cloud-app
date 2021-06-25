@@ -3,7 +3,7 @@
 		<div class="cloud__item">
 			<div class="cloud__upper">
 				<div class="item__color" :style="{'background-color': statusColor}"></div>
-				<div class="item__title">{{this.cloud.NAME}}</div>
+				<div class="item__title">{{cloud.CUSTOM_VM_NAME ? cloud.CUSTOM_VM_NAME : cloud.NAME}}</div>
 				<div class="item__status">{{cloud.STATE}}</div>
 			</div>
 			<div class="cloud__lower">

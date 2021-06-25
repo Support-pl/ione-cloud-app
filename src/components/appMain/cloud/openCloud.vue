@@ -12,7 +12,7 @@
 					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
 						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 						<div class="Fcloud__title">
-							{{SingleCloud.NAME}}
+							{{SingleCloud.CUSTOM_VM_NAME ? SingleCloud.CUSTOM_VM_NAME : SingleCloud.NAME}}
 						</div>
 						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">
 							{{vmState | replace("_", " ")}}
@@ -36,6 +36,11 @@
 								
 							</a-modal>
 							
+							<a-modal v-model="modal.rename" :confirmLoading="isRenameLoading" title='rename' @ok="sendRename">
+								<p>{{$t('Enter new VM name')}}</p>
+								<a-input v-model="renameNewName" :placeholder="$t('input new name')">
+								</a-input>
+							</a-modal>
 							<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
 								<p>{{$t('Enter new password')}}</p>
 								<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
@@ -313,8 +318,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import md5 from 'md5'
-import loading from '../../loading/loading.vue'
-import config from '../../../appconfig'
+import loading from '@/components/loading/loading.vue'
+import config from '@/appconfig'
+import api from '@/api'
 import diskControl from './openCloud/diskControl'
 import bootOrder from './openCloud/bootOrder'
 import networkControl from './openCloud/networkControl'
@@ -372,7 +378,9 @@ export default {
 			status: 'running',
 			name: 'test3',
 			showPermissions: false,
+			isRenameLoading: false,
 			reinstallPass: '',
+			renameNewName: '',
 			loadingResizeVM: false,
 			modal: {
 				reboot: false,
@@ -386,6 +394,7 @@ export default {
 				diskControl: false,
 				bootOrder: false,
 				networkControl: false,
+				rename: false
 			},
 			option: {
 				reboot: 0,
@@ -417,6 +426,12 @@ export default {
 					onclick: this.openModal,
 					params: ['reinstall'],
 					icon: "exclamation"
+				},
+				{
+					title: "Rename",
+					onclick: this.openModal,
+					params: ['rename'],
+					icon: "tag"
 				},
 				{
 					title: "Resize VM",
@@ -937,6 +952,25 @@ export default {
 		getFormatedDate(dstring){
 			const date = new Date(+(dstring + "000"));
 			return date.toLocaleString();
+		},
+		sendRename(){
+			this.isRenameLoading = true;
+			api.sendVMaction('VMChangeName', {newVmName: this.renameNewName})
+			.then(res => {
+				if(res.result == 'success'){
+					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+					this.closeModal('rename');
+					this.closeModal('menu');
+					this.renameNewName = '';
+					this.$message.success(this.$t('vm name changes successfully'));
+					this.isRenameLoading = false;
+				} else {
+					throw res;
+				}
+			})
+			.catch(err => {
+				console.error(err);
+			})
 		},
 		sendReinstall(){
 			const me = this;
