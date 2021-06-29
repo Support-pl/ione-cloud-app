@@ -13,7 +13,7 @@ export default {
 	appFolder: 'app_back/v1',
 	services: {
 		SSL: {
-			groupname: 'GoGet SSL 2.5.6',
+			groupname: ['GoGet SSL 2.5.6', 'SSL'],
 			icon: 'lock',
 		},
 		VM: {
