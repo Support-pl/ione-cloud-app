@@ -23,6 +23,17 @@
 				</router-link>
 			</div>
 			<div v-else class="products__control">
+				<a-button
+					class="products__new"
+					size="small"
+					shape="round"
+					icon="plus"
+					type="primary"
+					@click="newProductHandle"
+					v-if="queryTypes.length == 1"
+				>
+					{{$t('Order')}}
+				</a-button>
 				<a-popover placement="bottomRight">
 					<template slot="content">
 						<p v-for="(type, key) in $config.services" :key="key">
@@ -52,7 +63,7 @@
 
 		</div>
 		<div class="products__wrapper" :class="{ 'products__wrapper--loading': productsLoading }">
-			<template v-if="!productsLoading">
+			<template v-if="!productsLoading && productsPrepared.length > 0">
 				<product
 					v-for="product in productsPrepared"
 					@click.native="productClickHandler(product)"
@@ -64,7 +75,8 @@
 					:wholeProduct="product"
 				/>
 			</template>
-			<loading v-else/>
+			<loading v-else-if="productsLoading"/>
+			<a-empty v-else/>
 		</div>
 	</div>
 </template>
@@ -91,6 +103,7 @@ export default {
 	},
 	mounted(){
 		this.$store.dispatch('products/autoFetch');
+		console.log(this.queryTypes);
 	},
 	computed: {
 		productsPrepared(){
@@ -128,6 +141,14 @@ export default {
 		},
 		isNeedFilterStringInHeader(){
 			return this.$route.name == 'products' && this.$route.query.type
+		},
+		queryTypes(){
+			if(this.$route.query.type){
+				const ret = this.$route.query.type.split(',').filter(el => el.length > 0);
+				console.log(ret);
+				return ret
+			} else
+				return []
 		}
 	},
 	methods: {
@@ -158,6 +179,12 @@ export default {
 			}
 			const newTypes = Array.from(types).join(',');
 			this.$router.replace({query: {type: newTypes}});
+		},
+		newProductHandle(){
+			const newRoute = {
+				name: this.$config.services[this.queryTypes[0]].creationRouteName
+			}
+			this.$router.push(newRoute);
 		}
 	}
 }
@@ -205,6 +232,11 @@ export default {
 
 .products__all:hover{
 	text-decoration: underline;
+}
+
+.products__new{
+	margin-right: 10px;
+	transform: translateY(-2px)
 }
 
 /* animations */

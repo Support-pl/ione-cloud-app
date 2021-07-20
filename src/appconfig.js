@@ -14,14 +14,17 @@ export default {
 	services: {
 		SSL: {
 			groupname: ['GoGet SSL 2.5.6', 'SSL'],
+			creationRouteName: "cloud",
 			icon: 'lock',
 		},
 		VM: {
 			groupname: ['Self-Service VDS (2018)', 'Self-Service VDS SSD HC', 'Self-Service VDS SSD (2018)'],
+			creationRouteName: "newPaaS",
 			icon: 'database',
 		},
 		IaaS: {
 			groupname: ['IaaS'],
+			creationRouteName: "newVDC",
 			icon: 'cloud-server',
 		}
 	},
