@@ -152,7 +152,7 @@ export default {
 		OpenWHMCSInvoice(){
 			// console.log('work');
 			const close_your_eyes = md5('openInvoiceWHMCS'+this.user.id+this.user.secret);
-			window.open(config.WHMCSsiteurl + `app_back/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
+			window.open(config.WHMCSsiteurl + config.appFolder +`/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
 		},
 		showfull(){
 			this.showFullTable = true;
