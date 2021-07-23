@@ -21,7 +21,18 @@ for(let service in servicesArray){
 			componentName: service,
 			productsGroupName: servicesArray[service].groupname
 		},
-		component: () => import(`../components/services/userServices.vue`),
+		component: () => import(`../components/services/${service.toLowerCase()}/index.vue`),
+	}
+	if(config.services[service].additionalRoutes){
+		for(let additionalRoute of config.services[service].additionalRoutes){
+			const route = {
+				path: additionalRoute.path,
+				name: additionalRoute.name,
+				meta: additionalRoute.meta,
+				component: () => import(`../components/services/${service.toLowerCase()}/${additionalRoute.componentName}.vue`)
+			}
+			services.push(route);
+		}
 	}
 	services.push(temp);
 }
