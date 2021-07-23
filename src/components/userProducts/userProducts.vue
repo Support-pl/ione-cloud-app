@@ -103,7 +103,6 @@ export default {
 	},
 	mounted(){
 		this.$store.dispatch('products/autoFetch');
-		console.log(this.queryTypes);
 	},
 	computed: {
 		productsPrepared(){
@@ -145,7 +144,6 @@ export default {
 		queryTypes(){
 			if(this.$route.query.type){
 				const ret = this.$route.query.type.split(',').filter(el => el.length > 0);
-				console.log(ret);
 				return ret
 			} else
 				return []
@@ -153,6 +151,11 @@ export default {
 	},
 	methods: {
 		productClickHandler(product){
+			const isProductTypeOf = (productTypeName) => {
+				const result = this.$config.getServiceType(product.groupname) == productTypeName;
+				return result
+			}
+
 			if(product.groupname === 'IaaS'){
 				this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
 			}
@@ -164,10 +167,18 @@ export default {
 				const key = 'That product is pending. Check your invoices.';
 				this.$message.warning(key);
 			}
-			if(product.status === "Active"){
+			if(product.status === "Active" && isProductTypeOf('VM')){
 				const vms = this.$store.getters['cloud/getClouds']();
 				const id = vms.find( vm => vm.id_service == product.id).ID;
 				this.$router.push(`cloud-${id}`);
+			}
+			if(product.status === "Active" && isProductTypeOf('SSL')){
+				this.$router.push({
+					name: 'generator-SSL',
+					params: {
+						id: product.pid
+					}
+				});
 			}
 		},
 		filterElementClickHandler(key){

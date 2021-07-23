@@ -13,9 +13,21 @@ export default {
 	appFolder: 'app_back/v1',
 	services: {
 		SSL: {
-			groupname: ['GoGet SSL 2.5.6', 'SSL'],
-			creationRouteName: "cloud",
+			groupname: ['GoGet SSL 2.5.6', 'SSL', 'SSL сертификаты'],
+			creationRouteName: "service-SSL",
 			icon: 'lock',
+			additionalRoutes: [
+				{
+					path: 'SSL/generator/:id',
+					name: `generator-SSL`,
+					meta: {
+						footerTile: 'services',
+						isNeedBackButton: true,
+						headerTitle: 'CSR generator',
+					},
+					componentName: 'generator'
+				}
+			]
 		},
 		VM: {
 			groupname: ['Self-Service VDS (2018)', 'Self-Service VDS SSD HC', 'Self-Service VDS SSD (2018)'],
