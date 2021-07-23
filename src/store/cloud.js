@@ -1,6 +1,6 @@
 import md5 from 'md5';
 import axios from '../axios';
-import api from '../api';
+import api from '@/api'
 
 
 export default {
