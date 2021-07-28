@@ -118,6 +118,12 @@ export default {
 					buttons: [
 						{
 							name: 'invoice_filter',
+							icon: 'filter',
+							popover: true
+							// доделать фильтр тут
+						},
+						{
+							name: 'invoice_reload',
 							icon: 'reload',
 							onClickFuncion: this.fetchInvoices,
 						},

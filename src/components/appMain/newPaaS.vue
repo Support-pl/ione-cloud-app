@@ -312,7 +312,7 @@ export default {
 			modal: {
 				confirmCreate: false,
 				confirmLoading: false,
-				goToInvoice: false
+				goToInvoice: true
 			}
 		}
 	},
