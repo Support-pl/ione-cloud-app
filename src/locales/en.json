@@ -186,5 +186,12 @@
 	"turn of VM to resize it": "turn of VM to resize it",
 
 	"chat_Resend_message": "Resend message",
-	"chat_Delete_message": "Delete message"
+	"chat_Delete_message": "Delete message",
+
+	"comp_services": {
+		"Your orders": "Your orders",
+		"with filter": "with filter",
+		"total": "total",
+		"all": "all"
+	}
 }

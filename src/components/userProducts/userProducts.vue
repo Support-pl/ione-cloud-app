@@ -2,15 +2,18 @@
 	<div class="products_wrapper">
 		<div class="products__header">
 				<div class="products__title">
-					Ваши услуги
+					{{$t('comp_services.Your orders')}} 
+					<!-- Ваши услуги -->
 					<transition name="header-transition" mode="out-in">
 					<span class="header__animated" :key="$route.query.type || 'emptyQuery'">
 						<span v-if="isNeedFilterStringInHeader">
-							по фильтру: <b>{{$route.query.type.replace(/,/g, ', ')}}</b>
+							{{$t('comp_services.with filter')}}: <b>{{$route.query.type.replace(/,/g, ', ')}}</b>
+							 <!-- по фильтру -->
 						</span>
 						<transition name="fade-in">
 							<span v-if="!productsLoading" class="products__count">
-								всего: {{productsCount}}
+								{{$t('comp_services.total')}}: {{productsCount}}
+								<!-- всего -->
 							</span>
 						</transition>
 					</span>
@@ -19,7 +22,8 @@
 			
 			<div v-if="min" class="products__all">
 				<router-link :to="{name: 'products'}">
-					все
+					{{$t('comp_services.all')}}
+					 <!-- все -->
 				</router-link>
 			</div>
 			<div v-else class="products__control">
@@ -46,16 +50,22 @@
 						</p>
 					</template>
 					<template slot="title">
-						<span>Filter</span>
+						<span>
+							{{$t('Filter')}}
+						</span>
 					</template>
 					<a-icon class="products__control-item" type="filter" />
 				</a-popover>
 				<a-popover placement="bottomRight">
 					<template slot="content">
-						<p>coming soon</p>
+						<p>
+							{{$t('coming soon')}}
+						</p>
 					</template>
 					<template slot="title">
-						<span>Sort</span>
+						<span>
+							{{$t('Sort')}}
+						</span>
 					</template>
 					<a-icon class="products__control-item" type="sort-ascending" />
 				</a-popover>

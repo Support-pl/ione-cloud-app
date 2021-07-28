@@ -186,5 +186,12 @@
 	"turn of VM to resize it": "выключите VM для изменения параметров",
 
 	"chat_Resend_message": "Повторить отправку",
-	"chat_Delete_message": "Удалить сообщение"
+	"chat_Delete_message": "Удалить сообщение",
+
+	"comp_services": {
+		"Your orders": "Ваши услуги",
+		"with filter": "по фильтру",
+		"total": "всего",
+		"all": "все"
+	}
 }
