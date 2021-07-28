@@ -11,9 +11,12 @@
         <div class="noVNC_scroll">
 
         <div @click="removeCanvases">
-          <router-link class="noVNC_button noVNC_button--goBack" :to="{path: `/cloud-${$route.params.pathMatch}`}" title="Go back">
+          <!-- <router-link class="noVNC_button noVNC_button--goBack" :to="{path: `/cloud-${$route.params.pathMatch}`}" title="Go back">
             <a-icon type="left"></a-icon>
-          </router-link>
+          </router-link> -->
+          <a class="noVNC_button noVNC_button--goBack" @click="$router.go(-1)" title="Go back">
+            <a-icon type="left"></a-icon>
+          </a>
         </div>
 
         <!-- Drag/Pan the viewport -->
