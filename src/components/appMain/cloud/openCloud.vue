@@ -162,7 +162,7 @@
 						<div class="Fcloud__info-title">{{$t('Information')}}</div>
 					</div>
 
-					<div class="Fcloud__main-info">
+					<div v-if="IPs.length > 0" class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
 								<tr v-for="nic in IPs" :key="nic.NAME">
@@ -513,7 +513,7 @@ export default {
 			return data
 		},
 		IPs(){
-			return this.SingleCloud.NIC.filter( el => el.IP != undefined );
+			return this.SingleCloud.NIC.filter( el => el?.IP != undefined );
 		}
 	},
 	created(){
