@@ -29,8 +29,9 @@
 					<a-button
 						type="primary"
 						@click="orderClickHandler"
+						:loading="sendloading"
 					>
-						order
+						{{$t('order')}}
 					</a-button>
 				</div>
 			</div>
@@ -47,6 +48,7 @@ export default {
 		return {
 			products: [],
 			fetchLoading: false,
+			sendloading: false,
 			options: {
 				provider: '',
 				tarif: '',
@@ -69,15 +71,19 @@ export default {
 			})
 		},
 		orderClickHandler(){
+			this.sendloading = true;
 			api.sendAsUser('createOrderSSL', {
 				domain: this.options.domain,
 				billingcycle: 'annually',
 				pid: this.getProducts.pid
 			})
 			.then(result => {
-				this.$router.push({name: "products"});
+				this.$router.push(`/invoice-${result.invoiceid}`);
 			})
-			.catch(err => console.error(err));
+			.catch(err => console.error(err))
+			.finally(()=>{
+				this.sendloading = false;
+			})
 		}
 	},
 	computed: {
