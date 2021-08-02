@@ -89,7 +89,6 @@ export default {
 						{
 							name: 'support_filter',
 							icon: 'filter',
-							isActiveState: this.isOnlyClosedTickets,
 							popover: true
 						},
 						{
@@ -153,7 +152,7 @@ export default {
 		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
 		...mapActions('invoices', ['fetchInvoices']),
 		...mapActions('cloud', ['fetchClouds']),
-		...mapMutations('support', ['inverseAddTicketState', 'updateFilter']),
+		...mapMutations('support', ['inverseAddTicketState']),
 		...mapMutations('cloud', ['inverseSearch']),
 		getState(name){
 			switch (name) {
@@ -195,6 +194,13 @@ export default {
 		},
 		orderVM(){
 			this.$router.push({name: 'newPaaS'});
+		},
+		updateFilter(info){
+			if(this.active == 'support'){
+				this.$store.commit('support/updateFilter', info);
+			} else if(this.active == 'invoice'){
+				this.$store.commit('invoices/updateFilter', info);
+			}
 		}
 	},
 	computed:{
@@ -204,6 +210,7 @@ export default {
 		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets', 'getTickets', 'getAllTickets']),
 		...mapGetters('app', ['getActiveTab']),
 		...mapGetters('cloud', ['isSearch']),
+		...mapGetters('invoices', ['getInvoices', 'getAllInvoices']),
 		...mapGetters(['getUser']),
 		active(){
 			const layoutTile = this.$route.meta?.layoutTile;
@@ -220,8 +227,13 @@ export default {
 				return arr.filter((e,i,a)=>a.indexOf(e)==i)
 			}
 			
-			const tickets = this.getAllTickets;
-			let statuses = tickets.map(el => el.status);
+			let filterElem;
+			if(this.active == 'support'){
+				filterElem = this.getAllTickets;
+			} else if(this.active == 'invoice'){
+				filterElem = this.getAllInvoices;
+			}
+			let statuses = filterElem.map(el => el.status);
 			statuses = arrayUnique(statuses);
 			Object.assign(this, {
         checkedList: statuses,

@@ -77,11 +77,12 @@
 				<product
 					v-for="product in productsPrepared"
 					@click.native="productClickHandler(product)"
-					:key="product.id"
-					:title="product.name"
-					:date="new Date(product.regdate)"
-					:cost="product.firstpaymentamount"
+					:key="product.orderid"
+					:title="product.productname"
+					:date="new Date(product.date)"
+					:cost="product.orderamount"
 					:domain="product.domain"
+					:status="product.domainstatus"
 					:wholeProduct="product"
 				/>
 			</template>
@@ -169,20 +170,21 @@ export default {
 			if(product.groupname === 'IaaS'){
 				this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
 			}
-			if(product.status === "Cancelled"){
+			if(product.orderstatus === "Cancelled"){
 				const key = 'That product cancelled.';
 				this.$message.warning(key);
 			}
-			if(product.status === "Pending"){
-				const key = 'That product is pending. Check your invoices.';
-				this.$message.warning(key);
+			if(product.invoicestatus === "Unpaid"){
+				// const key = 'That product is pending. Check your invoices.';
+				// this.$message.warning(key);
+				this.$router.push({name: 'invoiceFS', params: {pathMatch: product.invoiceid}});
 			}
-			if(product.status === "Active" && isProductTypeOf('VM')){
+			if(product.orderstatus === "Active" && isProductTypeOf('VM')){
 				const vms = this.$store.getters['cloud/getClouds']();
 				const id = vms.find( vm => vm.id_service == product.id).ID;
 				this.$router.push(`cloud-${id}`);
 			}
-			if(product.status === "Active" && isProductTypeOf('SSL')){
+			if(product.orderstatus === "Active" && isProductTypeOf('SSL')){
 				this.$router.push({
 					name: 'generator-SSL',
 					params: {

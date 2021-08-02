@@ -6,6 +6,7 @@ export default {
 	state: {
 		loading: false,
 		invoices: [],
+		filter: ['all'],
 	},
 	mutations: {
 		updateInvoices(state, value) {
@@ -13,6 +14,9 @@ export default {
 		},
 		makeLoadingIs(state, value) {
 			state.loading = value;
+		},
+		updateFilter(state, value){
+			state.filter = value;
 		},
 	},
 	actions: {
@@ -61,8 +65,20 @@ export default {
 		// },
 	},
 	getters: {
+		getAllInvoices(state){
+			return state.invoices;
+		},
 		getInvoices(state) {
-			return state.invoices.sort((a, b) => {
+			console.log('tet');
+			let filtred;
+
+			if (state.filter[0] == 'all' || state.filter.length == 0) {
+				filtred = state.invoices;
+			} else {
+				filtred = state.invoices.filter(ticket => state.filter.includes(ticket.status))
+			}
+
+			return filtred.sort((a, b) => {
 				const dictionary = {
 					Cancelled: 1,
 					Paid: 1,

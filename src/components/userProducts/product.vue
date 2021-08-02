@@ -1,12 +1,19 @@
 <template>
 	<div class="product">
-		<div class="product__icon" :style="{'background-color': `var(--${iconColor})`}">
-			<a-icon :type="$config.services[$config.getServiceType(wholeProduct.groupname)].icon"/>
+		<div class="product__icon-wrapper">
+			<a-badge dot :count="wholeProduct.invoicestatus == 'Unpaid' ? 1 : 0" :offset='[-10, 2]'>
+				<div class="product__icon" :style="{'background-color': `var(--${iconColor})`}">
+					<a-icon :type="$config.services[$config.getServiceType(wholeProduct.groupname)].icon"/>
+				</div>
+			</a-badge>
 		</div>
 
 		<div class="product__text">
 			<div class="product__column product__column--main-info">
-				<div class="product__title">{{title}}</div>
+				<div class="product__title">
+					{{title}}
+				</div>
+				
 				<div v-if="domain !== null" class="product__domain">{{domain}}</div>
 			</div>
 			<div class="product__column product__column--secondary-info">
@@ -38,6 +45,10 @@ export default {
       type: [String, Number],
       required: true
 		},
+		status: {
+      type: [String],
+      required: true
+		},
 		domain: {
 			type: String,
 			default: null
@@ -52,10 +63,9 @@ export default {
 			return new Intl.DateTimeFormat().format(this.date);
 		},
 		iconColor(){
-			const status = this.wholeProduct?.status;
+			const status = this.status.toLowerCase();
 			let colorVariableName = '';
-
-			switch (status.toLowerCase()) {
+			switch (status) {
 				case 'active':
 					colorVariableName = 'success';
 					break;

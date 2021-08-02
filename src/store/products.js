@@ -23,9 +23,9 @@ export default {
 			return new Promise((resolve, reject) => {
 				api.sendAsUser('get.user.products')
 				.then(res => {
-					commit('setProducts', res.products);
+					commit('setProducts', res);
 					commit('setProductsLoading', false);
-					resolve(res.products);
+					resolve(res);
 				})
 				.catch(error => reject(error))
 			})
