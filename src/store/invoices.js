@@ -69,7 +69,6 @@ export default {
 			return state.invoices;
 		},
 		getInvoices(state) {
-			console.log('tet');
 			let filtred;
 
 			if (state.filter[0] == 'all' || state.filter.length == 0) {

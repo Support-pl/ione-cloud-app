@@ -118,7 +118,6 @@
 <script>
 import md5 from "md5";
 import loading from '../../loading/loading.vue'
-import { mapGetters } from 'vuex';
 import config from '../../../appconfig';
 
 export default {
