@@ -28,7 +28,7 @@
 										</div>
 									</template>
 									<template slot="title">
-										<span>{{$t('Filter')}}</span>
+										<span>{{$t('filter') | capitalize}}</span>
 									</template>
 									<a-icon class="header__icon" :type="button.icon"/>
 								</a-popover>
@@ -106,7 +106,7 @@ export default {
 					]
 				},
 				'services': {
-					title: 'Services',
+					title: 'services',
 					needBalance: true,
 					buttons: [
 					]
@@ -258,7 +258,7 @@ export default {
 		},
 		headerTitle(){
 			if(this.headers[this.active])
-				return this.$t(this.headers[this.active].title)
+				return this.$options.filters.capitalize(this.$t(this.headers[this.active].title))
 			else if(this.$route.meta.headerTitle)
 				return this.$route.meta.headerTitle
 			else

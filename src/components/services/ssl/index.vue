@@ -10,30 +10,42 @@
 					</a-row>
 					
 					<div class="order__slider">
-						<div
-							class="order__slider-item"
-							v-for="provider of Object.keys(products)"
-							:key="provider"
-							:class="{'order__slider-item--active': options.provider == provider}"
-							@click="() => options.provider = provider"
-						>
-							{{provider}}
-						</div>
+						<template v-if="!fetchLoading">
+							<div
+								class="order__slider-item"
+								v-for="provider of Object.keys(products)"
+								:key="provider"
+								:class="{'order__slider-item--active': options.provider == provider}"
+								@click="() => options.provider = provider"
+							>
+								{{provider}}
+							</div>
+						</template>
+						<template v-else>
+							<div
+								class="order__slider-item order__slider-item--loading"
+								v-for="(provider, index) of Array(4)"
+								:key="index"
+							>
+							</div>
+						</template>
 					</div>
 
 					<a-row class="order__prop">
 						<a-col span="8" :xs="6">{{$t('tarif') | capitalize}}:</a-col>
 						<a-col span="16" :xs="18">
-							<a-select v-model="options.tarif" style="width: 100%">
+							<a-select v-if="!fetchLoading" v-model="options.tarif" style="width: 100%">
 								<a-select-option v-for="kind of products[options.provider]" :value="kind.tarif" :key="kind.tarif">{{kind.tarif}}</a-select-option>
 							</a-select>
+							<div v-else class="loadingLine"></div>
 						</a-col>
 					</a-row>
 
 					<a-row class="order__prop">
 						<a-col span="8" :xs="6">{{$t('domain') | capitalize}}:</a-col>
 						<a-col span="16" :xs="18">
-							<a-input v-model="options.domain" placeholder="example.com"></a-input>
+							<a-input v-if="!fetchLoading" v-model="options.domain" placeholder="example.com"></a-input>
+							<div v-else class="loadingLine"></div>
 						</a-col>
 					</a-row>
 
@@ -49,11 +61,12 @@
 
 					<a-col :xs="12" :sm="18" :lg='12'>
 						<!-- <a-select :default-value="periods[0].value"  style="width: 100%"> -->
-						<a-select v-model="options.period"  style="width: 100%">
+						<a-select v-if="!fetchLoading" v-model="options.period"  style="width: 100%">
 							<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period'>
 								{{$t(period)}}
 							</a-select-option>
 						</a-select>
+						<div v-else class="loadingLine"></div>
 					</a-col>
 				</a-row>
 				
@@ -63,7 +76,10 @@
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
-						{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
+						<template v-if="!fetchLoading">
+							{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
+						</template>
+						<div v-else class="loadingLine loadingLine--total"></div>
 					</a-col>
 				</a-row>
 
@@ -351,6 +367,45 @@ export default {
 .order__slider-item--active{
 	background-color: var(--main);
 	color: #fff;
+}
+
+
+.order__slider-item--loading{
+	/* background-color: #f2f2f2; */
+	box-shadow: none;
+	/* animation: glowing .5s ease infinite; */
+	animation-name: glowing;
+	animation-duration: 1s;
+	animation-timing-function: ease;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+
+.loadingLine{
+	min-width: 100px;
+	width: 100%;
+	height: 2rem;
+	border-radius: 4px;
+	animation-name: glowing;
+	animation-duration: 1s;
+	animation-timing-function: ease;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+
+.loadingLine--total{
+	margin-top: 10px;
+	height: 26px;
+}
+
+@keyframes glowing {
+	from {
+		background-color: #f2f2f2;
+	}
+	to {
+		background-color: #e9e9e9;
+		/* background-color: red; */
+	}
 }
 
 @media screen and (max-width: 1024px) {

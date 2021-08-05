@@ -67,7 +67,6 @@ export default {
 	computed: {
 		...mapGetters('cloud', ['isLoading', 'isSearch']),
 		getClouds(){
-			console.log(this.$route.query);
 			const clouds = this.$store.getters['cloud/getClouds'](this.textToSearch);
 			if(this.$route.query.type == 'IaaS'){
 				return clouds.filter(el => +el.VDC);

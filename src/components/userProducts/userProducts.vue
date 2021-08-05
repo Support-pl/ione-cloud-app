@@ -51,7 +51,7 @@
 					</template>
 					<template slot="title">
 						<span>
-							{{$t('Filter')}}
+							{{$t('filter') | capitalize}}
 						</span>
 					</template>
 					<a-icon class="products__control-item" type="filter" />
@@ -64,7 +64,7 @@
 					</template>
 					<template slot="title">
 						<span>
-							{{$t('Sort')}}
+							{{$t('sort') | capitalize}}
 						</span>
 					</template>
 					<a-icon class="products__control-item" type="sort-ascending" />

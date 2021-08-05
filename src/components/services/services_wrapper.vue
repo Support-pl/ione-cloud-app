@@ -27,7 +27,7 @@ export default {
 					}
 				},
 				{
-					title: 'Clouds',
+					title: 'Cloud',
 					icon: 'cloud-server',
 					onclick: {
 						function: this.routeTo,

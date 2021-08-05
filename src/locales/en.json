@@ -1,6 +1,7 @@
 {
   "localePrefix": "en",
   "localeLang": "English",
+	"coming soon": "coming soon",
   "Settings": "Settings",
   "Buy a license": "Buy a license",
   "Have an idea to make the app better": "Have an idea to make the app better",
@@ -31,7 +32,8 @@
   "status": "Status",
   "payed": "payed",
   "unpaid": "unpaid",
-  "service": "Service",
+  "service": "sыervice",
+  "services": "services",
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
   "Choice payment": "Choice payment",
@@ -188,6 +190,9 @@
 	"chat_Resend_message": "Resend message",
 	"chat_Delete_message": "Delete message",
 
+	"sort": "sort",
+	"filter": "filter",
+	
 	"comp_services": {
 		"Your orders": "Your orders",
 		"with filter": "with filter",

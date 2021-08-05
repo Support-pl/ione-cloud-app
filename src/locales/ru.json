@@ -1,6 +1,7 @@
 {
   "localePrefix": "ru",
   "localeLang": "Русский",
+	"coming soon": "скоро будет",
   "Settings": "Настройки",
   "Buy a license": "Купить лицензию",
   "Have an idea to make the app better": "Есть идея, как сделать приложение лучше?",
@@ -31,7 +32,8 @@
   "status": "Статус",
   "payed": "оплачен",
   "unpaid": "не оплачен",
-  "service": "Услуга",
+  "service": "услуга",
+  "services": "услуги",
   "invoiceDate": "Дата счёта",
   "dueDate": "Срок оплаты",
   "Choice payment": "Способ оплаты",
@@ -187,6 +189,9 @@
 
 	"chat_Resend_message": "Повторить отправку",
 	"chat_Delete_message": "Удалить сообщение",
+
+	"sort": "сортировка",
+	"filter": "фильтрация",
 
 	"comp_services": {
 		"Your orders": "Ваши услуги",
