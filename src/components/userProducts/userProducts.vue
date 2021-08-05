@@ -95,6 +95,7 @@
 <script>
 import product from './product.vue'
 import loading from '../loading/loading.vue'
+import md5 from "md5";
 
 export default {
 	name: 'products-block',
@@ -166,11 +167,11 @@ export default {
 				const result = this.$config.getServiceType(product.groupname) == productTypeName;
 				return result
 			}
-
+			console.log(product);
 			if(product.groupname === 'IaaS'){
 				this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
 			}
-			if(product.orderstatus === "Cancelled"){
+			if(product.domainstatus === "Cancelled"){
 				const key = 'That product cancelled.';
 				this.$message.warning(key);
 			}
@@ -179,18 +180,15 @@ export default {
 				// this.$message.warning(key);
 				this.$router.push({name: 'invoiceFS', params: {pathMatch: product.invoiceid}});
 			}
-			if(product.orderstatus === "Active" && isProductTypeOf('VM')){
+			if(product.domainstatus === "Active" && isProductTypeOf('VM')){
 				const vms = this.$store.getters['cloud/getClouds']();
 				const id = vms.find( vm => vm.id_service == product.id).ID;
 				this.$router.push(`cloud-${id}`);
 			}
-			if(product.orderstatus === "Active" && isProductTypeOf('SSL')){
-				this.$router.push({
-					name: 'generator-SSL',
-					params: {
-						id: product.pid
-					}
-				});
+			if(product.domainstatus === "Active" && isProductTypeOf('SSL')){
+				const user = this.$store.getters.getUser;
+				const close_your_eyes = md5('user.open.product'+user.id+user.secret);
+				window.open(this.$config.WHMCSsiteurl + this.$config.appFolder +`/user.open.product.php?userid=${user.id}&secret=${close_your_eyes}&serviceid=${product.orderid}`);
 			}
 		},
 		filterElementClickHandler(key){
