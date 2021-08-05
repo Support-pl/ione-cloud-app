@@ -3,7 +3,14 @@
 		<div class="product__icon-wrapper">
 			<a-badge dot :count="wholeProduct.invoicestatus == 'Unpaid' ? 1 : 0" :offset='[-10, 2]'>
 				<div class="product__icon" :style="{'background-color': `var(--${iconColor})`}">
-					<a-icon :type="$config.services[$config.getServiceType(wholeProduct.groupname)].icon"/>
+					<a-icon
+						v-if="$config.getServiceType(wholeProduct.groupname)"
+						:type="$config.services[$config.getServiceType(wholeProduct.groupname)].icon"
+					/>
+					<a-icon
+						v-else
+						type="shopping-cart"
+					/>
 				</div>
 			</a-badge>
 		</div>
