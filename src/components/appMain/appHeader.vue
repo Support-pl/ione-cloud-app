@@ -7,7 +7,7 @@
 					<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
 						<a-icon type="left"/>
 					</div>
-					{{headerTitle}}
+					{{headerTitle | capitalize}}
 				</div>
 
 				<div class="header__right-side">

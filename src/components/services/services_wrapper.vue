@@ -44,6 +44,14 @@ export default {
 						paramsArr: [{name: 'products', query: {type: 'SSL'}}],
 					}
 				},
+				{
+					title: 'Virtual',
+					icon: 'solution',
+					onclick: {
+						function: this.routeTo,
+						paramsArr: [{name: 'products', query: {type: 'virtual'}}],
+					}
+				},
 			],
 		}
 	},

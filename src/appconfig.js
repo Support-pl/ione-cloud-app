@@ -12,6 +12,11 @@ export default {
 	WHMCSsiteurl: 'https://my.support.by/',
 	appFolder: 'app_back/v1',
 	services: {
+		virtual: {
+			groupname: ['Виртуальный хостинг'],
+			creationRouteName: "service-virtual",
+			icon: 'solution',
+		},
 		SSL: {
 			groupname: ['GoGet SSL 2.5.6', 'SSL', 'SSL сертификаты'],
 			creationRouteName: "service-SSL",
@@ -38,7 +43,7 @@ export default {
 			groupname: ['IaaS'],
 			creationRouteName: "newVDC",
 			icon: 'cloud-server',
-		}
+		},
 	},
 	getServiceType(groupname){
 		const services = this.services;

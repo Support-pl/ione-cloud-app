@@ -5,49 +5,26 @@
 
 				<div class="order_option">
 
-					<a-row class="order__prop" style="margin-bottom: 5px">
-						<a-col span="8" :xs="6">{{$t('provider') | capitalize}}:</a-col>
-					</a-row>
-					
-					<div class="order__slider">
-						<template v-if="!fetchLoading">
-							<div
-								class="order__slider-item"
-								v-for="provider of Object.keys(products)"
-								:key="provider"
-								:class="{'order__slider-item--active': options.provider == provider}"
-								@click="() => options.provider = provider"
-							>
-								{{provider}}
-							</div>
-						</template>
-						<template v-else>
-							<div
-								class="order__slider-item order__slider-item--loading"
-								v-for="(provider, index) of Array(4)"
-								:key="index"
-							>
-							</div>
-						</template>
-					</div>
+					<a-slider
+						:marks="{...sizes}"
+						:value="sizes.indexOf(options.size)"
+						:tip-formatter="null"
+						:max="sizes.length-1"
+						:min="0"
+						@change="(newval) => options.size = sizes[newval]"
+					>
+					</a-slider>
 
-					<a-row class="order__prop">
-						<a-col span="8" :xs="6">{{$t('tarif') | capitalize}}:</a-col>
-						<a-col span="16" :xs="18">
-							<a-select v-if="!fetchLoading" v-model="options.tarif" style="width: 100%">
-								<a-select-option v-for="kind of products[options.provider]" :value="kind.tarif" :key="kind.tarif">{{kind.tarif}}</a-select-option>
-							</a-select>
-							<div v-else class="loadingLine"></div>
-						</a-col>
-					</a-row>
-
-					<a-row class="order__prop">
-						<a-col span="8" :xs="6">{{$t('domain') | capitalize}}:</a-col>
-						<a-col span="16" :xs="18">
-							<a-input v-if="!fetchLoading" v-model="options.domain" placeholder="example.com"></a-input>
-							<div v-else class="loadingLine"></div>
-						</a-col>
-					</a-row>
+					<template v-if="productSpecs">
+						<a-row v-for="(row, index) in productSpecs" :key="index">
+							<a-col v-for="(item) in row" :key="item.GROUP" span=12>
+								<a-row>
+									<a-col span=12>{{item.GROUP}}</a-col>
+									<a-col span=12>{{item.TITLE}}</a-col>
+								</a-row>
+							</a-col>
+						</a-row>
+					</template>
 
 				</div>
 			</div>
@@ -119,31 +96,34 @@ export default {
 	name: 'ssl-component',
 	data(){
 		return {
+			sizes: [],
 			products: [],
 			fetchLoading: false,
 			sendloading: false,
 			options: {
-				provider: '',
-				tarif: '',
+				size: '',
 				domain: '',
-				period: 'annually'
+				period: ''
 			},
 			modal: {
 				confirmCreate: false,
 				confirmLoading: false,
 				goToInvoice: true
 			},
-			periods: ['annually', 'biennially']
+			periods: []
 		}
 	},
 	methods: {
 		fetch(){
 			this.fetchLoading = true;
-			api.getWithParams('products.get.SSL', {})
+			api.getWithParams('products.get.virtual', {})
 			.then(res => {
+				res = res.sort((a, b) => b.name - a.name)
 				this.products = res;
-				this.options.provider = Object.keys(res)[0];
-				this.options.tarif = res[this.options.provider][0].tarif;
+				this.sizes = res.map(el => el.name.replace(/Виртуальный хостинг |Host /gi, ''));
+				this.options.size = this.sizes[1];
+				this.periods = Object.keys(res[0].pricing).filter(el => !el.match(/fix/));
+				this.options.period = this.periods[1];
 			})
 			.catch(err => console.error(err))
 			.finally(() => {
@@ -178,22 +158,27 @@ export default {
 		}
 	},
 	computed: {
-		productName(){
-			return 'test'
-		},
 		getProducts(){
 			if(Object.keys(this.products).length == 0) return "NAN"
-			return this.products[this.options.provider].find(el => el.tarif == this.options.tarif)
+			return this.products[this.sizes.indexOf(this.options.size)]
+		},
+		productSpecs(){
+			const array = this.getProducts?.description?.properties;
+			if (array === undefined) {
+				return undefined
+			}
+			console.log(array);
+			const size = 2; //размер подмассива
+			let subarray = []; //массив в который будет выведен результат.
+			for (let i = 0; i <Math.ceil(array.length/size); i++){
+					subarray[i] = array.slice((i*size), (i*size) + size);
+			}
+			return subarray;
 		}
 	},
 	created(){
 		// console.log(this.data);
 		this.fetch();
-	},
-	watch: {
-		'options.provider': function() {
-			this.options.tarif = this.products[this.options.provider][0].tarif;
-		}
 	}
 }
 </script>
