@@ -95,6 +95,7 @@
 	"high": "улучшенный",
 	"processor": "процессор",
 	"Order": "Заказать",
+	"order": "заказать",
 
 	"High speed": "Улучшенный",
 	"traffic": "Трафик",
@@ -193,10 +194,20 @@
 	"sort": "сортировка",
 	"filter": "фильтрация",
 
+	"monthly": "ежемесячно",
+	"quarterly": "квартально",
+	"semiannually": "полугодично",
+	"annually": "ежегодно",
+	"biennially": "раз в два года",
+
 	"comp_services": {
 		"Your orders": "Ваши услуги",
 		"with filter": "по фильтру",
 		"total": "всего",
 		"all": "все"
+	},
+
+	"order_services": {
+		"Do you want to order": "Вы хотите заказать"
 	}
 }

@@ -95,6 +95,7 @@
 	"high": "high",
 	"processor": "processor",
 	"Order": "Order",
+	"order": "order",
 
 	"High speed": "High speed",
 	"traffic": "traffic",
@@ -192,11 +193,21 @@
 
 	"sort": "sort",
 	"filter": "filter",
+
+	"monthly": "monthly",
+	"quarterly": "quarterly",
+	"semiannually": "semiannually",
+	"annually": "annually",
+	"biennially": "biennially",
 	
 	"comp_services": {
 		"Your orders": "Your orders",
 		"with filter": "with filter",
 		"total": "total",
 		"all": "all"
+	},
+
+	"order_services": {
+		"Do you want to order": "Do you want to order"
 	}
 }

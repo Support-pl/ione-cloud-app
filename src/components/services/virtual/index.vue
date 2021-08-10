@@ -15,15 +15,16 @@
 					>
 					</a-slider>
 
-					<template v-if="productSpecs">
-						<a-row v-for="(row, index) in productSpecs" :key="index">
-							<a-col v-for="(item) in row" :key="item.GROUP" span=12>
-								<a-row>
-									<a-col span=12>{{item.GROUP}}</a-col>
-									<a-col span=12>{{item.TITLE}}</a-col>
-								</a-row>
-							</a-col>
-						</a-row>
+					<template>
+						
+						<transition name="specs" mode="out-in">
+							<table v-if="getProducts.description != undefined" class="product__specs" :key="getProducts.name">
+								<tr v-for="val in getProducts.description.properties" :key="val.GROUP">
+									<td>{{val.GROUP}}</td>
+									<td>{{val.TITLE}}</td>
+								</tr>
+							</table>
+						</transition>
 					</template>
 
 				</div>
@@ -53,10 +54,12 @@
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
-						<template v-if="!fetchLoading">
-							{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
-						</template>
-						<div v-else class="loadingLine loadingLine--total"></div>
+						<transition name="textchange" mode="out-in">
+							<template v-if="!fetchLoading">
+								{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
+							</template>
+							<div v-else class="loadingLine loadingLine--total"></div>
+						</transition>
 					</a-col>
 				</a-row>
 
@@ -73,7 +76,7 @@
 							@ok="orderClickHandler"
 							@cancel="() => {modal.confirmCreate = false}"
 						>
-							<p>{{$t('Do you want to order')}}: {{getProducts['name']}}</p>
+							<p>{{$t('order_services.Do you want to order')}}: {{getProducts['name']}}</p>
 
 							<a-row style="margin-top: 20px">
 								<a-col>
@@ -161,19 +164,6 @@ export default {
 		getProducts(){
 			if(Object.keys(this.products).length == 0) return "NAN"
 			return this.products[this.sizes.indexOf(this.options.size)]
-		},
-		productSpecs(){
-			const array = this.getProducts?.description?.properties;
-			if (array === undefined) {
-				return undefined
-			}
-			console.log(array);
-			const size = 2; //размер подмассива
-			let subarray = []; //массив в который будет выведен результат.
-			for (let i = 0; i <Math.ceil(array.length/size); i++){
-					subarray[i] = array.slice((i*size), (i*size) + size);
-			}
-			return subarray;
 		}
 	},
 	created(){
@@ -199,6 +189,35 @@ export default {
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;
+}
+
+.product__specs{
+	margin: 0 auto;
+	--border-color: gray;
+	--border-line-weight: 1px;
+	--border-line-type: solid;
+}
+
+.product__specs td{
+	padding: 10px 20px;
+}
+
+.product__specs td:nth-child(2){
+	text-align: center;
+}
+
+.product__specs td{
+	border-left: var(--border-line-weight) var(--border-line-type) var(--border-color);
+}
+.product__specs td:last-child{
+	border-right: var(--border-line-weight) var(--border-line-type) var(--border-color);
+}
+
+.product__specs tr{
+	border-top: var(--border-line-weight) var(--border-line-type) var(--border-color);
+}
+.product__specs tr:last-child{
+	border-bottom: var(--border-line-weight) var(--border-line-type) var(--border-color);
 }
 
 .order__prop:not(:first-child){
@@ -463,12 +482,34 @@ export default {
 	}
 }
 
-.networkApear-enter-active, .networkApear-leave-active {
-	transition: opacity .5s, height .5s;
-	height: 26px;
+.specs-enter-active,
+.specs-leave-active {
+  transition: all .15s ease;
 }
-.networkApear-enter, .networkApear-leave-to {
-	opacity: 0;
-	height: 0;
+
+.specs-enter{
+  transform: translateX(-1em);
+  opacity: 0;
+}
+
+.specs-leave-to{
+  transform: translateX(1em);
+  opacity: 0;
+}
+
+
+.textchange-enter-active,
+.textchange-leave-active {
+  transition: all .15s ease;
+}
+
+.textchange-enter{
+  transform: translateY(-0.5em);
+  opacity: 0;
+}
+
+.textchange-leave-to{
+  transform: translateY(0.5em);
+  opacity: 0;
 }
 </style>
