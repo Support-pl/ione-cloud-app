@@ -27,6 +27,14 @@
 						</transition>
 					</template>
 
+					<a-row class="order__prop">
+						<a-col span="8" :xs="6">{{$t('domain') | capitalize}}:</a-col>
+						<a-col span="16" :xs="18">
+							<a-input v-if="!fetchLoading" v-model="options.domain" placeholder="example.com"></a-input>
+							<div v-else class="loadingLine"></div>
+						</a-col>
+					</a-row>
+
 				</div>
 			</div>
 			
@@ -55,9 +63,9 @@
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
 						<transition name="textchange" mode="out-in">
-							<template v-if="!fetchLoading">
+							<div v-if="!fetchLoading">
 								{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
-							</template>
+							</div>
 							<div v-else class="loadingLine loadingLine--total"></div>
 						</transition>
 					</a-col>
@@ -135,9 +143,9 @@ export default {
 		},
 		orderClickHandler(){
 			this.sendloading = true;
-			api.sendAsUser('createOrderSSL', {
+			api.sendAsUser('createOrder', {
 				domain: this.options.domain,
-				billingcycle: 'annually',
+				billingcycle: this.options.period,
 				pid: this.getProducts.pid
 			})
 			.then(result => {
@@ -192,32 +200,43 @@ export default {
 }
 
 .product__specs{
+	--color: rgb(126, 126, 126);
+	color: var(--color);
 	margin: 0 auto;
-	--border-color: gray;
+	--border-color: #dbdbdb;
 	--border-line-weight: 1px;
 	--border-line-type: solid;
+	width: 80%;
+	font-size: 1.2rem;
 }
 
 .product__specs td{
 	padding: 10px 20px;
+	position: relative;
+}
+
+.product__specs td:nth-child(1){
+	font-weight: 500;
 }
 
 .product__specs td:nth-child(2){
-	text-align: center;
-}
-
-.product__specs td{
-	border-left: var(--border-line-weight) var(--border-line-type) var(--border-color);
-}
-.product__specs td:last-child{
-	border-right: var(--border-line-weight) var(--border-line-type) var(--border-color);
+	text-align: right;
+	color: rgba(0, 0, 0, .7)
 }
 
 .product__specs tr{
-	border-top: var(--border-line-weight) var(--border-line-type) var(--border-color);
-}
-.product__specs tr:last-child{
 	border-bottom: var(--border-line-weight) var(--border-line-type) var(--border-color);
+}
+
+.product__specs td:last-child::before{
+	content: '';
+	width: 2px;
+	height: 50%;
+	background: #f5f5f5;
+	display: block;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .order__prop:not(:first-child){
