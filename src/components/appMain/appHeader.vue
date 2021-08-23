@@ -213,9 +213,9 @@ export default {
 		...mapGetters('invoices', ['getInvoices', 'getAllInvoices']),
 		...mapGetters(['getUser']),
 		active(){
-			const layoutTile = this.$route.meta?.layoutTile;
-			if(layoutTile){
-				return layoutTile;
+			const layoutTitle = this.$route.meta?.layoutTitle;
+			if(layoutTitle){
+				return layoutTitle;
 			}
 			return this.getActiveTab.title
 		},

@@ -15,7 +15,7 @@ for(let service in servicesArray){
 		path: service,
 		name: `service-${service}`,
 		meta: {
-			footerTile: 'services',
+			footerTitle: 'services',
 			isNeedBackButton: true,
 			headerTitle: service,
 			componentName: service,
@@ -55,7 +55,7 @@ const routes = [
 				path: '/',
 				name: 'root',
 				meta: {
-					layoutTile: 'services',
+					layoutTitle: 'services',
 					mustBeLoggined: true,
 				},
 				component: () => import('../routes/services.vue')
@@ -82,7 +82,7 @@ const routes = [
 				name: 'products',
 				meta: {
 					mustBeLoggined: true,
-					layoutTile: 'services',
+					layoutTitle: 'services',
 					isNeedBackButton: true,
 				},
 				component: () => import('../routes/products.vue')
@@ -116,7 +116,7 @@ const routes = [
 				name: 'newPaaS',
 				meta: {
 					mustBeLoggined: true,
-					footerTile: 'cloud'
+					footerTitle: 'cloud'
 				},
 				component: () => import('../components/appMain/newPaaS.vue')
 			},
@@ -125,7 +125,7 @@ const routes = [
 				name: 'newVDC',
 				meta: {
 					mustBeLoggined: true,
-					footerTile: 'cloud'
+					footerTitle: 'cloud'
 				},
 				component: () => import('../components/appMain/newVDC.vue')
 			}

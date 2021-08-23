@@ -26,7 +26,7 @@ export default {
 					path: 'SSL/generator/:id',
 					name: `generator-SSL`,
 					meta: {
-						footerTile: 'services',
+						footerTitle: 'services',
 						isNeedBackButton: true,
 						headerTitle: 'CSR generator',
 					},
