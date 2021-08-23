@@ -18,7 +18,7 @@
 				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 				<div v-if="$route.query.type != undefined" class="cloud__new-btn" @click="createVM()">
 					<span style="font-size: 1.2rem">
-						{{$t('Create VM')}}: {{$route.query.type}}
+						{{$t('Create server') | capitalize}}
 					</span>
 				</div>
 			</div>
