@@ -210,5 +210,13 @@
 
 	"order_services": {
 		"Do you want to order": "Do you want to order"
+	},
+
+	"IaaS": {
+		"order_info": "Here you can order a pay-per-use server."
+	},
+	
+	"PaaS": {
+		"order_info": "Here you can order servers with monthly payment."
 	}
 }

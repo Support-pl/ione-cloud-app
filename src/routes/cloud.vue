@@ -1,14 +1,14 @@
 <template>
-	<div class="cloud" :class="{searchActive: isSearch}">
+	<div class="cloud">
 		
-		<div v-if="isSearch" class="search">
+		<!-- <div v-if="isSearch" class="search">
 			<div class="cloud_search-wrapper">
 				<input type="text" v-model="textToSearch" placeholder="Filter by name or status">
 				<div class="cloud_search-clear" @click="SearchClear">
 					<a-icon type="close" />
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<loading v-if="isLoading" />
 
 		<template v-else>
@@ -16,12 +16,28 @@
 			<!-- <div v-else class="cloud__wrapper"> -->
 			<div class="cloud__wrapper">
 				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-				<div v-if="$route.query.type != undefined" class="cloud__new-btn" @click="createVM()">
+				<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
 					<span style="font-size: 1.2rem">
 						{{$t('Create server') | capitalize}}
 					</span>
 				</div>
 			</div>
+
+
+			<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__info info">
+				<div class="info__header-container">
+					<h2 class="info__header">
+						<a-icon type="notification" />
+						<span class="info__header-text">
+							Info
+						</span>
+					</h2>
+				</div>
+				<div class="info__content">
+					{{$t($route.query.type + '.order_info')}}
+				</div>
+			</div>
+
 		</template>
 	</div>
 </template>
@@ -90,22 +106,6 @@ export default {
 	padding: 20px 10px 0;
 }
 
-.searchActive{
-	padding-top: 50px;
-}
-
-.search{
-	background: var(--main);
-	padding: 4px;
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	top: 0;
-	left: 0;
-	right: 0;
-}
-
 .cloud_search-wrapper{
 	width: 90%;
 	display: flex;
@@ -151,9 +151,30 @@ export default {
 		inset 2px 4px 5px rgba(0, 0, 0, .05);
 }
 
+.cloud__info{
+	max-width: 800px;
+	margin-top: 30px;
+	/* background: red; */
+	padding: 10px 0 10px 10px;
+	border-left: 5px solid var(--main);
+}
+
+.info__header{
+	padding-left: 20px;
+	font-size: 1.4rem;
+}
+
+.info__header-text{
+	margin-left: 10px;
+}
+
+.info__content{
+	font-size: 1.2rem;
+}
+
 @media screen and (min-width: 768px){
 	.cloud__wrapper {
-		height: 100%;
+		/* height: 100%; */
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 		grid-auto-rows: min-content;

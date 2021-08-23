@@ -239,6 +239,24 @@
 					</a-col>
 				</a-row>
 
+				<transition name="networkApear">
+					<a-row v-if="options.network.public.status" type="flex" justify="space-between" :style="{'font-size': '1.2rem'}">
+						<a-col>
+							Public IPv4:
+						</a-col>
+						<a-col>
+							<!-- <a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+								<template slot="title">
+									{{$t('Actual price may vary')}}
+								</template>
+							</a-tooltip> -->
+							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
+								{{options.network.public.count * options.network.price}} {{user.currency_code}}/month
+							</a-skeleton>
+						</a-col>
+					</a-row>
+				</transition>
+
 				<!-- <transition name="networkApear">
 					<a-row v-if="options.network.public.status" type="flex" justify="space-between">
 						<a-col>
@@ -268,21 +286,6 @@
 						</a-tooltip>
 					</a-col>
 				</a-row>
-
-				<transition name="networkApear">
-					<a-row v-if="options.network.public.status" type="flex" justify="space-around" :style="{'font-size': '1.2rem'}">
-						<a-col>
-							<!-- <a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
-								<template slot="title">
-									{{$t('Actual price may vary')}}
-								</template>
-							</a-tooltip> -->
-							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								+ Public IPv4: {{options.network.public.count * options.network.price}} {{user.currency_code}}/month
-							</a-skeleton>
-						</a-col>
-					</a-row>
-				</transition>
 				
 				<!-- <template v-if="false"> -->
 					<a-divider orientation="left" :style="{'margin-bottom': '0'}">

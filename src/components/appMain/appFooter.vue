@@ -23,10 +23,10 @@ export default {
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
-			const layoutTitle = this.$route.meta?.layoutTitle;
 			const footerTitle = this.$route.meta?.footerTitle;
-			if(layoutTitle) return layoutTitle;
+			const layoutTitle = this.$route.meta?.layoutTitle;
 			if(footerTitle) return footerTitle;
+			if(layoutTitle) return layoutTitle;
 			return this.getActiveTab.title;
 		}
 	},

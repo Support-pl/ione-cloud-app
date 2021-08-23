@@ -12,13 +12,16 @@
 
 				<div class="header__right-side">
 					<div class="header__buttons" v-if="headers[active]" >
+
 						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
 							<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
 								<a-icon class="header__icon" :type="button.icon"/>
 							</div>
-							<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper order__btn" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-								<div class="header__order-btn">{{button.name}}</div>
+
+							<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper btn--no-image" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+								<div class="header__btn--no-image">{{button.name}}</div>
 							</div>
+
 							<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
 								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
 								<a-popover v-else placement="bottomRight">
@@ -33,7 +36,9 @@
 									<a-icon class="header__icon" :type="button.icon"/>
 								</a-popover>
 							</div>
+
 						</div>
+
 					</div>
 					<div v-if="isNeedBalance" class="header__balance">
 						<balance/>
@@ -62,13 +67,8 @@ export default {
 			headers: {
 				'cloud': {
 					title: 'Cloud',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
-						// {
-						// 	name: this.$t('Order'),
-						// 	type: 'main action',
-						// 	onClickFuncion: this.orderVM
-						// },
 						{
 							name: 'cloud_search',
 							icon: 'search',
@@ -149,8 +149,12 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
-		...mapActions('invoices', ['fetchInvoices']),
+		...mapActions('support', {
+			fetchTickets: 'fetch'
+		}),
+		...mapActions('invoices', {
+			fetchInvoices: 'fetch'
+		}),
 		...mapActions('cloud', ['fetchClouds']),
 		...mapMutations('support', ['inverseAddTicketState']),
 		...mapMutations('cloud', ['inverseSearch']),
@@ -213,10 +217,10 @@ export default {
 		...mapGetters('invoices', ['getInvoices', 'getAllInvoices']),
 		...mapGetters(['getUser']),
 		active(){
+			const headerTitle = this.$route.meta?.headerTitle;
 			const layoutTitle = this.$route.meta?.layoutTitle;
-			if(layoutTitle){
-				return layoutTitle;
-			}
+			if(headerTitle){return headerTitle;}
+			if(layoutTitle){return layoutTitle;}
 			return this.getActiveTab.title
 		},
 		isInSpecialType(){
@@ -257,6 +261,9 @@ export default {
 				return this.$route.meta.isNeedBalance
 		},
 		headerTitle(){
+			if(this.headers[this.active] && this.$route.query.type == "PaaS"){
+				return this.$options.filters.capitalize(this.$t('Servers'))
+			}
 			if(this.headers[this.active])
 				return this.$options.filters.capitalize(this.$t(this.headers[this.active].title))
 			else if(this.$route.meta.headerTitle)
@@ -327,14 +334,14 @@ export default {
 			transform .2s ease;
 	}
 	
-	.order__btn{
+	.btn--no-image{
 		min-width: 44px;
 		width: auto;
 		border-radius: 30px;
 		padding: 2px 10px;
 	}
 
-	.header__order-btn{
+	.header__btn--no-image{
 		font-size: 1rem;
 	}
 
