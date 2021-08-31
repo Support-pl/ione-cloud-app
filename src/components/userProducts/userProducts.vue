@@ -167,7 +167,6 @@ export default {
 				const result = this.$config.getServiceType(product.groupname) == productTypeName;
 				return result
 			}
-			console.log(product);
 			if(product.groupname === 'IaaS'){
 				this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
 			}
@@ -179,6 +178,12 @@ export default {
 				// const key = 'That product is pending. Check your invoices.';
 				// this.$message.warning(key);
 				this.$router.push({name: 'invoiceFS', params: {pathMatch: product.invoiceid}});
+			}
+			if(product.domainstatus === "Active" && isProductTypeOf('virtual')){
+				// this.$router.push({name: 'cpanel', params: {serviceid: product.hostingid}});
+				const user = this.$store.getters.getUser;
+				const close_your_eyes = md5('cpanel.createSession'+user.id+user.secret);
+				window.open(this.$config.WHMCSsiteurl + this.$config.appFolder +`/cpanel.createSession.php?userid=${user.id}&secret=${close_your_eyes}&serviceid=${product.hostingid}`);
 			}
 			if(product.domainstatus === "Active" && isProductTypeOf('VM')){
 				const vms = this.$store.getters['cloud/getClouds']();

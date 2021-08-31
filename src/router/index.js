@@ -128,6 +128,15 @@ const routes = [
 					footerTitle: 'cloud'
 				},
 				component: () => import('../components/appMain/newVDC.vue')
+			},
+			{
+				path: 'virtual/:serviceid',
+				name: 'cpanel',
+				meta: {
+					mustBeLoggined: true,
+					footerTitle: 'services'
+				},
+				component: () => import('../components/services/virtual/cpanel.vue')
 			}
 		]
 	},
