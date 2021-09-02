@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "builddev": "SET titlePrefix=dev&vue-cli-service build",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
