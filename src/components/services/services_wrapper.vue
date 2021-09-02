@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import serviceItem from './service.vue';
+import serviceItem from './service_min.vue';
 export default {
 	name: "services-wrapper",
 	components: {
@@ -20,6 +20,7 @@ export default {
 			services: [
 				{
 					title: 'Servers',
+					translatable: true,
 					icon: 'database',
 					onclick: {
 						function: this.routeTo,
@@ -28,6 +29,7 @@ export default {
 				},
 				{
 					title: 'Cloud',
+					translatable: true,
 					icon: 'cloud-server',
 					onclick: {
 						function: this.routeTo,
@@ -46,6 +48,7 @@ export default {
 				},
 				{
 					title: 'Virtual',
+					translatable: true,
 					icon: 'solution',
 					onclick: {
 						function: this.routeTo,

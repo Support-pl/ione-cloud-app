@@ -200,6 +200,10 @@
 	"semiannually": "semiannually",
 	"annually": "annually",
 	"biennially": "biennially",
+
+	"Servers": "Servers",
+	"Virtual": "Virtual",
+	"info": "info",
 	
 	"comp_services": {
 		"Your orders": "Your orders",

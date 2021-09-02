@@ -18,7 +18,7 @@
 				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 				<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
 					<span style="font-size: 1.2rem">
-						{{$t('Create server') | capitalize}}
+						{{$t('create server') | capitalize}}
 					</span>
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 					<h2 class="info__header">
 						<a-icon type="notification" />
 						<span class="info__header-text">
-							Info
+							{{$t('info') | capitalize}}
 						</span>
 					</h2>
 				</div>

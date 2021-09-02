@@ -4,7 +4,7 @@
 			<a-icon :type="service.icon"></a-icon>
 		</div>
 		<div class="service__title">
-			{{service.title}}
+			{{translatedName}}
 		</div>
 	</div>
 </template>
@@ -13,6 +13,14 @@
 export default {
 	name: 'service-item',
 	props: ['service'],
+	computed: {
+		translatedName(){
+			if(this.service.translatable){
+				return this.$t(this.service.title);
+			}
+			return this.service.title
+		}
+	}
 }
 </script>
 
