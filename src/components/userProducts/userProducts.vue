@@ -163,7 +163,7 @@ export default {
 	},
 	methods: {
 		productClickHandler(product){
-			this.$router.push({name: 'service', params: {pathMatch: product.orderid}});
+			this.$router.push({name: 'service', params: {pathMatch: product.hostingid}});
 			// const isProductTypeOf = (productTypeName) => {
 			// 	const result = this.$config.getServiceType(product.groupname) == productTypeName;
 			// 	return result

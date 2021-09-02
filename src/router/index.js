@@ -134,7 +134,9 @@ const routes = [
 				name: 'service',
 				meta: {
 					mustBeLoggined: true,
-					footerTitle: 'services'
+					footerTitle: 'services',
+					headerTitle: 'service',
+					isNeedBackButton: true,
 				},
 				component: () => import('../routes/userService.vue')
 			}
