@@ -1,10 +1,12 @@
 <template>
-	
+	<div class="div">
+		Hello World!
+	</div>
 </template>
 
 <script>
 export default {
-	name: "user-product"
+	name: "user-service-view"
 }
 </script>
 

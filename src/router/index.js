@@ -130,13 +130,13 @@ const routes = [
 				component: () => import('../components/appMain/newVDC.vue')
 			},
 			{
-				path: 'virtual/:serviceid',
-				name: 'cpanel',
+				path: 'service-*',
+				name: 'service',
 				meta: {
 					mustBeLoggined: true,
 					footerTitle: 'services'
 				},
-				component: () => import('../components/services/virtual/cpanel.vue')
+				component: () => import('../routes/userService.vue')
 			}
 		]
 	},
