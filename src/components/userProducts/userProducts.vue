@@ -95,7 +95,6 @@
 <script>
 import product from './product.vue'
 import loading from '../loading/loading.vue'
-import md5 from "md5";
 
 export default {
 	name: 'products-block',

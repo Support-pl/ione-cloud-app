@@ -40,6 +40,8 @@
 						</a-col>
 					</a-row>
 
+					<component :is="getModuleButtons" :service="service" />
+
 				</template>
 
 				<loading v-else/>
@@ -51,6 +53,7 @@
 <script>
 import loading from '@/components/loading/loading.vue'
 import api from '@/api.js'
+import config from '@/appconfig.js'
 
 const info = [
 	{
@@ -118,6 +121,12 @@ export default {
 		},
 		user(){
 			return this.$store.getters.getUser;
+		},
+		getModuleButtons(){
+			let serviceType = config.getServiceType(this.service.groupname)
+			if(serviceType == undefined) return;
+			serviceType = serviceType.toLowerCase();
+			return () => import(`@/components/services/${serviceType}/draw`);
 		}
 	}
 }
@@ -139,7 +148,7 @@ export default {
 .service-card{
 	background: #fff;
 	border-radius: 10px;
-	padding: 10px 10px 15px 10px;
+	padding: 10px 15px 15px;
 }
 
 .service__header{
