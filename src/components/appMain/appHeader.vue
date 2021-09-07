@@ -264,10 +264,12 @@ export default {
 			if(this.headers[this.active] && this.$route.query.type == "PaaS"){
 				return this.$options.filters.capitalize(this.$t('Servers'))
 			}
+
 			if(this.headers[this.active])
 				return this.$options.filters.capitalize(this.$t(this.headers[this.active].title))
 			else if(this.$route.meta.headerTitle)
-				return this.$route.meta.headerTitle
+				// return this.$route.meta.headerTitle
+				return this.$options.filters.capitalize(this.$t(this.$route.meta.headerTitle.toLowerCase()))
 			else
 				return ''
 		}

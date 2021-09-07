@@ -1,41 +1,42 @@
 <template>
-	<div class="service">
+	<div class="service-page">
 		<div class="container">
-			<div class="service-card">
+			<div class="service-page-card">
 				<template v-if="service">
 
-					<div class="service__header">
-						<div class="service__title">
+					<div class="service-page__header">
+						<div class="service-page__title">
 							{{service.name}}
 						</div>
-						<div v-if="service.domain" class="service__domain">
+						<div v-if="service.domain" class="service-page__domain">
 							<a :href="service.domain">{{service.domain}}</a>
 						</div>
 					</div>
 
-					<div class="service__info">
-						<div class="service__info-title">{{$t('status') | capitalize}}:</div>
-						<div class="service__info-value">
+					<div class="service-page__info">
+						<div class="service-page__info-title">{{$t('status') | capitalize}}:</div>
+						<div class="service-page__info-value">
 							<a-tag :color="getTagColor">
 								{{service.status}}
 							</a-tag>
 						</div>
 					</div>
 
-					<div class="service__info">
-						<div class="service__info-title">Registration date:</div>
-						<div class="service__info-value">{{new Intl.DateTimeFormat().format(new Date(service.regdate))}}</div>
-					</div>
+					<!-- <div class="service-page__info">
+						<div class="service-page__info-title">Registration date:</div>
+						<div class="service-page__info-value">{{new Intl.DateTimeFormat().format(new Date(service.regdate))}}</div>
+					</div> -->
 
 					<a-row :gutter='[10, 10]'>
-						<a-col :md="12" :xs="24" :sm="12" v-for="elem in info" :key="elem.key">
-							<div class="service__info">
-								<div class="service__info-title">{{elem.title | capitalize}}:</div>
-								<div v-if="elem.type == 'money'" class="service__info-value">{{service[elem.key]}} {{user.currency_code}}</div>
+						<a-col :md="12" :xs="12" :sm="12" v-for="elem in info" :key="elem.key">
+							<div class="service-page__info">
+								<div class="service-page__info-title">{{$t('userService.' + elem.title) | capitalize}}:</div>
+
+								<div v-if="elem.type == 'money'" class="service-page__info-value">{{service[elem.key]}} {{user.currency_code}}</div>
 								<div v-else-if="elem.type == 'date' && service[elem.key] == '0000-00-00'" class="service__info-value">-</div>
-								<div v-else-if="elem.type == 'date'" class="service__info-value">{{new Intl.DateTimeFormat().format(new Date(service[elem.key]))}}</div>
-								<div v-else-if="elem.type == 'text'" class="service__info-value">{{$t(service[elem.key])}}</div>
-								<div v-else class="service__info-value">{{service[elem.key]}}</div>
+								<div v-else-if="elem.type == 'date'" class="service-page__info-value">{{new Intl.DateTimeFormat().format(new Date(service[elem.key]))}}</div>
+								<div v-else-if="elem.type == 'text'" class="service-page__info-value">{{$t(service[elem.key].toLowerCase()) | capitalize}}</div>
+								<div v-else class="service-page__info-value">{{service[elem.key]}}</div>
 							</div>
 						</a-col>
 					</a-row>
@@ -56,10 +57,15 @@ import api from '@/api.js'
 import config from '@/appconfig.js'
 
 const info = [
+	// {
+	// 	title: 'first payment',
+	// 	key: 'firstpaymentamount',
+	// 	type: 'money',
+	// },
 	{
-		title: 'first payment',
-		key: 'firstpaymentamount',
-		type: 'money',
+		title: 'billing cycle',
+		key: 'billingcycle',
+		type: 'text',
 	},
 	{
 		title: 'renewal amount',
@@ -67,9 +73,9 @@ const info = [
 		type: 'money',
 	},
 	{
-		title: 'billing cycle',
-		key: 'billingcycle',
-		type: 'text',
+		title: 'registration date',
+		key: 'regdate',
+		type: 'date'
 	},
 	{
 		title: 'next payment date',
@@ -134,44 +140,44 @@ export default {
 
 <style>
 
-.service{
+.service-page{
 	padding-top: 20px;
 }
 
 @media screen and (max-width: 768px) {
-	.service{
+	.service-page{
 		padding-left: 10px;
 		padding-right: 10px;
 	}
 }
 
-.service-card{
+.service-page-card{
 	background: #fff;
 	border-radius: 10px;
 	padding: 10px 15px 15px;
 }
 
-.service__header{
+.service-page__header{
 	margin-bottom: 10px;
 }
 
-.service__title{
+.service-page__title{
 	font-size: 1.6rem;
 }
 
-.service__domain{
+.service-page__domain{
 	font-size: 1rem;
 }
 
-.service__info:not(:last-of-type){
+.service-page__info:not(:last-of-type){
 	margin-bottom: 5px;
 }
 
-.service__info-title{
+.service-page__info-title{
 	font-weight: bold;
 }
 
-.service__info-value{
+.service-page__info-value{
 	font-size: 1.1rem;
 }
 </style>

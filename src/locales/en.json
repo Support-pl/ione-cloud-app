@@ -32,7 +32,7 @@
   "status": "Status",
   "payed": "payed",
   "unpaid": "unpaid",
-  "service": "sыervice",
+  "service": "service",
   "services": "services",
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
@@ -200,10 +200,20 @@
 	"semiannually": "semiannually",
 	"annually": "annually",
 	"biennially": "biennially",
+	"free account": "free account",
 
 	"Servers": "Servers",
 	"Virtual": "Virtual",
 	"info": "info",
+	
+	"enter": "enter",
+	
+	"userService": {
+		"billing cycle": "billing cycle",
+		"renewal amount": "renewal amount",
+		"registration date": "registration date",
+		"next payment date": "next payment date"
+	},
 	
 	"comp_services": {
 		"Your orders": "Your orders",

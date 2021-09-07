@@ -23,6 +23,7 @@
 				
 				<div v-if="domain !== null" class="product__domain">{{domain}}</div>
 			</div>
+			<component :service="wholeProduct" :is="getModuleProductBtn"></component>
 			<div class="product__column product__column--secondary-info">
 				<div class="product__date">{{localDate}}</div>
 				<div class="product__cost">
@@ -37,6 +38,8 @@
 </template>
 
 <script>
+import config from '@/appconfig.js'
+
 export default {
 	name: 'product',
 	props: {
@@ -88,6 +91,12 @@ export default {
 					break;
 			}
 			return colorVariableName;
+		},
+		getModuleProductBtn(){
+			let serviceType = config.getServiceType(this.wholeProduct.groupname)
+			if(serviceType == undefined) return;
+			serviceType = serviceType.toLowerCase();
+			return () => import(`@/components/services/${serviceType}/lilbtn`);
 		}
 	},
 }

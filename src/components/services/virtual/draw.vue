@@ -1,11 +1,11 @@
 <template>
 	<div class="module">
-		<div class="module__row-title">
+		<!-- <div class="module__row-title">
 			Control buttons:
-		</div>
+		</div> -->
 		<a-row :gutter='[10, 10]'>
 			<a-col :md="12" :xs="24" :sm="12">
-				<a-button size="large" @click="logIntoCpanel" :loading="loginLoading">open cpanel</a-button>
+				<a-button size="large" type="primary" @click="logIntoCpanel" :loading="loginLoading">{{$t('enter') | capitalize}}</a-button>
 			</a-col>
 		</a-row>
 	</div>

@@ -200,10 +200,20 @@
 	"semiannually": "полугодично",
 	"annually": "ежегодно",
 	"biennially": "раз в два года",
+	"free account": "бесплатно",
 
 	"Servers": "Сервера",
 	"Virtual": "Хостинг",
 	"info": "информация",
+	
+	"enter": "войти",
+	
+	"userService": {
+		"billing cycle": "период оплаты",
+		"renewal amount": "стоимость продления",
+		"registration date": "дата регистрации",
+		"next payment date": "дата продления"
+	},
 
 	"comp_services": {
 		"Your orders": "Ваши услуги",
