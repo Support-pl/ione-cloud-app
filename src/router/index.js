@@ -139,6 +139,17 @@ const routes = [
 					isNeedBackButton: true,
 				},
 				component: () => import('../routes/userService.vue')
+			},
+			{
+				path: 'cabinet',
+				name: 'cabinet',
+				meta: {
+					mustBeLoggined: true,
+					footerTitle: 'settings',
+					headerTitle: 'settings',
+					isNeedBackButton: true,
+				},
+				component: () => import('../routes/userSettings.vue')
 			}
 		]
 	},
