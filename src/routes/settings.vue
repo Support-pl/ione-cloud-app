@@ -108,8 +108,8 @@ export default {
 			localStorage.setItem("lang", this.$i18n.locale);
 		},
 		logoutFunc(){
-			this.$router.push({name: 'login'})
 			this.$store.commit('logout')
+			this.$router.push({name: 'login'})
 		},
 		URLparameter(obj, outer = ''){
 			var str = "";
