@@ -1,28 +1,27 @@
 <template>
-	<div class="addTicket__wrapper" @click="clickOutOfBlock(this)">
-		<div class="addTicket">
-			<div class="addTicket__header">{{$t('support_Create_ticket')}}</div>
-			<div class="addTicket__title">
-				<div class="addTicket__title-name row__name">{{$t('support_Question_subject')}}</div>
-				<input type="text" class="addTicket__title-input" v-model="ticketTitle">
-			</div>
-			<div class="addTicket__message">
-				<div class="addTicket__message-name row__name">{{$t('support_Question')}}</div>
-				<textarea name="question" id="question" cols="30" rows="10" class="addTicket__message-input"  v-model="ticketMessage"></textarea>
-			</div>
-			<div class="addTicket__buttons">
-				<button class="addTicket__button addTicket__button--cancel" @click="closeFields()">{{$t('Cancel')}}</button>
-				<button class="addTicket__button addTicket__button--send" @click="sendNewTicket()">
-					<template v-if="!isSending">{{$t('Send')}}</template>
-					<a-icon v-else type="loading" />
-				</button>
-			</div>
-		</div>
-	</div>
+	<a-modal
+		title="Ask a question"
+		:visible="addTicketStatus"
+		:confirmLoading="isSending"
+		@cancel="closeFields"
+		@ok="sendNewTicket"
+	>
+	
+	<a-form-model layout="vertical">
+		<a-form-model-item label="Question subject">
+			<a-input v-model="ticketTitle" placeholder="type question subject" />
+		</a-form-model-item>
+
+		<a-form-model-item label="Question">
+			<a-textarea v-model="ticketMessage" rows="10" />
+		</a-form-model-item>
+	</a-form-model>
+
+	</a-modal>
 </template>
 
 <script>
-import md5 from 'md5';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'addTicket',
@@ -36,7 +35,10 @@ export default {
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
-		}
+		},
+		...mapGetters('support', {
+			addTicketStatus: 'isAddTicketState'
+		})
 	},
 	methods: {
 		clickOutOfBlock(){
@@ -48,32 +50,35 @@ export default {
 			this.$store.commit('support/inverseAddTicketState')
 		},
 		sendNewTicket(){
-			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3) return;
+			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3){
+				this.$message.warn('Ticket subject or message is too short');
+				return;
+			}
 			this.isSending = true;
 
-			const close_your_eyes = md5('openticket'+this.user.id+this.user.secret);
-			const object = {
+			this.$api.sendAsUser('openticket', {
 				subject: this.ticketTitle,
 				message: this.ticketMessage,
-				userid: this.user.id,
-				secret: close_your_eyes
-			}
-
-			const params = Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
-
-			const url = `/openticket.php?${params}`;
-
-			this.$axios.get(url)
+			})
 				.then(resp => {
-					if(resp.data.result == "success"){
+					if(resp.result == "success"){
 						this.ticketTitle = "";
 						this.ticketMessage = "";
 						this.isSending = false;
 						
 						
-						this.$store.dispatch("support/fetchTickets")
+						this.$store.dispatch("support/autoFetch")
 						this.$store.commit('support/inverseAddTicketState')
+					} else {
+						throw resp
 					}
+				})
+				.catch(err => {
+					console.error(err);
+					this.$message.error('Something went wrong');
+				})
+				.finally(()=>{
+					this.isSending = false;
 				})
 		},
 	}

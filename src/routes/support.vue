@@ -10,9 +10,9 @@
 				</div>
 			</template>
 
-			<transition name="ticket__add">
-				<addTicketField v-if="addTicketStatus"/>
-			</transition>
+			<!-- <transition name="ticket__add"> -->
+			<addTicketField/>
+			<!-- </transition> -->
 		</div>
 	</div>
 </template>
