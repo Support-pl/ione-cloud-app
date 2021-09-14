@@ -1,7 +1,8 @@
 export default {
 	state: {
 		user: null,
-		logged: false
+		logged: false,
+		userData: null
 	},
 	mutations: {
 		setUser(state, value){
@@ -27,6 +28,9 @@ export default {
 			state.user = null
 			state.logged = false
 			deleteCookie('CloudUser')
+		},
+		setUserData(state, data){
+			state.userData = data
 		}
 	},
 	actions: {
@@ -60,6 +64,9 @@ export default {
 		},
 		getCookie: state => name => {
 			return getCookie(name);
+		},
+		getUserData(state){
+			return state.userData;
 		}
 	}
 }
