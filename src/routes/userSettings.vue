@@ -10,21 +10,26 @@
 				</div>
 
 				<div class="content__fields-wrapper">
-					<a-form-model layout="vertical" :model="form" >
-							<a-form-model-item v-for="(item, key) in form" :key="key" :label="key">
-								<a-input v-model="form[key]" placeholder="input placeholder" />
-							</a-form-model-item>
-							<a-form-model-item>
-								<a-button-group>
-									<a-button type="primary">
-										Submit
-									</a-button>
-									<a-button @click="installDataToBuffer">
-										Cancel
-									</a-button>
-								</a-button-group>
-							</a-form-model-item>
-						</a-form-model>
+					<a-form-model layout="vertical" :model="form" v-if="form.firstname">
+
+						<a-form-model-item v-for="(item, key) in form" :key="key" :label="key">
+							<a-input v-model="form[key]" placeholder="input placeholder" />
+						</a-form-model-item>
+
+						<a-form-model-item>
+							<a-button-group>
+								<a-button type="primary" @click="sendInfo" :disabled="Object.keys(deltaInfo).length == 0" :loading="isSendingInfo">
+									Submit
+								</a-button>
+								<a-button @click="installDataToBuffer">
+									Cancel
+								</a-button>
+							</a-button-group>
+						</a-form-model-item>
+						
+					</a-form-model>
+
+					<loading v-else/>
 				</div>
 			</div>
 		</div>
@@ -34,14 +39,19 @@
 <script>
 import { mapGetters } from 'vuex';
 import api from "@/api.js";
+import loading from "@/components/loading/loading";
 
 export default {
 	name: 'userSettings-view',
+	components: {
+		loading
+	},
 	data(){
 		return {
 			form: {
 
-			}
+			},
+			isSendingInfo: false
 		}
 	},
 	methods: {
@@ -50,24 +60,56 @@ export default {
 			interestedKeys.forEach(key => {
 				this.$set(this.form, key, this.userData[key]);
 			});
+		},
+		fetchInfo(){
+			api.sendAsUser('clientDetails')
+			.then(res => {
+				this.$store.commit('setUserData', res);
+				this.installDataToBuffer();
+			})
+			.catch(res => {
+				console.error(res);
+			})
+
+		},
+		sendInfo(){
+			if(Object.keys(this.deltaInfo).length == 0) {
+				return
+			}
+
+			this.isSendingInfo = true;
+
+			api.sendAsUser('user.update', this.deltaInfo)
+			.then(res=>{
+				this.$message.success('success');		
+				this.fetchInfo();
+			})
+			.catch(err => {
+				console.error(err);
+				this.$message.error('Something went wrong');
+			})
+			.finally(()=>{
+				this.isSendingInfo = false; 
+			})
 		}
 	},
 	computed: {
 		...mapGetters({
 			user: 'getUser',
 			userData: 'getUserData'
-		})
+		}),
+		deltaInfo(){
+			const info = {...this.form};
+			for(let key in info){
+				if(info[key] == this.userData[key]){
+					delete info[key];
+				}
+			}
+			return info;
+		}
 	},
 	mounted(){
-		api.sendAsUser('clientDetails')
-		.then(res => {
-			console.log(res);
-			this.$store.commit('setUserData', res);
-			this.installDataToBuffer();
-		})
-		.catch(res => {
-			console.error(res);
-		})
+		this.fetchInfo();
 	}
 }
 </script>
