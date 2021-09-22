@@ -23,6 +23,20 @@
 							<input type="password" placeholder="Password"  v-model="password">
 						</template>
 					</div>
+					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
+						<input type="text" placeholder="Email" v-model="email">
+						<template v-if="remember">
+							<span class="login__horisontal-line"></span>
+							<input type="password" placeholder="Password"  v-model="password">
+						</template>
+					</div>
+					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
+						<input type="text" placeholder="Email" v-model="email">
+						<template v-if="remember">
+							<span class="login__horisontal-line"></span>
+							<input type="password" placeholder="Password"  v-model="password">
+						</template>
+					</div>
 					<template>
 						<template v-if="!tryingLogin">
 							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
@@ -36,16 +50,8 @@
 						</div>
 					</template>
 				</div>
-				<div class="login__forgot">
-					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
-				</div>
-				<div class="login__forgot" style="margin-top: 5px">
-					{{$t('use access data from my.support.by')}} {{$t('or')}}
-					<router-link :to="{name: 'register'}">{{$t('create profile')}}</router-link>
-				</div>
-				<div id="qrcode" style="margin-top: 50px; text-align: center">
-					<p>{{$t('Use on your phone:')}}</p>
-					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px">
+				<div class="login__forgot" style="margin-top: 40px">
+					<router-link :to="{name: 'login'}">{{$t('create profile')}}</router-link>
 				</div>
 			</div>
 		</div>
