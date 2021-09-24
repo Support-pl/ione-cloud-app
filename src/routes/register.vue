@@ -15,34 +15,39 @@
 		<div class="login__main login__layout">
 			<div class="login__UI">
 				<div class="login__inputs">
-					<div v-if="loginError" class="login__error">{{loginError}}</div>
-					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="email">
-						<template v-if="remember">
-							<span class="login__horisontal-line"></span>
-							<input type="password" placeholder="Password"  v-model="password">
-						</template>
-					</div>
-					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="email">
-						<template v-if="remember">
-							<span class="login__horisontal-line"></span>
-							<input type="password" placeholder="Password"  v-model="password">
-						</template>
-					</div>
-					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="email">
-						<template v-if="remember">
-							<span class="login__horisontal-line"></span>
-							<input type="password" placeholder="Password"  v-model="password">
-						</template>
-					</div>
-					<template>
-						<template v-if="!tryingLogin">
-							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
-							<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
+					<!-- <div v-if="loginError" class="login__error">{{loginError}}</div> -->
 
-						</template>
+					<div class="inputs__log-pas">
+						<input type="text" placeholder="Email" v-model="userinfo.email">
+						<span class="login__horisontal-line"></span>
+						<input type="password" placeholder="Password"  v-model="userinfo.password">
+					</div>
+
+					<div class="inputs__log-pas">
+						<input type="text" placeholder="Firstname" v-model="userinfo.firstname">
+						<span class="login__horisontal-line"></span>
+						<input type="text" placeholder="Lastname"  v-model="userinfo.lastname">
+					</div>
+
+					<div class="inputs__log-pas">
+						<input type="text" placeholder="Country" v-model="userinfo.country">
+						<span class="login__horisontal-line"></span>
+						<input type="text" placeholder="State" v-model="userinfo.state">
+						<span class="login__horisontal-line"></span>
+						<input type="text" placeholder="City" v-model="userinfo.city">
+						<span class="login__horisontal-line"></span>
+						<input type="text" placeholder="Postcode" v-model="userinfo.postcode">
+						<span class="login__horisontal-line"></span>
+						<input type="text" placeholder="Address"  v-model="userinfo.address1">
+					</div>
+
+					<div class="inputs__log-pas">
+						<input type="text" placeholder="Phone number" v-model="userinfo.phonenumber">
+					</div>
+
+					<template>
+						<button v-if="!registerLoading" @click="submitHandler()" class="login__submit">{{$t('register') | capitalize}}</button>
+							
 						<div v-else class="login__loading">
 							<span class="load__item"></span>
 							<span class="load__item"></span>
@@ -51,7 +56,7 @@
 					</template>
 				</div>
 				<div class="login__forgot" style="margin-top: 40px">
-					<router-link :to="{name: 'login'}">{{$t('create profile')}}</router-link>
+					<router-link :to="{name: 'login'}">{{$t('already have account') | capitalize}}</router-link>
 				</div>
 			</div>
 		</div>
@@ -60,99 +65,53 @@
 </template>
 
 <script>
-import md5 from 'md5'
+import api from '@/api.js';
 
 export default {
 	name: "login",
 	data(){
 		return {
-			tryingLogin: false,
-			loginError: "",
-			remember: true,
-			password: '',
-			email: '',
-			qrcode: null
+			registerLoading: false,
+			userinfo: {
+				firstname: '',
+				lastname: '',
+				email: '',
+				password: '',
+				address1: '',
+				city: '',
+				state: '',
+				postcode: '',
+				country: '',
+				phonenumber: ''
+			}
 		}
-	},
-	props: {
-		getUser: Function
 	},
 	methods: {
 		submitHandler(){
-			this.tryingLogin = true;
+			this.registerLoading = true;
 			this.send(this);
 		},
-		send(context){
+		send(){
 			const email = encodeURIComponent(this.email);
 			const password = encodeURIComponent(this.password);
 			
-			this.$axios.get(`/login.php?email=${email}&password=${password}`)
-			.then(Response => {
-				const data = Response.data;
-				const user = {};
-				if (data.result == "success"){
-
-					user.id = data.userid;
-					user.passwordhash = data.passwordhash;
-					user.email = data.email;
-					user.secret = data.secret;
-					
-					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
-					const url = `/clientDetails.php?userid=${user.id}&secret=${close_your_eyes}`;
-					this.$axios.get(url)
-					.then(resp => {
-						user.firstname = resp.data.firstname;
-						user.lastname = resp.data.lastname;
-						user.balance = resp.data.credit;
-						user.currency_code = resp.data.currency_code;
-
-						this.$store.dispatch("onLoadUser", user);
-						this.$router.push({name: 'root'});
-						// location.reload() //костыль, починить позже
-					})
-					.finally( () => {
-						this.tryingLogin = false;
-					})
+			api.getWithParams('client.addClient', this.userinfo)
+			.then(result => {
+				if(result.result == 'success'){
+					this.$message.success('Account created successfully.');
+					this.$router.push({name: 'login'});
+				} else {
+					throw result;
 				}
-				else if(data.result == "error"){
-					this.loginError = data.message;
-					this.tryingLogin = false;
-				}
+				console.log(result)
 			})
 			.catch(err => {
 				console.error(err);
-				this.$message.error("Can't connect to the server")
 			})
-		},
-		forgotPass(){
-			this.remember = !this.remember;
-		},
-		restorePass(){
-			const email = encodeURIComponent(this.email);
-			
-			this.$axios.get(`/userResetPassword.php?email=${email}`)
-			.then(res => {
-				const data = res.data;
-				// console.log(data);
-				if (data.result == "success"){
-					// console.log('succ');
-					this.$message.success(data.message);
-				}
-				else if(data.result == "error"){
-					// console.log('err');
-					this.loginError = data.message;
-					this.tryingLogin = false;
-				}
+			.finally(()=>{
+				this.registerLoading = false;
 			})
-			.catch(err => {
-				console.error(err);
-				this.$message.error("Can't connect to the server")
-			})
-			.finally( () => {
-				this.tryingLogin = false;
-			})
-		}
-		
+		},	
 	}
 }
 </script>
@@ -183,6 +142,8 @@ export default {
 	color: var(--bright_font);
 	font-size: 36px;
 	font-weight: bold;
+	flex-shrink: 0;
+	min-height: 50%;
 }
 
 .login__title::selection{
@@ -201,6 +162,7 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
+	overflow-y: auto;
 }
 
 .login__inputs{
