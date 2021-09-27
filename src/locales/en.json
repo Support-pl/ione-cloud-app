@@ -99,7 +99,7 @@
 	"order": "order",
 
 	"or": "or",
-	"create profile": "create profile",
+	"sign up": "sign up",
 
 	"High speed": "High speed",
 	"traffic": "traffic",
@@ -166,6 +166,7 @@
 	"All unsaved progress will be lost, are you sure?": "All unsaved progress will be lost, are you sure?",
 
 	"Cancel": "Cancel",
+	"Submit": "Submit",
 	"Yes": "Yes",
 	"Send": "Send",
 	"Filter": "Filter",
@@ -235,5 +236,24 @@
 	
 	"PaaS": {
 		"order_info": "Here you can order servers with monthly payment."
+	},
+
+	"clientinfo": {
+		"password": "password",
+		"firstname": "firstname",
+		"lastname": "lastname",
+		"state": "state",
+		"city": "city",
+		"postcode": "postcode",
+		"address": "address",
+		"phone number": "phone number",
+		"phonenumber": "phone number",
+		"register": "register",
+		"already have account?": "already have account?",
+		"companyname": "company name",
+		"countryname": "country name",
+		"email": "email",
+		"address1": "address line 1",
+		"address2": "address line 2"
 	}
 }

@@ -40,8 +40,8 @@
 					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
 				</div>
 				<div class="login__forgot" style="margin-top: 5px">
-					{{$t('use access data from my.support.by')}} {{$t('or')}}
-					<router-link :to="{name: 'register'}">{{$t('create profile')}}</router-link>
+					<!-- {{$t('use access data from my.support.by')}} {{$t('or')}} -->
+					<router-link :to="{name: 'register'}">{{$t('sign up') | capitalize}}</router-link>
 				</div>
 				<div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>

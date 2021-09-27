@@ -15,48 +15,54 @@
 		<div class="login__main login__layout">
 			<div class="login__UI">
 				<div class="login__inputs">
+					<form>
 					<!-- <div v-if="loginError" class="login__error">{{loginError}}</div> -->
 
-					<div class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="userinfo.email">
-						<span class="login__horisontal-line"></span>
-						<input type="password" placeholder="Password"  v-model="userinfo.password">
-					</div>
-
-					<div class="inputs__log-pas">
-						<input type="text" placeholder="Firstname" v-model="userinfo.firstname">
-						<span class="login__horisontal-line"></span>
-						<input type="text" placeholder="Lastname"  v-model="userinfo.lastname">
-					</div>
-
-					<div class="inputs__log-pas">
-						<input type="text" placeholder="Country" v-model="userinfo.country">
-						<span class="login__horisontal-line"></span>
-						<input type="text" placeholder="State" v-model="userinfo.state">
-						<span class="login__horisontal-line"></span>
-						<input type="text" placeholder="City" v-model="userinfo.city">
-						<span class="login__horisontal-line"></span>
-						<input type="text" placeholder="Postcode" v-model="userinfo.postcode">
-						<span class="login__horisontal-line"></span>
-						<input type="text" placeholder="Address"  v-model="userinfo.address1">
-					</div>
-
-					<div class="inputs__log-pas">
-						<input type="text" placeholder="Phone number" v-model="userinfo.phonenumber">
-					</div>
-
-					<template>
-						<button v-if="!registerLoading" @click="submitHandler()" class="login__submit">{{$t('register') | capitalize}}</button>
-							
-						<div v-else class="login__loading">
-							<span class="load__item"></span>
-							<span class="load__item"></span>
-							<span class="load__item"></span>
+						<div class="inputs__log-pas">
+							<input type="text" placeholder="Email" v-model="userinfo.email">
+							<span class="login__horisontal-line"></span>
+							<input type="password" :placeholder="$t('clientinfo.password')"  v-model="userinfo.password">
 						</div>
-					</template>
+
+						<div class="inputs__log-pas">
+							<input type="text" :placeholder="$t('clientinfo.firstname')" v-model="userinfo.firstname">
+							<span class="login__horisontal-line"></span>
+							<input type="text" :placeholder="$t('clientinfo.lastname')"  v-model="userinfo.lastname">
+						</div>
+
+						<div class="inputs__log-pas">
+							<!-- <input type="text" placeholder="Country" v-model="userinfo.country"> -->
+							<select name="country" id="country" v-model="userinfo.country">
+								<option v-for="country in countries" :key="country.code" :value="country.code">{{country.title}}</option>
+							</select>
+							<span class="login__horisontal-line"></span>
+							<input type="text" :placeholder="$t('clientinfo.state')" v-model="userinfo.state">
+							<span class="login__horisontal-line"></span>
+							<input type="text" :placeholder="$t('clientinfo.city')" v-model="userinfo.city">
+							<span class="login__horisontal-line"></span>
+							<input type="text" :placeholder="$t('clientinfo.postcode')" v-model="userinfo.postcode">
+							<span class="login__horisontal-line"></span>
+							<input type="text" :placeholder="$t('clientinfo.address')"  v-model="userinfo.address1">
+						</div>
+
+						<div class="inputs__log-pas">
+							<input type="text" :placeholder="$t('clientinfo.phone number')" v-model="userinfo.phonenumber">
+						</div>
+
+						<template>
+							<button v-if="!registerLoading" @click="submitHandler()" class="login__submit">{{$t('clientinfo.register') | capitalize}}</button>
+								
+							<div v-else class="login__loading">
+								<span class="load__item"></span>
+								<span class="load__item"></span>
+								<span class="load__item"></span>
+							</div>
+						</template>
+
+					</form>
 				</div>
 				<div class="login__forgot" style="margin-top: 40px">
-					<router-link :to="{name: 'login'}">{{$t('already have account') | capitalize}}</router-link>
+					<router-link :to="{name: 'login'}">{{$t('clientinfo.already have account?') | capitalize}}</router-link>
 				</div>
 			</div>
 		</div>
@@ -66,11 +72,13 @@
 
 <script>
 import api from '@/api.js';
+import countries from '@/countries.json';
 
 export default {
-	name: "login",
+	name: "register-view",
 	data(){
 		return {
+			countries,
 			registerLoading: false,
 			userinfo: {
 				firstname: '',
@@ -81,20 +89,35 @@ export default {
 				city: '',
 				state: '',
 				postcode: '',
-				country: '',
+				country: 'BY',
 				phonenumber: ''
 			}
 		}
 	},
 	methods: {
 		submitHandler(){
-			this.registerLoading = true;
 			this.send(this);
 		},
 		send(){
-			const email = encodeURIComponent(this.email);
-			const password = encodeURIComponent(this.password);
-			
+			if(Object.keys(this.userinfo).some(key => !this.userinfo[key].length)){
+				this.$message.warn('all fields are required');
+				return
+			}
+
+			for(let key in this.userinfo){
+				if(this.userinfo[key].length < 2){
+					this.$message.warn(key + ' field field must contain more characters');
+					return
+				}
+			}
+
+			let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if(!this.userinfo.email.match(regexEmail)){
+				this.$message.warn('Email is not valid');
+				return
+			}
+
+			this.registerLoading = true;
 			api.getWithParams('client.addClient', this.userinfo)
 			.then(result => {
 				if(result.result == 'success'){
@@ -198,10 +221,11 @@ export default {
 	border-radius: 10px;
 	padding: 7px 20px;
 	background: linear-gradient(90deg, #427cf7, #8baef2);
-    background-size: 150% 200%;
+	background-size: 150% 200%;
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
+	width: 100%;
 }
 #qrcode{
 	display: none;
@@ -217,10 +241,15 @@ export default {
     100%{background-position:0% 50%}
 }
 
-.inputs__log-pas input{
+.inputs__log-pas input,
+.inputs__log-pas select{
 	border: none;
 	outline: none;
 	padding: 10px 15px;
+}
+
+.inputs__log-pas input::placeholder{
+	opacity: .5;
 }
 
 .login__forgot a{

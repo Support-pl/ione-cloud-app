@@ -99,7 +99,7 @@
 	"order": "заказать",
 
 	"or": "или",
-	"create profile": "создайте профиль",
+	"sign up": "создайте профиль",
 
 	"High speed": "Улучшенный",
 	"traffic": "Трафик",
@@ -166,6 +166,7 @@
 	"All unsaved progress will be lost, are you sure?": "Весь несохраненный прогресс будет утерян, вы уверены?",
 
 	"Cancel": "Отмена",
+	"Submit": "Отправить",
 	"Yes": "Да",
 	"Send": "Отправить",
 	"Filter": "Фильтр",
@@ -235,5 +236,24 @@
 
 	"PaaS": {
 		"order_info": "Тут вы можете заказать сервера с помесячной оплатой."
+	},
+
+	"clientinfo": {
+		"password": "пароль",
+		"firstname": "имя",
+		"lastname": "фамилия",
+		"state": "район",
+		"city": "город",
+		"postcode": "почтовый индекс",
+		"address": "адрес",
+		"phone number": "номер телефона",
+		"phonenumber": "номер телефона",
+		"register": "регистрация",
+		"already have account?": "уже есть аккаунт?",
+		"companyname": "название компании",
+		"countryname": "страна",
+		"email": "email",
+		"address1": "адрес 1-ая линия",
+		"address2": "адрес 2-ая линия"
 	}
 }

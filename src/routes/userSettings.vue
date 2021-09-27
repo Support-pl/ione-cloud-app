@@ -12,17 +12,17 @@
 				<div class="content__fields-wrapper">
 					<a-form-model layout="vertical" :model="form" v-if="form.firstname">
 
-						<a-form-model-item v-for="(item, key) in form" :key="key" :label="key">
+						<a-form-model-item v-for="(item, key) in form" :key="key" :label="$t('clientinfo.'+key) | capitalize">
 							<a-input v-model="form[key]" placeholder="input placeholder" />
 						</a-form-model-item>
 
 						<a-form-model-item>
 							<a-button-group>
 								<a-button type="primary" @click="sendInfo" :disabled="Object.keys(deltaInfo).length == 0" :loading="isSendingInfo">
-									Submit
+									{{$t('Submit')}}
 								</a-button>
 								<a-button @click="installDataToBuffer">
-									Cancel
+									{{$t('Cancel')}}
 								</a-button>
 							</a-button-group>
 						</a-form-model-item>
@@ -56,7 +56,7 @@ export default {
 	},
 	methods: {
 		installDataToBuffer(){
-			const interestedKeys = ['firstname', 'lastname', 'companyname', 'email', 'address1', 'address2', 'city', 'state', 'postcode', 'countryname', 'phonecc', 'phonenumber'];
+			const interestedKeys = ['firstname', 'lastname', 'companyname', 'email', 'address1', 'address2', 'city', 'state', 'postcode', 'countryname', 'phonenumber'];
 			interestedKeys.forEach(key => {
 				this.$set(this.form, key, this.userData[key]);
 			});
