@@ -11,7 +11,7 @@
 			</template>
 
 			<!-- <transition name="ticket__add"> -->
-			<addTicketField/>
+			<addTicketField v-if="addTicketStatus"/>
 			<!-- </transition> -->
 		</div>
 	</div>

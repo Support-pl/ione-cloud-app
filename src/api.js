@@ -28,6 +28,8 @@ export default {
 		let url = '';
 		if(params != undefined){
 			url = rawUrl + `?${URLparameter(params)}`;
+		} else {
+			url = rawUrl;
 		}
 		return this.getRaw(url);
 	},

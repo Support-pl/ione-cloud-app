@@ -8,7 +8,8 @@ export default {
 		tickets: [],
 		onlyClosedTickets: false,
 		addTicketState: false,
-		filter: ['all']
+		filter: ['all'],
+		departments: [],
 	},
 	mutations: {
 		updateTickets(state, value){
@@ -25,6 +26,9 @@ export default {
 		},
 		inverseAddTicketState(state){
 			state.addTicketState = !state.addTicketState;
+		},
+		setDepartments(state, data){
+			state.departments = data;
 		}
 	},
 	actions: {
@@ -50,6 +54,23 @@ export default {
 			} else {
 				return dispatch('fetch');
 			}
+		},
+		fetchDepartments({commit}){
+			return new Promise((resolve, reject) => {
+				api.getWithParams('support.getDepartments')
+				.then(res => {
+					if(res.result == "success"){
+						commit('setDepartments', res.response);
+						resolve(res);
+					} else {
+						throw res;
+					}
+				})
+				.catch(err => {
+					console.error(err);
+					reject(err);
+				})
+			})
 		}
 	},
 	getters: {
@@ -61,7 +82,7 @@ export default {
 				'open',
 				'closed'
 			];
-			console.log(state.tickets);
+			// console.log(state.tickets);
 			const tickets = state.tickets.sort((a,b) => {
 				return order.indexOf(a.status.toLowerCase()) - order.indexOf(b.status.toLowerCase());
 			})
@@ -79,6 +100,9 @@ export default {
 		},
 		isAddTicketState(state){
 			return state.addTicketState;
+		},
+		getDepartments(state){
+			return state.departments;
 		}
 	}
 }

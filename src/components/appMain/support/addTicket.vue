@@ -8,6 +8,12 @@
 	>
 	
 	<a-form-model layout="vertical">
+		<a-form-model-item label="Department">
+			<a-select :loading="ticketDepartment == -1" v-model="ticketDepartment" placeholder="department">
+				<a-select-option v-for="department in departments" :key="department.id" :value="department.id">{{department.name}}</a-select-option>
+			</a-select>
+		</a-form-model-item>
+
 		<a-form-model-item label="Question subject">
 			<a-input v-model="ticketTitle" placeholder="type question subject" />
 		</a-form-model-item>
@@ -27,6 +33,7 @@ export default {
 	name: 'addTicket',
 	data(){
 		return {
+			ticketDepartment: -1,
 			ticketTitle: "",
 			ticketMessage: "",
 			isSending: false,
@@ -37,7 +44,8 @@ export default {
 			return this.$store.getters.getUser;
 		},
 		...mapGetters('support', {
-			addTicketStatus: 'isAddTicketState'
+			addTicketStatus: 'isAddTicketState',
+			departments: 'getDepartments',
 		})
 	},
 	methods: {
@@ -54,11 +62,18 @@ export default {
 				this.$message.warn('Ticket subject or message is too short');
 				return;
 			}
+
+			if(this.ticketDepartment == -1){
+				this.$message.warn('Departments are loading...');
+				return;
+			}
+
 			this.isSending = true;
 
 			this.$api.sendAsUser('openticket', {
 				subject: this.ticketTitle,
 				message: this.ticketMessage,
+				department: this.ticketDepartment
 			})
 				.then(resp => {
 					if(resp.result == "success"){
@@ -81,6 +96,14 @@ export default {
 					this.isSending = false;
 				})
 		},
+	},
+	created(){
+		this.$store.dispatch('support/fetchDepartments')
+		.then((res) => {
+			console.log(res);
+			console.log(this.departments);
+			this.ticketDepartment = this.departments[0].id;
+		})
 	}
 }
 </script>
