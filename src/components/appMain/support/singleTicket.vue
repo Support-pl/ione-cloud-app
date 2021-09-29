@@ -5,10 +5,10 @@
 			<div class="ticket__upper">
 				<div class="ticket__title">
 					<a-badge v-if="ticket.status == 'Answered'" dot>
-						#{{ticket.tid}} - {{ticket.title}}
+						#{{ticket.tid}} - {{titleDecoded}}
 					</a-badge>
 					<template v-else>
-						#{{ticket.tid}} - {{ticket.title}}
+						#{{ticket.tid}} - {{titleDecoded}}
 					</template>
 				</div>
 				<div class="ticket__status-text">{{ticket.status}}</div>
@@ -72,6 +72,11 @@ export default {
 			}
 			return color;
 		},
+		titleDecoded(){
+			var txt = document.createElement('textarea');
+			txt.innerHTML = this.ticket.title;
+			return txt.value;
+		}
 	},
 	mounted(){
 	}
@@ -110,6 +115,13 @@ export default {
 		left: 20px;
 		transform: translateY(-50%);
 	}
+	.ticket__message,
+	.ticket__title{
+		overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+	}
 	.ticket__title{
 		font-weight: bold;
 	}
@@ -117,5 +129,6 @@ export default {
 		font-size: .8rem;
 		color:rgba(0, 0, 0, .3);
 		font-weight: 600;
+		flex-shrink: 0;
 	}
 </style>

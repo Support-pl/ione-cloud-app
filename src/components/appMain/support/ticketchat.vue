@@ -7,7 +7,7 @@
 				</div>
 			</div>
 			<div class="chat__title">
-				{{theme}}
+				{{titleDecoded}}
 			</div>
 			<div class="chat__reload">
 				<div class="icon__wrapper" @click="reload()">
@@ -36,7 +36,8 @@
 		</div>
 
 		<div class="chat__footer">
-			<input v-model="messageInput" v-on:keyup.enter="sendMessage" type="text" class="chat__input" name="message" id="message" placeholder="Message...">
+			<a-textarea allowClear :autoSize="{minRows: 1, maxRows: 2}" v-model="messageInput" v-on:keyup.shift.enter.exact="newLine" v-on:keyup.enter.exact="sendMessage" type="text" class="chat__input" name="message" id="message" placeholder="Message...">
+			</a-textarea>
 			<div class="chat__send" @click="sendMessage">
 				<a-icon type="arrow-up" />
 			</div>
@@ -48,8 +49,6 @@
 </template>
 
 <script>
-const md5 = require('md5');
-
 import load from '../../loading/loading.vue';
 
 export default {
@@ -59,7 +58,7 @@ export default {
 	},
 	data(){
 		return {
-			theme: "SUPPORT",
+			subject: "SUPPORT",
 			replies: null,
 			messageInput: "",
 			loading: true,
@@ -71,6 +70,11 @@ export default {
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
+		},
+		titleDecoded(){
+			var txt = document.createElement('textarea');
+			txt.innerHTML = this.subject;
+			return txt.value;
 		}
 	},
 	methods: {
@@ -81,6 +85,9 @@ export default {
 			message = message.replace(/\n/g, '<br>');
 			message = message.replace(/[\s\uFEFF\xA0]{2,}/g, ' ');
 			return message.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+		},
+		newLine(){
+			this.messageInput.replace(/$/, '\n');
 		},
 		isAdminSent(reply){
 			return reply.admin !== "";
@@ -93,7 +100,7 @@ export default {
 				contactid: "0",
 				date: new Date(),
 				email: this.user.email,
-				message: this.messageInput,
+				message: this.messageInput.trim(),
 				name: this.user.firstname + " " + this.user.lastname,
 				userid: this.user.id,
 				sending: true,
@@ -101,47 +108,41 @@ export default {
 			this.sendingMessagesCount++;
 			this.replies.unshift(message);
 
-			const close_your_eyes = md5('ticketreply'+this.user.id+this.user.secret);
 			const object = {
 				id: this.$route.params.pathMatch,
 				message: this.messageInput,
-				secret: close_your_eyes,
-				userid: this.user.id,
 			}
 
 			const params = this.objectToParams(object);
 
 			const url = `/ticketreply.php?${params}`;
 
-			this.$axios.get(url)
+			this.$api.sendAsUser('ticketreply', object)
 			.then(res => {
-				if(res.data.result == "success")
+				if(res.result == "success")
 					this.replies[--this.sendingMessagesCount].sending = false;
 				else {
-					this.sendingMessagesCount--;
-					this.replies[this.sendingMessagesCount].sending = false;
-					this.replies[this.sendingMessagesCount].error = true;
+					throw res;
 				}
+			})
+			.catch(err => {
+				console.error(err);
+				this.sendingMessagesCount--;
+				this.replies[this.sendingMessagesCount].sending = false;
+				this.replies[this.sendingMessagesCount].error = true;
 			})
 			this.messageInput = "";
 		},
 		loadMessages(){
 			this.loading = true;
-
-			const close_your_eyes = md5('ticket'+this.user.id+this.user.secret);
 			const object = {
 				userid: this.user.id,
-				secret: close_your_eyes,
 				id: this.chatid,
 			}
-			const params = this.objectToParams(object);
-
-			const url = `/ticket.php?${params}`;
-
-			this.$axios.get(url)
+			this.$api.sendAsUser('ticket', object)
 			.then(resp => {
-				this.replies = resp.data.replies.reply;
-				this.theme = resp.data.subject;
+				this.replies = resp.replies.reply;
+				this.subject = resp.subject;
 				this.loading = false;
 			})
 		},
