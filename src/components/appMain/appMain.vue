@@ -9,7 +9,7 @@
 					<router-view class="frame"></router-view>
 				</transition>
 			</a-layout-content>
-			<a-layout-footer :style="{padding: 0}">
+			<a-layout-footer v-if="user" :style="{padding: 0}">
 				<appFooter :active="active" />
 			</a-layout-footer>
     	</a-layout>
@@ -50,6 +50,9 @@ export default {
 			set(newVal){
 				this.activeName = newVal; 
 			}
+		},
+		user(){
+			return this.$store.getters.getUser;
 		}
 	},
 	created(){

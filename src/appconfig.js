@@ -11,6 +11,10 @@ export default {
 	languages: ['en', 'ru'],
 	WHMCSsiteurl: 'https://my.support.by/',
 	appFolder: 'app_back/v1',
+	currency: {
+		prefix: "",
+		suffix: "BYN",
+	},
 	services: {
 		virtual: {
 			groupname: ['Виртуальный хостинг'],

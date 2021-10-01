@@ -142,12 +142,27 @@ export default {
 			})
 		},
 		orderClickHandler(){
-			this.sendloading = true;
-			api.sendAsUser('createOrder', {
+			const info = {
 				domain: this.options.domain,
 				billingcycle: this.options.period,
 				pid: this.getProducts.pid
-			})
+			}
+
+			if(!this.$store.getters.getUser){
+				this.$store.commit('setOnloginRedirect', this.$route.name);
+				this.$store.commit('setOnloginInfo', 'you want to get virtual');
+				this.$store.dispatch('setOnloginAction', () => {
+					this.createVirtual(info);
+				});
+				this.$router.push({name: 'login'});
+				return
+			}
+
+			this.createVirtual(info);
+		},
+		createVirtual(info){
+			this.sendloading = true;
+			api.sendAsUser('createOrder', info)
 			.then(result => {
 				if(this.modal.goToInvoice){
 					this.$router.push({name: 'invoiceFS', params: {pathMatch: result.invoiceid}});

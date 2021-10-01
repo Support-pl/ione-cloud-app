@@ -60,7 +60,20 @@ export default {
 	},
 	methods: {
 		routeTo(param){
-			this.$router.push(param);
+			if(this.user){
+				this.$router.push(param);
+				return
+			}
+			const config = this.$config;
+			let type = param.query.type;
+			type = type == 'PaaS' ? 'VM' : type;
+			const service = config.services[type]
+			console.log(service);
+			if(service.creationRouteName){
+				this.$router.push({name: service.creationRouteName});
+			} else {
+				this.$router.push({name: `service-${type}`});
+			}
 		},
 		openNotification() {
       this.$notification['info']({
@@ -73,6 +86,11 @@ export default {
         },
       });
     },
+	},
+	computed: {
+		user(){
+			return this.$store.getUser;
+		}
 	}
 }
 </script>

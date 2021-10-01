@@ -38,7 +38,8 @@ export default {
 		update: {
 			worker: null,
 			status: false
-		}
+		},
+		currencyPostfix: '',
 	},
 	mutations: {
 		setActiveTabName(state, value){
@@ -49,6 +50,9 @@ export default {
 		},
 		setUpdate(state, value) {
 			state.update = value;
+		},
+		setCurrencyPostfix(state, value){
+			state.currencyPostfix = value;
 		}
 	},
 	actions: {
@@ -87,6 +91,9 @@ export default {
 				title: state.activeTabName,
 				index: state.activeTabNum
 			}
+		},
+		currencyPostfix(state){
+			return state.currencyPostfix
 		}
 	}
 }

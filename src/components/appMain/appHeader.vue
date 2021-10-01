@@ -40,8 +40,13 @@
 						</div>
 
 					</div>
-					<div v-if="isNeedBalance" class="header__balance">
+					<div v-if="isNeedBalance && user" class="header__balance">
 						<balance/>
+					</div>
+
+					<div class="header__links" v-if="!user">
+						<router-link :to="{name: 'login'}">sign in</router-link>
+						<router-link :to="{name: 'register'}">sign up</router-link>
 					</div>
 				</div>
 			</div>
@@ -312,6 +317,38 @@ export default {
 	.header_back_btn{
 		font-size: 1.4rem;
 		margin-right: 20px;
+	}
+
+	.header__links a{
+		color: #fff;
+		transition: color .2s ease, background-color .3s ease, opacity .2s ease;
+	}
+
+	.header__links a:hover{
+		color: #fff;
+	}
+
+	.header__links a:not(:last-child){
+		margin-right: 20px;
+	}
+
+	.header__links a:first-child{
+		opacity: .8;
+	}
+
+	.header__links a:first-child:hover{
+		opacity: 1;
+	}
+
+	.header__links a:last-child{
+		box-shadow: 0px 0px 0px 1px #fff;
+		border-radius: 5px;
+		padding: 10px 15px;
+	}
+
+	.header__links a:last-child:hover{
+		background: #fff;
+		color: var(--main);
 	}
 
 	.header__right{

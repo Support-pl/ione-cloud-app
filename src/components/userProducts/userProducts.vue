@@ -20,13 +20,13 @@
 				</transition>
 			</div>
 			
-			<div v-if="min" class="products__all">
+			<div v-if="min && user" class="products__all">
 				<router-link :to="{name: 'products'}">
 					{{$t('comp_services.all')}}
 					 <!-- все -->
 				</router-link>
 			</div>
-			<div v-else class="products__control">
+			<div v-else-if="user" class="products__control">
 				<a-button
 					class="products__new"
 					size="small"
@@ -73,7 +73,10 @@
 
 		</div>
 		<div class="products__wrapper" :class="{ 'products__wrapper--loading': productsLoading }">
-			<template v-if="!productsLoading && productsPrepared.length > 0">
+			<div class="products__unregistred" v-if="!user">
+				will be able after <router-link :to="{name: 'login'}">sign in</router-link>.
+			</div>
+			<template v-else-if="!productsLoading && productsPrepared.length > 0">
 				<product
 					v-for="product in productsPrepared"
 					@click.native="productClickHandler(product)"
@@ -113,9 +116,13 @@ export default {
 		}
 	},
 	mounted(){
+		// if(!this.user) return
 		this.$store.dispatch('products/autoFetch');
 	},
 	computed: {
+		user(){
+			return this.$store.getters.getUser;
+		},
 		productsPrepared(){
 			if(this.min) return this.products.slice(0, 3);
 			else if(this.$route.query.type) {
@@ -240,6 +247,10 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.products__unregistred{
+	font-size: 1.5rem;
 }
 
 .products__title{

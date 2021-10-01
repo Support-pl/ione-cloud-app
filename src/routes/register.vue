@@ -14,6 +14,11 @@
 		</div>
 		<div class="login__main login__layout">
 			<div class="login__UI">
+		
+				<div v-if="getOnlogin.info" class="login__action-info">
+					{{getOnlogin.info}}
+				</div>
+
 				<div class="login__inputs">
 					<form>
 					<!-- <div v-if="loginError" class="login__error">{{loginError}}</div> -->
@@ -61,7 +66,7 @@
 
 					</form>
 				</div>
-				<div class="login__forgot" style="margin-top: 40px">
+				<div class="register__already-has" style="margin-top: 40px">
 					<router-link :to="{name: 'login'}">{{$t('clientinfo.already have account?') | capitalize}}</router-link>
 				</div>
 			</div>
@@ -135,6 +140,11 @@ export default {
 				this.registerLoading = false;
 			})
 		},	
+	},
+	computed: {
+		getOnlogin(){
+			return this.$store.getters.getOnlogin;
+		}
 	}
 }
 </script>
@@ -252,11 +262,11 @@ export default {
 	opacity: .5;
 }
 
-.login__forgot a{
+.register__already-has a{
 	text-decoration: none;
 }
 
-.login__forgot a:hover{
+.register__already-has a:hover{
 	text-decoration: underline;
 }
 

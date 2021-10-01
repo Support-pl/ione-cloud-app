@@ -212,7 +212,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -223,7 +223,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -234,7 +234,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -251,7 +251,7 @@
 								</template>
 							</a-tooltip> -->
 							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								{{options.network.public.count * options.network.price}} {{user.currency_code}}/month
+								{{options.network.public.count * options.network.price}} {{currencyPostfix}}/month
 							</a-skeleton>
 						</a-col>
 					</a-row>
@@ -281,7 +281,7 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice()}} {{user.currency_code}}/{{$tc(toShow[periodToShow])}}
+								~{{calculateFullPrice()}} {{currencyPostfix}}/{{$tc(toShow[periodToShow])}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -374,7 +374,7 @@ export default {
 					name: 'Custom'
 				},
 				os: {
-					id: 0,
+					id: -1,
 					name: "",
 				},
 				cpu: {
@@ -428,11 +428,13 @@ export default {
 		this.$store.dispatch("newVDC/fetchRates");
 		
 		const user = this.user;
-		let userinfo = {
-			userid: user.id,
-			secret: md5('createVDC' + user.id + user.secret)
+		if(user){
+			let userinfo = {
+				userid: user.id,
+				secret: md5('createVDC' + user.id + user.secret)
+			}
+			this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 		}
-		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 		this.$axios.get("getSettings.php?filter=cost,disktypes" )
 			.then( res => {
 				// console.log(res);
@@ -450,17 +452,17 @@ export default {
 				this.$message.error("Can't load prices. Show saved ones.");
 			} )
 
-		userinfo = {
-			userid: user.id,
-			secret: md5('getBalance' + user.id + user.secret)
-		}
-		this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
-			.then( res => {
-				if(user.id == res.data.userid){
-					this.$store.dispatch("updateBalance", res.data.balance);
-				}
-			})
-			.catch( err => console.error(err));
+		// userinfo = {
+		// 	userid: user.id,
+		// 	secret: md5('getBalance' + user.id + user.secret)
+		// }
+		// this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
+		// 	.then( res => {
+		// 		if(user.id == res.data.userid){
+		// 			this.$store.dispatch("updateBalance", res.data.balance);
+		// 		}
+		// 	})
+		// 	.catch( err => console.error(err));
 	},
 	methods: {
 		setOS(id){
@@ -528,9 +530,8 @@ export default {
 		},
 		calculateFullPrice(){
 			if(this.options.rate.id != 0){
-				const user = this.user;
 				this.options.tarification = true;
-				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
+				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[this.currencyPostfix];
 			} //выключил
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
@@ -542,13 +543,14 @@ export default {
 		},
 		createVDC(){
 			const user = this.user;
+	
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size
 				]
 			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(3);
-			if(+price > +user.balance){
+			if(user && +price > +user.balance){
 				this.$message.error('You don\'t have enough money for a day of use');
 				return;
 			}
@@ -604,10 +606,6 @@ export default {
 		},
 		send(){
 			const user = this.user;
-			const userinfo = {
-				userid: user.id,
-				secret: md5('createVM' + user.id + user.secret)
-			}
 			let savedPeriod = this.period;
 			this.period = 'month';
 			const price = this.calculateFullPrice();
@@ -628,7 +626,18 @@ export default {
 			if(this.options.network.local.status){
 				vmOptions['localIPs'] = this.options.network.local.count;
 			}
-			return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
+			// return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
+			if(user){
+				return this.$api.sendAsUser("createVM", vmOptions);
+			} else {
+				this.$store.commit('setOnloginRedirect', 'newVDC');
+				this.$store.commit('setOnloginInfo', 'you want to get VDC VM');
+				this.$store.dispatch('setOnloginAction', () => {
+					this.$api.sendAsUser("createVM", vmOptions);
+				});
+
+				this.$router.push({name: 'login'});
+			}
 		},
 		URLparameter(obj, outer = ''){
 			var str = "";
@@ -699,6 +708,9 @@ export default {
 		user(){
 			const user = this.$store.getters.getUser;
 			return user;
+		},
+		currencyPostfix(){
+			return this.$config.currency.suffix;
 		}
 	},
 	watch: {

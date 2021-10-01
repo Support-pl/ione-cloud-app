@@ -13,7 +13,16 @@
 			</svg>
 		</div>
 		<div class="login__main login__layout">
+
 			<div class="login__UI">
+				<div v-if="!getOnlogin.info" class="login__see-services">
+					<router-link :to="{name: 'services'}">see services</router-link>
+				</div>
+
+				<div v-else class="login__action-info">
+					{{getOnlogin.info}}
+				</div>
+
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
 					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
@@ -45,7 +54,7 @@
 				</div>
 				<div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>
-					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px">
+					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px; height: 150px">
 				</div>
 			</div>
 		</div>
@@ -101,7 +110,15 @@ export default {
 						user.currency_code = resp.data.currency_code;
 
 						this.$store.dispatch("onLoadUser", user);
-						this.$router.push({name: 'root'});
+						if(this.getOnlogin.redirect){
+							this.$router.push({name: this.getOnlogin.redirect});
+						} else {
+							this.$router.push({name: 'root'});
+						}
+
+						if(this.getOnlogin.action){
+							this.getOnlogin.action();
+						}
 						// location.reload() //костыль, починить позже
 					})
 					.finally( () => {
@@ -147,6 +164,11 @@ export default {
 			})
 		}
 		
+	},
+	computed: {
+		getOnlogin(){
+			return this.$store.getters.getOnlogin;
+		}
 	}
 }
 </script>
@@ -290,6 +312,23 @@ export default {
 }
 .load__item:nth-child(3){
 	animation: loading 1.4s .6s ease infinite;
+}
+
+.login__see-services,
+.login__action-info {
+	margin-bottom: 40px;
+}
+
+.login__see-services a{
+	padding: 10px 15px;
+	/* border: 1px solid #d0dfff; */
+	box-shadow: inset 0px 0px 0px 1px #d0dfff;
+	border-radius: 5px;
+	transition: box-shadow .2s ease;
+}
+
+.login__see-services a:hover{
+	box-shadow: inset 0px 0px 0px 1px var(--main);
 }
 
 @keyframes loading {

@@ -152,11 +152,26 @@ export default {
 		},
 		orderClickHandler(){
 			this.sendloading = true;
-			api.sendAsUser('createOrderSSL', {
+			const info = {
 				domain: this.options.domain,
 				billingcycle: 'annually',
 				pid: this.getProducts.pid
-			})
+			}
+
+			if(!this.$store.getters.getUser){
+				this.$store.commit('setOnloginRedirect', this.$route.name);
+				this.$store.commit('setOnloginInfo', 'you want to get SSL');
+				this.$store.dispatch('setOnloginAction', () => {
+					this.createSSL(info);
+				});
+				this.$router.push({name: 'login'});
+				return
+			}
+
+			this.createSSL(info);
+		},
+		createSSL(info){
+			api.sendAsUser('createOrderSSL', info)
 			.then(result => {
 				if(this.modal.goToInvoice){
 					this.$router.push({name: 'invoiceFS', params: {pathMatch: result.invoiceid}});

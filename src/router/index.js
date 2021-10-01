@@ -81,7 +81,7 @@ const routes = [
 				path: 'services',
 				name: 'services',
 				meta: {
-					mustBeLoggined: true,
+					// mustBeLoggined: true,
 				},
 				component: () => import('../routes/services.vue'),
 			},
@@ -90,7 +90,7 @@ const routes = [
 				path: 'products',
 				name: 'products',
 				meta: {
-					mustBeLoggined: true,
+					// mustBeLoggined: true,
 					layoutTitle: 'services',
 					isNeedBackButton: true,
 				},
@@ -124,7 +124,7 @@ const routes = [
 				path: 'cloud/newPaaS',
 				name: 'newPaaS',
 				meta: {
-					mustBeLoggined: true,
+					// mustBeLoggined: true,
 					footerTitle: 'cloud'
 				},
 				component: () => import('../components/appMain/newPaaS.vue')
@@ -133,7 +133,7 @@ const routes = [
 				path: 'cloud/newVDC',
 				name: 'newVDC',
 				meta: {
-					mustBeLoggined: true,
+					// mustBeLoggined: true,
 					footerTitle: 'cloud'
 				},
 				component: () => import('../components/appMain/newVDC.vue')

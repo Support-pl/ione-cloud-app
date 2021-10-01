@@ -23,7 +23,8 @@ export default {
 		const user = this.$store.getters.getCookie('CloudUser');
 		if(user !== undefined) {
 			this.$store.commit("setUser", JSON.parse(user));
-		};
+			this.$store.dispatch('cloud/fetchClouds');
+		}
 
 		this.$router.beforeEach((to, from, next) => {
 			const isLogged = this.$store.getters.isLogged;
@@ -42,9 +43,6 @@ export default {
 		const lang = localStorage.getItem("lang");
 		if(lang != undefined)
 			this.$i18n.locale = lang;
-		
-		
-		this.$store.dispatch('cloud/fetchClouds');
 	},
 	mounted(){
 		this.$router.onReady(route => {

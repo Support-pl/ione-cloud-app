@@ -352,6 +352,39 @@ export default {
 				billingcycle: this.options.period,
 			}
 			console.log(orderData);
+
+			if(!this.$store.getUser){
+				const parent = this.$parent;
+				console.log(parent);
+				this.$store.commit('setOnloginInfo', 'you want to get PaaS VM');
+				this.$store.dispatch('setOnloginAction', () => {
+					console.log('func', parent);
+					this.$store.dispatch('newPaaS/sendOrder', orderData)
+					.then( result => {
+						const res = result.data;
+						console.log('ondone', parent);
+						if(res.result == "success"){
+							parent.$message.success(parent.$t('Order created successfully.'));
+							parent.modal.confirmCreate = false;
+							parent.$router.push(`/invoice-${res.invoiceid}`);
+						} else {
+							throw result.data
+						}
+					})
+					.catch( err => {
+						parent.$message.error('Can\'t create order. Try later.');
+						console.error(err);
+					} )
+					.finally( res => {
+						parent.modal.confirmLoading = false;
+					} )
+				});
+
+				this.$router.push({name: 'login'});
+
+				return;
+			}
+
 			this.$store.dispatch('newPaaS/sendOrder', orderData)
 			.then( result => {
 				const res = result.data;
