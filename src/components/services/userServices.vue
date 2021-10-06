@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .user-services{
 	padding-top: 20px;
 }

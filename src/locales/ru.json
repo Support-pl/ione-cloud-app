@@ -11,7 +11,7 @@
   "Order an app development": "Заказать разработку приложения",
   "Need more functionality on these app? Write us!": "Нужно больше функциональности в этом приложении? Напишите нам!",
   "Developed by": "Разработано",
-  "login": "Войти",
+  "login": "войти",
   "Enter value": "Введите значение",
   "stay on page": "остаться на странице",
   "forgotPass": "Забыли пароль?",
@@ -237,6 +237,12 @@
 	"PaaS": {
 		"order_info": "Тут вы можете заказать сервера с помесячной оплатой."
 	},
+	
+	"virtual": {
+		"used space": "использовано места",
+		"bw": "использовано трафика",
+		"unlimited": "неограниченно"
+	},
 
 	"clientinfo": {
 		"password": "пароль",
@@ -255,5 +261,12 @@
 		"email": "email",
 		"address1": "адрес 1-ая линия",
 		"address2": "адрес 2-ая линия"
+	},
+
+	"unregistered": {
+		"will be able after": "будет доступно после",
+		"login": "входа",
+		"sign up": "зарегистрироваться",
+		"see services": "сервисы"
 	}
 }

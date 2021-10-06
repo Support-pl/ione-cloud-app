@@ -631,7 +631,13 @@ export default {
 				return this.$api.sendAsUser("createVM", vmOptions);
 			} else {
 				this.$store.commit('setOnloginRedirect', 'newVDC');
-				this.$store.commit('setOnloginInfo', 'you want to get VDC VM');
+				
+				this.$store.commit('setOnloginInfo', {
+					type: 'IaaS',
+					title: 'Cloud Virtual machine',
+					cost: this.calculateFullPrice()
+				});
+
 				this.$store.dispatch('setOnloginAction', () => {
 					this.$api.sendAsUser("createVM", vmOptions);
 				});

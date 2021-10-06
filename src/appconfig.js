@@ -14,6 +14,7 @@ export default {
 	currency: {
 		prefix: "",
 		suffix: "BYN",
+		code: "BYN",
 	},
 	services: {
 		virtual: {

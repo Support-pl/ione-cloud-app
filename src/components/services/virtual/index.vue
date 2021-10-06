@@ -150,7 +150,11 @@ export default {
 
 			if(!this.$store.getters.getUser){
 				this.$store.commit('setOnloginRedirect', this.$route.name);
-				this.$store.commit('setOnloginInfo', 'you want to get virtual');
+				this.$store.commit('setOnloginInfo', {
+					type: 'IaaS',
+					title: 'Virtual Hosting',
+					cost: this.getProducts.pricing[this.options.period]
+				});
 				this.$store.dispatch('setOnloginAction', () => {
 					this.createVirtual(info);
 				});

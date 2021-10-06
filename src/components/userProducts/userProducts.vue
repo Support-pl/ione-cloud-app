@@ -74,7 +74,7 @@
 		</div>
 		<div class="products__wrapper" :class="{ 'products__wrapper--loading': productsLoading }">
 			<div class="products__unregistred" v-if="!user">
-				will be able after <router-link :to="{name: 'login'}">sign in</router-link>.
+				{{$t('unregistered.will be able after')}} <router-link :to="{name: 'login'}">{{$t('unregistered.login')}}</router-link>.
 			</div>
 			<template v-else-if="!productsLoading && productsPrepared.length > 0">
 				<product
@@ -223,7 +223,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .header__animated{
 	display: inline-block;
 }
@@ -251,6 +251,10 @@ export default {
 
 .products__unregistred{
 	font-size: 1.5rem;
+}
+
+.products__unregistred{
+	text-align: center;
 }
 
 .products__title{

@@ -237,6 +237,12 @@
 	"PaaS": {
 		"order_info": "Here you can order servers with monthly payment."
 	},
+	
+	"virtual": {
+		"used space": "used space",
+		"bw": "used trafic",
+		"unlimited": "unlimited"
+	},
 
 	"clientinfo": {
 		"password": "password",
@@ -255,5 +261,12 @@
 		"email": "email",
 		"address1": "address line 1",
 		"address2": "address line 2"
+	},
+
+	"unregistered": {
+		"will be able after": "will be able after",
+		"login": "login",
+		"sign up": "sign up",
+		"see services": "see services"
 	}
 }

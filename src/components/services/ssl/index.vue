@@ -160,7 +160,11 @@ export default {
 
 			if(!this.$store.getters.getUser){
 				this.$store.commit('setOnloginRedirect', this.$route.name);
-				this.$store.commit('setOnloginInfo', 'you want to get SSL');
+				this.$store.commit('setOnloginInfo', {
+					type: 'SSL',
+					title: 'SSL Certificate',
+					cost: this.getProducts.pricing[this.options.period]
+				});
 				this.$store.dispatch('setOnloginAction', () => {
 					this.createSSL(info);
 				});

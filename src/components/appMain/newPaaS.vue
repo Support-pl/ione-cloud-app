@@ -163,7 +163,7 @@
 						<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 							<transition name="textchange" mode="out-in">
 								<a-col :key='getFullPrice'>
-									{{getFullPrice}} BYN
+									{{getFullPrice}} {{currency}}
 								</a-col>
 							</transition>
 						</a-row>
@@ -218,7 +218,7 @@
 										<ul>
 											<li class="tariff__property">
 												<span class="tariff__body-value">
-													{{getProducts[tariff][sizes[options.slide]][0][0].pricing.BYN.monthly}} <span class="tariff__currency">BYN</span>
+													{{getProducts[tariff][sizes[options.slide]][0][0].pricing[currency].monthly}} <span class="tariff__currency">{{currency}}</span>
 												</span>
 											</li>
 											<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index" class="tariff__property">
@@ -344,66 +344,53 @@ export default {
 			return str;
 		},
 		handleOkOnCreateOrder(){
-			this.modal.confirmLoading = true;
 			const addons = Object.values(this.options.addons).filter( el => el != -1).join(',')
 			const orderData = {
 				pid: this.getCurrentProd.pid,
 				addons,
 				billingcycle: this.options.period,
 			}
-			console.log(orderData);
+			// console.log(orderData);
 
 			if(!this.$store.getUser){
-				const parent = this.$parent;
-				console.log(parent);
-				this.$store.commit('setOnloginInfo', 'you want to get PaaS VM');
+				this.$store.commit('setOnloginInfo', {
+					type: 'VM',
+					title: 'Virtual machine',
+					cost: this.getFullPrice()
+				});
+
 				this.$store.dispatch('setOnloginAction', () => {
-					console.log('func', parent);
-					this.$store.dispatch('newPaaS/sendOrder', orderData)
-					.then( result => {
-						const res = result.data;
-						console.log('ondone', parent);
-						if(res.result == "success"){
-							parent.$message.success(parent.$t('Order created successfully.'));
-							parent.modal.confirmCreate = false;
-							parent.$router.push(`/invoice-${res.invoiceid}`);
-						} else {
-							throw result.data
-						}
-					})
-					.catch( err => {
-						parent.$message.error('Can\'t create order. Try later.');
-						console.error(err);
-					} )
-					.finally( res => {
-						parent.modal.confirmLoading = false;
-					} )
+					this.orderVM(orderData);
 				});
 
 				this.$router.push({name: 'login'});
 
 				return;
 			}
+		},
+		orderVM(orderData){
+			this.modal.confirmLoading = true;
+			const self = this;
 
 			this.$store.dispatch('newPaaS/sendOrder', orderData)
 			.then( result => {
 				const res = result.data;
+				console.log(res, self);
 				if(res.result == "success"){
-					this.$message.success(this.$t('Order created successfully.'));
-					this.modal.confirmCreate = false;
-					if(this.modal.goToInvoice){
-						this.$router.push(`/invoice-${res.invoiceid}`);
+					self.$message.success(self.$t('Order created successfully.'));
+					if(self.modal.goToInvoice){
+						self.$router.push(`/invoice-${res.invoiceid}`);
 					}
 				} else {
 					throw result.data
 				}
 			})
 			.catch( err => {
-				this.$message.error('Can\'t create order. Try later.');
+				self.$message.error('Can\'t create order. Try later.');
 				console.error(err);
 			} )
 			.finally( res => {
-				this.modal.confirmLoading = false;
+				self.modal.confirmLoading = false;
 			} )
 		},
 		setAddon(name, value){
@@ -458,7 +445,7 @@ export default {
 			if (this.isAddonsLoading || this.isProductsLoading) {
 				return false
 			}
-			const VMonly = +this.getCurrentProd.pricing.BYN[this.options.period];
+			const VMonly = +this.getCurrentProd.pricing[this.currency][this.options.period];
 			const addonsName = [
 					"drive",
 					"traffic",
@@ -481,11 +468,13 @@ export default {
 		},
 		sliderIsCanPrev(){
 			return this.options.slide > 0;
+		},
+		currency(){
+			return this.$config.currency.code;
 		}
 	},
 	watch: {
 		getAddons: function(newVal){
-			console.log(newVal);
 			this.options.addons.os = +newVal.os[0].id;
 		}
 	}

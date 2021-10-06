@@ -15,12 +15,30 @@
 		<div class="login__main login__layout">
 
 			<div class="login__UI">
-				<div v-if="!getOnlogin.info" class="login__see-services">
-					<router-link :to="{name: 'services'}">see services</router-link>
-				</div>
+				<div class="login__onlogin-action">
+					<div v-if="!getOnlogin.info" class="login__see-services">
+						<router-link :to="{name: 'services'}">
+							<a-icon type="shopping-cart" />
+							{{$t('unregistered.see services')}}
+						</router-link>
+					</div>
 
-				<div v-else class="login__action-info">
-					{{getOnlogin.info}}
+					<div v-else class="login__action-info">
+						<!-- {{getOnlogin.info}} -->
+						your order:
+						<div class="order__card">
+							<div class="order__icon">
+								<a-icon :type="$config.services[getOnlogin.info.type].icon"/>
+							</div>
+							<div class="order__info">
+								<div class="order__title">{{getOnlogin.info.title}}</div>
+								<div class="order__cost">{{getOnlogin.info.cost}} {{$config.currency.suffix}}</div>
+							</div>
+							<div class="order__remove" @click="$store.commit('clearOnlogin');">
+								<a-icon type="close" />
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="login__inputs">
@@ -314,21 +332,52 @@ export default {
 	animation: loading 1.4s .6s ease infinite;
 }
 
-.login__see-services,
-.login__action-info {
+.login__onlogin-action {
 	margin-bottom: 40px;
 }
 
 .login__see-services a{
+	display: block;
 	padding: 10px 15px;
 	/* border: 1px solid #d0dfff; */
 	box-shadow: inset 0px 0px 0px 1px #d0dfff;
 	border-radius: 5px;
 	transition: box-shadow .2s ease;
+	display: flex;
+	grid-gap: 10px;
+	font-size: 1.2em;
 }
 
 .login__see-services a:hover{
 	box-shadow: inset 0px 0px 0px 1px var(--main);
+}
+
+.login__see-services a i{
+	font-size: 1.5em;
+}
+
+.order__card{
+	margin-top: 7px;
+	position: relative;
+	box-sizing: border-box;
+	display: flex;
+	min-width: 300px;
+	box-shadow: inset 0px 0px 0px 1px #d0dfff;
+	border-radius: 5px;
+	padding: 10px 15px;
+	grid-gap: 10px;
+}
+
+.order__icon{
+	font-size: 32px;
+}
+
+.order__remove{
+	position: absolute;
+	padding: 5px;
+	top: 5px;
+	right: 10px;
+	cursor: pointer;
 }
 
 @keyframes loading {

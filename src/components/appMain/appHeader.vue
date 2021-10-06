@@ -45,8 +45,8 @@
 					</div>
 
 					<div class="header__links" v-if="!user">
-						<router-link :to="{name: 'login'}">sign in</router-link>
-						<router-link :to="{name: 'register'}">sign up</router-link>
+						<router-link :to="{name: 'login'}">{{$t('login')}}</router-link>
+						<router-link :to="{name: 'register'}">{{$t('unregistered.sign up')}}</router-link>
 					</div>
 				</div>
 			</div>
