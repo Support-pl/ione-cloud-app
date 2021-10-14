@@ -272,9 +272,12 @@ export default {
 
 			if(this.headers[this.active])
 				return this.$options.filters.capitalize(this.$t(this.headers[this.active].title))
-			else if(this.$route.meta.headerTitle)
+			else if(this.$route.meta.headerTitle){
+				console.log(this.$route.meta.headerTitle);
+				console.log(this.$t(this.$route.meta.headerTitle));
 				// return this.$route.meta.headerTitle
-				return this.$options.filters.capitalize(this.$t(this.$route.meta.headerTitle.toLowerCase()))
+				return this.$options.filters.capitalize(this.$t(this.$route.meta.headerTitle))
+			}
 			else
 				return ''
 		}

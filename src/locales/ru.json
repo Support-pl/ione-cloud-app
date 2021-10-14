@@ -238,10 +238,16 @@
 		"order_info": "Тут вы можете заказать сервера с помесячной оплатой."
 	},
 	
-	"virtual": {
+	"virtual_product": {
 		"used space": "использовано места",
 		"bw": "использовано трафика",
-		"unlimited": "неограниченно"
+		"unlimited": "неограниченно",
+		"power": "мощность",
+		"sites": "сайты",
+		"mysql": "базы данных",
+		"email": "email",
+		"hdd_shared": "объем hdd",
+		"traffic": "трафик"
 	},
 
 	"clientinfo": {

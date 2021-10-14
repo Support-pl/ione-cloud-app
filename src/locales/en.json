@@ -238,10 +238,16 @@
 		"order_info": "Here you can order servers with monthly payment."
 	},
 	
-	"virtual": {
+	"virtual_product": {
 		"used space": "used space",
 		"bw": "used trafic",
-		"unlimited": "unlimited"
+		"unlimited": "unlimited",
+		"power": "power",
+		"sites": "sites",
+		"mysql": "mysql",
+		"email": "email",
+		"hdd_shared": "hdd shared",
+		"traffic": "traffic"
 	},
 
 	"clientinfo": {

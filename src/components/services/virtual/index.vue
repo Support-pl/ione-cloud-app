@@ -20,7 +20,7 @@
 						<transition name="specs" mode="out-in">
 							<table v-if="getProducts.description != undefined" class="product__specs" :key="getProducts.name">
 								<tr v-for="val in getProducts.description.properties" :key="val.GROUP">
-									<td>{{val.GROUP}}</td>
+									<td>{{$t('virtual_product.'+val.GROUP) | capitalize}}</td>
 									<td>{{val.TITLE}}</td>
 								</tr>
 							</table>

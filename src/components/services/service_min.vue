@@ -51,5 +51,20 @@ export default {
 	align-items: center;
 	font-size: 2rem;
 	margin-bottom: 3px;
+	position: relative;
 }
+
+.service__icon::after{
+	color: var(--main);
+	font-size: 2.3rem;
+	content: '+';
+	display: block;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 1rem;
+	height: 1rem;
+	transform: translate(5px, -14px);
+}
+
 </style>
