@@ -89,7 +89,7 @@ export default {
 	},
 	computed: {
 		user(){
-			return this.$store.getUser;
+			return this.$store.getters.getUser;
 		}
 	}
 }
