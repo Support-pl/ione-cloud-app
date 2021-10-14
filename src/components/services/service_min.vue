@@ -54,7 +54,7 @@ export default {
 	position: relative;
 }
 
-.service__icon::after{
+/* .service__icon::after{
 	color: var(--main);
 	font-size: 2.3rem;
 	content: '+';
@@ -65,6 +65,6 @@ export default {
 	width: 1rem;
 	height: 1rem;
 	transform: translate(5px, -14px);
-}
+} */
 
 </style>
