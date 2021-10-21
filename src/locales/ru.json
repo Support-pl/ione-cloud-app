@@ -212,6 +212,13 @@
 	
 	"enter": "войти",
 	
+	"period": {
+		"day": "день",
+		"week": "неделя",
+		"month": "месяц",
+		"year": "год"
+	},
+	
 	"userService": {
 		"billing cycle": "период оплаты",
 		"renewal amount": "стоимость продления",

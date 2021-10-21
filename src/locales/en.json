@@ -212,6 +212,13 @@
 	
 	"enter": "enter",
 	
+	"period": {
+		"day": "day",
+		"week": "week",
+		"month": "month",
+		"year": "year"
+	},
+		
 	"userService": {
 		"billing cycle": "billing cycle",
 		"renewal amount": "renewal amount",
