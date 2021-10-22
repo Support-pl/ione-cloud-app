@@ -187,7 +187,7 @@
 			
 			<div class="newCloud__calculate newCloud__field">
 					
-				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
+				<!-- <a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
 					<a-col :span="22">
 						<a-select default-value="hour" :disabled="options.tarification" :value="periodToShow" style="width: 100%" @change="changePeriod">
 							<a-select-option value="hour">
@@ -204,7 +204,7 @@
 							</a-select-option>
 						</a-select>
 					</a-col>
-				</a-row>
+				</a-row> -->
 					
 				<a-row type="flex" justify="space-between">
 					<a-col>
@@ -281,7 +281,31 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice()}} {{currencyPostfix}}/{{$tc(toShow[periodToShow])}}
+								~{{calculateFullPrice('hour')}} {{currencyPostfix}}/{{$t('hour')}}
+							</a-skeleton>
+						</a-tooltip>
+					</a-col>
+				</a-row>
+				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
+					<a-col>
+						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+							<template slot="title">
+								{{$t('Actual price may vary')}}
+							</template>
+							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
+								~{{calculateFullPrice('day')}} {{currencyPostfix}}/{{$t('day')}}
+							</a-skeleton>
+						</a-tooltip>
+					</a-col>
+				</a-row>
+				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
+					<a-col>
+						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+							<template slot="title">
+								{{$t('Actual price may vary')}}
+							</template>
+							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
+								~{{calculateFullPrice('month')}} {{currencyPostfix}}/{{$tc('period.month')}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -506,9 +530,9 @@ export default {
 			this.period = value;
 		},
 		calculatePrice(price, period = this.period){
-			if(this.options.tarification){
-				return price;	
-			}
+			// if(this.options.tarification){
+			// 	return price;	
+			// }
 			switch (period) {
 				case "minute":
 					price = price / 60;
@@ -522,13 +546,13 @@ export default {
 					price = price / 30 * 7;
 					break
 				default:
-					console.error("[VDC Calculator]: Wrong price in calc.");
+					console.error("[VDC Calculator]: Wrong price in calc.", period);
 					return undefined
 					break;
 			}
 			return price;
 		},
-		calculateFullPrice(){
+		calculateFullPrice(tarification = this.period){
 			if(this.options.rate.id != 0){
 				this.options.tarification = true;
 				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[this.currencyPostfix];
@@ -539,7 +563,7 @@ export default {
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size,
 				// this.options.network.price * this.options.network.public.count
 				]
-			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(2);
+			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(2);
 		},
 		createVDC(){
 			const user = this.user;
