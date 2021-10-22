@@ -27,7 +27,7 @@
 				</router-link>
 			</div>
 			<div v-else-if="user" class="products__control">
-				<a-button
+				<!-- <a-button
 					class="products__new"
 					size="small"
 					shape="round"
@@ -37,7 +37,7 @@
 					v-if="queryTypes.length == 1"
 				>
 					{{$t('Order')}}
-				</a-button>
+				</a-button> -->
 				<a-popover placement="bottomRight">
 					<template slot="content">
 						<p v-for="(type, key) in $config.services" :key="key">
@@ -91,6 +91,19 @@
 			</template>
 			<loading v-else-if="productsLoading"/>
 			<a-empty v-else/>
+			<a-button
+					class="products__new"
+					size="large"
+					shape="round"
+					icon="plus"
+					type="primary"
+					style="margin-top: 15px"
+					@click="newProductHandle"
+					block
+					v-if="queryTypes.length == 1"
+				>
+					{{$t('Order')}}
+				</a-button>
 		</div>
 	</div>
 </template>

@@ -6,7 +6,7 @@
 		<a-row :gutter='[10, 10]'>
 			<a-col :md="12" :xs="12" :sm="12">
 				<div class="service-page__info">
-					<div class="service-page__info-title">{{$t('virtual.used space') | capitalize}}:</div>
+					<div class="service-page__info-title">{{$t('virtual_product.used space') | capitalize}}:</div>
 
 					<div class="service-page__info-value">{{service.diskusage}}MB / {{service.disklimit}}MB ({{service.diskusage / service.disklimit * 100}}%)</div>
    				<a-progress :percent="service.diskusage / service.disklimit * 100" :show-info="false" />
@@ -15,9 +15,9 @@
 
 			<a-col :md="12" :xs="12" :sm="12">
 				<div class="service-page__info">
-					<div class="service-page__info-title">{{$t('virtual.bw') | capitalize}}:</div>
+					<div class="service-page__info-title">{{$t('virtual_product.bw') | capitalize}}:</div>
 
-					<div class="service-page__info-value">{{service.bwusage}}MB / {{service.bwlimit ? service.bwlimit + 'MB' + ' (' + service.bwusage / service.bwlimit * 100 + '%)' : $t('virtual.unlimited')}}</div>
+					<div class="service-page__info-value">{{service.bwusage}}MB / {{service.bwlimit ? service.bwlimit + 'MB' + ' (' + service.bwusage / service.bwlimit * 100 + '%)' : $t('virtual_product.unlimited')}}</div>
    				<a-progress :percent="service.bwusage / service.bwlimit * 100" :show-info="false" />
 				</div>
 			</a-col>
