@@ -119,7 +119,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-slider v-model="options.disk.size" :min="options.disk.min[options.disk.type]" :max="options.disk.max[options.disk.type]" :tooltip-visible="showTooltip" :step="10" />
+												<a-slider v-model="options.disk.size" :min="diskMinValue" :max="diskMaxValue" :tooltip-visible="showTooltip" :step="10" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
@@ -370,6 +370,7 @@ export default {
 	name: "newVDC",
 	data(){
 		return {
+			settings: {},
 			diskTypes: [],
 			savedRateId: 0,
 			custom: true,
@@ -459,13 +460,20 @@ export default {
 			}
 			this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 		}
-		this.$axios.get("getSettings.php?filter=cost,disktypes" )
+		this.$axios.get("getSettings.php?filter=cost,disktypes,minDisk,maxDisk" )
 			.then( res => {
 				// console.log(res);
-				this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 30 * 3600 * 24
-				this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 30 * 3600 * 24
-				this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 30 * 3600 * 24
-				this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 30 * 3600 * 24
+				this.settings = res;
+				const multiplier = 60*60*24;
+				const CAPACITY_COST = res.data.CAPACITY_COST;
+				this.options.cpu.price = CAPACITY_COST.CPU_COST * multiplier
+				this.options.ram.price = CAPACITY_COST.MEMORY_COST * multiplier
+
+				const DISK_COSTS = res.data.DISK_COSTS;
+				Object.keys(DISK_COSTS).forEach(disktype => {
+					this.options.disk.price[disktype] = DISK_COSTS[disktype] * multiplier
+				})
+
 				this.options.network.price = res.data.PUBLIC_IP_COST;
 				this.diskTypes = res.data.DISK_TYPES.split(',');
 				this.options.disk.type = this.diskTypes[0];
@@ -604,11 +612,11 @@ export default {
 			}
 			this.modal.confirmLoading = true;
 			this.send()
-				.then( responce => {
-					if(responce.data.result == 'error'){
-						this.$message.error(responce.data.message);
+				.then( response => {
+					if(response.result == 'error'){
+						this.$message.error(response.message);
 					} else {
-						this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
+						this.$message.success(this.$t('VDC created successfully with') +' id = ' + response.id);
 						this.$store.dispatch("app/setTabByName", "cloud");
 					}
 					this.options.password = '';
@@ -659,7 +667,7 @@ export default {
 				this.$store.commit('setOnloginInfo', {
 					type: 'IaaS',
 					title: 'Cloud Virtual machine',
-					cost: this.calculateFullPrice()
+					cost: this.calculateFullPrice('month')
 				});
 
 				this.$store.dispatch('setOnloginAction', () => {
@@ -741,6 +749,34 @@ export default {
 		},
 		currencyPostfix(){
 			return this.$config.currency.suffix;
+		},
+		isWindowsSelected(){
+			return this.options.os.name.search(/windows/i) != -1;
+		},
+		selectedTemplate(){
+			return this.templatesArray.find(template => template.id == this.options.os.id);
+		},
+		diskMinValue(){
+			if(this.selectedTemplate?.minDisk != undefined){
+				return this.selectedTemplate.minDisk
+			}
+
+			if(this.settings.minDisk != undefined){
+				return this.settings.minDisk;
+			}
+
+			return 50;
+		},
+		diskMaxValue(){
+			if(this.selectedTemplate?.maxDisk != undefined){
+				return this.selectedTemplate.maxDisk
+			}
+
+			if(this.settings.maxDisk != undefined){
+				return this.settings.maxDisk;
+			}
+
+			return 2000;
 		}
 	},
 	watch: {
@@ -751,6 +787,11 @@ export default {
 				}, 250);
 			} else {
 					this.showTooltip = false
+			}
+		},
+		diskMinValue(val){
+			if(this.options.disk.size < val){
+				this.options.disk.size = val;
 			}
 		}
 	}

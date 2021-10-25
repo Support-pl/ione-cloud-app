@@ -350,13 +350,13 @@ export default {
 				addons,
 				billingcycle: this.options.period,
 			}
-			// console.log(orderData);
+			console.log(orderData, this.$store.getters.getUser);
 
-			if(!this.$store.getUser){
+			if(!this.$store.getters.getUser){
 				this.$store.commit('setOnloginInfo', {
 					type: 'VM',
 					title: 'Virtual machine',
-					cost: this.getFullPrice()
+					cost: this.getFullPrice
 				});
 
 				this.$store.dispatch('setOnloginAction', () => {
@@ -366,6 +366,8 @@ export default {
 				this.$router.push({name: 'login'});
 
 				return;
+			} else {
+				this.orderVM(orderData)
 			}
 		},
 		orderVM(orderData){
