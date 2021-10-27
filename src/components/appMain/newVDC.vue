@@ -458,7 +458,7 @@ export default {
 				userid: user.id,
 				secret: md5('createVDC' + user.id + user.secret)
 			}
-			this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
+			// this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 		}
 		this.$axios.get("getSettings.php?filter=cost,disktypes,minDisk,maxDisk" )
 			.then( res => {
