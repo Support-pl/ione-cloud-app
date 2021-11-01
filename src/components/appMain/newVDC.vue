@@ -319,7 +319,7 @@
 					<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
 						<a-col>
 							<div style="text-align: center">
-								{{$t('When paying per month - save up to 15%')}}
+								{{$t(`When paying per month - save up to`)}} {{monthDiscount}}%
 							</div>
 						</a-col>
 					</a-row>
@@ -347,6 +347,11 @@
 							@ok="handleOk"
 							@cancel="handleCancel"
 						>
+
+							<p v-if="options.tarification">
+								{{$t('With discount')}} {{monthDiscount}}% {{$t('you will pay:')}} {{costAfterDiscount}}{{currencyPostfix}}
+							</p>
+
 							<p>
 								{{$t("Enter VM name")}}:
 								<a-input v-model="options.vmname" />
@@ -354,6 +359,10 @@
 							<p>
 								{{$t("Enter OS password")}}:
 								<a-input-password v-model="options.password" />
+							</p>
+							<p>
+								{{$t("Enter OS password again")}}:
+								<a-input-password v-model="options.password2" />
 							</p>
 						</a-modal>
 					</a-col>
@@ -370,6 +379,7 @@ export default {
 	name: "newVDC",
 	data(){
 		return {
+			monthDiscount: 15,
 			settings: {},
 			diskTypes: [],
 			savedRateId: 0,
@@ -390,10 +400,13 @@ export default {
 				confirmCreate: false,
 				confirmLoading: false
 			},
+			DISK_MIN_SIZE: {},
+			DISK_MAX_SIZE: {},
 			options: {
 				tarification: false,
 				vmname: '',
 				password: '',
+				password2: '',
 				rate: {
 					id: 0,
 					name: 'Custom'
@@ -416,7 +429,7 @@ export default {
 					max: 512
 				},
 				disk: {
-					size: 20,
+					size: 0,
 					units: "GB",
 					type: "",
 					price: {
@@ -424,12 +437,12 @@ export default {
 						SSD: 0
 					},
 					min: {
-						HDD: 50,
-						SSD: 20
+						HDD: 0,
+						SSD: 0
 					},
 					max: {
-						HDD: 1020,
-						SSD: 1020
+						HDD: 0,
+						SSD: 0
 					},
 					backupPrice: 0
 				},
@@ -448,7 +461,6 @@ export default {
 		}
 	},
 	mounted(){
-		// console.log(this.user);
 		this.$store.dispatch("newVDC/fetchTemplates");
 		this.$store.dispatch("newVDC/fetchRates");
 		
@@ -462,9 +474,8 @@ export default {
 		}
 		this.$axios.get("getSettings.php?filter=cost,disktypes,minDisk,maxDisk" )
 			.then( res => {
-				// console.log(res);
-				this.settings = res;
-				const multiplier = 60*60*24;
+				this.settings = res.data;
+				const multiplier = 60*60*24*30;
 				const CAPACITY_COST = res.data.CAPACITY_COST;
 				this.options.cpu.price = CAPACITY_COST.CPU_COST * multiplier
 				this.options.ram.price = CAPACITY_COST.MEMORY_COST * multiplier
@@ -554,7 +565,7 @@ export default {
 					price = price / 30 * 7;
 					break
 				default:
-					console.error("[VDC Calculator]: Wrong price in calc.", period);
+					console.error("[VDC Calculator]: Wrong period in calc.", period);
 					return undefined
 					break;
 			}
@@ -608,6 +619,10 @@ export default {
 		handleOk(){
 			if(this.options.password.length < 6) {
 				this.$message.error(this.$t("Password is too short"));
+				return 0
+			}
+			if(this.options.password != this.options.password2) {
+				this.$message.error(this.$t("Password mismatch"));
 				return 0
 			}
 			this.modal.confirmLoading = true;
@@ -725,6 +740,9 @@ export default {
 		}
 	},
 	computed: {
+		costAfterDiscount(){
+			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(2);
+		},
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
 			return elements;
@@ -757,26 +775,27 @@ export default {
 			return this.templatesArray.find(template => template.id == this.options.os.id);
 		},
 		diskMinValue(){
-			if(this.selectedTemplate?.minDisk != undefined){
-				return this.selectedTemplate.minDisk
+			if(this.selectedTemplate?.DISK_MIN_SIZE?.[this.options.disk.type] != undefined){
+				return this.selectedTemplate.DISK_MIN_SIZE
 			}
 
-			if(this.settings.minDisk != undefined){
-				return this.settings.minDisk;
+			if(this.settings?.DISK_MIN_SIZE?.[this.options.disk.type] != undefined){
+				console.log(this.settings.DISK_MIN_SIZE[this.options.disk.type]);
+				return this.settings.DISK_MIN_SIZE[this.options.disk.type];
 			}
 
 			return 50;
 		},
 		diskMaxValue(){
-			if(this.selectedTemplate?.maxDisk != undefined){
-				return this.selectedTemplate.maxDisk
+			if(this.selectedTemplate?.DISK_MAX_SIZE?.[this.options.disk.type] != undefined){
+				return this.selectedTemplate.DISK_MAX_SIZE[this.options.disk.type]
 			}
 
-			if(this.settings.maxDisk != undefined){
-				return this.settings.maxDisk;
+			if(this.settings?.DISK_MAX_SIZE?.[this.options.disk.type] != undefined){
+				return this.settings.DISK_MAX_SIZE[this.options.disk.type];
 			}
 
-			return 2000;
+			return 300;
 		}
 	},
 	watch: {
@@ -789,10 +808,14 @@ export default {
 					this.showTooltip = false
 			}
 		},
-		diskMinValue(val){
-			if(this.options.disk.size < val){
-				this.options.disk.size = val;
-			}
+		diskMinValue:{
+			handler: function(val){
+				console.log(val)
+				if(this.options.disk.size < val){
+					this.options.disk.size = val;
+				}
+			},
+      immediate: true
 		}
 	}
 }
@@ -1003,7 +1026,7 @@ export default {
 
 	.networkApear-enter-active, .networkApear-leave-active {
 		transition: opacity .5s, height .5s;
-		height: 26px;
+		height: 28px;
 	}
 	.networkApear-enter, .networkApear-leave-to {
 		opacity: 0;
