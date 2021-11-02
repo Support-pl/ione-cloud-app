@@ -5,7 +5,7 @@
 				<appHeader/>
 			</a-layout-header>
 			<a-layout-content :style="{'background-color': $config.colors.bright_bg, 'position': 'relative'}">
-				<transition name="nomain__slider">
+				<transition name="main-frame-anim">
 					<router-view class="frame"></router-view>
 				</transition>
 			</a-layout-content>
@@ -91,4 +91,19 @@ export default {
 		width: 100%;
 		overflow-y: auto;
 	}
+	
+.main-frame-anim-enter-active,
+.main-frame-anim-leave-active {
+  transition: all .25s ease;
+}
+
+.main-frame-anim-enter{
+  transform: translateY(-0.5em);
+  opacity: 0;
+}
+
+.main-frame-anim-leave-to{
+  transform: translateY(0.5em);
+  opacity: 0;
+}
 </style>

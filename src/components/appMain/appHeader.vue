@@ -11,11 +11,12 @@
 				</div>
 
 				<div class="header__right-side">
-					<div class="header__buttons" v-if="headers[active]" >
+					<!-- <div class="header__buttons" v-if="headers[active]" > -->
+					<transition-group name="header__item-anim" class="header__buttons" v-if="headers[active]" tag="div">
 
 						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
 							<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-								<a-icon class="header__icon" :type="button.icon"/>
+								<a-icon :spin="button.isSpin" class="header__icon" :type="button.icon"/>
 							</div>
 
 							<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper btn--no-image" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
@@ -39,10 +40,13 @@
 
 						</div>
 
-					</div>
-					<div v-if="isNeedBalance && user" class="header__balance">
-						<balance/>
-					</div>
+					</transition-group>
+					<!-- </div> -->
+					<transition name="header__item-anim">
+						<div v-if="isNeedBalance && user" class="header__balance">
+							<balance/>
+						</div>
+					</transition>
 
 					<div class="header__links" v-if="!user">
 						<router-link :to="{name: 'login'}">{{$t('login')}}</router-link>
@@ -429,4 +433,12 @@ export default {
 		margin-left: 10px;
 		padding-right: 10px;
 	}
+	
+.header__item-anim-enter-active, .header__item-anim-leave-active {
+  transition: all .2s;
+}
+.header__item-anim-enter, .header__item-anim-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>
