@@ -43,6 +43,8 @@ export default {
 		const lang = localStorage.getItem("lang");
 		if(lang != undefined)
 			this.$i18n.locale = lang;
+
+		this.$store.dispatch('fetchDomainInfo')
 	},
 	mounted(){
 		this.$router.onReady(route => {

@@ -1,3 +1,4 @@
+import api from "../api"
 export default {
 	state: {
 		user: null,
@@ -8,6 +9,10 @@ export default {
 			redirect: null,
 			action: null,
 			info: null
+		},
+
+		domain: {
+
 		}
 	},
 	mutations: {
@@ -53,6 +58,9 @@ export default {
 				action: null,
 				info: null
 			}
+		},
+		setDomain(state, data){
+			state.domain = data
 		}
 	},
 	actions: {
@@ -77,6 +85,13 @@ export default {
 			commit('_setOnloginAction', () => {
 				data();
 				commit('clearOnlogin');
+			})
+		},
+		fetchDomainInfo({commit}){
+			api.getWithParams("domain.test")
+			.then(res => {
+				console.log(res);
+				commit('setDomain', res)
 			})
 		}
 	},
@@ -108,6 +123,9 @@ export default {
 		getOnlogin(state){
 			return state.onlogin;
 		},
+		getDomainInfo(state){
+			return state.domain?.settings ?? {}
+		}
 	}
 }
 

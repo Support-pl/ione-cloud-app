@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			support.by
+			{{companyName}}
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -186,6 +186,9 @@ export default {
 	computed: {
 		getOnlogin(){
 			return this.$store.getters.getOnlogin;
+		},
+		companyName(){
+			return this.$store.getters['getDomainInfo'].name ?? "IONe cloud app"
 		}
 	}
 }
