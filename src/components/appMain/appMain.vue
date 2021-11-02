@@ -1,56 +1,35 @@
 <template>
 	<div class="application">
 		<a-layout>
-			<a-layout-header :style="{'background-color': $config.colors.main, color: $config.colors.bright_font, padding: 0}">
-				<appHeader/>
+			<a-layout-header :style="{'background-color': 'var(--main)', color: 'var(--bright_font)', padding: 0}">
+				<appHeader />
 			</a-layout-header>
-			<a-layout-content :style="{'background-color': $config.colors.bright_bg, 'position': 'relative'}">
+
+			<a-layout-content :style="{'background-color': 'var(--bright_bg)', 'position': 'relative'}">
 				<transition name="main-frame-anim">
 					<router-view class="frame"></router-view>
 				</transition>
 			</a-layout-content>
+
 			<a-layout-footer v-if="user" :style="{padding: 0}">
-				<appFooter :active="active" />
+				<appFooter />
 			</a-layout-footer>
-    	</a-layout>
+
+		</a-layout>
 	</div>
 </template>
 
 <script>
 import appFooter from './appFooter.vue';
 import appHeader from './appHeader.vue';
-import cloud from '../../routes/cloud.vue';
-import support from '../../routes/support.vue';
-import invoice from '../../routes/invoice.vue';
-import settings from '../../routes/settings.vue';
 
 export default {
 	name:"appMain",
 	components: {
 		appFooter,
 		appHeader,
-		cloud,
-		support,
-		invoice,
-		settings
-	},
-	data(){
-		return {
-			activeName: '',
-			unwatch: null,
-		}
 	},
 	computed: {
-		active: {
-			get(){
-				let ret = this.activeName == '' ? this.$router.currentRoute.name : this.activeName;
-				ret = ret == "cloudHome" ? 'cloud' : ret;
-				return ret;
-			},
-			set(newVal){
-				this.activeName = newVal; 
-			}
-		},
 		user(){
 			return this.$store.getters.getUser;
 		}
@@ -60,7 +39,6 @@ export default {
 			this.$store.dispatch('app/setTabByNameNoRoute', this.$router.currentRoute.name)
 		});
 		this.$router.beforeEach((to, from, next) => {
-			this.activeName = to.name == 'cloudHome' ? 'cloud' : to.name;
 			this.$store.dispatch('app/setTabByNameNoRoute', to.name)
 			next();
 		})
