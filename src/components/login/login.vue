@@ -72,7 +72,8 @@
 				</div>
 				<div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>
-					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px; height: 150px">
+					<!-- <img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px; height: 150px"> -->
+  				<qrcode-vue :value="selfUrl" size="150" level="M" renderAs="svg" />
 				</div>
 			</div>
 		</div>
@@ -82,6 +83,7 @@
 
 <script>
 import md5 from 'md5'
+import QrcodeVue from 'qrcode.vue'
 
 export default {
 	name: "login",
@@ -94,6 +96,9 @@ export default {
 			email: '',
 			qrcode: null
 		}
+	},
+	components: {
+		QrcodeVue
 	},
 	props: {
 		getUser: Function
@@ -189,6 +194,9 @@ export default {
 		},
 		companyName(){
 			return this.$store.getters['getDomainInfo'].name ?? "IONe cloud app"
+		},
+		selfUrl(){
+			return location.href;
 		}
 	}
 }
