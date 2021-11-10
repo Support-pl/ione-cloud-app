@@ -215,7 +215,9 @@
 	"info": "информация",
 	
 	"enter": "войти",
-	
+	"all fields are required": "необходимо заполнить все поля",
+	"field must contain more characters": "поле должн содержать больше символов",
+
 	"period": {
 		"day": "день",
 		"week": "неделя",

@@ -9,12 +9,12 @@ export default {
 		bright_bg: '#f7f7f7',
 	},
 	languages: ['en', 'ru'],
-	WHMCSsiteurl: 'https://my.support.by/',
-	appFolder: 'app_back/v1',
+	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
+	appFolder: globalConfig.appFolder ?? 'app_backend/v1',
 	currency: {
-		prefix: "",
-		suffix: "BYN",
-		code: "BYN",
+		prefix: globalConfig?.currency?.prefix ?? "",
+		suffix: globalConfig?.currency?.suffix ?? "USD",
+		code: globalConfig?.currency?.code ?? "USD",
 	},
 	services: {
 		virtual: {

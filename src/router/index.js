@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import appMain from '../components/appMain/appMain.vue'
-import Login from '../components/login/login.vue'
 import config from '../appconfig'
 
 Vue.use(VueRouter)
@@ -45,7 +44,7 @@ const routes = [
 			mustBeLoggined: false,
 			mustBeUnloggined: true,
 		},
-		component: Login
+		component: () => import('../routes/login.vue')
 	},
 	{
 		path: '/register',

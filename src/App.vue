@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import login from './components/login/login.vue';
+import login from './routes/login.vue';
 import appMain from './components/appMain/appMain.vue';
 import updateNotification from './components/updateNotification/index.vue';
 

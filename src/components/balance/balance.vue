@@ -1,12 +1,12 @@
 <template>
 	<div class="balance">
 		<span class="balance__item" @click="showModal" :class="{ clickable: clickable }">
-			{{user.balance}} 
+			{{currency.prefix}}{{user.balance}} 
 			<a-badge v-if="clickable" :count="'+'" :offset="[10, -8]">
-				{{user.currency_code}}
+				{{currency.suffix}}
 			</a-badge>
 			<template v-else>
-				{{user.currency_code}}
+				{{currency.suffix}}
 			</template>
 		</span>
 		<addFunds :modalVisible="modalVisible" :hideModal="hideModal"/>
@@ -56,6 +56,9 @@ export default {
 		user(){
 			return this.$store.getters.getUser;
 		},
+		currency(){
+			return this.$config.currency;
+		}
 	},
 	methods: {
 		URLparameter(obj, outer = ''){

@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			support.by
+			{{companyName}}
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -23,39 +23,79 @@
 					<form>
 					<!-- <div v-if="loginError" class="login__error">{{loginError}}</div> -->
 
-						<div class="inputs__log-pas">
+						<!-- <div class="inputs__log-pas">
 							<input type="text" placeholder="Email" v-model="userinfo.email">
 							<span class="login__horisontal-line"></span>
-							<input type="password" :placeholder="$t('clientinfo.password')"  v-model="userinfo.password">
-						</div>
+							<input type="password" :placeholder="$t('clientinfo.password') | capitalize"  v-model="userinfo.password">
+						</div> -->
 
 						<div class="inputs__log-pas">
-							<input type="text" :placeholder="$t('clientinfo.firstname')" v-model="userinfo.firstname">
+							<input
+								type="text"
+								name="firstname"
+								:placeholder="$t('clientinfo.firstname') + ' *' | capitalize"
+								v-model="userinfo.firstname"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
 							<span class="login__horisontal-line"></span>
-							<input type="text" :placeholder="$t('clientinfo.lastname')"  v-model="userinfo.lastname">
+							<input
+								type="text"
+								name="lastname"
+								:placeholder="$t('clientinfo.lastname') + ' *' | capitalize" 
+								v-model="userinfo.lastname"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
+							<span class="login__horisontal-line"></span>
+							<input
+								type="email"
+								name="email"
+								:placeholder="$t('clientinfo.email') + ' *' | capitalize"
+								v-model="userinfo.email"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
+							<span class="login__horisontal-line"></span>
+							<input
+								type="text"
+								name="phone"
+								:placeholder="$t('clientinfo.phone number') + ' *' | capitalize"
+								v-model="userinfo.phonenumber"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
+							<span class="login__horisontal-line"></span>
+							<input
+								type="password"
+								name="password"
+								:placeholder="$t('clientinfo.password') + ' *' | capitalize" 
+								v-model="userinfo.password"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
 						</div>
 
-						<div class="inputs__log-pas">
-							<!-- <input type="text" placeholder="Country" v-model="userinfo.country"> -->
+						<!-- <div class="inputs__log-pas">
 							<select name="country" id="country" v-model="userinfo.country">
 								<option v-for="country in countries" :key="country.code" :value="country.code">{{country.title}}</option>
 							</select>
 							<span class="login__horisontal-line"></span>
-							<input type="text" :placeholder="$t('clientinfo.state')" v-model="userinfo.state">
+							<input type="text" :placeholder="$t('clientinfo.state') | capitalize" v-model="userinfo.state">
 							<span class="login__horisontal-line"></span>
-							<input type="text" :placeholder="$t('clientinfo.city')" v-model="userinfo.city">
+							<input type="text" :placeholder="$t('clientinfo.city') | capitalize" v-model="userinfo.city">
 							<span class="login__horisontal-line"></span>
-							<input type="text" :placeholder="$t('clientinfo.postcode')" v-model="userinfo.postcode">
+							<input type="text" :placeholder="$t('clientinfo.postcode') | capitalize" v-model="userinfo.postcode">
 							<span class="login__horisontal-line"></span>
-							<input type="text" :placeholder="$t('clientinfo.address')"  v-model="userinfo.address1">
+							<input type="text" :placeholder="$t('clientinfo.address') | capitalize"  v-model="userinfo.address1">
 						</div>
 
 						<div class="inputs__log-pas">
-							<input type="text" :placeholder="$t('clientinfo.phone number')" v-model="userinfo.phonenumber">
-						</div>
+							<input type="text" :placeholder="$t('clientinfo.phone number') | capitalize" v-model="userinfo.phonenumber">
+						</div> -->
 
 						<template>
-							<button v-if="!registerLoading" @click="submitHandler()" class="login__submit">{{$t('clientinfo.register') | capitalize}}</button>
+							<button v-if="!registerLoading" @click.prevent="submitHandler()" class="login__submit">{{$t('clientinfo.register') | capitalize}}</button>
 								
 							<div v-else class="login__loading">
 								<span class="load__item"></span>
@@ -90,10 +130,10 @@ export default {
 				lastname: '',
 				email: '',
 				password: '',
-				address1: '',
-				city: '',
-				state: '',
-				postcode: '',
+				// address1: '',
+				// city: '',
+				// state: '',
+				// postcode: '',
 				country: 'BY',
 				phonenumber: ''
 			}
@@ -105,13 +145,13 @@ export default {
 		},
 		send(){
 			if(Object.keys(this.userinfo).some(key => !this.userinfo[key].length)){
-				this.$message.warn('all fields are required');
+				this.$message.warn(this.$t('all fields are required'));
 				return
 			}
 
 			for(let key in this.userinfo){
 				if(this.userinfo[key].length < 2){
-					this.$message.warn(key + ' field field must contain more characters');
+					this.$message.warn(key + ' ' + this.$t('field must contain more characters'));
 					return
 				}
 			}
@@ -134,6 +174,7 @@ export default {
 				console.log(result)
 			})
 			.catch(err => {
+				this.$message.error(err.message);
 				console.error(err);
 			})
 			.finally(()=>{
@@ -144,7 +185,10 @@ export default {
 	computed: {
 		getOnlogin(){
 			return this.$store.getters.getOnlogin;
-		}
+		},
+		companyName(){
+			return this.$store.getters['getDomainInfo'].name
+		},
 	}
 }
 </script>

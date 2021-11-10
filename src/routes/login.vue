@@ -193,7 +193,7 @@ export default {
 			return this.$store.getters.getOnlogin;
 		},
 		companyName(){
-			return this.$store.getters['getDomainInfo'].name ?? "IONe cloud app"
+			return this.$store.getters['getDomainInfo'].name
 		},
 		selfUrl(){
 			return location.href;

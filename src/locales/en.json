@@ -215,6 +215,8 @@
 	"info": "info",
 	
 	"enter": "enter",
+	"all fields are required": "all fields are required",
+	"field must contain more characters": "field must contain more characters",
 	
 	"period": {
 		"day": "day",
