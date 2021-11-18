@@ -18,6 +18,9 @@ export default {
 			.then(res => {
 				if(res.result == 'error')
 					throw res;
+				if(res?.cpanelresult?.error){
+					throw res;
+				}
 				window.open(res.data.url);
 			})
 			.catch(err => {
