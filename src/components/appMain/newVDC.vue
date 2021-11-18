@@ -658,7 +658,7 @@ export default {
 			const price = this.calculateFullPrice();
 			this.period = savedPeriod;
 			const vmOptions = {
-				'publicIPs': this.options.network.public.count,
+				'publicIPs': this.options.network.public.status ? this.options.network.public.count : 0,
 				'cpu': this.options.cpu.count,
 				'drivesize': this.options.disk.size,
 				'drive': this.options.disk.type,
@@ -712,8 +712,8 @@ export default {
 		},
 		changeValue(variable, val){
 			if(variable == 'disksize'
-				&& this.options.disk.size + val <= this.options.disk.max[this.options.disk.type]
-				&& this.options.disk.size + val >= this.options.disk.min[this.options.disk.type])
+				&& this.options.disk.size + val <= this.diskMaxValue
+				&& this.options.disk.size + val >= this.diskMinValue)
 			{
 				this.options.disk.size += val;
 			}
@@ -780,7 +780,7 @@ export default {
 			}
 
 			if(this.settings?.DISK_MIN_SIZE?.[this.options.disk.type] != undefined){
-				console.log(this.settings.DISK_MIN_SIZE[this.options.disk.type]);
+				// console.log(this.settings.DISK_MIN_SIZE[this.options.disk.type]);
 				return this.settings.DISK_MIN_SIZE[this.options.disk.type];
 			}
 
@@ -810,7 +810,7 @@ export default {
 		},
 		diskMinValue:{
 			handler: function(val){
-				console.log(val)
+				// console.log(val)
 				if(this.options.disk.size < val){
 					this.options.disk.size = val;
 				}
