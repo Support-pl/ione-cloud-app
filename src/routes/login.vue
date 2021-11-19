@@ -193,7 +193,7 @@ export default {
 			return this.$store.getters.getOnlogin;
 		},
 		companyName(){
-			return this.$store.getters['getDomainInfo'].name
+			return this.$store.getters['getDomainInfo'].name ?? this.$config.appTitle
 		},
 		selfUrl(){
 			return location.href;

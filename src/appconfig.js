@@ -11,6 +11,7 @@ export default {
 	languages: ['en', 'ru'],
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
 	appFolder: globalConfig.appFolder ?? 'app_backend/v1',
+	appTitle: globalConfig.appTitle ?? '',
 	currency: {
 		prefix: globalConfig?.currency?.prefix ?? "",
 		suffix: globalConfig?.currency?.suffix ?? "USD",
