@@ -365,7 +365,6 @@ export default {
 			this.attach.newIP = this.attach.newIP.replace(/((\d{1,3}\.){3}\d{1,3})\d?\.?/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/(\d{1,3})\d*/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/[3-9]\d\d|[2-9][6-9]\d|[2-9][5-9][6-9]/gi, '255');
-			this.attach.newIP = this.attach.newIP.replace(/[4-9][1-9]|[3-9][3-9]/gi, '32');
 		},
 		selectedRows(rows){
 			this.attach.publicAR_ID = rows.selectedRows.map(el => el.AR_ID).join(',');

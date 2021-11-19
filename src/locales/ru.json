@@ -217,6 +217,12 @@
 	"enter": "войти",
 	"all fields are required": "необходимо заполнить все поля",
 	"field must contain more characters": "поле должн содержать больше символов",
+	
+	"disk_manage": {
+		"This will detach the disk immediately": "Это действие удалит диск полностью",
+		"All data will be lost": "Все данные будут удалены",
+		"Do you want to proceed?": "Вы хотите продолжить?"
+	},
 
 	"period": {
 		"day": "день",

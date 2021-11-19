@@ -218,6 +218,12 @@
 	"all fields are required": "all fields are required",
 	"field must contain more characters": "field must contain more characters",
 	
+	"disk_manage": {
+		"This will detach the disk immediately": "This will detach the disk immediately",
+		"All data will be lost": "All data will be lost",
+		"Do you want to proceed?": "Do you want to proceed?"
+	},
+	
 	"period": {
 		"day": "day",
 		"week": "week",

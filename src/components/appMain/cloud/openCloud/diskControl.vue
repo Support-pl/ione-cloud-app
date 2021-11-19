@@ -41,8 +41,9 @@
 			@ok="sendDetach"
 			@cancel="closeModal('detach')"
 		>
-			<p>This will detach the disk immediately</p>
-			<p>Do you want to proceed?</p>
+			<p>{{$t('disk_manage.This will detach the disk immediately')}}</p>
+			<p>{{$t('disk_manage.All data will be lost')}}</p>
+			<p>{{$t('disk_manage.Do you want to proceed?')}}</p>
 		</a-modal>
 		<a-modal
 			title="Disk attach"
@@ -52,7 +53,7 @@
 			@cancel="closeModal('attach')"
 		>
 			<a-radio-group v-model="attach.type">
-				<a-radio :value='1'>Image</a-radio>
+				<a-radio disabled :value='1'>Image</a-radio>
 				<a-radio :value='2'>Volatile disk</a-radio>
 			</a-radio-group>
 
@@ -137,7 +138,7 @@ export default {
 					'1': 'Image',
 					'2': 'Volatile disk'
 				},
-				type: 1,
+				type: 2,
 				size: 10,
 				imageID: -1,
 				loading: false
