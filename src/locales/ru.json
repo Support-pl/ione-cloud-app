@@ -218,6 +218,10 @@
 	"all fields are required": "необходимо заполнить все поля",
 	"field must contain more characters": "поле должн содержать больше символов",
 	
+	"quatnity": {
+		"items": "шт."
+	},
+	
 	"disk_manage": {
 		"This will detach the disk immediately": "Это действие удалит диск полностью",
 		"All data will be lost": "Все данные будут удалены",

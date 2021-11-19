@@ -68,7 +68,7 @@
 									</transition>
 								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									{{$t('Show full list')}} ({{inv.items.item.length-1}})
+									{{$t('Show full list')}} ({{inv.items.item.length}} {{$t('quatnity.items')}})
 								</div>
 							</div>
 						</div>

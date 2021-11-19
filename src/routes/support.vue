@@ -50,7 +50,7 @@ export default {
 
 <style>
 	.tickets{
-		overflow: hidden;
+		overflow: auto;
 		height: 100%;
 		position: relative;
 		padding-top: 20px;

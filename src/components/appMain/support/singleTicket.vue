@@ -38,6 +38,7 @@ export default {
 		},
 		beauty(message){
 			// return message
+			message = this.decode(message);
 			message = message.replace(/-{2,}.*/gi, '');
 			message = message.replace(/IP Address.*/gi, '');
 			return message;
@@ -51,6 +52,11 @@ export default {
 			const mi = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(d)
 
 			return `${ye}-${mo}-${da} ${(ho<=9 ? '0' + ho : ho)}:${(mi<=9 ? '0' + mi : mi)}`;
+		},
+		decode(text){
+			var txt = document.createElement('textarea');
+			txt.innerHTML = text;
+			return txt.value;
 		}
 	},
 	computed: {
@@ -73,9 +79,7 @@ export default {
 			return color;
 		},
 		titleDecoded(){
-			var txt = document.createElement('textarea');
-			txt.innerHTML = this.ticket.title;
-			return txt.value;
+			return this.decode(this.ticket.title)
 		}
 	},
 	mounted(){

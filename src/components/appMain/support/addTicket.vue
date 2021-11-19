@@ -14,8 +14,8 @@
 			</a-select>
 		</a-form-model-item>
 
-		<a-form-model-item label="Question subject">
-			<a-input v-model="ticketTitle" placeholder="type question subject" />
+		<a-form-model-item label="Subject">
+			<a-input v-model="ticketTitle" placeholder="" />
 		</a-form-model-item>
 
 		<a-form-model-item label="Question">
@@ -49,11 +49,6 @@ export default {
 		})
 	},
 	methods: {
-		clickOutOfBlock(){
-			if(event.target.classList.contains("addTicket__wrapper")){
-				this.closeFields();
-			}
-		},
 		closeFields(){
 			this.$store.commit('support/inverseAddTicketState')
 		},
@@ -100,8 +95,6 @@ export default {
 	created(){
 		this.$store.dispatch('support/fetchDepartments')
 		.then((res) => {
-			console.log(res);
-			console.log(this.departments);
 			this.ticketDepartment = this.departments[0].id;
 		})
 	}
