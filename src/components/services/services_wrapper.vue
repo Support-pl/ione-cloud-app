@@ -24,18 +24,18 @@ export default {
 					icon: 'database',
 					onclick: {
 						function: this.routeTo,
-						paramsArr: [{name: 'cloud', query: {type: 'PaaS'}}],
+						paramsArr: [{name: 'cloud'}],
 					}
 				},
-				{
-					title: 'Cloud',
-					translatable: true,
-					icon: 'cloud-server',
-					onclick: {
-						function: this.routeTo,
-						paramsArr: [{name: 'cloud', query: {type: 'IaaS'}}],
-					}
-				},
+				// {
+				// 	title: 'Cloud',
+				// 	translatable: true,
+				// 	icon: 'cloud-server',
+				// 	onclick: {
+				// 		function: this.routeTo,
+				// 		paramsArr: [{name: 'cloud', query: {type: 'IaaS'}}],
+				// 	}
+				// },
 				{
 					title: 'SSL',
 					icon: 'lock',

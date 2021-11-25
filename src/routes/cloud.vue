@@ -12,29 +12,69 @@
 		<loading v-if="isLoading" />
 
 		<template v-else>
-			<!-- <empty v-if="getClouds.length == 0"/>	 -->
-			<!-- <div v-else class="cloud__wrapper"> -->
-			<div class="cloud__wrapper">
-				<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-				<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
-					<span style="font-size: 1.2rem">
+			<div class="container">
+
+				<div class="create-vm__wrapper">
+
+					<div class="create-vm__header">
+						<div class="create-vm__title">
 						{{$t('create server') | capitalize}}
-					</span>
+						</div>
+					</div>
+
+						<div class="create-vm__type">
+							<div class="cloud__new-btn" @click="createVM('PaaS')">
+								<span style="font-size: 1.1rem">
+									{{$t('PaaS.createButton') | capitalize}}
+								</span>
+							</div>
+
+							<div class="create-vm__description cloud__info info">
+								<p class="info__content">
+									{{$t('PaaS.description')}}
+								</p>
+							</div>
+						</div>
+
+						<div class="create-vm__type">
+							<div class="cloud__new-btn" @click="createVM('IaaS')">
+								<span style="font-size: 1.1rem">
+									{{$t('IaaS.createButton') | capitalize}}
+								</span>
+							</div>
+
+							<div class="create-vm__description cloud__info info">
+								<p class="info__content">
+									{{$t('IaaS.description')}}
+								</p>
+							</div>
+						</div>
 				</div>
-			</div>
 
-
-			<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__info info">
-				<div class="info__header-container">
-					<h2 class="info__header">
-						<a-icon type="notification" />
-						<span class="info__header-text">
-							{{$t('info') | capitalize}}
+				<!-- <empty v-if="getClouds.length == 0"/>	 -->
+				<!-- <div v-else class="cloud__wrapper"> -->
+				<div class="cloud__wrapper">
+					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
+					<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
+						<span style="font-size: 1.2rem">
+							{{$t('create server') | capitalize}}
 						</span>
-					</h2>
+					</div>
 				</div>
-				<div class="info__content">
-					{{$t($route.query.type + '.order_info')}}
+
+
+				<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__info info">
+					<div class="info__header-container">
+						<h2 class="info__header">
+							<a-icon type="notification" />
+							<span class="info__header-text">
+								{{$t('info') | capitalize}}
+							</span>
+						</h2>
+					</div>
+					<div class="info__content">
+						{{$t($route.query.type + '.order_info')}}
+					</div>
 				</div>
 			</div>
 
@@ -66,12 +106,13 @@ export default {
 		SearchClear(){
 			this.textToSearch = '';
 		},
-		createVM(){
+		createVM(type){
 			let newRouteName;
-			if(this.$route.query.type == 'IaaS'){
+			type = type || this.$route.query.type;
+			if(type == 'IaaS'){
 				newRouteName = 'newVDC'
 			}
-			if(this.$route.query.type == 'PaaS'){
+			if(type == 'PaaS'){
 				newRouteName = 'newPaaS'
 			}
 			this.$store.dispatch("app/setTabByName", newRouteName);
@@ -132,9 +173,9 @@ export default {
 
 .cloud__new-btn{
 	position: relative;
-	box-shadow: 5px 8px 10px rgba(0, 0, 0, .05);
+	box-shadow: 4px 5px 10px rgba(0, 0, 0, .02);
 	border-radius: 15px;
-	min-height: 70px;
+	min-height: 60px;
 	border: 2px solid rgba(0, 0, 0, .1);
 	color:rgba(0, 0, 0, .7);
 	cursor: pointer;
@@ -169,7 +210,39 @@ export default {
 }
 
 .info__content{
-	font-size: 1.2rem;
+	font-size: 1.1rem;
+}
+
+.create-vm__wrapper{
+	background: #fff;
+	border-radius: 10px;
+	padding: 10px 10px 15px 10px;
+	margin-bottom: 10px;
+}
+
+.create-vm__title{
+	font-size: 18px;
+}
+.create-vm__header{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 5px;
+	margin-bottom: 15px;
+}
+
+.create-vm__type:not(:last-child){
+	margin-bottom: 20px;
+}
+
+.create-vm__description{
+	margin-left: 14px;
+	margin-top: 5px;
+	padding-right: 12px;
+}
+
+.create-vm__description p{
+	margin-bottom: 7px;
 }
 
 @media screen and (min-width: 768px){

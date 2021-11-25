@@ -254,11 +254,15 @@
 	},
 
 	"IaaS": {
-		"order_info": "Here you can order a pay-per-use server."
+		"order_info": "Here you can order a pay-per-use server.",
+		"description": "Create in the configurator and order a virtual machine with payment as you use it",
+		"createButton": "configurator VM"
 	},
 	
 	"PaaS": {
-		"order_info": "Here you can order servers with monthly payment."
+		"order_info": "Here you can order servers with monthly payment.",
+		"description": "Choose a ready-to-use tariff and order a virtual machine with one month's prepayment",
+		"createButton": "ready tariff"
 	},
 	
 	"virtual_product": {
