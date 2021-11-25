@@ -55,11 +55,11 @@
 				<!-- <div v-else class="cloud__wrapper"> -->
 				<div class="cloud__wrapper">
 					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-					<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
+					<!-- <div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
 						<span style="font-size: 1.2rem">
 							{{$t('create server') | capitalize}}
 						</span>
-					</div>
+					</div> -->
 				</div>
 
 
