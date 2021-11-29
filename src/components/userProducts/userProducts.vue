@@ -27,17 +27,6 @@
 				</router-link>
 			</div>
 			<div v-else-if="user" class="products__control">
-				<!-- <a-button
-					class="products__new"
-					size="small"
-					shape="round"
-					icon="plus"
-					type="primary"
-					@click="newProductHandle"
-					v-if="queryTypes.length == 1"
-				>
-					{{$t('Order')}}
-				</a-button> -->
 				<a-popover placement="bottomRight">
 					<template slot="content">
 						<p v-for="(type, key) in $config.services" :key="key">

@@ -60,7 +60,6 @@
 					</a-col>
 
 					<a-col :xs="12" :sm="18" :lg='12'>
-						<!-- <a-select :default-value="periods[0].value"  style="width: 100%"> -->
 						<a-select v-if="!fetchLoading" v-model="options.period"  style="width: 100%">
 							<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period'>
 								{{$t(period)}}

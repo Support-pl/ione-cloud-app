@@ -22,11 +22,6 @@
 						</div>
 					</div>
 
-					<!-- <div class="service-page__info">
-						<div class="service-page__info-title">Registration date:</div>
-						<div class="service-page__info-value">{{new Intl.DateTimeFormat().format(new Date(service.regdate))}}</div>
-					</div> -->
-
 					<a-row :gutter='[10, 10]'>
 						<a-col :md="12" :xs="12" :sm="12" v-for="elem in info" :key="elem.key">
 							<div class="service-page__info">

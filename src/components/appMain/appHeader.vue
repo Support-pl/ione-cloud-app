@@ -11,7 +11,6 @@
 				</div>
 
 				<div class="header__right-side">
-					<!-- <div class="header__buttons" v-if="headers[active]" > -->
 					<transition-group name="header__item-anim" class="header__buttons" v-if="headers[active]" tag="div">
 
 						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
@@ -67,7 +66,6 @@
 						</div>
 
 					</transition-group>
-					<!-- </div> -->
 					<transition name="header__item-anim">
 						<div v-if="isNeedBalance && user" class="header__balance">
 							<balance/>

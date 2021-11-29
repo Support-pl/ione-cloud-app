@@ -136,9 +136,6 @@
 									</a-col>
 									<a-col :sm="13" :span="14">
 										<a-select v-model="options.disk.type" class="max-width" :default-value="diskTypes[0]" @change='diskChange()'>
-											<!-- <a-select-option value="SSD">
-												SSD
-											</a-select-option> -->
 											<a-select-option v-for="type of diskTypes" :key="type" :value="type">
 												{{type}}
 											</a-select-option>
@@ -186,26 +183,7 @@
 			</div>
 			
 			<div class="newCloud__calculate newCloud__field">
-					
-				<!-- <a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
-					<a-col :span="22">
-						<a-select default-value="hour" :disabled="options.tarification" :value="periodToShow" style="width: 100%" @change="changePeriod">
-							<a-select-option value="hour">
-								{{$t("Cost")}}/{{$t("hour")}}
-							</a-select-option>
-							<a-select-option value="day">
-								{{$t("Cost")}}/{{$t("day")}}
-							</a-select-option>
-							<a-select-option value="week">
-								{{$t("Cost")}}/{{$t("week")}}
-							</a-select-option>
-							<a-select-option value="month">
-								{{$t("Cost")}}/{{$tc("month")}}
-							</a-select-option>
-						</a-select>
-					</a-col>
-				</a-row> -->
-					
+										
 				<a-row type="flex" justify="space-between">
 					<a-col>
 						CPU: {{options.cpu.count}}
@@ -245,30 +223,12 @@
 							Public IPv4:
 						</a-col>
 						<a-col>
-							<!-- <a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
-								<template slot="title">
-									{{$t('Actual price may vary')}}
-								</template>
-							</a-tooltip> -->
 							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
 								{{options.network.public.count * options.network.price}} {{currencyPostfix}}/month
 							</a-skeleton>
 						</a-col>
 					</a-row>
 				</transition>
-
-				<!-- <transition name="networkApear">
-					<a-row v-if="options.network.public.status" type="flex" justify="space-between">
-						<a-col>
-							{{$t("Network")}}:
-						</a-col>
-						<a-col>
-							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-								{{(calculatePrice(options.network.price)*options.network.public.count).toFixed(3)}}USD
-							</a-skeleton>
-						</a-col>
-					</a-row>
-				</transition> -->
 				
 				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 					{{$t('Total')}}:
@@ -311,7 +271,6 @@
 					</a-col>
 				</a-row>
 				
-				<!-- <template v-if="false"> -->
 					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 						{{$t('Tarification')}}:
 					</a-divider>
@@ -332,7 +291,6 @@
 							<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
 						</a-col>
 					</a-row>
-				<!-- </template> -->
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">

@@ -1,8 +1,5 @@
 <template>
 	<div class="module">
-		<!-- <div class="module__row-title">
-			Control buttons:
-		</div> -->
 		<a-row :gutter='[10, 10]'>
 			<a-col :md="12" :xs="12" :sm="12">
 				<div class="service-page__info">

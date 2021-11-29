@@ -135,11 +135,6 @@
 					<a-skeleton :loading="getCurrentProd==null" :active="true">
 					
 						
-						<!-- <transition name="textchange" mode="out-in">
-							<div class="result__title" :key='getCurrentProd!=null ? getCurrentProd.name : "sdg32tgssdfSTRING"'>
-								{{getCurrentProd!=null ? getCurrentProd.name : ''}}
-							</div>
-						</transition> -->
 
 						<a-row type="flex" justify="space-around" style="margin-top: 20px">
 							<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
@@ -147,7 +142,6 @@
 							</a-col>
 
 							<a-col :xs="12" :sm="18" :lg='12'>
-								<!-- <a-select :default-value="periods[0].value"  style="width: 100%"> -->
 								<a-select v-model="options.period"  style="width: 100%">
 									<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period.value'>
 										{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}

@@ -85,7 +85,6 @@
 				<div class="Fcloud__buttons">
 					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
 						<div class="Fcloud__BTN-icon">
-							<!-- <a-icon type="stop" /> -->
 							<div class="cloud__icon cloud__icon--stop"></div>
 						</div>
 						<div class="Fcloud__BTN-title">{{$t('Power off')}}</div>
@@ -211,7 +210,6 @@
 						<div class="Fcloud__block-header">
 							<a-icon type="apartment" />
 							{{$t('Network')}}
-							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content">
 							<div class="block__column">
@@ -229,7 +227,6 @@
 						<div class="Fcloud__block-header">
 							<a-icon type="line-chart" />
 							{{$t('graphs') | capitalize}} 
-							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content Fcloud__block-content--charts">
 							<a-row type='flex' justify="space-around" style="width: 100%">
