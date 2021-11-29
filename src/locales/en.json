@@ -94,7 +94,7 @@
 	"Delete": "Delete",
 	"Snapshots": "Snapshots",
 	"input password": "input password",
-	"сreate server": "сreate server",
+	"order server": "order server",
 
 	"basic": "basic",
 	"high": "high",
@@ -202,6 +202,7 @@
 
 	"sort": "sort",
 	"filter": "filter",
+	"search": "search",
 
 	"monthly": "monthly",
 	"quarterly": "quarterly",
@@ -255,14 +256,14 @@
 
 	"IaaS": {
 		"order_info": "Here you can order a pay-per-use server.",
-		"description": "Create in the configurator and order a virtual machine with payment as you use it",
+		"description": "Create in the configurator a virtual machine with payment as you use it.",
 		"createButton": "configurator VM"
 	},
 	
 	"PaaS": {
 		"order_info": "Here you can order servers with monthly payment.",
-		"description": "Choose a ready-to-use tariff and order a virtual machine with one month's prepayment",
-		"createButton": "ready tariff"
+		"description": "Сhoose a ready-to-use virtual machine.",
+		"createButton": "ready made VM"
 	},
 	
 	"virtual_product": {

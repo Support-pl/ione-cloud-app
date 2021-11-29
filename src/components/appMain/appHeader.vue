@@ -23,6 +23,32 @@
 								<div class="header__btn--no-image">{{button.name}}</div>
 							</div>
 
+							<div v-else-if="button.icon == 'search'" class="icon__wrapper" :class="[button.additionalClass]">
+								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+								<a-popover v-else placement="bottomRight">
+									<template slot="content">
+										<div>
+											<a-input-search
+												placeholder="title/id/IP"
+												enter-button
+												:value="searchString"
+												@input="(e) => $store.commit('cloud/updateSearch', e.target.value)"
+												@search="(text) => $store.commit('cloud/updateSearch', text)"
+											>
+												<div slot="suffix" @click="$store.commit('cloud/updateSearch', '')" style="cursor: pointer">
+													<a-icon type="close" style="color: rgba(0,0,0,.45)"/>
+												</div>
+											</a-input-search>
+											
+										</div>
+									</template>
+									<template slot="title">
+										<span>{{$t('search') | capitalize}}</span>
+									</template>
+									<a-icon class="header__icon" :type="button.icon"/>
+								</a-popover>
+							</div>
+
 							<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
 								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
 								<a-popover v-else placement="bottomRight">
@@ -81,8 +107,7 @@ export default {
 						{
 							name: 'cloud_search',
 							icon: 'search',
-							onClickFuncion: this.inverseSearch,
-							isActiveState: this.isSearch
+							popover: true
 						},
 						{
 							name: 'cloud_reload',
@@ -166,12 +191,8 @@ export default {
 		}),
 		...mapActions('cloud', ['fetchClouds']),
 		...mapMutations('support', ['inverseAddTicketState']),
-		...mapMutations('cloud', ['inverseSearch']),
 		getState(name){
 			switch (name) {
-				case 'cloud_search':
-					return this.isSearch;
-					break;
 				case 'support_filter':
 					return this.isOnlyClosedTickets;
 					break;
@@ -222,7 +243,7 @@ export default {
 		},
 		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets', 'getTickets', 'getAllTickets']),
 		...mapGetters('app', ['getActiveTab']),
-		...mapGetters('cloud', ['isSearch']),
+		...mapGetters('cloud', ['searchString']),
 		...mapGetters('invoices', ['getInvoices', 'getAllInvoices']),
 		...mapGetters(['getUser']),
 		active(){

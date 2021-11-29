@@ -13,8 +13,8 @@
 					IP: {{cloud.IP || $t('have no')}}
 			</div>
 		</div>
-		<div class="cloud__label cloud__label__mainColor" v-if="cloud.VDC == 1">
-			IaaS
+		<div class="cloud__label cloud__label__mainColor">
+			{{cloud.VDC == 1 ? "PAYG" : "PrePaid"}}
 		</div>
 	</div>
 </template>

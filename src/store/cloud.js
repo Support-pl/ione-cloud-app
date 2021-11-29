@@ -9,7 +9,7 @@ export default {
 	state: {
 		loading: false,
 		singleLoading: true,
-		isSearch: false,
+		searchString: '',
 		clouds: [],
 		updating: false,
 		opennedCloud: {},
@@ -35,8 +35,8 @@ export default {
 		makeLoadingIs(state, value) {
 			state.loading = value;
 		},
-		inverseSearch(state) {
-			state.isSearch = !state.isSearch;
+		updateSearch(state, data) {
+			state.searchString = data;
 		},
 		makeUpdatingIs(state, value) {
 			state.updating = value
@@ -157,10 +157,22 @@ export default {
 		}
 	},
 	getters: {
-		getClouds: state => textToSearch => {
-			const regexp = new RegExp(textToSearch, "i");
-			if (state.isSearch){
-				return state.clouds.filter(cloud => cloud.NAME.search(regexp) != -1 || cloud.STATE.search(regexp) != -1);
+		getClouds(state) {
+			const regexp = new RegExp(state.searchString, "i");
+			if (state.searchString){
+				const res = state.clouds.filter(cloud => {
+					const rules = [
+						cloud.NAME.search(regexp) != -1,
+						cloud.STATE.search(regexp) != -1,
+						cloud.ID.search(regexp) != -1,
+						cloud.IP !== undefined && cloud.IP.search(regexp) != -1,
+						cloud.CUSTOM_VM_NAME !== undefined && cloud.CUSTOM_VM_NAME.search(regexp) != -1,
+						cloud.IPS.some(ip => ip.IP.search(regexp) != -1)
+					]
+					let result = rules.some(e => !!e)
+					return result;
+				});
+				return res;
 			} else {
 				return state.clouds
 			}
@@ -168,8 +180,8 @@ export default {
 		isLoading(state) {
 			return state.loading;
 		},
-		isSearch(state){
-			return state.isSearch;
+		searchString(state){
+			return state.searchString;
 		},
 		getCloudHostById: state => id => {
 			return state.clouds.find(el => el.ID == id).HOST

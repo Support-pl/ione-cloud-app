@@ -1,80 +1,39 @@
 <template>
 	<div class="cloud">
-		
-		<!-- <div v-if="isSearch" class="search">
-			<div class="cloud_search-wrapper">
-				<input type="text" v-model="textToSearch" placeholder="Filter by name or status">
-				<div class="cloud_search-clear" @click="SearchClear">
-					<a-icon type="close" />
-				</div>
-			</div>
-		</div> -->
 		<loading v-if="isLoading" />
-
 		<template v-else>
 			<div class="container">
-
 				<div class="create-vm__wrapper">
-
 					<div class="create-vm__header">
 						<div class="create-vm__title">
-						{{$t('create server') | capitalize}}
+						{{$t('order server') | capitalize}}
 						</div>
 					</div>
 
-						<div class="create-vm__type">
-							<div class="cloud__new-btn" @click="createVM('PaaS')">
-								<span style="font-size: 1.1rem">
-									{{$t('PaaS.createButton') | capitalize}}
-								</span>
-							</div>
-
+					<a-row :gutter="[15,15]">
+						<a-col :md="12" :xs="24" v-for="type in ['IaaS', 'PaaS']" :key="type">
+							<a-button
+								class="create-vm__btn"
+								size="large"
+								shape="round"
+								icon="plus"
+								type="primary"
+								@click="createVM(type)"
+								block
+							>
+								{{$t(type+'.createButton') | capitalize}}
+							</a-button>
 							<div class="create-vm__description cloud__info info">
 								<p class="info__content">
-									{{$t('PaaS.description')}}
+									{{$t(type+'.description')}}
 								</p>
 							</div>
-						</div>
+						</a-col>
+					</a-row>
 
-						<div class="create-vm__type">
-							<div class="cloud__new-btn" @click="createVM('IaaS')">
-								<span style="font-size: 1.1rem">
-									{{$t('IaaS.createButton') | capitalize}}
-								</span>
-							</div>
-
-							<div class="create-vm__description cloud__info info">
-								<p class="info__content">
-									{{$t('IaaS.description')}}
-								</p>
-							</div>
-						</div>
 				</div>
-
-				<!-- <empty v-if="getClouds.length == 0"/>	 -->
-				<!-- <div v-else class="cloud__wrapper"> -->
 				<div class="cloud__wrapper">
 					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-					<!-- <div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__new-btn" @click="createVM()">
-						<span style="font-size: 1.2rem">
-							{{$t('create server') | capitalize}}
-						</span>
-					</div> -->
-				</div>
-
-
-				<div v-if="$route.query.type != undefined && $route.query.type.length > 0" class="cloud__info info">
-					<div class="info__header-container">
-						<h2 class="info__header">
-							<a-icon type="notification" />
-							<span class="info__header-text">
-								{{$t('info') | capitalize}}
-							</span>
-						</h2>
-					</div>
-					<div class="info__content">
-						{{$t($route.query.type + '.order_info')}}
-					</div>
 				</div>
 			</div>
 
@@ -97,15 +56,7 @@ export default {
 		loading,
 		empty
 	},
-	data(){
-		return {
-			textToSearch: '',
-		}
-	},
 	methods: {
-		SearchClear(){
-			this.textToSearch = '';
-		},
 		createVM(type){
 			let newRouteName;
 			type = type || this.$route.query.type;
@@ -122,16 +73,9 @@ export default {
 		this.$store.dispatch('cloud/autoFetchClouds');
 	},
 	computed: {
-		...mapGetters('cloud', ['isLoading', 'isSearch']),
+		...mapGetters('cloud', ['isLoading']),
 		getClouds(){
-			const clouds = this.$store.getters['cloud/getClouds'](this.textToSearch);
-			if(this.$route.query.type == 'IaaS'){
-				return clouds.filter(el => +el.VDC);
-			}
-			if(this.$route.query.type == 'PaaS'){
-				return clouds.filter(el => !+el.VDC);
-			}
-
+			const clouds = this.$store.getters['cloud/getClouds'];
 			return clouds;
 		}
 	}
@@ -195,7 +139,6 @@ export default {
 .cloud__info{
 	max-width: 800px;
 	margin-top: 30px;
-	/* background: red; */
 	padding: 10px 0 10px 10px;
 	border-left: 5px solid var(--main);
 }
@@ -210,7 +153,7 @@ export default {
 }
 
 .info__content{
-	font-size: 1.1rem;
+	font-size: 1rem;
 }
 
 .create-vm__wrapper{
@@ -247,7 +190,6 @@ export default {
 
 @media screen and (min-width: 768px){
 	.cloud__wrapper {
-		/* height: 100%; */
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 		grid-auto-rows: min-content;
