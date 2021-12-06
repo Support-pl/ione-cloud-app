@@ -256,6 +256,7 @@
 								</a-button>
 								<a-modal v-model="snapshots.modal" :title="$t('Snapshots')" :footer="null">
 									<div v-if="(SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3) && SingleCloud.LCM_STATE != 24" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
+									<div v-if="SingleCloud.LCM_STATE == 24" :style="{'text-align': 'center'}">{{$t('Snapshot processing')}}</div>
 									<a-table
 										:columns="snapshots.columns"
 										:data-source="snapshots.data"
