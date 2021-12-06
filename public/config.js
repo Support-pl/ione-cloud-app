@@ -1,10 +1,10 @@
 const globalConfig = {
-	WHMCSsiteurl: 'https://my.support.by/',
+	WHMCSsiteurl: '',
 	appFolder: 'app_back/v1',
-	appTitle: 'support.by',
+	appTitle: 'AppTitle',
 	currency: {
 		prefix: "",
-		suffix: "BYN",
-		code: "BYN",
+		suffix: "USD",
+		code: "USD",
 	}
 }

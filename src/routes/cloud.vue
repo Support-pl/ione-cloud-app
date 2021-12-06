@@ -4,11 +4,11 @@
 		<template v-else>
 			<div class="container">
 				<div class="create-vm__wrapper">
-					<div class="create-vm__header">
+					<!-- <div class="create-vm__header">
 						<div class="create-vm__title">
 						{{$t('order server') | capitalize}}
 						</div>
-					</div>
+					</div> -->
 
 					<a-row :gutter="[15,15]">
 						<a-col :md="12" :xs="24" v-for="type in ['IaaS', 'PaaS']" :key="type">
