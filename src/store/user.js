@@ -1,7 +1,19 @@
+import api from "../api"
 export default {
 	state: {
 		user: null,
-		logged: false
+		logged: false,
+		userData: null,
+
+		onlogin: {
+			redirect: null,
+			action: null,
+			info: null
+		},
+
+		domain: {
+
+		}
 	},
 	mutations: {
 		setUser(state, value){
@@ -27,6 +39,28 @@ export default {
 			state.user = null
 			state.logged = false
 			deleteCookie('CloudUser')
+		},
+		setUserData(state, data){
+			state.userData = data
+		},
+		setOnloginRedirect(state, data){
+			state.onlogin.redirect = data;
+		},
+		setOnloginInfo(state, data){
+			state.onlogin.info = data;
+		},
+		_setOnloginAction(state, data){
+			state.onlogin.action = data
+		},
+		clearOnlogin(state){
+			state.onlogin = {
+				redirect: null,
+				action: null,
+				info: null
+			}
+		},
+		setDomain(state, data){
+			state.domain = data
 		}
 	},
 	actions: {
@@ -46,6 +80,19 @@ export default {
 		updateCurrency(ctx, value){
 			const getters = ctx.getters;
 			ctx.commit("setCurrency", {value, getters})
+		},
+		setOnloginAction({commit}, data){
+			commit('_setOnloginAction', () => {
+				data();
+				commit('clearOnlogin');
+			})
+		},
+		fetchDomainInfo({commit}){
+			api.getWithParams("domain.test")
+			.then(res => {
+				console.log(res);
+				commit('setDomain', res)
+			})
 		}
 	},
 	getters: {
@@ -60,6 +107,24 @@ export default {
 		},
 		getCookie: state => name => {
 			return getCookie(name);
+		},
+		getUserData(state){
+			return state.userData;
+		},
+		getOnloginRedirect(state){
+			return state.onlogin.redirect;
+		},
+		getOnloginAction(state){
+			return state.onlogin.action;
+		},
+		getOnloginInfo(state){
+			return state.onlogin.info;
+		},
+		getOnlogin(state){
+			return state.onlogin;
+		},
+		getDomainInfo(state){
+			return state.domain?.settings ?? {}
 		}
 	}
 }

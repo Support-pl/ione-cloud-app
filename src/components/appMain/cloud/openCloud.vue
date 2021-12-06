@@ -5,14 +5,14 @@
 			<div class="Fcloud">
 				<div class="Fcloud__header">
 					<div class="Fcloud__back-wrapper">
-						<router-link class="Fcloud__back icon__wrapper" to="/cloud">
+						<div class="Fcloud__back icon__wrapper" @click="$router.go(-1)">
 							<a-icon type="left" />
-						</router-link>
+						</div>
 					</div>
 					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
 						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
 						<div class="Fcloud__title">
-							{{SingleCloud.NAME}}
+							{{SingleCloud.CUSTOM_VM_NAME ? SingleCloud.CUSTOM_VM_NAME : SingleCloud.NAME}}
 						</div>
 						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">
 							{{vmState | replace("_", " ")}}
@@ -36,6 +36,11 @@
 								
 							</a-modal>
 							
+							<a-modal v-model="modal.rename" :confirmLoading="isRenameLoading" title='rename' @ok="sendRename">
+								<p>{{$t('Enter new VM name')}}</p>
+								<a-input v-model="renameNewName" :placeholder="$t('input new name')">
+								</a-input>
+							</a-modal>
 							<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
 								<p>{{$t('Enter new password')}}</p>
 								<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
@@ -80,7 +85,6 @@
 				<div class="Fcloud__buttons">
 					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
 						<div class="Fcloud__BTN-icon">
-							<!-- <a-icon type="stop" /> -->
 							<div class="cloud__icon cloud__icon--stop"></div>
 						</div>
 						<div class="Fcloud__BTN-title">{{$t('Power off')}}</div>
@@ -157,7 +161,7 @@
 						<div class="Fcloud__info-title">{{$t('Information')}}</div>
 					</div>
 
-					<div class="Fcloud__main-info">
+					<div v-if="IPs.length > 0" class="Fcloud__main-info">
 						<table class="Fcloud__table">
 							<tbody>
 								<tr v-for="nic in IPs" :key="nic.NAME">
@@ -206,7 +210,6 @@
 						<div class="Fcloud__block-header">
 							<a-icon type="apartment" />
 							{{$t('Network')}}
-							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content">
 							<div class="block__column">
@@ -224,19 +227,24 @@
 						<div class="Fcloud__block-header">
 							<a-icon type="line-chart" />
 							{{$t('graphs') | capitalize}} 
-							<!-- add translate -->
 						</div>
 						<div class="Fcloud__block-content Fcloud__block-content--charts">
-							<GChart
-								type="LineChart"
-								:data="inbChartDataReady"
-								:options="chartOption('inbound')"
-							/>
-							<GChart
-								type="LineChart"
-								:data="outChartDataReady"
-								:options="chartOption('outgoing')"
-							/>
+							<a-row type='flex' justify="space-around" style="width: 100%">
+								<a-col>
+									<GChart
+										type="LineChart"
+										:data="inbChartDataReady"
+										:options="chartOption('inbound')"
+									/>
+								</a-col>
+								<a-col>
+									<GChart
+										type="LineChart"
+										:data="outChartDataReady"
+										:options="chartOption('outgoing')"
+									/>
+								</a-col>
+							</a-row>
 						</div>
 					</div>
 
@@ -308,8 +316,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import md5 from 'md5'
-import loading from '../../loading/loading.vue'
-import config from '../../../appconfig'
+import loading from '@/components/loading/loading.vue'
+import config from '@/appconfig'
+import api from '@/api'
 import diskControl from './openCloud/diskControl'
 import bootOrder from './openCloud/bootOrder'
 import networkControl from './openCloud/networkControl'
@@ -367,7 +376,9 @@ export default {
 			status: 'running',
 			name: 'test3',
 			showPermissions: false,
+			isRenameLoading: false,
 			reinstallPass: '',
+			renameNewName: '',
 			loadingResizeVM: false,
 			modal: {
 				reboot: false,
@@ -381,6 +392,7 @@ export default {
 				diskControl: false,
 				bootOrder: false,
 				networkControl: false,
+				rename: false
 			},
 			option: {
 				reboot: 0,
@@ -412,6 +424,12 @@ export default {
 					onclick: this.openModal,
 					params: ['reinstall'],
 					icon: "exclamation"
+				},
+				{
+					title: "Rename",
+					onclick: this.openModal,
+					params: ['rename'],
+					icon: "tag"
 				},
 				{
 					title: "Resize VM",
@@ -493,7 +511,7 @@ export default {
 			return data
 		},
 		IPs(){
-			return this.SingleCloud.NIC.filter( el => el.IP != undefined );
+			return this.SingleCloud.NIC.filter( el => el?.IP != undefined );
 		}
 	},
 	created(){
@@ -580,19 +598,54 @@ export default {
 			const userid = user.id;
 			const vmid = this.SingleCloud.ID;
 
+			let lowerAct = action.toLowerCase();
 
 			let close_your_eyes = md5('vmaction' + userid + user.secret);
 			let url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
-			if(action.toLowerCase()=='reinstall'){
+			if(lowerAct == 'reinstall'){
 				url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
-			if(action.toLowerCase()=='delete'){
+			if(lowerAct == 'delete'){
 				close_your_eyes = md5('VMremove' + userid + user.secret);
 				url = `/VMremove.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
+			if(lowerAct == 'recovertoday' || lowerAct == 'recoveryesterday'){
+				this.$message.warning(this.$t("Recover sended. Wait please"));
+			}
 			this.$axios.get(url)
 			.then(res => {
-				let lowerAct = action.toLowerCase();
+				if(lowerAct == 'recovertoday' || lowerAct == 'recoveryesterday'){
+					let self = this;
+					console.log('started wait for ans');
+					setTimeout(() => {
+						self.$store.dispatch('cloud/fetchAnsible', res.data.id)
+						.then( res => {
+							console.log(res);
+							if(res.response.status == 'FAILED'){
+								console.log(res.response.error.message_type);
+								console.log(res.response.error);
+								switch (res.response.error.message_type) {
+									case 1:
+										self.$message.error(self.$t('There was a problem while recovering. Please contact support'));
+										break;
+
+									case 2:
+										self.$message.error(self.$t('Before restoring from a service copy, please delete manually created snapshots'));
+										break;
+								
+									default:
+										self.$message.error(res.response.error.msg);
+										break;
+								}
+							}
+							this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+						})
+						.catch( err => {
+							console.error(err);
+						})
+					}, 10000);
+				}
+
 				if(lowerAct == 'delete' || lowerAct=='reinstall'){
 					if(res.data.result == "success"){
 						this.$message.success(res.data.message);
@@ -898,6 +951,25 @@ export default {
 			const date = new Date(+(dstring + "000"));
 			return date.toLocaleString();
 		},
+		sendRename(){
+			this.isRenameLoading = true;
+			api.sendVMaction('VMChangeName', {newVmName: this.renameNewName})
+			.then(res => {
+				if(res.result == 'success'){
+					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
+					this.closeModal('rename');
+					this.closeModal('menu');
+					this.renameNewName = '';
+					this.$message.success(this.$t('vm name changes successfully'));
+					this.isRenameLoading = false;
+				} else {
+					throw res;
+				}
+			})
+			.catch(err => {
+				console.error(err);
+			})
+		},
 		sendReinstall(){
 			const me = this;
 			this.$confirm({
@@ -1102,6 +1174,7 @@ export default {
 		font-weight: bold;
 		color: #fff;
 		font-size: 1.4rem;
+		cursor: pointer;
 	}
 
 	.Fcloud__menu-btn{

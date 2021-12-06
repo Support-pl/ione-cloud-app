@@ -13,20 +13,33 @@ export default {
 				icon: 'database',
 				title: 'cloud',
 				theme: 'filled'
-			}, {
+			},
+			{
+				icon: 'appstore',
+				title: 'services',
+				theme: 'outlined'
+			},
+			{
 				icon: 'message',
 				title: 'support',
 				theme: 'outlined'
-			}, {
+			},
+			{
 				icon: 'credit-card',
 				title: 'invoice',
 				theme: 'outlined'
-			}, {
+			},
+			{
 				icon: 'setting',
 				title: 'settings',
 				theme: 'filled'
 			},
-		]
+		],
+		update: {
+			worker: null,
+			status: false
+		},
+		currencyPostfix: '',
 	},
 	mutations: {
 		setActiveTabName(state, value){
@@ -34,14 +47,20 @@ export default {
 		},
 		setActiveTabNum(state, value) {
 			state.activeTabNum = value;
+		},
+		setUpdate(state, value) {
+			state.update = value;
+		},
+		setCurrencyPostfix(state, value){
+			state.currencyPostfix = value;
 		}
 	},
 	actions: {
 		setTabByName(ctx, value){
-			if (value == 'cloudHome') value = 'cloud'
+			if (value == 'root') value = 'services'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
-			if (router.currentRoute.name != ctx.getters.getActiveTab.title)
+			if (router.currentRoute.name != ctx.getters.getActiveTab.title || Object.keys(router.currentRoute.query).length > 0)
 				router.push({
 					name: ctx.getters.getActiveTab.title
 				})
@@ -55,7 +74,7 @@ export default {
 				})
 		},
 		setTabByNameNoRoute(ctx, value) {
-			if (value == 'cloudHome') value = 'cloud'
+			if (value == 'root') value = 'services'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
 		}
@@ -64,11 +83,17 @@ export default {
 		getButtons(state){
 			return state.buttons;
 		},
+		isNeedReloadToBeUpdated(state){
+			return state.update;
+		},
 		getActiveTab(state){
 			return {
 				title: state.activeTabName,
 				index: state.activeTabNum
 			}
+		},
+		currencyPostfix(state){
+			return state.currencyPostfix
 		}
 	}
 }

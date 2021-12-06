@@ -1,5 +1,7 @@
 {
   "localePrefix": "en",
+  "localeLang": "English",
+	"coming soon": "coming soon",
   "Settings": "Settings",
   "Buy a license": "Buy a license",
   "Have an idea to make the app better": "Have an idea to make the app better",
@@ -30,7 +32,8 @@
   "status": "Status",
   "payed": "payed",
   "unpaid": "unpaid",
-  "service": "Service",
+  "service": "service",
+  "services": "services",
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
   "Choice payment": "Choice payment",
@@ -42,6 +45,8 @@
 	"Create": "Create",
 	"Confirm": "Confirm",
 	"Enter OS password": "Enter OS password",
+	"Enter OS password again": "Enter OS password again",
+	"Password mismatch": "Password mismatch",
 	"Enter VM name": "Enter VM name",
 	"VM create": "VM create",
 	"Drive": "Drive",
@@ -55,7 +60,8 @@
 	"hour": "hour",
 	"day": "day",
 	"week": "week",
-	"month": "month",
+	"month": "no months | {n} month | {n} months",
+	"year": "year",
 	"Network": "Network",
 	"Total": "Total",
 	"Ready made servers": "Ready made servers",
@@ -63,7 +69,9 @@
 	"VDC created successfully with": "VDC created successfully with",
 	"Monthly payment": "Monthly payment",
 	"Tarification": "Tarification",
-	"When paying per month - save up to 15%": "When paying per month - save up to 15%",
+	"When paying per month - save up to": "When paying per month - save up to",
+	"With discount": "With discount",
+	"you will pay:": "you will pay:",
 	"Actual price may vary": "Actual price may vary",
 	"Choose a tariff": "Choose a tariff",
 	"Choose OS": "Choose OS",
@@ -73,6 +81,10 @@
 	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
 	"Snapshot successfully deleted": "Snapshot successfully deleted",
 	"Vm was successfully restored from snapshot": "Vm was successfully restored from snapshot",
+	
+	"Recover sended. Wait please": "Recover sended. Wait please",
+	"There was a problem while restoring. Please contact support": "There was a problem while restoring. Please contact support",
+	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots",
 
 	"Reinstall": "Reinstall",
 	"Resize VM": "Resize VM",
@@ -82,6 +94,27 @@
 	"Delete": "Delete",
 	"Snapshots": "Snapshots",
 	"input password": "input password",
+	"order server": "order server",
+
+	"basic": "basic",
+	"high": "high",
+	"processor": "processor",
+	"Order": "Order",
+	"order": "order",
+
+	"or": "or",
+	"sign up": "sign up",
+
+	"High speed": "High speed",
+	"traffic": "traffic",
+	"under 3 Gb per month": "under 3 Gb per month",
+	"panel": "panel",
+	"none": "none",
+	"backup": "backup HDD",
+	"Pay peroiod": "Pay peroiod",
+	"go to invoice": "go to invoice",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "increases core frequency from 2.4 GHz to 3.7 GHz",
+	"Virtual machine will be available after paying the invoice": "Virtual machine will be available after paying the invoice",
 
 	"Power off": "Power off",
 	"Reboot": "Reboot",
@@ -137,6 +170,7 @@
 	"All unsaved progress will be lost, are you sure?": "All unsaved progress will be lost, are you sure?",
 
 	"Cancel": "Cancel",
+	"Submit": "Submit",
 	"Yes": "Yes",
 	"Send": "Send",
 	"Filter": "Filter",
@@ -145,6 +179,8 @@
 	"Add Funds": "Add Funds",
 
 	"have no": "have no",
+
+	"os": "OS",
 
 	"Do you want to delete this virtual machine?": "Do you want to delete this virtual machine?",
 	"Do you want to reinstall this virtual machine?": "Do you want to reinstall this virtual machine?",
@@ -162,5 +198,109 @@
 	"turn of VM to resize it": "turn of VM to resize it",
 
 	"chat_Resend_message": "Resend message",
-	"chat_Delete_message": "Delete message"
+	"chat_Delete_message": "Delete message",
+
+	"sort": "sort",
+	"filter": "filter",
+	"search": "search",
+
+	"monthly": "monthly",
+	"quarterly": "quarterly",
+	"semiannually": "semiannually",
+	"annually": "annually",
+	"biennially": "biennially",
+	"free account": "free account",
+
+	"Servers": "Servers",
+	"Virtual": "Virtual",
+	"info": "info",
+	
+	"enter": "enter",
+	"all fields are required": "all fields are required",
+	"field must contain more characters": "field must contain more characters",
+	
+	"quatnity": {
+		"items": "items"
+	},
+
+	"disk_manage": {
+		"This will detach the disk immediately": "This will detach the disk immediately",
+		"All data will be lost": "All data will be lost",
+		"Do you want to proceed?": "Do you want to proceed?"
+	},
+	
+	"period": {
+		"day": "day",
+		"week": "week",
+		"month": "month",
+		"year": "year"
+	},
+		
+	"userService": {
+		"billing cycle": "billing cycle",
+		"renewal amount": "renewal amount",
+		"registration date": "registration date",
+		"next payment date": "next payment date"
+	},
+	
+	"comp_services": {
+		"Your orders": "Your orders",
+		"with filter": "with filter",
+		"total": "total",
+		"all": "all"
+	},
+
+	"order_services": {
+		"Do you want to order": "Do you want to order"
+	},
+
+	"IaaS": {
+		"order_info": "Here you can order a pay-per-use server.",
+		"description": "Create in the configurator a virtual machine with payment as you use it.",
+		"createButton": "configurator VM"
+	},
+	
+	"PaaS": {
+		"order_info": "Here you can order servers with monthly payment.",
+		"description": "Сhoose a ready-to-use virtual machine.",
+		"createButton": "ready made VM"
+	},
+	
+	"virtual_product": {
+		"used space": "used space",
+		"bw": "used trafic",
+		"unlimited": "unlimited",
+		"power": "power",
+		"sites": "sites",
+		"mysql": "mysql",
+		"email": "email",
+		"hdd_shared": "hdd shared",
+		"traffic": "traffic"
+	},
+
+	"clientinfo": {
+		"password": "password",
+		"firstname": "firstname",
+		"lastname": "lastname",
+		"state": "state",
+		"city": "city",
+		"postcode": "postcode",
+		"address": "address",
+		"phone number": "phone number",
+		"phonenumber": "phone number",
+		"register": "register",
+		"already have account?": "already have account?",
+		"companyname": "company name",
+		"countryname": "country name",
+		"email": "email",
+		"address1": "address line 1",
+		"address2": "address line 2"
+	},
+
+	"unregistered": {
+		"will be able after": "will be able after",
+		"login": "login",
+		"sign up": "sign up",
+		"see services": "see services"
+	}
 }

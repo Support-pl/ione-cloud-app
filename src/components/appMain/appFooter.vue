@@ -23,10 +23,11 @@ export default {
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
-			if(this.getActiveTab.title=="newVDC"){
-				return "cloud"
-			}
-			return this.getActiveTab.title
+			const footerTitle = this.$route.meta?.footerTitle;
+			const layoutTitle = this.$route.meta?.layoutTitle;
+			if(footerTitle) return footerTitle;
+			if(layoutTitle) return layoutTitle;
+			return this.getActiveTab.title;
 		}
 	},
 	methods: {

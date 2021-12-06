@@ -1,5 +1,8 @@
 import md5 from 'md5';
 import axios from '../axios';
+
+import api from '@/api.js'
+
 export default {
 	namespaced: true,
 
@@ -22,15 +25,16 @@ export default {
 	actions: {
 		fetchTemplates(ctx) {
 			ctx.commit('makeLoadingIs', true);
-			const user = ctx.rootGetters.getUser;
+			// const user = ctx.rootGetters.getUser;
 
-			const close_your_eyes = md5('getTemplates' + user.id + user.secret);
-			const url = `getTemplates.php?userid=${user.id}&secret=${close_your_eyes}`;
+			// const close_your_eyes = md5('getTemplates' + user.id + user.secret);
+			// const url = `getTemplates.php?userid=${user.id}&secret=${close_your_eyes}`;
 			// console.log(url)
 
-			axios.get(url)
+			// axios.get(url)
+			api.getWithParams('getTemplates')
 				.then(resp => {
-					ctx.commit("updateTemplates", resp.data.response)
+					ctx.commit("updateTemplates", resp.response)
 					ctx.commit('makeLoadingIs', false)
 				})
 		},

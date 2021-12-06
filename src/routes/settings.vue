@@ -6,7 +6,7 @@
 				<div class="settings__info">
 					<div class="settings__user">
 						<div class="settings__name">{{user.firstname}} {{user.lastname}}</div>
-						<!-- <div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div> -->
+						<div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div>
 					</div>
 					<div class="settings__user-btn" v-if="user_btn">
 						<a-icon type="right" />
@@ -29,18 +29,31 @@
 					<div class="settings__title">
 						{{$t('Language')}}
 					</div>
+
+					<a-modal
+						:title="$t('Language')"
+						:visible="modal.language"
+						:footer="false"
+						@cancel="closeModal('language')"
+					>
+						<div v-for="lang in langs" :key='lang' @click="changeLocale(lang)" class="singleLang">
+							<span class="singleLang__title">
+								{{$t('localeLang', lang)}}
+							</span>
+							<span v-if="$i18n.locale == lang" class='singleLang__current-marker'></span>
+						</div>
+					</a-modal>
 				</div>
 
-				<!-- <div class="settings__item" @click="showModal()">
+				<div class="settings__item" @click="showModal('addFunds')">
 					<div class="settings__logo">
-						<a-icon type="pound" />
+						<a-icon type="dollar" />
 					</div>
 					<div class="settings__title">
 						{{$t('Add Funds')}}
 					</div>
-					<add-funds :modalVisible="modalVisible" :hideModal="hideModal"/>
-				</div> -->
-
+					<add-funds :modalVisible="modal.addFunds" :hideModal="hideFunds"/>
+				</div>
 				<button class="settings__exit" @click="logoutFunc()">
 					{{$t('Exit')}}
 				</button>
@@ -51,17 +64,22 @@
 </template>
 
 <script>
-import md5 from 'md5'
-import balance from "../../balance/balance.vue";
-import addFunds from "../../balance/addFunds.vue";
-import config from '../../../appconfig';
+import balance from "../components/balance/balance.vue";
+import addFunds from "../components/balance/addFunds.vue";
+import config from "../appconfig";
+import md5 from 'md5';
+
 export default {
 	name: 'settings',
   data() {
     return {
-      modalVisible: false,
 			confirmLoading: false,
-			user_btn: false
+			user_btn: false,
+			modal: {
+				language: false,
+				addFunds: false
+			},
+			config
     };
 	},
 	components: {
@@ -72,13 +90,26 @@ export default {
 		exit(){
 			this.$router.push("login")
 		},
+		showModal(name){
+			this.modal[name] = true;
+		},
+		closeModal(name){
+			this.modal[name] = false;
+		},
+		hideFunds(){
+			this.closeModal('addFunds')
+		},
 		changeLanguage(){
-			this.$i18n.locale = this.$i18n.locale == "ru"? "en" : "ru";
+			this.showModal('language')
+		},
+		changeLocale(lang){
+			this.closeModal('language');
+			this.$i18n.locale = lang;
 			localStorage.setItem("lang", this.$i18n.locale);
 		},
 		logoutFunc(){
-			this.$router.push('/login')
 			this.$store.commit('logout')
+			this.$router.push({name: 'login'})
 		},
 		URLparameter(obj, outer = ''){
 			var str = "";
@@ -95,24 +126,22 @@ export default {
 			}
 			return str;
 		},
-		showModal() {
-      this.modalVisible = true;
-    },
-    hideModal(e) {
-      this.modalVisible = false;
-		},
 		addAmount(amount){
 			if(this.amount == "") this.amount = 0
 			this.amount += amount;
 		},
 		GoToPersonalArea(){
-			const close_your_eyes = md5('openWHMCSclientDetails'+this.user.id+this.user.secret);
-			window.open(config.WHMCSsiteurl + `app_back/openWHMCSclientDetails.php?userid=${this.user.id}&secret=${close_your_eyes}`);
+			this.$router.push({name: "cabinet"});
+			// const close_your_eyes = md5('openWHMCSclientDetails'+this.user.id+this.user.secret);
+			// window.open(config.WHMCSsiteurl + config.appFolder + `/openWHMCSclientDetails.php?userid=${this.user.id}&secret=${close_your_eyes}`);
 		}
 	},
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
+		},
+		langs(){
+			return this.config.languages;
 		}
 	}
 }
@@ -174,6 +203,38 @@ export default {
 
 	.settings__exit:active{
 		background-color: #d8504b;
+	}
+
+	.singleLang .singleLang__title{
+		padding-left: 20px;
+	}
+
+	.singleLang__current-marker{
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		background-color: var(--main);
+		border-radius: 50%;
+		width: 7px;
+		height: 7px;
+		transform: translateY(-50%);
+	}
+
+	.singleLang{
+		position: relative;
+		font-size: 1rem;
+		padding: 16px 0;
+		border-top: 1px solid rgba(0, 0, 0, .1);
+		cursor: pointer;
+		transition: background-color .2s ease;
+	}
+
+	.singleLang:hover{
+		background-color: rgba(0,0,0,.1);
+	}
+
+	.singleLang:last-of-type{
+		border-bottom: 1px solid rgba(0, 0, 0, .1);
 	}
 
 	.settings__item{

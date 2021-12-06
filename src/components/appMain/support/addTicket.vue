@@ -1,33 +1,39 @@
 <template>
-	<div class="addTicket__wrapper" @click="clickOutOfBlock(this)">
-		<div class="addTicket">
-			<div class="addTicket__header">{{$t('support_Create_ticket')}}</div>
-			<div class="addTicket__title">
-				<div class="addTicket__title-name row__name">{{$t('support_Question_subject')}}</div>
-				<input type="text" class="addTicket__title-input" v-model="ticketTitle">
-			</div>
-			<div class="addTicket__message">
-				<div class="addTicket__message-name row__name">{{$t('support_Question')}}</div>
-				<textarea name="question" id="question" cols="30" rows="10" class="addTicket__message-input"  v-model="ticketMessage"></textarea>
-			</div>
-			<div class="addTicket__buttons">
-				<button class="addTicket__button addTicket__button--cancel" @click="closeFields()">{{$t('Cancel')}}</button>
-				<button class="addTicket__button addTicket__button--send" @click="sendNewTicket()">
-					<template v-if="!isSending">{{$t('Send')}}</template>
-					<a-icon v-else type="loading" />
-				</button>
-			</div>
-		</div>
-	</div>
+	<a-modal
+		title="Ask a question"
+		:visible="addTicketStatus"
+		:confirmLoading="isSending"
+		@cancel="closeFields"
+		@ok="sendNewTicket"
+	>
+	
+	<a-form-model layout="vertical">
+		<a-form-model-item label="Department">
+			<a-select :loading="ticketDepartment == -1" v-model="ticketDepartment" placeholder="department">
+				<a-select-option v-for="department in departments" :key="department.id" :value="department.id">{{department.name}}</a-select-option>
+			</a-select>
+		</a-form-model-item>
+
+		<a-form-model-item label="Subject">
+			<a-input v-model="ticketTitle" placeholder="" />
+		</a-form-model-item>
+
+		<a-form-model-item label="Question">
+			<a-textarea v-model="ticketMessage" rows="10" />
+		</a-form-model-item>
+	</a-form-model>
+
+	</a-modal>
 </template>
 
 <script>
-import md5 from 'md5';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'addTicket',
 	data(){
 		return {
+			ticketDepartment: -1,
 			ticketTitle: "",
 			ticketMessage: "",
 			isSending: false,
@@ -36,46 +42,61 @@ export default {
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
-		}
+		},
+		...mapGetters('support', {
+			addTicketStatus: 'isAddTicketState',
+			departments: 'getDepartments',
+		})
 	},
 	methods: {
-		clickOutOfBlock(){
-			if(event.target.classList.contains("addTicket__wrapper")){
-				this.closeFields();
-			}
-		},
 		closeFields(){
 			this.$store.commit('support/inverseAddTicketState')
 		},
 		sendNewTicket(){
-			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3) return;
-			this.isSending = true;
-
-			const close_your_eyes = md5('openticket'+this.user.id+this.user.secret);
-			const object = {
-				subject: this.ticketTitle,
-				message: this.ticketMessage,
-				userid: this.user.id,
-				secret: close_your_eyes
+			if(this.ticketTitle.length < 3 || this.ticketMessage.length < 3){
+				this.$message.warn('Ticket subject or message is too short');
+				return;
 			}
 
-			const params = Object.entries(object).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+			if(this.ticketDepartment == -1){
+				this.$message.warn('Departments are loading...');
+				return;
+			}
 
-			const url = `/openticket.php?${params}`;
+			this.isSending = true;
 
-			this.$axios.get(url)
+			this.$api.sendAsUser('openticket', {
+				subject: this.ticketTitle,
+				message: this.ticketMessage,
+				department: this.ticketDepartment
+			})
 				.then(resp => {
-					if(resp.data.result == "success"){
+					if(resp.result == "success"){
 						this.ticketTitle = "";
 						this.ticketMessage = "";
 						this.isSending = false;
 						
 						
-						this.$store.dispatch("support/fetchTickets")
+						this.$store.dispatch("support/autoFetch")
 						this.$store.commit('support/inverseAddTicketState')
+					} else {
+						throw resp
 					}
 				})
+				.catch(err => {
+					console.error(err);
+					this.$message.error('Something went wrong');
+				})
+				.finally(()=>{
+					this.isSending = false;
+				})
 		},
+	},
+	created(){
+		this.$store.dispatch('support/fetchDepartments')
+		.then((res) => {
+			this.ticketDepartment = this.departments[0].id;
+		})
 	}
 }
 </script>

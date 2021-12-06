@@ -1,42 +1,83 @@
 <template>
 	<div class="header__container">
 		<div class="container">
-			<div class="header__wrapper">
-			<div class="header__title">
-				<div v-if="headers[active] && headers[active].notmain" class="header_back_btn icon__wrapper" @click="routeBack">
-					<a-icon type="left"/>
+			<div v-if="isNeedHeader" class="header__wrapper">
+
+				<div class="header__title">
+					<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
+						<a-icon type="left"/>
+					</div>
+					{{headerTitle | capitalize}}
 				</div>
-				{{this.$t(headers[active].title)}}
-			</div>
-			<div class="header__right-side">
-				<div class="header__buttons" >
-					<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
-						<div v-if="button.onClickFuncion" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
-							<a-icon class="header__icon" :type="button.icon"/>
+
+				<div class="header__right-side">
+					<transition-group name="header__item-anim" class="header__buttons" v-if="headers[active]" tag="div">
+
+						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
+							<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+								<a-icon :spin="button.isSpin" class="header__icon" :type="button.icon"/>
+							</div>
+
+							<div v-else-if="button.onClickFuncion && button.type != undefined" class="icon__wrapper btn--no-image" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
+								<div class="header__btn--no-image">{{button.name}}</div>
+							</div>
+
+							<div v-else-if="button.icon == 'search'" class="icon__wrapper" :class="[button.additionalClass]">
+								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+								<a-popover v-else placement="bottomRight">
+									<template slot="content">
+										<div>
+											<a-input-search
+												placeholder="title/id/IP"
+												enter-button
+												:value="searchString"
+												@input="(e) => $store.commit('cloud/updateSearch', e.target.value)"
+												@search="(text) => $store.commit('cloud/updateSearch', text)"
+											>
+												<div slot="suffix" @click="$store.commit('cloud/updateSearch', '')" style="cursor: pointer">
+													<a-icon type="close" style="color: rgba(0,0,0,.45)"/>
+												</div>
+											</a-input-search>
+											
+										</div>
+									</template>
+									<template slot="title">
+										<span>{{$t('search') | capitalize}}</span>
+									</template>
+									<a-icon class="header__icon" :type="button.icon"/>
+								</a-popover>
+							</div>
+
+							<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
+								<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
+								<a-popover v-else placement="bottomRight">
+									<template slot="content">
+										<div>
+											<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
+										</div>
+									</template>
+									<template slot="title">
+										<span>{{$t('filter') | capitalize}}</span>
+									</template>
+									<a-icon class="header__icon" :type="button.icon"/>
+								</a-popover>
+							</div>
+
 						</div>
-						<div v-else class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]">
-							<a-icon v-if="!button.popover" class="header__icon" :type="button.icon"/>
-							<a-popover v-else placement="bottomRight">
-								<template slot="content">
-									<div>
-										<a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
-									</div>
-								</template>
-								<template slot="title">
-									<span>{{$t('Filter')}}</span>
-								</template>
-								<a-icon class="header__icon" :type="button.icon"/>
-							</a-popover>
+
+					</transition-group>
+					<transition name="header__item-anim">
+						<div v-if="isNeedBalance && user" class="header__balance">
+							<balance/>
 						</div>
+					</transition>
+
+					<div class="header__links" v-if="!user">
+						<router-link :to="{name: 'login'}">{{$t('login')}}</router-link>
+						<router-link :to="{name: 'register'}">{{$t('unregistered.sign up')}}</router-link>
 					</div>
 				</div>
-				<div v-if="headers[active].needBalance" class="header__balance">
-					<balance/>
-				</div>
 			</div>
-		</div>
-
-
 		</div>
 		
 	</div>
@@ -59,13 +100,12 @@ export default {
 			headers: {
 				'cloud': {
 					title: 'Cloud',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
 						{
 							name: 'cloud_search',
 							icon: 'search',
-							onClickFuncion: this.inverseSearch,
-							isActiveState: this.isSearch
+							popover: true
 						},
 						{
 							name: 'cloud_reload',
@@ -76,12 +116,11 @@ export default {
 				},
 				'support': {
 					title: 'Support',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
 						{
 							name: 'support_filter',
 							icon: 'filter',
-							isActiveState: this.isOnlyClosedTickets,
 							popover: true
 						},
 						{
@@ -98,12 +137,24 @@ export default {
 						},
 					]
 				},
+				'services': {
+					title: 'services',
+					needBalance: true,
+					buttons: [
+					]
+				},
 				'invoice': {
 					title: 'Invoice',
-					// needBalance: true,
+					needBalance: true,
 					buttons: [
 						{
 							name: 'invoice_filter',
+							icon: 'filter',
+							popover: true
+							// доделать фильтр тут
+						},
+						{
+							name: 'invoice_reload',
 							icon: 'reload',
 							onClickFuncion: this.fetchInvoices,
 						},
@@ -116,7 +167,13 @@ export default {
 				'newVDC': {
 					title: 'Create VM',
 					notmain: true,
-					// needBalance: true,
+					needBalance: true,
+					buttons: []
+				},
+				'newPaaS': {
+					title: 'Create VM',
+					notmain: true,
+					needBalance: true,
 					buttons: []
 				}
 
@@ -124,16 +181,16 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('support', ['fetchTickets', 'fetchTicketsThatClosed']),
-		...mapActions('invoices', ['fetchInvoices']),
+		...mapActions('support', {
+			fetchTickets: 'fetch'
+		}),
+		...mapActions('invoices', {
+			fetchInvoices: 'fetch'
+		}),
 		...mapActions('cloud', ['fetchClouds']),
-		...mapMutations('support', ['inverseAddTicketState', 'updateFilter']),
-		...mapMutations('cloud', ['inverseSearch']),
+		...mapMutations('support', ['inverseAddTicketState']),
 		getState(name){
 			switch (name) {
-				case 'cloud_search':
-					return this.isSearch;
-					break;
 				case 'support_filter':
 					return this.isOnlyClosedTickets;
 					break;
@@ -166,6 +223,16 @@ export default {
 		},
 		routeBack(){
 			this.$router.go(-1)
+		},
+		orderVM(){
+			this.$router.push({name: 'newPaaS'});
+		},
+		updateFilter(info){
+			if(this.active == 'support'){
+				this.$store.commit('support/updateFilter', info);
+			} else if(this.active == 'invoice'){
+				this.$store.commit('invoices/updateFilter', info);
+			}
 		}
 	},
 	computed:{
@@ -174,18 +241,31 @@ export default {
 		},
 		...mapGetters('support', ['isAddTicketState', 'isOnlyClosedTickets', 'getTickets', 'getAllTickets']),
 		...mapGetters('app', ['getActiveTab']),
-		...mapGetters('cloud', ['isSearch']),
+		...mapGetters('cloud', ['searchString']),
+		...mapGetters('invoices', ['getInvoices', 'getAllInvoices']),
 		...mapGetters(['getUser']),
 		active(){
+			const headerTitle = this.$route.meta?.headerTitle;
+			const layoutTitle = this.$route.meta?.layoutTitle;
+			if(headerTitle){return headerTitle;}
+			if(layoutTitle){return layoutTitle;}
 			return this.getActiveTab.title
+		},
+		isInSpecialType(){
+			return this.$route.query?.type !== undefined; 
 		},
 		plainOptions(){
 			function arrayUnique(arr){
 				return arr.filter((e,i,a)=>a.indexOf(e)==i)
 			}
 			
-			const tickets = this.getAllTickets;
-			let statuses = tickets.map(el => el.status);
+			let filterElem;
+			if(this.active == 'support'){
+				filterElem = this.getAllTickets;
+			} else if(this.active == 'invoice'){
+				filterElem = this.getAllInvoices;
+			}
+			let statuses = filterElem.map(el => el.status);
 			statuses = arrayUnique(statuses);
 			Object.assign(this, {
         checkedList: statuses,
@@ -193,6 +273,36 @@ export default {
         checkAll: true,
       });
 			return statuses;
+		},
+		isNeedHeader(){
+			const conditions = [
+				this.headers[this.active],
+				this.isInSpecialType,
+				this.$route.meta.headerTitle
+			]
+			return conditions.some(el => !!el);
+		},
+		isNeedBalance(){
+			if(this.headers[this.active])
+				return this.headers[this.active].needBalance
+			else if(this.$route.meta.isNeedBalance)
+				return this.$route.meta.isNeedBalance
+		},
+		headerTitle(){
+			if(this.headers[this.active] && this.$route.query.type == "PaaS"){
+				return this.$options.filters.capitalize(this.$t('Servers'))
+			}
+
+			if(this.headers[this.active])
+				return this.$options.filters.capitalize(this.$t(this.headers[this.active].title))
+			else if(this.$route.meta.headerTitle){
+				console.log(this.$route.meta.headerTitle);
+				console.log(this.$t(this.$route.meta.headerTitle));
+				// return this.$route.meta.headerTitle
+				return this.$options.filters.capitalize(this.$t(this.$route.meta.headerTitle))
+			}
+			else
+				return ''
 		}
 	},
 	created(){
@@ -202,7 +312,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 	.header__wrapper{
 		display: grid;
 		grid-template-columns: 20% 1fr 20%;
@@ -235,6 +345,38 @@ export default {
 		margin-right: 20px;
 	}
 
+	.header__links a{
+		color: #fff;
+		transition: color .2s ease, background-color .3s ease, opacity .2s ease;
+	}
+
+	.header__links a:hover{
+		color: #fff;
+	}
+
+	.header__links a:not(:last-child){
+		margin-right: 20px;
+	}
+
+	.header__links a:first-child{
+		opacity: .8;
+	}
+
+	.header__links a:first-child:hover{
+		opacity: 1;
+	}
+
+	.header__links a:last-child{
+		box-shadow: 0px 0px 0px 1px #fff;
+		border-radius: 5px;
+		padding: 10px 15px;
+	}
+
+	.header__links a:last-child:hover{
+		background: #fff;
+		color: var(--main);
+	}
+
 	.header__right{
 		transition: transform .2s ease;
 	}
@@ -255,6 +397,17 @@ export default {
 			background-color .2s ease,
 			color .1s ease,
 			transform .2s ease;
+	}
+	
+	.btn--no-image{
+		min-width: 44px;
+		width: auto;
+		border-radius: 30px;
+		padding: 2px 10px;
+	}
+
+	.header__btn--no-image{
+		font-size: 1rem;
 	}
 
 	.icon__wrapper:hover{
@@ -297,5 +450,14 @@ export default {
 
 	.header__balance{
 		margin-left: 10px;
+		padding-right: 10px;
 	}
+	
+.header__item-anim-enter-active, .header__item-anim-leave-active {
+  transition: all .2s;
+}
+.header__item-anim-enter, .header__item-anim-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>

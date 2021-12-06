@@ -9,6 +9,7 @@ import router from './router'
 import './registerServiceWorker'
 import axios from './axios'
 import config from './appconfig'
+import api from "@/api.js"
 
 Vue.config.productionTip = false
 Vue.use(Antd)
@@ -16,6 +17,7 @@ Vue.use(VueGoogleCharts)
 
 Vue.prototype.$config = config;
 Vue.prototype.$axios = axios;
+Vue.prototype.$api = api;
 
 Vue.filter('capitalize', function (value) {
   if (!value) return ''

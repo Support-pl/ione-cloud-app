@@ -1,5 +1,5 @@
-import md5 from 'md5';
-import axios from '../axios';
+import api from '@/api'
+
 export default {
 	namespaced: true,
 
@@ -8,7 +8,8 @@ export default {
 		tickets: [],
 		onlyClosedTickets: false,
 		addTicketState: false,
-		filter: ['all']
+		filter: ['all'],
+		departments: [],
 	},
 	mutations: {
 		updateTickets(state, value){
@@ -25,34 +26,51 @@ export default {
 		},
 		inverseAddTicketState(state){
 			state.addTicketState = !state.addTicketState;
+		},
+		setDepartments(state, data){
+			state.departments = data;
 		}
 	},
 	actions: {
-		fetchTickets(ctx) {
-			if (ctx.getters.isLoading) return;
-			ctx.commit('makeLoadingIs', true);
-			const user = ctx.rootGetters.getUser;
-
-			const close_your_eyes = md5('tickets' + user.id + user.secret);
-			const url = `/tickets.php?userid=${user.id}&secret=${close_your_eyes}`;
-			// console.log(url)
-
-			axios.get(url)
-				.then(resp => {
-					// console.log("vuex action: ", resp);
-					if (resp.data.numreturned == 0) {
-						ctx.commit("updateTickets", [])
-					} else {
-						ctx.commit("updateTickets", resp.data.tickets.ticket)
-					}
-					ctx.commit('makeLoadingIs', false)
+		silentFetch({commit}){
+			return new Promise((resolve, reject) => {
+				api.sendAsUser('tickets')
+				.then(res => {
+					const tickets = res.tickets.ticket;
+					commit('updateTickets', tickets);
+					commit('makeLoadingIs', false);
+					resolve(tickets)
 				})
+				.catch(err => reject(err));
+			});
 		},
-		fetchTicketsThatClosed(ctx){
-			if(ctx.getters.isLoading) return;
-			const curState = ctx.getters.isOnlyClosedTickets;
-			ctx.commit("makeOnlyClosedTicketsIs", !curState);
-			ctx.dispatch("fetchTickets");
+		fetch({dispatch, commit}){
+			commit('makeLoadingIs', true);
+			return dispatch('silentFetch');
+		},
+		autoFetch({state, dispatch}){
+			if(state.tickets.length > 0){
+				return dispatch('silentFetch');
+			} else {
+				return dispatch('fetch');
+			}
+		},
+		fetchDepartments({commit}){
+			return new Promise((resolve, reject) => {
+				api.getWithParams('support.getDepartments')
+				.then(res => {
+					if(res.result == "success"){
+						commit('setDepartments', res.response);
+						resolve(res);
+					} else {
+						throw res;
+					}
+				})
+				.catch(err => {
+					console.error(err);
+					reject(err);
+				})
+			})
 		}
 	},
 	getters: {
@@ -60,10 +78,18 @@ export default {
 			return state.tickets;
 		},
 		getTickets(state){
+			const order = [
+				'open',
+				'closed'
+			];
+			// console.log(state.tickets);
+			const tickets = state.tickets.sort((a,b) => {
+				return order.indexOf(a.status.toLowerCase()) - order.indexOf(b.status.toLowerCase());
+			})
 			if (state.filter[0] == 'all' || state.filter.length == 0) {
-				return state.tickets;
+				return tickets;
 			} else {
-				return state.tickets.filter(ticket => state.filter.includes(ticket.status))
+				return tickets.filter(ticket => state.filter.includes(ticket.status))
 			}
 		},
 		isLoading(state){
@@ -74,6 +100,9 @@ export default {
 		},
 		isAddTicketState(state){
 			return state.addTicketState;
+		},
+		getDepartments(state){
+			return state.departments;
 		}
 	}
 }

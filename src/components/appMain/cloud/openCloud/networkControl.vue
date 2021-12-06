@@ -220,14 +220,14 @@ export default {
 			this.modal[modalname] = false;
 		},
 		detachInit(NIC){
-			console.log(NIC)
-			console.log('works', NIC.NIC_ID)
+			// console.log(NIC)
+			// console.log('works', NIC.NIC_ID)
 			this.detach.NIC = NIC.NIC_ID;
 			this.showModal('detach');
-			console.log('works', this.modal.detach)
+			// console.log('works', this.modal.detach)
 		},
 		sendDetach(disk){
-			console.log(disk)
+			// console.log(disk)
 			if(this.detach.imageID == 0){
 				this.$message.warning('You can\' remove main NIC');
 				return;
@@ -251,7 +251,7 @@ export default {
 			this.detach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`Disk detached`);
 				else{
@@ -332,7 +332,7 @@ export default {
 			const url = `/VMNICattach.php?${this.URLparameter(query)}`;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`NIC attached`);
 				else{
@@ -365,11 +365,10 @@ export default {
 			this.attach.newIP = this.attach.newIP.replace(/((\d{1,3}\.){3}\d{1,3})\d?\.?/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/(\d{1,3})\d*/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/[3-9]\d\d|[2-9][6-9]\d|[2-9][5-9][6-9]/gi, '255');
-			this.attach.newIP = this.attach.newIP.replace(/[4-9][1-9]|[3-9][3-9]/gi, '32');
 		},
 		selectedRows(rows){
 			this.attach.publicAR_ID = rows.selectedRows.map(el => el.AR_ID).join(',');
-			console.log(this.attach.publicAR_ID);
+			// console.log(this.attach.publicAR_ID);
 		}
 	},
 	mounted(){

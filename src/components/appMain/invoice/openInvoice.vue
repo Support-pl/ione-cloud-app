@@ -68,7 +68,7 @@
 									</transition>
 								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									{{$t('Show full list')}} ({{inv.items.item.length-1}})
+									{{$t('Show full list')}} ({{inv.items.item.length}} {{$t('quatnity.items')}})
 								</div>
 							</div>
 						</div>
@@ -118,7 +118,6 @@
 <script>
 import md5 from "md5";
 import loading from '../../loading/loading.vue'
-import { mapGetters } from 'vuex';
 import config from '../../../appconfig';
 
 export default {
@@ -152,7 +151,7 @@ export default {
 		OpenWHMCSInvoice(){
 			// console.log('work');
 			const close_your_eyes = md5('openInvoiceWHMCS'+this.user.id+this.user.secret);
-			window.open(config.WHMCSsiteurl + `app_back/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
+			window.open(config.WHMCSsiteurl + config.appFolder +`/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
 		},
 		showfull(){
 			this.showFullTable = true;
@@ -199,11 +198,18 @@ export default {
 		.then(res => {
 			this.inv = res.data;
 			this.loading = false;
+			if(res.data.result == 'error'){
+				throw res.data
+			}
 		})
-		this.$axios.get('/GetPaymentMethods.php')
-		.then(res => {
-			this.payMethods = res.data.paymentmethods.paymentmethod;
+		.catch(err => {
+			this.$router.push('/invoice');
+			console.error(err);
 		})
+		// this.$axios.get('/GetPaymentMethods.php')
+		// .then(res => {
+		// 	this.payMethods = res.data.paymentmethods.paymentmethod;
+		// })
 
 
 	},
