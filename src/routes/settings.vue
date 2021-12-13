@@ -54,6 +54,33 @@
 					</div>
 					<add-funds :modalVisible="modal.addFunds" :hideModal="hideFunds"/>
 				</div>
+
+				<div class="settings__item" @click="showModal('QR')">
+					<div class="settings__logo">
+						<a-icon type="qrcode" />
+					</div>
+					<div class="settings__title">
+						{{$t('share app link') | capitalize}}
+					</div>
+
+					<a-modal
+						:title="$t('share') | capitalize"
+						:visible="modal.QR"
+						:footer="false"
+						@cancel="closeModal('QR')"
+					>
+						<h3 style="text-align: center">
+							{{$t("copy link") | capitalize}}: <span class="clickable" @click="copyLink"><a-icon type="copy"/> {{selfHost}}</span>
+						</h3>
+						<h3 style="text-align: center">
+							{{$t("your QR code") | capitalize}}:
+						</h3>
+						<div class="qr__wrapper">
+							<qrcode-vue :value="selfUrl" size="150" level="M" renderAs="svg" />
+						</div>
+					</a-modal>
+				</div>
+
 				<button class="settings__exit" @click="logoutFunc()">
 					{{$t('Exit')}}
 				</button>
@@ -67,7 +94,7 @@
 import balance from "../components/balance/balance.vue";
 import addFunds from "../components/balance/addFunds.vue";
 import config from "../appconfig";
-import md5 from 'md5';
+import QrcodeVue from 'qrcode.vue'
 
 export default {
 	name: 'settings',
@@ -77,14 +104,16 @@ export default {
 			user_btn: false,
 			modal: {
 				language: false,
-				addFunds: false
+				addFunds: false,
+				QR: false
 			},
 			config
     };
 	},
 	components: {
 		balance,
-		addFunds
+		addFunds,
+		QrcodeVue
 	},
 	methods: {
 		exit(){
@@ -134,6 +163,15 @@ export default {
 			this.$router.push({name: "cabinet"});
 			// const close_your_eyes = md5('openWHMCSclientDetails'+this.user.id+this.user.secret);
 			// window.open(config.WHMCSsiteurl + config.appFolder + `/openWHMCSclientDetails.php?userid=${this.user.id}&secret=${close_your_eyes}`);
+		},
+		copyLink(){
+			navigator.clipboard.writeText(location.href.replace('settings', ''))
+			.then(() => {
+				this.$message.success(this.$t('Link copyed successfully'));
+			})
+			.catch(() => {
+				this.$message.success(this.$t('Some error. Copy link manually'));
+			})
 		}
 	},
 	computed: {
@@ -142,6 +180,12 @@ export default {
 		},
 		langs(){
 			return this.config.languages;
+		},
+		selfUrl(){
+			return location.href;
+		},
+		selfHost(){
+			return location.host;
 		}
 	}
 }
@@ -265,5 +309,18 @@ export default {
 
 	.settings__title{
 		padding-left: 60px;
+	}
+
+	.qr__wrapper{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.clickable{
+		color: var(--main);
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 5px;
 	}
 </style>
