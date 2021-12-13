@@ -118,7 +118,7 @@ export default {
 			const email = encodeURIComponent(this.email);
 			const password = encodeURIComponent(this.password);
 			
-			this.$axios.get(`/login.php?email=${email}&password=${password}`)
+			this.$api.auth(email, password)
 			.then(Response => {
 				const data = Response.data;
 				const user = {};

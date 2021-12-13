@@ -42,6 +42,14 @@ export default {
 				console.error(err)
 			})
 		})
+	},
+
+	auth(email, password){
+		return new Promise((resolve, reject) => {
+			axios.get(`/login.php?email=${email}&password=${password}`)
+			.then(resolve)
+			.catch(reject)
+		})
 	}
 }
 function URLparameter(obj, outer = ''){
