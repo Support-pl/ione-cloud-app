@@ -1,7 +1,15 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			{{companyName}}
+			<div class="logo" :class="['pos_'+companyLogoPos]">
+				<div class="logo__title" v-if="companyName">
+					{{companyName}}
+				</div>
+				<div class="logo__image" v-if="companyLogo">
+					<img :src="`./img/${companyLogo}`" alt="logo">
+				</div>
+
+			</div>
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -193,6 +201,12 @@ export default {
 		companyName(){
 			return this.$store.getters['getDomainInfo'].name ?? this.$config.appTitle
 		},
+		companyLogo(){
+			return this.$config.appLogo.path;
+		},
+		companyLogoPos(){
+			return this.$config.appLogo.pos;
+		},
 		selfUrl(){
 			return location.href;
 		}
@@ -201,6 +215,31 @@ export default {
 </script>
 
 <style>
+
+.logo{
+	display: flex;
+	grid-gap: 15px
+}
+
+.pos_top{
+	flex-direction: column-reverse;
+}
+
+.pos_bottom{
+	flex-direction: column;
+}
+
+.pos_left{
+	flex-direction: row-reverse;
+}
+
+.pos_right{
+	flex-direction: row;
+}
+
+.logo__title{
+	text-align: center;
+}
 
 .clipPathSvg{
 	height: 0;

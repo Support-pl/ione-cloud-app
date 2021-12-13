@@ -12,6 +12,10 @@ export default {
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
 	appFolder: globalConfig.appFolder ?? 'app_backend/v1',
 	appTitle: globalConfig.appTitle ?? '',
+	appLogo: {
+		path: globalConfig.appLogo ?? '',
+		pos: globalConfig.appLogoPosition.toLowerCase() || 'top'
+	},
 	currency: {
 		prefix: globalConfig?.currency?.prefix ?? "",
 		suffix: globalConfig?.currency?.suffix ?? "USD",
