@@ -11,9 +11,9 @@ export default {
 
 		return this.sendAsUser(method, query);
 	},
-	sendAsUser(method, params = {}, customSecet){
+	sendAsUser(method, params = {}, customSecret){
 		const user = store.getters['getUser'];
-		const secretKey = customSecet || method;
+		const secretKey = customSecret || method;
 		const secret = md5(secretKey + user.id + user.secret);
 		const auth = {
 			userid: user.id,
