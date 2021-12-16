@@ -118,12 +118,15 @@ export default {
 		}
 	},
 	mounted(){
-		// if(!this.user) return
-		this.$store.dispatch('products/autoFetch');
+		if(!this.isLogged) return
+			this.$store.dispatch('products/autoFetch');
 	},
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
+		},
+		isLogged(){
+			return this.$store.getters.isLogged;
 		},
 		productsPrepared(){
 			if(this.min) return this.products.slice(0, 3);
@@ -172,38 +175,6 @@ export default {
 	methods: {
 		productClickHandler(product){
 			this.$router.push({name: 'service', params: {pathMatch: product.hostingid}});
-			// const isProductTypeOf = (productTypeName) => {
-			// 	const result = this.$config.getServiceType(product.groupname) == productTypeName;
-			// 	return result
-			// }
-			// if(product.groupname === 'IaaS'){
-			// 	this.$router.push({name: 'cloud', query: {type: 'IaaS'}})
-			// }
-			// if(product.domainstatus === "Cancelled"){
-			// 	const key = 'That product cancelled.';
-			// 	this.$message.warning(key);
-			// }
-			// if(product.invoicestatus === "Unpaid"){
-			// 	// const key = 'That product is pending. Check your invoices.';
-			// 	// this.$message.warning(key);
-			// 	this.$router.push({name: 'invoiceFS', params: {pathMatch: product.invoiceid}});
-			// }
-			// if(product.domainstatus === "Active" && isProductTypeOf('virtual')){
-			// 	// this.$router.push({name: 'cpanel', params: {serviceid: product.hostingid}});
-			// 	const user = this.$store.getters.getUser;
-			// 	const close_your_eyes = md5('cpanel.createSession'+user.id+user.secret);
-			// 	window.open(this.$config.WHMCSsiteurl + this.$config.appFolder +`/cpanel.createSession.php?userid=${user.id}&secret=${close_your_eyes}&serviceid=${product.hostingid}`);
-			// }
-			// if(product.domainstatus === "Active" && isProductTypeOf('VM')){
-			// 	const vms = this.$store.getters['cloud/getClouds']();
-			// 	const id = vms.find( vm => vm.id_service == product.id).ID;
-			// 	this.$router.push(`cloud-${id}`);
-			// }
-			// if(product.domainstatus === "Active" && isProductTypeOf('SSL')){
-			// 	const user = this.$store.getters.getUser;
-			// 	const close_your_eyes = md5('user.open.product'+user.id+user.secret);
-			// 	window.open(this.$config.WHMCSsiteurl + this.$config.appFolder +`/user.open.product.php?userid=${user.id}&secret=${close_your_eyes}&serviceid=${product.orderid}`);
-			// }
 		},
 		filterElementClickHandler(key){
 			const types = new Set(this.checkedTypes);
