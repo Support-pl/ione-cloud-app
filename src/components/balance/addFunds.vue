@@ -6,7 +6,7 @@
       @ok="handleOk"
       @cancel="handleCancel"
     >
-			<p>{{$t('Enter value')}} ({{user.currency_code}}):</p>
+			<p v-if="isLogged">{{$t('Enter value')}} ({{user.currency_code}}):</p>
       <a-input type="number" min="0" v-model="amount" allow-clear/>
 			<a-row type="flex" justify="space-around" align="middle" :gutter="[10, 10]" style="margin-top: 10px">
 				<a-col v-for="add in btns" :key="add" :xl="4" :xs="8">
@@ -46,6 +46,9 @@ export default {
 		user(){
 			return this.$store.getters.getUser;
 		},
+		isLogged(){
+			return this.$store.getters.isLogged;
+		}
 	},
 	methods: {
 		URLparameter(obj, outer = ''){

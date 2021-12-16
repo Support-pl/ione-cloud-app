@@ -1,5 +1,5 @@
 <template>
-	<div class="balance">
+	<div class="balance" v-if="isLogged">
 		<span class="balance__item" @click="showModal" :class="{ clickable: clickable }">
 			{{currency.prefix}}{{user.balance}} 
 			<a-badge v-if="clickable" :count="'+'" :offset="[10, -8]">
@@ -39,18 +39,17 @@ export default {
     };
   },
 	mounted(){
-		let userinfo = {
-			userid: this.user.id,
-			secret: md5('getBalance' + this.user.id + this.user.secret)
-		}
-		this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
+		this.$api.sendAsUser('getBalance')
 			.then( res => {
-				if(this.user.id == res.data.userid){
-					this.$store.dispatch("updateBalance", res.data.balance);
-					this.$store.dispatch("updateCurrency", res.data.currency_code);
+				if(this.isLogged && this.user.id == res.userid){
+					this.$store.dispatch("updateBalance", res.balance);
+					this.$store.dispatch("updateCurrency", res.currency_code);
 				}
 			})
 			.catch( err => console.error(err));
+	},
+	destroyed() {
+console.log('destroyed');
 	},
 	computed:{
 		user(){
@@ -58,6 +57,9 @@ export default {
 		},
 		currency(){
 			return this.$config.currency;
+		},
+		isLogged(){
+			return this.$store.getters.isLogged;
 		}
 	},
 	methods: {
