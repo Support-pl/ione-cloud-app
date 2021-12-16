@@ -27,7 +27,7 @@
 					<div v-if="!getOnlogin.info" class="login__see-services">
 						<router-link :to="{name: 'services'}">
 							<a-icon type="shopping-cart" />
-							{{$t('unregistered.see services')}}
+							{{$t('unregistered.see services') | capitalize}}
 						</router-link>
 					</div>
 
@@ -60,8 +60,15 @@
 					</div>
 					<template>
 						<template v-if="!tryingLogin">
-							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
-							<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
+							<div class="login__button">
+								<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
+								<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
+								<a-select style="width: 70px" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+									<a-select-option v-for="lang in langs" :key="lang" :value="lang">
+										{{lang.toUpperCase()}}
+									</a-select-option>
+								</a-select>
+							</div>
 
 						</template>
 						<div v-else class="login__loading">
@@ -209,7 +216,10 @@ export default {
 		},
 		selfUrl(){
 			return location.href;
-		}
+		},
+		langs(){
+			return this.$config.languages;
+		},
 	}
 }
 </script>
@@ -310,6 +320,13 @@ export default {
 	margin-bottom: 25px;
 }
 
+.login__button{
+	display: flex;
+	grid-gap: 15px;
+	justify-content: center;
+	align-items: center;
+}
+
 .login__submit{
 	border: none;
 	outline: none;
@@ -322,6 +339,7 @@ export default {
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
+	flex-grow: 1;
 }
 #qrcode{
 	display: none;

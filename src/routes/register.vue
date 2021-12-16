@@ -82,6 +82,15 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
+							<span class="login__horisontal-line"></span>
+						</div>
+
+						<div class="inputs__log-pas">
+							<a-select style="width: 100%; border: none" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+								<a-select-option v-for="lang in langs" :key="lang" :value="lang">
+									{{$t('localeLang', lang)}}
+								</a-select-option>
+							</a-select>
 						</div>
 
 						<!-- <div class="inputs__log-pas">
@@ -171,7 +180,7 @@ export default {
 			}
 
 			this.registerLoading = true;
-			api.getWithParams('client.addClient', this.userinfo)
+			api.getWithParams('client.addClient', {...this.userinfo, lang: this.$i18n.locale})
 			.then(result => {
 				if(result.result == 'success'){
 					this.$message.success('Account created successfully.');
@@ -196,6 +205,15 @@ export default {
 		},
 		companyName(){
 			return this.$store.getters['getDomainInfo'].name ?? this.$config.appTitle
+		},
+		langs(){
+			return this.$config.languages;
+		},
+		companyLogo(){
+			return this.$config.appLogo.path;
+		},
+		companyLogoPos(){
+			return this.$config.appLogo.pos;
 		},
 	}
 }
@@ -374,6 +392,10 @@ export default {
 }
 .load__item:nth-child(3){
 	animation: loading 1.4s .6s ease infinite;
+}
+
+.inputs__log-pas .ant-select-selection{
+	border: none;
 }
 
 @keyframes loading {
