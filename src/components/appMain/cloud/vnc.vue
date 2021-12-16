@@ -258,33 +258,13 @@ export default {
       .then( res => {
         this.token = res.data.response.token;
         this.desktopName = res.data.response.vm_name;
-        this.url = res.data.response.url;
+        this.url = res.data.response.connectURL;
       })
       .catch( err => console.error(err));
     },
     connect(token){
       this.$refs.vncscreen.innerHTML = '';
-      let host = this.url;
-      let path = 'websockify';
-      let proxy_port = 29876;
-      let password = '';
-      let _is_encrypted = '';
-      let url = '';
-
-      if (window.location.protocol === "https:" || ~window.location.host.search(/localhost/)) {
-      url = "wss";
-      _is_encrypted ="encrypted";
-      } else {
-      url = "ws";
-      _is_encrypted ="unencrypted";
-      }
-
-      url += "://" + host;
-      url += ":" + proxy_port;
-      url += '/' + path;
-      url += `?token=${token}`;
-
-      UI.connect(url);
+      UI.connect(this.url);
     },
     credentialsAreRequired(e) {
       const password = prompt("Password Required:");
