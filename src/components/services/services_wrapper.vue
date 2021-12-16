@@ -1,10 +1,14 @@
 <template>
 	<div class="services__wrapper">
-		<service-item
+		<template
 			v-for="service in services"
-			:key="service.title"
-			:service="service"
-		/>
+		>
+			<service-item
+				v-if="!service.needLogin || isLogged"
+				:key="service.title"
+				:service="service"
+			/>
+		</template>
 	</div>
 </template>
 
@@ -60,20 +64,7 @@ export default {
 	},
 	methods: {
 		routeTo(param){
-			if(this.user){
-				this.$router.push(param);
-				return
-			}
-			const config = this.$config;
-			let type = param.query.type;
-			type = type == 'PaaS' ? 'VM' : type;
-			const service = config.services[type]
-			console.log(service);
-			if(service.creationRouteName){
-				this.$router.push({name: service.creationRouteName});
-			} else {
-				this.$router.push({name: `service-${type}`});
-			}
+			this.$router.push(param);
 		},
 		openNotification() {
       this.$notification['info']({
@@ -90,6 +81,9 @@ export default {
 	computed: {
 		user(){
 			return this.$store.getters.getUser;
+		},
+		isLogged(){
+			return this.$store.getters.isLogged;
 		}
 	}
 }

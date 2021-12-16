@@ -5,7 +5,7 @@
 
 				<div class="settings__info">
 					<div class="settings__user">
-						<div class="settings__name">{{user.firstname}} {{user.lastname}}</div>
+						<div class="settings__name" v-if="isLogged">{{user.firstname}} {{user.lastname}}</div>
 						<div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div>
 					</div>
 					<div class="settings__user-btn" v-if="user_btn">
@@ -186,6 +186,9 @@ export default {
 		},
 		selfHost(){
 			return location.host;
+		},
+		isLogged(){
+			return this.$store.getters.isLogged;
 		}
 	}
 }

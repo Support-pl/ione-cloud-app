@@ -72,7 +72,7 @@ const routes = [
 				path: 'cloud',
 				name: 'cloud',
 				meta: {
-					mustBeLoggined: true,
+					mustBeLoggined: false,
 				},
 				component: () => import('../routes/cloud.vue')
 			},

@@ -4,14 +4,14 @@
 			<div v-if="isNeedHeader" class="header__wrapper">
 
 				<div class="header__title">
-					<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton" class="header_back_btn icon__wrapper" @click="routeBack">
+					<div v-if="(headers[active] && headers[active].notmain) || isInSpecialType || $route.meta.isNeedBackButton || !isLogged" class="header_back_btn icon__wrapper" @click="routeBack">
 						<a-icon type="left"/>
 					</div>
 					{{headerTitle | capitalize}}
 				</div>
 
 				<div class="header__right-side">
-					<transition-group name="header__item-anim" class="header__buttons" v-if="headers[active]" tag="div">
+					<transition-group name="header__item-anim" class="header__buttons" v-if="headers[active] && isLogged" tag="div">
 
 						<div class="header__button" v-for="button in headers[active].buttons" :key="button.icon">
 							<div v-if="button.onClickFuncion && button.type == undefined" class="icon__wrapper" :class="[{ active__btn: getState(button.name) }, button.additionalClass]" @click="button.onClickFuncion">
@@ -67,12 +67,12 @@
 
 					</transition-group>
 					<transition name="header__item-anim">
-						<div v-if="isNeedBalance && user" class="header__balance">
+						<div v-if="isNeedBalance && isLogged" class="header__balance">
 							<balance/>
 						</div>
 					</transition>
 
-					<div class="header__links" v-if="!user">
+					<div class="header__links" v-if="!isLogged">
 						<router-link :to="{name: 'login'}">{{$t('login')}}</router-link>
 						<router-link :to="{name: 'register'}">{{$t('unregistered.sign up')}}</router-link>
 					</div>
@@ -303,6 +303,9 @@ export default {
 			}
 			else
 				return ''
+		},
+		isLogged(){
+			return this.$store.getters.isLogged;
 		}
 	},
 	created(){
