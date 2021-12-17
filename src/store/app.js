@@ -40,6 +40,7 @@ export default {
 			status: false
 		},
 		currencyPostfix: '',
+		maintananceMode: false,
 	},
 	mutations: {
 		setActiveTabName(state, value){
@@ -53,6 +54,9 @@ export default {
 		},
 		setCurrencyPostfix(state, value){
 			state.currencyPostfix = value;
+		},
+		setMaintananceMode(state, value){
+			state.maintananceMode = value;
 		}
 	},
 	actions: {
@@ -94,6 +98,9 @@ export default {
 		},
 		currencyPostfix(state){
 			return state.currencyPostfix
+		},
+		isMaintananceMode(state){
+			return state.maintananceMode;
 		}
 	}
 }
