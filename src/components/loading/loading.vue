@@ -1,5 +1,5 @@
 <template>
-  <div class="loading" :style="{'color': color}">
+  <div class="loading" :class="{'ha': ha}" :style="{'color': color}">
 		<a-icon type="loading" />
   </div>
 </template>
@@ -13,16 +13,24 @@ export default {
 			default: function() {
 				return this.$config.colors.main
 			}
+		},
+		ha: {
+			type: Boolean,
+			default: false
 		}
 	}
 }
 </script>
 
-<style>
+<style scoped>
 .loading {
 	height: 100%;
 	display: grid;
 	place-items: center;
 	font-size: 3rem;
+}
+
+.ha{
+	height: auto;
 }
 </style>
