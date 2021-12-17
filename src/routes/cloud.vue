@@ -1,9 +1,11 @@
 <template>
 	<div class="cloud">
-		<loading v-if="isLoading" />
+		<div class="container ha">
+			<create-vm />
+		</div>
+		<loading :ha="true" v-if="isLoading" />
 		<template v-else>
-			<div class="container">
-				<create-vm />
+			<div class="container ha">
 				<div class="cloud__wrapper">
 					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 				</div>
@@ -79,6 +81,11 @@ export default {
 	right: 10px;
 	transform: translateY(-50%);
 	cursor: pointer;
+}
+
+.ha{
+	height: auto;
+	min-height: auto;
 }
 
 @media screen and (min-width: 768px){
