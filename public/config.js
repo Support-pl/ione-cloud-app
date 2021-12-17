@@ -8,5 +8,6 @@ const globalConfig = {
 		prefix: "",
 		suffix: "USD",
 		code: "USD",
-	}
+	},
+	dangerModeNoSSLCheck: false
 }

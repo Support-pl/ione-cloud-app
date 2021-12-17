@@ -9,6 +9,7 @@ export default {
 		bright_bg: '#f7f7f7',
 	},
 	languages: ['en', 'ru'],
+	dangerModeNoSSLCheck: globalConfig.dangerModeNoSSLCheck ?? false,
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
 	appFolder: globalConfig.appFolder ?? 'app_backend/v1',
 	appTitle: globalConfig.appTitle ?? '',
