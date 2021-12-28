@@ -1,314 +1,320 @@
 <template>
-	<div class="cloud__fullscreen Fcloud">
-		<transition name="opencloud" :duration="600">
-		<div v-if="!singleLoading" class="cloud__container">
-			<div class="Fcloud">
-				<div class="Fcloud__header">
-					<div class="Fcloud__back-wrapper">
-						<div class="Fcloud__back icon__wrapper" @click="$router.go(-1)">
-							<a-icon type="left" />
-						</div>
-					</div>
-					<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
-						<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
-						<div class="Fcloud__title">
-							{{SingleCloud.CUSTOM_VM_NAME ? SingleCloud.CUSTOM_VM_NAME : SingleCloud.NAME}}
-						</div>
-						<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">
-							{{vmState | replace("_", " ")}}
-						</div>
-					</div>
-					<div class="Fcloud__menu-wrapper">
-						<div class="Fcloud__menu-btn icon__wrapper">
-							<a-icon type="more" @click='openModal("menu")'/>
-							<a-modal v-model="modal.menu" title='Menu' :footer="null">
-								<a-button
-									v-for="btn in menuOptions.filter(el => !el.forVNC || SingleCloud.GNAME == 'VDC')"
-									:key="btn.title"
-									:icon="btn.icon"
-									@click="btn.onclick(...btn.params)"
-									block
-									class="menu__button"
-									:type="btn.type || 'default'"
-								>
-									{{$t(btn.title)}}
-								</a-button>
-								
-							</a-modal>
-							
-							<a-modal v-model="modal.rename" :confirmLoading="isRenameLoading" title='rename' @ok="sendRename">
-								<p>{{$t('Enter new VM name')}}</p>
-								<a-input v-model="renameNewName" :placeholder="$t('input new name')">
-								</a-input>
-							</a-modal>
-							<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
-								<p>{{$t('Enter new password')}}</p>
-								<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
-
-								</a-input-password>
-							</a-modal>
-							<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" :title='$t("Resize VM")' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
-								<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
-								<a-row :gutter="[10,10]">
-									<a-col :xs="24" :sm="4">
-										CPU
-									</a-col>
-									<a-col :xs="24" :sm="20">
-										<a-input type="number" :min="1" v-model="resize.VCPU"/>
-									</a-col>
-								</a-row>
-								<a-row :gutter="[10,10]">
-									<a-col :xs="24" :sm="4">
-										RAM (GB)
-									</a-col>
-									<a-col :xs="24" :sm="20">
-										<a-input type="number" :min="1" v-model="resize.RAM"/>
-									</a-col>
-								</a-row>
-							</a-modal>
-							
-							<a-modal v-model="modal.diskControl" :title='$t("Disk control")' :footer="null">
-								<disk-control/>
-							</a-modal>
-							
-							<a-modal v-model="modal.networkControl" :title='$t("Network control")' :footer="null">
-								<network-control/>
-							</a-modal>
-							
-							<a-modal v-model="modal.bootOrder" :title='$t("Boot order")' :footer="null">
-								<boot-order @onEnd="bootOrderNewState"/>
-							</a-modal>
-
-						</div>
-					</div>
-				</div>
-				<div class="Fcloud__buttons">
-					<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
-						<div class="Fcloud__BTN-icon">
-							<div class="cloud__icon cloud__icon--stop"></div>
-						</div>
-						<div class="Fcloud__BTN-title">{{$t('Power off')}}</div>
-						<a-modal v-model="modal.shutdown" :title="$t('cloud_Shutdown_modal')" @ok="handleOk('shutdown')">
-							<p>{{$t('cloud_Shutdown_invite')}}</p>
-							<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
-								<a-radio :value="0" :style="{'margin-bottom': '10px'}">
-									<a-tag color="green" :style="{'margin': '0 2px 0 0'}">{{$t('cloud_Regular')}}</a-tag>
-									{{$t('cloud_Shutdown')}}
-								</a-radio>
-								<a-radio :value="1">
-									<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
-										HARD
-									</a-tag>
-									{{$t('cloud_Shutdown')}}
-								</a-radio>
-							</a-radio-group>
-						</a-modal>
-					</div>
-					<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
-						<div class="Fcloud__BTN-icon">
-							<a-icon type="caret-right" />
-						</div>
-						<div class="Fcloud__BTN-title">{{$t('Start')}}</div>
-					</div>
-					<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot , 'btn_disabled_wiggle': true}" @click='openModal("reboot")'>
-						<div class="Fcloud__BTN-icon">
-							<a-icon type="redo" />
-						</div>
-						<div class="Fcloud__BTN-title">{{$t('Reboot')}}</div>
-						<a-modal v-model="modal.reboot" :title="$t('cloud_Reboot_modal')" @ok="handleOk('reboot')">
-							<p>{{$t('cloud_Reboot_invite')}}</p>
-							<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
-								<a-radio :value="0">
-									<a-tag color="green" :style="{'margin-bottom': '10px'}">
-										{{$t('cloud_Regular')}}
-									</a-tag>
-									{{$t('cloud_Reboot_modal')}}
-								</a-radio>
-								<a-radio :value="1">
-									<a-tag color="red">
-										HARD
-									</a-tag>
-									{{$t('cloud_Reboot_modal')}}
-								</a-radio>
-							</a-radio-group>
-						</a-modal>
-					</div>
-					<div class="Fcloud__button" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='openModal("recover")'>
-						<div class="Fcloud__BTN-icon">
-							<a-icon type="backward" />
-						</div>
-						<div class="Fcloud__BTN-title">{{$t('Recover')}}</div>
-						<a-modal v-model="modal.recover" :title="$t('cloud_Recover_modal')" @ok="handleOk('recover')">
-							<p>{{$t('cloud_Recover_invite_line1')}}</p>
-							<p>{{$t('cloud_Recover_invite_line2')}}</p>
-							<p>{{$t('cloud_Recover_invite_line3')}}</p>
-							<p>{{$t('cloud_Recover_invite')}}</p>
-							<a-radio-group v-model="option.recover" name="recover" :default-value="1">
-								<a-radio :value="0">
-									{{$t('yesterday')}}
-								</a-radio>
-								<a-radio :value="1">
-									{{$t('today')}}
-								</a-radio>
-							</a-radio-group>
-						</a-modal>
-					</div>
-				</div>
-
-				
-				<div class="Fcloud__info">
-					<div class="Fcloud__info-header">
-						<div class="Fcloud__info-title">{{$t('Information')}}</div>
-					</div>
-
-					<div v-if="IPs.length > 0" class="Fcloud__main-info">
-						<table class="Fcloud__table">
-							<tbody>
-								<tr v-for="nic in IPs" :key="nic.NAME">
-									<td>IP</td>
-									<td>{{nic.IP}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="Fcloud__info-block block">
-						<div class="Fcloud__block-header">
-							<a-icon type="setting" theme="filled" />
-							{{$t('cloud_Capacity')}}
-						</div>
-						<div class="Fcloud__block-content">
-							<div class="block__column">
-								<div class="block__title">CPU</div>
-								<div class="block__value">{{SingleCloud.VCPU}}</div>
-							</div>
-							<div class="block__column">
-								<div class="block__title">{{$t('cloud_Memory')}}</div>
-								<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
+	<div class="cloud__fullscreen Fcloud" :class="{'cloud__fullscreen--while': isMaintananceMode}">
+		<maintanance-mode
+			v-if="isMaintananceMode"
+			main-page-button
+		></maintanance-mode>
+		<template v-else>
+			<transition name="opencloud" :duration="600">
+			<div v-if="!singleLoading" class="cloud__container">
+				<div class="Fcloud">
+					<div class="Fcloud__header">
+						<div class="Fcloud__back-wrapper">
+							<div class="Fcloud__back icon__wrapper" @click="$router.go(-1)">
+								<a-icon type="left" />
 							</div>
 						</div>
-					</div>
-
-					<div class="Fcloud__info-block block">
-						<div class="Fcloud__block-header">
-							<a-icon type="database" theme="filled" />
-							{{$t('cloud_Storage')}}
-						</div>
-						<div class="Fcloud__block-content">
-							<div class="block__column">
-								<div class="block__title">{{$t('cloud_Type')}}</div>
-								<div class="block__value">{{SingleCloud.DRIVE}}</div>
+						<div class="Fcloud__header-title" v-if="SingleCloud.STATE">
+							<div class="Fcloud__status-color" :class="{ 'glowing-animations': updating }" :style="{'background-color': statusColor}"></div>
+							<div class="Fcloud__title">
+								{{SingleCloud.CUSTOM_VM_NAME ? SingleCloud.CUSTOM_VM_NAME : SingleCloud.NAME}}
 							</div>
-							<div class="block__column">
-								<div class="block__title">{{$t('cloud_Size')}}</div>
-								<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
+							<div class="Fcloud__status" :class="{ 'glowing-animations': updating }">
+								{{vmState | replace("_", " ")}}
 							</div>
 						</div>
-					</div>
-
-					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
-						<div class="Fcloud__block-header">
-							<a-icon type="apartment" />
-							{{$t('Network')}}
-						</div>
-						<div class="Fcloud__block-content">
-							<div class="block__column">
-								<div class="block__title">{{$t('inbound') | capitalize}}</div>
-								<div class="block__value">{{printWidthRange(chart1Data[chart1Data.length-1][1])}}</div>
-							</div>
-							<div class="block__column">
-								<div class="block__title">{{$t('outgoing') | capitalize}}</div>
-								<div class="block__value">{{printWidthRange(chart2Data[chart2Data.length-1][1])}}</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
-						<div class="Fcloud__block-header">
-							<a-icon type="line-chart" />
-							{{$t('graphs') | capitalize}} 
-						</div>
-						<div class="Fcloud__block-content Fcloud__block-content--charts">
-							<a-row type='flex' justify="space-around" style="width: 100%">
-								<a-col>
-									<GChart
-										type="LineChart"
-										:data="inbChartDataReady"
-										:options="chartOption('inbound')"
-									/>
-								</a-col>
-								<a-col>
-									<GChart
-										type="LineChart"
-										:data="outChartDataReady"
-										:options="chartOption('outgoing')"
-									/>
-								</a-col>
-							</a-row>
-						</div>
-					</div>
-
-					<a-row :gutter="[15, 15]" style="margin-top: 20px">
-						<a-col :span='24' :md='12'>
-							<div class="button">
-								<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
-									{{$t('Snapshots')}}
-								</a-button>
-								<a-modal v-model="snapshots.modal" :title="$t('Snapshots')" :footer="null">
-									<div v-if="(SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3) && SingleCloud.LCM_STATE != 24" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
-									<a-table
-										:columns="snapshots.columns"
-										:data-source="snapshots.data"
-										:pagination="false"
-										:loading="snapshots.loading"
-										rowKey="TIME"
+						<div class="Fcloud__menu-wrapper">
+							<div class="Fcloud__menu-btn icon__wrapper">
+								<a-icon type="more" @click='openModal("menu")'/>
+								<a-modal v-model="modal.menu" title='Menu' :footer="null">
+									<a-button
+										v-for="btn in menuOptions.filter(el => !el.forVNC || SingleCloud.GNAME == 'VDC')"
+										:key="btn.title"
+										:icon="btn.icon"
+										@click="btn.onclick(...btn.params)"
+										block
+										class="menu__button"
+										:type="btn.type || 'default'"
 									>
-									<template slot="time" slot-scope="time">
-										{{getFormatedDate(time)}}
-									</template>
-									<template slot="actions" slot-scope="actions">
-										<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-										<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
-									</template>
-									</a-table>
-									<div class="modal__buttons">
-										<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">{{$t('Take snapshot')}}</a-button>
-									</div>
-									<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
-										<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
-										<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
-										<p>{{$t('Choose a name for the new snapshot:')}}</p>
-										<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
-										<div class="modal__buttons">
-											<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">{{$t('Cancel')}}</a-button>
-											<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">{{$t('Take snapshot')}}</a-button>
-										</div>
-									</a-modal>
+										{{$t(btn.title)}}
+									</a-button>
+									
 								</a-modal>
-							</div>
-						</a-col>
+								
+								<a-modal v-model="modal.rename" :confirmLoading="isRenameLoading" title='rename' @ok="sendRename">
+									<p>{{$t('Enter new VM name')}}</p>
+									<a-input v-model="renameNewName" :placeholder="$t('input new name')">
+									</a-input>
+								</a-modal>
+								<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
+									<p>{{$t('Enter new password')}}</p>
+									<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
 
-						<a-col :span='24' :md='12'>
-							<div class="button">
-								<a-button :disabled="SingleCloud.STATE != 3 || SingleCloud.LCM_STATE != 3" type="primary" shape="round" block size='large'>
-									<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
-										VNC
-									</router-link>
-								</a-button>
+									</a-input-password>
+								</a-modal>
+								<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" :title='$t("Resize VM")' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
+									<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
+									<a-row :gutter="[10,10]">
+										<a-col :xs="24" :sm="4">
+											CPU
+										</a-col>
+										<a-col :xs="24" :sm="20">
+											<a-input type="number" :min="1" v-model="resize.VCPU"/>
+										</a-col>
+									</a-row>
+									<a-row :gutter="[10,10]">
+										<a-col :xs="24" :sm="4">
+											RAM (GB)
+										</a-col>
+										<a-col :xs="24" :sm="20">
+											<a-input type="number" :min="1" v-model="resize.RAM"/>
+										</a-col>
+									</a-row>
+								</a-modal>
+								
+								<a-modal v-model="modal.diskControl" :title='$t("Disk control")' :footer="null">
+									<disk-control/>
+								</a-modal>
+								
+								<a-modal v-model="modal.networkControl" :title='$t("Network control")' :footer="null">
+									<network-control/>
+								</a-modal>
+								
+								<a-modal v-model="modal.bootOrder" :title='$t("Boot order")' :footer="null">
+									<boot-order @onEnd="bootOrderNewState"/>
+								</a-modal>
+
 							</div>
-						</a-col>
-					</a-row>
+						</div>
+					</div>
+					<div class="Fcloud__buttons">
+						<div v-if="SingleCloud.STATE == '3'" class="Fcloud__button" :class="{ 'disabled': permissions.shutdown }" @click='openModal("shutdown")'>
+							<div class="Fcloud__BTN-icon">
+								<div class="cloud__icon cloud__icon--stop"></div>
+							</div>
+							<div class="Fcloud__BTN-title">{{$t('Power off')}}</div>
+							<a-modal v-model="modal.shutdown" :title="$t('cloud_Shutdown_modal')" @ok="handleOk('shutdown')">
+								<p>{{$t('cloud_Shutdown_invite')}}</p>
+								<a-radio-group v-model="option.shutdown" name="shutdownOption" :default-value="1">
+									<a-radio :value="0" :style="{'margin-bottom': '10px'}">
+										<a-tag color="green" :style="{'margin': '0 2px 0 0'}">{{$t('cloud_Regular')}}</a-tag>
+										{{$t('cloud_Shutdown')}}
+									</a-radio>
+									<a-radio :value="1">
+										<a-tag color="red" :style="{'margin': '0 2px 0 0'}">
+											HARD
+										</a-tag>
+										{{$t('cloud_Shutdown')}}
+									</a-radio>
+								</a-radio-group>
+							</a-modal>
+						</div>
+						<div v-else class="Fcloud__button" :class="{ 'disabled': permissions.start }" @click='sendAction("Start")'>
+							<div class="Fcloud__BTN-icon">
+								<a-icon type="caret-right" />
+							</div>
+							<div class="Fcloud__BTN-title">{{$t('Start')}}</div>
+						</div>
+						<div class="Fcloud__button" :class="{ 'disabled': permissions.reboot , 'btn_disabled_wiggle': true}" @click='openModal("reboot")'>
+							<div class="Fcloud__BTN-icon">
+								<a-icon type="redo" />
+							</div>
+							<div class="Fcloud__BTN-title">{{$t('Reboot')}}</div>
+							<a-modal v-model="modal.reboot" :title="$t('cloud_Reboot_modal')" @ok="handleOk('reboot')">
+								<p>{{$t('cloud_Reboot_invite')}}</p>
+								<a-radio-group v-model="option.reboot" name="rebootOption" :default-value="1">
+									<a-radio :value="0">
+										<a-tag color="green" :style="{'margin-bottom': '10px'}">
+											{{$t('cloud_Regular')}}
+										</a-tag>
+										{{$t('cloud_Reboot_modal')}}
+									</a-radio>
+									<a-radio :value="1">
+										<a-tag color="red">
+											HARD
+										</a-tag>
+										{{$t('cloud_Reboot_modal')}}
+									</a-radio>
+								</a-radio-group>
+							</a-modal>
+						</div>
+						<div class="Fcloud__button" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='openModal("recover")'>
+							<div class="Fcloud__BTN-icon">
+								<a-icon type="backward" />
+							</div>
+							<div class="Fcloud__BTN-title">{{$t('Recover')}}</div>
+							<a-modal v-model="modal.recover" :title="$t('cloud_Recover_modal')" @ok="handleOk('recover')">
+								<p>{{$t('cloud_Recover_invite_line1')}}</p>
+								<p>{{$t('cloud_Recover_invite_line2')}}</p>
+								<p>{{$t('cloud_Recover_invite_line3')}}</p>
+								<p>{{$t('cloud_Recover_invite')}}</p>
+								<a-radio-group v-model="option.recover" name="recover" :default-value="1">
+									<a-radio :value="0">
+										{{$t('yesterday')}}
+									</a-radio>
+									<a-radio :value="1">
+										{{$t('today')}}
+									</a-radio>
+								</a-radio-group>
+							</a-modal>
+						</div>
+					</div>
+
+					
+					<div class="Fcloud__info">
+						<div class="Fcloud__info-header">
+							<div class="Fcloud__info-title">{{$t('Information')}}</div>
+						</div>
+
+						<div v-if="IPs.length > 0" class="Fcloud__main-info">
+							<table class="Fcloud__table">
+								<tbody>
+									<tr v-for="nic in IPs" :key="nic.NAME">
+										<td>IP</td>
+										<td>{{nic.IP}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="Fcloud__info-block block">
+							<div class="Fcloud__block-header">
+								<a-icon type="setting" theme="filled" />
+								{{$t('cloud_Capacity')}}
+							</div>
+							<div class="Fcloud__block-content">
+								<div class="block__column">
+									<div class="block__title">CPU</div>
+									<div class="block__value">{{SingleCloud.VCPU}}</div>
+								</div>
+								<div class="block__column">
+									<div class="block__title">{{$t('cloud_Memory')}}</div>
+									<div class="block__value">{{mbToGb(SingleCloud.RAM)}} GB</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="Fcloud__info-block block">
+							<div class="Fcloud__block-header">
+								<a-icon type="database" theme="filled" />
+								{{$t('cloud_Storage')}}
+							</div>
+							<div class="Fcloud__block-content">
+								<div class="block__column">
+									<div class="block__title">{{$t('cloud_Type')}}</div>
+									<div class="block__value">{{SingleCloud.DRIVE}}</div>
+								</div>
+								<div class="block__column">
+									<div class="block__title">{{$t('cloud_Size')}}</div>
+									<div class="block__value">{{mbToGb(SingleCloud.DRIVE_SIZE)}} GB</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
+							<div class="Fcloud__block-header">
+								<a-icon type="apartment" />
+								{{$t('Network')}}
+							</div>
+							<div class="Fcloud__block-content">
+								<div class="block__column">
+									<div class="block__title">{{$t('inbound') | capitalize}}</div>
+									<div class="block__value">{{printWidthRange(chart1Data[chart1Data.length-1][1])}}</div>
+								</div>
+								<div class="block__column">
+									<div class="block__title">{{$t('outgoing') | capitalize}}</div>
+									<div class="block__value">{{printWidthRange(chart2Data[chart2Data.length-1][1])}}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="Fcloud__info-block block" v-if="!(chart1Data.length == 0 || chart2Data.length == 0)">
+							<div class="Fcloud__block-header">
+								<a-icon type="line-chart" />
+								{{$t('graphs') | capitalize}} 
+							</div>
+							<div class="Fcloud__block-content Fcloud__block-content--charts">
+								<a-row type='flex' justify="space-around" style="width: 100%">
+									<a-col>
+										<GChart
+											type="LineChart"
+											:data="inbChartDataReady"
+											:options="chartOption('inbound')"
+										/>
+									</a-col>
+									<a-col>
+										<GChart
+											type="LineChart"
+											:data="outChartDataReady"
+											:options="chartOption('outgoing')"
+										/>
+									</a-col>
+								</a-row>
+							</div>
+						</div>
+
+						<a-row :gutter="[15, 15]" style="margin-top: 20px">
+							<a-col :span='24' :md='12'>
+								<div class="button">
+									<a-button type="primary" shape="round" block size='large' @click="openModal('snapshot')">
+										{{$t('Snapshots')}}
+									</a-button>
+									<a-modal v-model="snapshots.modal" :title="$t('Snapshots')" :footer="null">
+										<div v-if="(SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3) && SingleCloud.LCM_STATE != 24" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn on VM to create or load snapshots')}}</div>
+										<a-table
+											:columns="snapshots.columns"
+											:data-source="snapshots.data"
+											:pagination="false"
+											:loading="snapshots.loading"
+											rowKey="TIME"
+										>
+										<template slot="time" slot-scope="time">
+											{{getFormatedDate(time)}}
+										</template>
+										<template slot="actions" slot-scope="actions">
+											<a-button icon="caret-right" type="primary" shape="round" :style="{'margin-right': '10px'}" @click="revToShapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+											<a-button icon="close" type="danger" shape="round" @click="RMSnapshot(actions)" :disabled="actions.ACTION != undefined || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" :loading="snapshots.loadingSnaps.includes(actions.SNAPSHOT_ID)"></a-button>
+										</template>
+										</a-table>
+										<div class="modal__buttons">
+											<a-button icon="plus" type="primary" shape="round" size="large" :disabled="snapshots.data.length > 2 || snapshots.loading || (SingleCloud.LCM_STATE != 3 || SingleCloud.STATE != 3)" @click="openModal('createSnapshot')">{{$t('Take snapshot')}}</a-button>
+										</div>
+										<a-modal v-model="snapshots.addSnap.modal" :footer="null" title="Create snapshot">
+											<p>{{$t('You can only have 3 snapshots at a time.')}}</p>
+											<p>{{$t('Each snapshot exists for 24 hours and is then deleted.')}}</p>
+											<p>{{$t('Choose a name for the new snapshot:')}}</p>
+											<a-input ref="snapNameInput" placeholder="Snapshot name" v-model="snapshots.addSnap.snapname"/>
+											<div class="modal__buttons">
+												<a-button shape="round" :style="{'margin-right': '10px'}" @click="closeModal('createSnapshot')">{{$t('Cancel')}}</a-button>
+												<a-button icon="plus" type="primary" shape="round" :disabled="snapshots.addSnap.snapname.length < 1 " :loading="snapshots.addSnap.loading" @click="newsnap()">{{$t('Take snapshot')}}</a-button>
+											</div>
+										</a-modal>
+									</a-modal>
+								</div>
+							</a-col>
+
+							<a-col :span='24' :md='12'>
+								<div class="button">
+									<a-button :disabled="SingleCloud.STATE != 3 || SingleCloud.LCM_STATE != 3" type="primary" shape="round" block size='large'>
+										<router-link :to="{path: `cloud-${$route.params.pathMatch}/vnc`}">
+											VNC
+										</router-link>
+									</a-button>
+								</div>
+							</a-col>
+						</a-row>
+					</div>
 				</div>
 			</div>
-		</div>
-		<loading
-			v-else
-			color="#fff"
-			:style="{'position': 'absolute', 'height': '100%', 'width': '100%'}"
-			key="loading"
-			duration: 
-		/>
-		</transition>
+			<loading
+				v-else
+				color="#fff"
+				:style="{'position': 'absolute', 'height': '100%', 'width': '100%'}"
+				key="loading"
+				duration: 
+			/>
+			</transition>
+		</template>
 	</div>
 </template>
 
@@ -481,6 +487,7 @@ export default {
 			permissions: 'permissions',
 			singleLoading: 'singleLoading'
 		}),
+		...mapGetters('app', ['isMaintananceMode']),
 		inbChartDataReady(){
 			let data = this.chart1Data;
 			if(data == undefined) {
@@ -1032,6 +1039,10 @@ export default {
 	.cloud__fullscreen{
 		background: var(--main);
 		display: flex;
+	}
+
+	.cloud__fullscreen--while{
+		background: #fff;
 	}
 
 	.Fcloud {

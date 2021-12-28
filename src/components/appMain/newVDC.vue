@@ -1,5 +1,7 @@
 <template>
 	<div class="newCloud_wrapper">
+		<maintanance-mode v-if="isMaintananceMode"></maintanance-mode>
+		<template v-else>
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 
@@ -328,11 +330,14 @@
 
 			</div>
 		</div>
+		</template>
 	</div>
 </template>
 
 <script>
 import md5 from 'md5'
+import { mapGetters } from 'vuex'
+
 export default {
 	name: "newVDC",
 	data(){
@@ -698,6 +703,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters('app', ['isMaintananceMode']),
 		costAfterDiscount(){
 			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(2);
 		},

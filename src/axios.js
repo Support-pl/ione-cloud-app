@@ -20,7 +20,7 @@ const ax = axios.create(axiosConfig);
 ax.interceptors.response.use(response => {
 	if (response.data.maintenance) {
 		console.log(response, 'maintanance mode');
-		store.commit('app/setMaintananceMode', true);
+		store.commit('app/setMaintananceMode', response.data.maintenance);
 	}
 	return response
 }, error => {

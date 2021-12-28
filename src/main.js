@@ -11,6 +11,8 @@ import axios from './axios'
 import config from './appconfig'
 import api from "@/api.js"
 
+import maintanance from '@/components/maintanance.vue'
+
 Vue.config.productionTip = false
 Vue.use(Antd)
 Vue.use(VueGoogleCharts)
@@ -30,6 +32,8 @@ Vue.filter('replace', function (value, from, to) {
   value = value.toString()
   return value.replace(from, to)
 })
+
+Vue.component('maintanance-mode', maintanance);
 
 new Vue({
   i18n,

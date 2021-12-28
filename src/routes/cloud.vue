@@ -1,16 +1,18 @@
 <template>
 	<div class="cloud">
-		<div class="container ha">
-			<create-vm />
-		</div>
-		<loading :ha="true" v-if="isLoading" />
+		<maintanance-mode v-if="isMaintananceMode"></maintanance-mode>
 		<template v-else>
 			<div class="container ha">
-				<div class="cloud__wrapper">
-					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-				</div>
+				<create-vm />
 			</div>
-
+			<loading :ha="true" v-if="isLoading" />
+			<template v-else>
+				<div class="container ha">
+					<div class="cloud__wrapper">
+						<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
+					</div>
+				</div>
+			</template>
 		</template>
 	</div>
 </template>
@@ -20,6 +22,7 @@ import cloudItem from '@/components/appMain/cloud/cloudItem.vue';
 import loading from '@/components/loading/loading.vue';
 import empty from '@/components/empty/empty.vue';
 import createvm from '@/components/createVM.vue';
+import maintanance from '@/components/maintanance.vue';
 import { mapGetters } from 'vuex';
 
 
@@ -30,6 +33,7 @@ export default {
 		cloudItem,
 		loading,
 		empty,
+		maintanance,
 		'create-vm': createvm
 	},
 	created(){
@@ -39,6 +43,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('cloud', ['isLoading']),
+		...mapGetters('app', ['isMaintananceMode']),
 		getClouds(){
 			const clouds = this.$store.getters['cloud/getClouds'];
 			return clouds;
