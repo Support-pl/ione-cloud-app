@@ -46,7 +46,11 @@ export default {
 
 	auth(email, password){
 		return new Promise((resolve, reject) => {
-			axios.get(`/login.php?email=${email}&password=${password}`)
+			axios.get(`/login.php`, {
+				headers: {
+					Authorization: `Basic ${email}:${password}`
+				}
+			})
 			.then(resolve)
 			.catch(reject)
 		})
