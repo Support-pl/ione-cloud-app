@@ -70,7 +70,7 @@
 						@cancel="closeModal('QR')"
 					>
 						<h3 style="text-align: center">
-							{{$t("copy link") | capitalize}}: <span class="clickable" @click="copyLink"><a-icon type="copy"/> {{selfHost}}</span>
+							{{$t("copy link") | capitalize}}: <span class="link--clickable" @click="copyLink"><a-icon type="copy"/> {{selfHost}}</span>
 						</h3>
 						<h3 style="text-align: center">
 							{{$t("your QR code") | capitalize}}:
@@ -320,7 +320,7 @@ export default {
 		align-items: center;
 	}
 
-	.clickable{
+	.link--clickable{
 		color: var(--main);
 		text-decoration: underline;
 		cursor: pointer;

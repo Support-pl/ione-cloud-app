@@ -48,9 +48,6 @@ export default {
 			})
 			.catch( err => console.error(err));
 	},
-	destroyed() {
-console.log('destroyed');
-	},
 	computed:{
 		user(){
 			return this.$store.getters.getUser;
