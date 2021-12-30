@@ -180,9 +180,13 @@
 						<div class="Fcloud__info-block block">
 							<div class="Fcloud__block-header">
 								<a-icon type="setting" theme="filled" />
-								{{$t('cloud_Capacity')}}
+								{{$t('cloud_system') | capitalize}}
 							</div>
 							<div class="Fcloud__block-content">
+								<div class="block__column">
+									<div class="block__title">OS</div>
+									<div class="block__value">{{SingleCloud.DESCRIPTION}}</div>
+								</div>
 								<div class="block__column">
 									<div class="block__title">CPU</div>
 									<div class="block__value">{{SingleCloud.VCPU}}</div>

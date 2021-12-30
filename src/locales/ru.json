@@ -140,6 +140,7 @@
 	
   "cloud_StartTime": "Время запуска",
 	"cloud_Capacity": "Вместимость",
+  "cloud_system": "система",
 	"cloud_Storage": "Хранилище",
 	"cloud_Memory": "Память",
 	"cloud_Type": "Тип",
