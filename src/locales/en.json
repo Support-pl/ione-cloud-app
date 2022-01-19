@@ -180,6 +180,9 @@
 	"Add Funds": "Add Funds",
 
 	"have no": "have no",
+	"ip": {
+		"none": "none"
+	},
 
 	"os": "OS",
 
@@ -224,6 +227,12 @@
 	"enter": "enter",
 	"all fields are required": "all fields are required",
 	"field must contain more characters": "field must contain more characters",
+	
+	"advice": {
+		"look up": "look up",
+		"You have billed for the renewal of this virtual machine": "You have billed for the renewal of this virtual machine",
+		"If you do not pay within the specified period, the virtual machine will be suspended": "If you do not pay within the specified period, the virtual machine will be suspended"
+	},
 	
 	"quatnity": {
 		"items": "items"

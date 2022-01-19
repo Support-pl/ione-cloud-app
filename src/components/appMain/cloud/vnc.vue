@@ -97,6 +97,17 @@
 									<li class="noVNC_heading">
 										<img alt="" src="img/images/settings.svg"> Settings
 									</li>
+									<template v-if="SingleCloud && !isLoading">
+										<li>
+											password:
+										</li>
+										<li>
+											<password :password="SingleCloud.TEMPLATE.CONTEXT.PASSWORD"/>
+										</li>
+									</template>
+									<li>
+										<hr>
+									</li>
 									<li>
 										<label><input id="noVNC_setting_shared" type="checkbox"> Shared Mode</label>
 									</li>
@@ -220,76 +231,91 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex'
-	import md5 from 'md5'
-	import UI from '../../../libs/noVNC/app/ui.js';
+import { mapGetters } from 'vuex'
+import md5 from 'md5'
+import UI from '../../../libs/noVNC/app/ui.js';
+import password from '@/components/password.vue';
 
-	export default {
-		name: 'vnc',
-		data() {
-			return {
-				status: '',
-				desktopName: '',
-				rfb: null,
+export default {
+	name: 'vnc',
+	data() {
+		return {
+			status: '',
+			desktopName: '',
+			rfb: null,
 
-				curTok: 0,
-				token: '',
-				url: '',
-			}
-		},
-		created() {},
-		mounted() {
-			this.getToken()
-				.then(res => {
-					this.connect(this.token);
-				})
-			UI.prime();
-			if (UI.connected) {
-				location.reload();
-			}
-		},
-		methods: {
-			getToken() {
-				const user = this.$store.getters.getUser;
-				const userid = user.id;
-
-				const vmid = this.$route.params.pathMatch
-
-				let close_your_eyes = md5('getVNCtoken' + vmid + userid + user.secret);
-				let url = `/getVNCtoken.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`
-
-				return this.$axios.get(url)
-					.then(res => {
-						this.token = res.data.response.token;
-						this.desktopName = res.data.response.vm_name;
-						this.url = res.data.response.connectURL;
-					})
-					.catch(err => console.error(err));
-			},
-			connect(token) {
-				this.$refs.vncscreen.innerHTML = '';
-				UI.connect(this.url);
-			},
-			credentialsAreRequired(e) {
-				const password = prompt("Password Required:");
-				this.rfb.sendCredentials({
-					password: password
-				});
-			},
-			updateDesktopName(e) {
-				this.desktopName = e.detail.name;
-			},
-			removeCanvases() {
-				let conv = document.getElementsByTagName('canvas');
-				Array.from(conv).forEach(el => {
-					el.remove()
-				})
-			}
-		},
-		computed: {
-			...mapGetters('app', ['isMaintananceMode']),
+			curTok: 0,
+			token: '',
+			url: '',
 		}
+	},
+	components: {
+		password
+	},
+	created() {
+		this.$store.dispatch('cloud/fetchSingleCloud', this.$route.params.pathMatch)
+		.then( res => {
+			if(res.result == 'error' && res.message == 'Not your VM.'){
+				this.$router.replace('/cloud');
+			}
+		})
+	},
+	mounted() {
+		this.getToken()
+			.then(res => {
+				this.connect(this.token);
+			})
+		UI.prime();
+		if (UI.connected) {
+			location.reload();
+		}
+	},
+	methods: {
+		getToken() {
+			const user = this.$store.getters.getUser;
+			const userid = user.id;
+
+			const vmid = this.$route.params.pathMatch
+
+			let close_your_eyes = md5('getVNCtoken' + vmid + userid + user.secret);
+			let url = `/getVNCtoken.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}`
+
+			return this.$axios.get(url)
+				.then(res => {
+					this.token = res.data.response.token;
+					this.desktopName = res.data.response.vm_name;
+					this.url = res.data.response.connectURL;
+				})
+				.catch(err => console.error(err));
+		},
+		connect(token) {
+			this.$refs.vncscreen.innerHTML = '';
+			UI.connect(this.url);
+		},
+		credentialsAreRequired(e) {
+			const password = prompt("Password Required:");
+			this.rfb.sendCredentials({
+				password: password
+			});
+		},
+		updateDesktopName(e) {
+			this.desktopName = e.detail.name;
+		},
+		removeCanvases() {
+			let conv = document.getElementsByTagName('canvas');
+			Array.from(conv).forEach(el => {
+				el.remove()
+			})
+		}
+	},
+	computed: {
+		...mapGetters('app', ['isMaintananceMode']),
+		...mapGetters('cloud', {
+			SingleCloud: 'getOpenedCloud',
+			isLoading: 'isLoading',
+		}),
 	}
+}
 </script>
 
 <style scoped>
@@ -1048,7 +1074,9 @@
 	}
 
 	/* Settings */
-	#noVNC_settings {}
+	#noVNC_settings {
+		min-width: 250px;
+	}
 
 	#noVNC_settings ul {
 		list-style: none;

@@ -180,6 +180,9 @@
 	"Add Funds": "Пополнить баланс",
 
 	"have no": "Нет",
+	"ip": {
+		"none": "Нет"
+	},
 
 	"os": "OS",
 	
@@ -225,6 +228,12 @@
 	"all fields are required": "необходимо заполнить все поля",
 	"field must contain more characters": "поле должн содержать больше символов",
 	
+	"advice": {
+		"look up": "перейти",
+		"You have billed for the renewal of this virtual machine": "Вам выставлен счёт продления данной виртуальной машины",
+		"If you do not pay within the specified period, the virtual machine will be suspended": "При неуплате в указанный срок работы виртуальной машины будет приостановлена"
+	},
+
 	"quatnity": {
 		"items": "шт."
 	},

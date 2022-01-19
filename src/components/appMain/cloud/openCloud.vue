@@ -35,6 +35,7 @@
 										block
 										class="menu__button"
 										:type="btn.type || 'default'"
+										:disabled="disabledMenu(btn.title.toLowerCase())"
 									>
 										{{$t(btn.title)}}
 									</a-button>
@@ -82,6 +83,10 @@
 								
 								<a-modal v-model="modal.bootOrder" :title='$t("Boot order")' :footer="null">
 									<boot-order @onEnd="bootOrderNewState"/>
+								</a-modal>
+								
+								<a-modal v-model="modal.accessManager" :title='$t("Access manager")' :footer="null">
+									<access-manager />
 								</a-modal>
 
 							</div>
@@ -164,6 +169,25 @@
 					<div class="Fcloud__info">
 						<div class="Fcloud__info-header">
 							<div class="Fcloud__info-title">{{$t('Information')}}</div>
+						</div>
+
+
+						<div v-if="SingleCloud.ORDER_INFO.invoicestatus.toLowerCase() == 'unpaid'" class="Fcloud__main-info Fcloud__main-info--invoice">
+							<div class="icon">
+								<a-icon type="exclamation-circle" />
+							</div>
+							<div class="content">
+								{{$t('advice.You have billed for the renewal of this virtual machine')}}.
+								{{$t('advice.If you do not pay within the specified period, the virtual machine will be suspended')}}.
+							</div>
+							<div class="link__wrapper">
+								<router-link
+									class="link"
+									:to="{name: 'invoiceFS', params: {pathMatch: SingleCloud.ORDER_INFO.invoiceid}}"
+								>
+									{{$t('advice.look up') | capitalize}}
+								</router-link>
+							</div>
 						</div>
 
 						<div v-if="IPs.length > 0" class="Fcloud__main-info">
@@ -331,6 +355,7 @@ import api from '@/api'
 import diskControl from './openCloud/diskControl'
 import bootOrder from './openCloud/bootOrder'
 import networkControl from './openCloud/networkControl'
+import accessManager from './openCloud/accessManager'
 
 const columns = [
   {
@@ -359,7 +384,8 @@ export default {
 		loading,
 		diskControl,
 		bootOrder,
-		networkControl
+		networkControl,
+		accessManager
 	},
 	data(){
 		return {
@@ -401,6 +427,7 @@ export default {
 				diskControl: false,
 				bootOrder: false,
 				networkControl: false,
+				accessManager: false,
 				rename: false
 			},
 			option: {
@@ -439,6 +466,12 @@ export default {
 					onclick: this.openModal,
 					params: ['rename'],
 					icon: "tag"
+				},
+				{
+					title: "Access manager",
+					onclick: this.openModal,
+					params: ['accessManager'],
+					icon: "safety"
 				},
 				{
 					title: "Resize VM",
@@ -528,6 +561,13 @@ export default {
 		// this.sync(); //он вызывается ниже, в вотче изменения роута
 	},
 	methods: {
+		disabledMenu(menuName){
+			if(this.SingleCloud.DISABLE.includes(menuName)){
+				return true;
+			}
+
+			return false;
+		},
 		sync(vmid = null){
 			if(vmid == null){
 				vmid = this.$route.params.pathMatch;
@@ -587,19 +627,24 @@ export default {
 		sendAction(action){
 			switch (action.toLowerCase()){
 				case 'start':
+					if(this.SingleCloud.DISABLE.start) return;
 					if(this.permissions.start) return;
 					break;
 				case 'Poweroff':
 				case 'PoweroffHard':
+					if(this.SingleCloud.DISABLE.Poweroff) return;
 					if(this.permissions.shutdown) return;
 					break;
 				case 'reboot':
+					if(this.SingleCloud.DISABLE.reboot) return;
 					if(this.permissions.reboot) return;
 					break;
 				case 'recover':
+					if(this.SingleCloud.DISABLE.recover) return;
 					if(this.permissions.recover) return;
 					break;
 				case 'reinstall':
+					if(this.SingleCloud.DISABLE.reinstall) return;
 					if(this.permissions.reinstall) return;
 					break;
 			}
@@ -1216,8 +1261,45 @@ export default {
 		color: rgba(0,0,0,.5);
 	}
 
+	.Fcloud__main-info--invoice{
+		display: flex;
+		align-items: stretch;
+		color: #32af32;
+		background-color: #c5eec5;
+		min-height: 2px;
+		padding: 0;
+		overflow: hidden;
+	}
 
+	.Fcloud__main-info--invoice .icon{
+		padding: 5px 15px;
+		font-size: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
+	.Fcloud__main-info--invoice .content{
+		font-weight: bold;
+		flex: 1 0;
+		padding: 15px 0;
+	}
+
+	.Fcloud__main-info--invoice .link{
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		padding: 5px 15px;
+		border-left: 1px solid #32af3260;
+		color: #32af32;
+		text-decoration: underline;
+		transition: background-color .2s ease;
+	}
+	.Fcloud__main-info--invoice .link:hover{
+		background-color: #b9e6b9;
+	}
 
 	.block{
 		margin-top: 10px;

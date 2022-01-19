@@ -10,7 +10,7 @@
 				<template v-if="cloud.HOST != '' && cloud.HOST != undefined">
 					HOST: {{cloud.HOST}},
 				</template>
-					IP: {{cloud.IP || $t('have no')}}
+					IP: {{cloud.IP || $t('ip.none')}}
 			</div>
 		</div>
 		<div class="cloud__label cloud__label__mainColor">
