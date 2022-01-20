@@ -179,8 +179,11 @@ export default {
 				return
 			}
 
+			const temp = JSON.parse(JSON.stringify(this.userinfo));
+			temp.phonenumber = temp.phonenumber.replace("+", "")
+
 			this.registerLoading = true;
-			api.getWithParams('client.addClient', {...this.userinfo, lang: this.$i18n.locale})
+			api.getWithParams('client.addClient', {...temp, lang: this.$i18n.locale})
 			.then(result => {
 				if(result.result == 'success'){
 					this.$message.success('Account created successfully.');
