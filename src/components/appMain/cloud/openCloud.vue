@@ -35,8 +35,8 @@
 										block
 										class="menu__button"
 										:type="btn.type || 'default'"
-										:disabled="disabledMenu(btn.title.toLowerCase())"
 									>
+										<!-- :disabled="disabledMenu(btn.title.toLowerCase())" -->
 										{{$t(btn.title)}}
 									</a-button>
 									
@@ -48,10 +48,19 @@
 									</a-input>
 								</a-modal>
 								<a-modal v-model="modal.reinstall" title='reinstall' @ok="sendReinstall">
-									<p>{{$t('Enter new password')}}</p>
-									<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
-
-									</a-input-password>
+									<template v-if="!disabledMenu('reinstall')">
+										<p>{{$t('Enter new password')}}</p>
+										<a-input-password v-model="reinstallPass" :placeholder="$t('input password')">
+										</a-input-password>
+									</template>
+									<template v-else>
+										<p>
+											We can't do it automaticly. Presss OK to create a ticket.
+										</p>
+										<p>
+											All unsaved data will be lost.
+										</p>
+									</template>
 								</a-modal>
 								<a-modal :confirm-loading='loadingResizeVM' v-model="modal.expand" :title='$t("Resize VM")' @ok="ExpandVM" :ok-button-props="{ props: { disabled: SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8 } }">
 									<div v-if="SingleCloud.LCM_STATE != 0 || SingleCloud.STATE != 8" :style="{ color: config.colors.err, 'text-align': 'center'}">{{$t('turn of VM to resize it') | capitalize}}</div>
@@ -172,7 +181,7 @@
 						</div>
 
 
-						<div v-if="SingleCloud.ORDER_INFO.invoicestatus.toLowerCase() == 'unpaid'" class="Fcloud__main-info Fcloud__main-info--invoice">
+						<div v-if="SingleCloud.ORDER_INFO.invoicestatus && SingleCloud.ORDER_INFO.invoicestatus.toLowerCase() == 'unpaid'" class="Fcloud__main-info Fcloud__main-info--invoice">
 							<div class="icon">
 								<a-icon type="exclamation-circle" />
 							</div>
@@ -459,7 +468,7 @@ export default {
 					title: "Reinstall",
 					onclick: this.openModal,
 					params: ['reinstall'],
-					icon: "exclamation"
+					icon: "exclamation",
 				},
 				{
 					title: "Rename",
@@ -1026,6 +1035,20 @@ export default {
 			})
 		},
 		sendReinstall(){
+			if(this.disabledMenu('reinstall')){
+				this.$store.dispatch('utils/createTicket', {
+					subject: `[generated]: Reinstall VM#${this.$route.params.pathMatch}`,
+					message: `VM#${this.$route.params.pathMatch} имеет аддон, запрещающий автопереустановку. Необходимо выполнить перустановку вручную.`
+				})
+				.then(() => {
+					this.$message.success("Order created successuffly");
+					this.closeModal('reinstall');
+				})
+				.catch(() => {
+					this.$message.success("Some error during creation order");
+				})
+				return
+			}
 			const me = this;
 			this.$confirm({
         title: me.$t('Do you want to reinstall this virtual machine?'),

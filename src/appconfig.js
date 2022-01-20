@@ -8,6 +8,9 @@ export default {
 		bright_font: '#fff',
 		bright_bg: '#f7f7f7',
 	},
+
+	autoTicketDepartment: 9,
+
 	languages: ['en', 'ru'],
 	dangerModeNoSSLCheck: globalConfig.dangerModeNoSSLCheck ?? false,
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
