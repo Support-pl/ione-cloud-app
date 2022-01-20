@@ -36,7 +36,19 @@
 		</div>
 
 		<div class="chat__footer">
-			<a-textarea allowClear :autoSize="{minRows: 1, maxRows: 2}" v-model="messageInput" v-on:keyup.shift.enter.exact="newLine" v-on:keyup.enter.exact="sendMessage" type="text" class="chat__input" name="message" id="message" placeholder="Message...">
+			<a-textarea
+				:disabled="this.status == 'Closed'"
+				allowClear
+				:autoSize="{minRows: 1, maxRows: 2}"
+				v-model="messageInput"
+				v-on:keyup.shift.enter.exact="newLine"
+				v-on:keyup.enter.exact="sendMessage"
+				type="text"
+				class="chat__input"
+				name="message"
+				id="message"
+				placeholder="Message..."
+			>
 			</a-textarea>
 			<div class="chat__send" @click="sendMessage">
 				<a-icon type="arrow-up" />
@@ -94,6 +106,7 @@ export default {
 		},
 		sendMessage(){
 			if (this.messageInput.length < 1) return;
+			if (this.status == 'Closed') return;
 			const message = {
 				admin: "",
 				attachment: "",
@@ -141,6 +154,7 @@ export default {
 			}
 			this.$api.sendAsUser('ticket', object)
 			.then(resp => {
+				this.status = resp.status
 				this.replies = resp.replies.reply;
 				this.subject = resp.subject;
 				this.loading = false;
