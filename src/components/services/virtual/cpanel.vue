@@ -19,7 +19,7 @@ export default {
 			serviceid: this.$route.params.serviceid
 		})
 		.then(res => {
-			console.log(res);
+			// console.log(res);
 			const fd = new FormData();
 			fd.append('user', res.data.username);
 			fd.append('pass', res.data.password);
@@ -31,7 +31,7 @@ export default {
 				method: "post"
 			})
 			.then(result => {
-				console.log(result);
+				// console.log(result);
 				this.link = res.data.url
 			})
 			.catch(error => {

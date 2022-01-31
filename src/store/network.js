@@ -10,8 +10,6 @@ export default {
 	},
 	mutations: {
 		updateValue(state, field, value){
-			console.log(arguments);
-			console.log(state[field]);
 			state[field] = value;
 		},
 		updateNICs(state, value){

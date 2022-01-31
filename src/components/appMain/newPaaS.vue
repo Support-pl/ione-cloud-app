@@ -347,7 +347,7 @@ export default {
 				addons,
 				billingcycle: this.options.period,
 			}
-			console.log(orderData, this.$store.getters.getUser);
+			// console.log(orderData, this.$store.getters.getUser);
 
 			if(!this.$store.getters.getUser){
 				this.$store.commit('setOnloginInfo', {
@@ -374,7 +374,7 @@ export default {
 			this.$store.dispatch('newPaaS/sendOrder', orderData)
 			.then( result => {
 				const res = result.data;
-				console.log(res, self);
+				// console.log(res, self);
 				if(res.result == "success"){
 					self.$message.success(self.$t('Order created successfully.'));
 					if(self.modal.goToInvoice){
