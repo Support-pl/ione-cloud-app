@@ -1,5 +1,7 @@
 <template>
 	<div class="newCloud_wrapper">
+		<maintanance-mode v-if="isMaintananceMode"></maintanance-mode>
+		<template v-else>
 		<div class="newCloud">
 			<div class="newCloud__inputs newCloud__field">
 
@@ -119,7 +121,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('disksize', -10)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-slider v-model="options.disk.size" :min="options.disk.min[options.disk.type]" :max="options.disk.max[options.disk.type]" :tooltip-visible="showTooltip" :step="10" />
+												<a-slider v-model="options.disk.size" :min="diskMinValue" :max="diskMaxValue" :tooltip-visible="showTooltip" :step="10" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('disksize', 10)"></a-icon>
@@ -136,9 +138,6 @@
 									</a-col>
 									<a-col :sm="13" :span="14">
 										<a-select v-model="options.disk.type" class="max-width" :default-value="diskTypes[0]" @change='diskChange()'>
-											<!-- <a-select-option value="SSD">
-												SSD
-											</a-select-option> -->
 											<a-select-option v-for="type of diskTypes" :key="type" :value="type">
 												{{type}}
 											</a-select-option>
@@ -186,33 +185,14 @@
 			</div>
 			
 			<div class="newCloud__calculate newCloud__field">
-					
-				<a-row type="flex" justify="space-around" :style="{'margin-bottom': '15px'}">
-					<a-col :span="22">
-						<a-select default-value="hour" :disabled="options.tarification" :value="periodToShow" style="width: 100%" @change="changePeriod">
-							<a-select-option value="hour">
-								{{$t("Cost")}}/{{$t("hour")}}
-							</a-select-option>
-							<a-select-option value="day">
-								{{$t("Cost")}}/{{$t("day")}}
-							</a-select-option>
-							<a-select-option value="week">
-								{{$t("Cost")}}/{{$t("week")}}
-							</a-select-option>
-							<a-select-option value="month">
-								{{$t("Cost")}}/{{$t("month")}}
-							</a-select-option>
-						</a-select>
-					</a-col>
-				</a-row>
-					
+										
 				<a-row type="flex" justify="space-between">
 					<a-col>
 						CPU: {{options.cpu.count}}
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -223,7 +203,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -234,23 +214,23 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{user.currency_code}}
+							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
 
-				<!-- <transition name="networkApear">
-					<a-row v-if="options.network.public.status" type="flex" justify="space-between">
+				<transition name="networkApear">
+					<a-row v-if="options.network.public.status" type="flex" justify="space-between" :style="{'font-size': '1.2rem'}">
 						<a-col>
-							{{$t("Network")}}:
+							Public IPv4:
 						</a-col>
 						<a-col>
-							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-								{{(calculatePrice(options.network.price)*options.network.public.count).toFixed(3)}}USD
+							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
+								{{options.network.public.count * options.network.price}} {{currencyPostfix}}/month
 							</a-skeleton>
 						</a-col>
 					</a-row>
-				</transition> -->
+				</transition>
 				
 				<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 					{{$t('Total')}}:
@@ -263,28 +243,36 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice()}} {{user.currency_code}}/{{$t(toShow[periodToShow])}}
+								~{{calculateFullPrice('hour')}} {{currencyPostfix}}/{{$t('hour')}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
 				</a-row>
-
-				<transition name="networkApear">
-					<a-row v-if="options.network.public.status" type="flex" justify="space-around" :style="{'font-size': '1.2rem'}">
-						<a-col>
-							<!-- <a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
-								<template slot="title">
-									{{$t('Actual price may vary')}}
-								</template>
-							</a-tooltip> -->
-							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								+ Public IPv4: {{options.network.public.count * options.network.price}} {{user.currency_code}}/month
+				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
+					<a-col>
+						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+							<template slot="title">
+								{{$t('Actual price may vary')}}
+							</template>
+							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
+								~{{calculateFullPrice('day')}} {{currencyPostfix}}/{{$t('day')}}
 							</a-skeleton>
-						</a-col>
-					</a-row>
-				</transition>
+						</a-tooltip>
+					</a-col>
+				</a-row>
+				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
+					<a-col>
+						<a-tooltip :get-popup-container="getPopupContainer" style="cursor: help">
+							<template slot="title">
+								{{$t('Actual price may vary')}}
+							</template>
+							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
+								~{{calculateFullPrice('month')}} {{currencyPostfix}}/{{$tc('period.month')}}
+							</a-skeleton>
+						</a-tooltip>
+					</a-col>
+				</a-row>
 				
-				<!-- <template v-if="false"> -->
 					<a-divider orientation="left" :style="{'margin-bottom': '0'}">
 						{{$t('Tarification')}}:
 					</a-divider>
@@ -292,7 +280,7 @@
 					<a-row type="flex" justify="space-around" :style="{'font-size': '.95rem', 'margin-bottom': '10px'}">
 						<a-col>
 							<div style="text-align: center">
-								{{$t('When paying per month - save up to 15%')}}
+								{{$t(`When paying per month - save up to`)}} {{monthDiscount}}%
 							</div>
 						</a-col>
 					</a-row>
@@ -305,7 +293,6 @@
 							<a-switch v-model="options.tarification" :disabled="options.rate.id != 0"></a-switch>
 						</a-col>
 					</a-row>
-				<!-- </template> -->
 
 				<a-row type="flex" justify="space-around" style="margin-top: 24px; margin-bottom: 10px">
 					<a-col :span="22">
@@ -320,6 +307,11 @@
 							@ok="handleOk"
 							@cancel="handleCancel"
 						>
+
+							<p v-if="options.tarification">
+								{{$t('With discount')}} {{monthDiscount}}% {{$t('you will pay:')}} {{costAfterDiscount}}{{currencyPostfix}}
+							</p>
+
 							<p>
 								{{$t("Enter VM name")}}:
 								<a-input v-model="options.vmname" />
@@ -328,23 +320,30 @@
 								{{$t("Enter OS password")}}:
 								<a-input-password v-model="options.password" />
 							</p>
+							<p>
+								{{$t("Enter OS password again")}}:
+								<a-input-password v-model="options.password2" />
+							</p>
 						</a-modal>
 					</a-col>
 				</a-row>
 
 			</div>
 		</div>
+		</template>
 	</div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import md5 from 'md5'
-import config from '../../appconfig'
+import { mapGetters } from 'vuex'
+
 export default {
 	name: "newVDC",
 	data(){
 		return {
+			monthDiscount: 15,
+			settings: {},
 			diskTypes: [],
 			savedRateId: 0,
 			custom: true,
@@ -364,16 +363,19 @@ export default {
 				confirmCreate: false,
 				confirmLoading: false
 			},
+			DISK_MIN_SIZE: {},
+			DISK_MAX_SIZE: {},
 			options: {
 				tarification: false,
 				vmname: '',
 				password: '',
+				password2: '',
 				rate: {
 					id: 0,
 					name: 'Custom'
 				},
 				os: {
-					id: 0,
+					id: -1,
 					name: "",
 				},
 				cpu: {
@@ -390,7 +392,7 @@ export default {
 					max: 512
 				},
 				disk: {
-					size: 20,
+					size: 0,
 					units: "GB",
 					type: "",
 					price: {
@@ -398,12 +400,12 @@ export default {
 						SSD: 0
 					},
 					min: {
-						HDD: 50,
-						SSD: 20
+						HDD: 0,
+						SSD: 0
 					},
 					max: {
-						HDD: 1020,
-						SSD: 1020
+						HDD: 0,
+						SSD: 0
 					},
 					backupPrice: 0
 				},
@@ -422,23 +424,30 @@ export default {
 		}
 	},
 	mounted(){
-		// console.log(this.user);
 		this.$store.dispatch("newVDC/fetchTemplates");
 		this.$store.dispatch("newVDC/fetchRates");
 		
 		const user = this.user;
-		let userinfo = {
-			userid: user.id,
-			secret: md5('createVDC' + user.id + user.secret)
+		if(user){
+			let userinfo = {
+				userid: user.id,
+				secret: md5('createVDC' + user.id + user.secret)
+			}
+			// this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
 		}
-		this.$axios.get("createVDC.php?" + this.URLparameter(userinfo) );
-		this.$axios.get("getSettings.php?filter=cost,disktypes" )
+		this.$axios.get("getSettings.php?filter=cost,disktypes,minDisk,maxDisk" )
 			.then( res => {
-				// console.log(res);
-				this.options.cpu.price = res.data.CAPACITY_COST.CPU_COST * 30 * 3600 * 24
-				this.options.ram.price = res.data.CAPACITY_COST.MEMORY_COST * 30 * 3600 * 24
-				this.options.disk.price.HDD = res.data.DISK_COSTS.HDD * 30 * 3600 * 24
-				this.options.disk.price.SSD = res.data.DISK_COSTS.SSD * 30 * 3600 * 24
+				this.settings = res.data;
+				const multiplier = 60*60*24*30;
+				const CAPACITY_COST = res.data.CAPACITY_COST;
+				this.options.cpu.price = CAPACITY_COST.CPU_COST * multiplier
+				this.options.ram.price = CAPACITY_COST.MEMORY_COST * multiplier
+
+				const DISK_COSTS = res.data.DISK_COSTS;
+				Object.keys(DISK_COSTS).forEach(disktype => {
+					this.options.disk.price[disktype] = DISK_COSTS[disktype] * multiplier
+				})
+
 				this.options.network.price = res.data.PUBLIC_IP_COST;
 				this.diskTypes = res.data.DISK_TYPES.split(',');
 				this.options.disk.type = this.diskTypes[0];
@@ -449,17 +458,17 @@ export default {
 				this.$message.error("Can't load prices. Show saved ones.");
 			} )
 
-		userinfo = {
-			userid: user.id,
-			secret: md5('getBalance' + user.id + user.secret)
-		}
-		this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
-			.then( res => {
-				if(user.id == res.data.userid){
-					this.$store.dispatch("updateBalance", res.data.balance);
-				}
-			})
-			.catch( err => console.error(err));
+		// userinfo = {
+		// 	userid: user.id,
+		// 	secret: md5('getBalance' + user.id + user.secret)
+		// }
+		// this.$axios.get("getBalance.php?" + this.URLparameter(userinfo))
+		// 	.then( res => {
+		// 		if(user.id == res.data.userid){
+		// 			this.$store.dispatch("updateBalance", res.data.balance);
+		// 		}
+		// 	})
+		// 	.catch( err => console.error(err));
 	},
 	methods: {
 		setOS(id){
@@ -503,9 +512,9 @@ export default {
 			this.period = value;
 		},
 		calculatePrice(price, period = this.period){
-			if(this.options.tarification){
-				return price;	
-			}
+			// if(this.options.tarification){
+			// 	return price;	
+			// }
 			switch (period) {
 				case "minute":
 					price = price / 60;
@@ -519,17 +528,16 @@ export default {
 					price = price / 30 * 7;
 					break
 				default:
-					console.error("[VDC Calculator]: Wrong price in calc.");
+					console.error("[VDC Calculator]: Wrong period in calc.", period);
 					return undefined
 					break;
 			}
 			return price;
 		},
-		calculateFullPrice(){
+		calculateFullPrice(tarification = this.period){
 			if(this.options.rate.id != 0){
-				const user = this.user;
 				this.options.tarification = true;
-				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[user.currency_code || 'BYN'];
+				return this.ratesArray.find(el => el.pid == this.options.rate.id).pricingmonth[this.currencyPostfix];
 			} //выключил
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
@@ -537,17 +545,18 @@ export default {
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size,
 				// this.options.network.price * this.options.network.public.count
 				]
-			return this.calculatePrice( parts.reduce( (a,b)=>a+b ) ).toFixed(2);
+			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(2);
 		},
 		createVDC(){
 			const user = this.user;
+	
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size
 				]
 			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(3);
-			if(+price > +user.balance){
+			if(user && +price > +user.balance){
 				this.$message.error('You don\'t have enough money for a day of use');
 				return;
 			}
@@ -575,13 +584,17 @@ export default {
 				this.$message.error(this.$t("Password is too short"));
 				return 0
 			}
+			if(this.options.password != this.options.password2) {
+				this.$message.error(this.$t("Password mismatch"));
+				return 0
+			}
 			this.modal.confirmLoading = true;
 			this.send()
-				.then( responce => {
-					if(responce.data.result == 'error'){
-						this.$message.error(responce.data.message);
+				.then( response => {
+					if(response.result == 'error'){
+						this.$message.error(response.message);
 					} else {
-						this.$message.success(this.$t('VDC created successfully with') +' id = ' + responce.data.id);
+						this.$message.success(this.$t('VDC created successfully with') +' id = ' + response.id);
 						this.$store.dispatch("app/setTabByName", "cloud");
 					}
 					this.options.password = '';
@@ -603,16 +616,12 @@ export default {
 		},
 		send(){
 			const user = this.user;
-			const userinfo = {
-				userid: user.id,
-				secret: md5('createVM' + user.id + user.secret)
-			}
 			let savedPeriod = this.period;
 			this.period = 'month';
 			const price = this.calculateFullPrice();
 			this.period = savedPeriod;
 			const vmOptions = {
-				'publicIPs': this.options.network.public.count,
+				'publicIPs': this.options.network.public.status ? this.options.network.public.count : 0,
 				'cpu': this.options.cpu.count,
 				'drivesize': this.options.disk.size,
 				'drive': this.options.disk.type,
@@ -627,7 +636,24 @@ export default {
 			if(this.options.network.local.status){
 				vmOptions['localIPs'] = this.options.network.local.count;
 			}
-			return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
+			// return this.$axios.get("createVM.php?" + this.URLparameter(vmOptions) + "&" + this.URLparameter(userinfo) );
+			if(user){
+				return this.$api.sendAsUser("createVM", vmOptions);
+			} else {
+				this.$store.commit('setOnloginRedirect', 'newVDC');
+				
+				this.$store.commit('setOnloginInfo', {
+					type: 'IaaS',
+					title: 'Cloud Virtual machine',
+					cost: this.calculateFullPrice('month')
+				});
+
+				this.$store.dispatch('setOnloginAction', () => {
+					this.$api.sendAsUser("createVM", vmOptions);
+				});
+
+				this.$router.push({name: 'login'});
+			}
 		},
 		URLparameter(obj, outer = ''){
 			var str = "";
@@ -649,8 +675,8 @@ export default {
 		},
 		changeValue(variable, val){
 			if(variable == 'disksize'
-				&& this.options.disk.size + val <= this.options.disk.max[this.options.disk.type]
-				&& this.options.disk.size + val >= this.options.disk.min[this.options.disk.type])
+				&& this.options.disk.size + val <= this.diskMaxValue
+				&& this.options.disk.size + val >= this.diskMinValue)
 			{
 				this.options.disk.size += val;
 			}
@@ -677,6 +703,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters('app', ['isMaintananceMode']),
+		costAfterDiscount(){
+			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(2);
+		},
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
 			return elements;
@@ -698,6 +728,38 @@ export default {
 		user(){
 			const user = this.$store.getters.getUser;
 			return user;
+		},
+		currencyPostfix(){
+			return this.$config.currency.suffix;
+		},
+		isWindowsSelected(){
+			return this.options.os.name.search(/windows/i) != -1;
+		},
+		selectedTemplate(){
+			return this.templatesArray.find(template => template.id == this.options.os.id);
+		},
+		diskMinValue(){
+			if(this.selectedTemplate?.DISK_MIN_SIZE?.[this.options.disk.type] != undefined){
+				return this.selectedTemplate.DISK_MIN_SIZE
+			}
+
+			if(this.settings?.DISK_MIN_SIZE?.[this.options.disk.type] != undefined){
+				// console.log(this.settings.DISK_MIN_SIZE[this.options.disk.type]);
+				return this.settings.DISK_MIN_SIZE[this.options.disk.type];
+			}
+
+			return 50;
+		},
+		diskMaxValue(){
+			if(this.selectedTemplate?.DISK_MAX_SIZE?.[this.options.disk.type] != undefined){
+				return this.selectedTemplate.DISK_MAX_SIZE[this.options.disk.type]
+			}
+
+			if(this.settings?.DISK_MAX_SIZE?.[this.options.disk.type] != undefined){
+				return this.settings.DISK_MAX_SIZE[this.options.disk.type];
+			}
+
+			return 300;
 		}
 	},
 	watch: {
@@ -709,6 +771,15 @@ export default {
 			} else {
 					this.showTooltip = false
 			}
+		},
+		diskMinValue:{
+			handler: function(val){
+				// console.log(val)
+				if(this.options.disk.size < val){
+					this.options.disk.size = val;
+				}
+			},
+      immediate: true
 		}
 	}
 }
@@ -919,7 +990,7 @@ export default {
 
 	.networkApear-enter-active, .networkApear-leave-active {
 		transition: opacity .5s, height .5s;
-		height: 26px;
+		height: 28px;
 	}
 	.networkApear-enter, .networkApear-leave-to {
 		opacity: 0;

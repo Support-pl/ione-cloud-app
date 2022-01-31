@@ -87,7 +87,7 @@ export default {
 				vmid,
 				secret: close_your_eyes,
 			};
-			console.log(AR);
+			// console.log(AR);
 			const actionParams = {
 				AR_ID: AR.AR_ID
 			}
@@ -97,7 +97,7 @@ export default {
 			this.$store.commit('network/updateValue', 'loading', true)
 			this.$axios.get(url)
 			.then( resp => {
-				console.log()
+				// console.log()
 			})
 			.catch( err => {
 				console.error(err)
@@ -124,7 +124,7 @@ export default {
 			this.$store.commit('network/updateValue', 'loading', true)
 			this.$axios.get(url)
 			.then( resp => {
-				console.log()
+				// console.log()
 			})
 			.catch( err => {
 				console.error(err)

@@ -44,7 +44,7 @@ export default {
 					return this.$config.colors.success;
 					break;
 				case 'cancelled':
-					return this.$config.colors.err;
+					return this.$config.colors.gray;
 					break;
 			
 				default:

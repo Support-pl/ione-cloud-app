@@ -41,8 +41,9 @@
 			@ok="sendDetach"
 			@cancel="closeModal('detach')"
 		>
-			<p>This will detach the disk immediately</p>
-			<p>Do you want to proceed?</p>
+			<p>{{$t('disk_manage.This will detach the disk immediately')}}</p>
+			<p>{{$t('disk_manage.All data will be lost')}}</p>
+			<p>{{$t('disk_manage.Do you want to proceed?')}}</p>
 		</a-modal>
 		<a-modal
 			title="Disk attach"
@@ -52,7 +53,7 @@
 			@cancel="closeModal('attach')"
 		>
 			<a-radio-group v-model="attach.type">
-				<a-radio :value='1'>Image</a-radio>
+				<a-radio disabled :value='1'>Image</a-radio>
 				<a-radio :value='2'>Volatile disk</a-radio>
 			</a-radio-group>
 
@@ -137,7 +138,7 @@ export default {
 					'1': 'Image',
 					'2': 'Volatile disk'
 				},
-				type: 1,
+				type: 2,
 				size: 10,
 				imageID: -1,
 				loading: false
@@ -203,12 +204,12 @@ export default {
 			return str;
 		},
 		detachInit(disk){
-			console.log(disk)
+			// console.log(disk)
 			this.detach.diskID = disk.DISK_ID;
 			this.showModal('detach');
 		},
 		resizeInit(disk){
-			console.log(disk)
+			// console.log(disk)
 			this.resize.currentdisk = disk.DISK_ID;
 			this.resize.currentdiskIndex = this.disks.indexOf(disk);
 			this.resize.newsize = disk.SIZE / 1024
@@ -228,7 +229,7 @@ export default {
 			} else {
 				newDiskSizeInMB = this.resize.newsize;
 			}
-			console.log(newDiskSizeInMB)
+			// console.log(newDiskSizeInMB)
 			if(newDiskSizeInMB <= this.disks[currentdisk].SIZE){
 				this.$message.warning('You can\'t resize disk to the same size');
 				return;
@@ -308,7 +309,7 @@ export default {
 			this.attach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`Disk attached`);
 				else{
@@ -326,7 +327,7 @@ export default {
 			})
 		},
 		sendDetach(disk){
-			console.log(disk)
+			// console.log(disk)
 			if(this.detach.imageID == 0){
 				this.$message.warning('You can\' remove main OS disk');
 				return;
@@ -350,7 +351,7 @@ export default {
 			this.detach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
 					this.$message.success(`Disk detached`);
 				else{

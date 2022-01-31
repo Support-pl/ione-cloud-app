@@ -1,7 +1,15 @@
 <template>
 	<div class="login">
 		<div class="login__title login__layout">
-			support.by
+			<div class="logo" :class="['pos_'+companyLogoPos]">
+				<div class="logo__title" v-if="companyName">
+					{{companyName}}
+				</div>
+				<div class="logo__image" v-if="companyLogo">
+					<img :src="`./img/${companyLogo}`" alt="logo">
+				</div>
+
+			</div>
 			<svg class="clipPathSvg" width="0" height="0">
 				<defs>
 					<clipPath id="myCurve" clipPathUnits="objectBoundingBox">
@@ -13,7 +21,34 @@
 			</svg>
 		</div>
 		<div class="login__main login__layout">
+
 			<div class="login__UI">
+				<div class="login__onlogin-action">
+					<div v-if="!getOnlogin.info" class="login__see-services">
+						<router-link :to="{name: 'services'}">
+							<a-icon type="shopping-cart" />
+							{{$t('unregistered.see services') | capitalize}}
+						</router-link>
+					</div>
+
+					<div v-else class="login__action-info">
+						<!-- {{getOnlogin.info}} -->
+						your order:
+						<div class="order__card">
+							<div class="order__icon">
+								<a-icon :type="$config.services[getOnlogin.info.type].icon"/>
+							</div>
+							<div class="order__info">
+								<div class="order__title">{{getOnlogin.info.title}}</div>
+								<div class="order__cost">{{getOnlogin.info.cost}} {{$config.currency.suffix}}</div>
+							</div>
+							<div class="order__remove" @click="$store.commit('clearOnlogin');">
+								<a-icon type="close" />
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
 					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
@@ -25,8 +60,15 @@
 					</div>
 					<template>
 						<template v-if="!tryingLogin">
-							<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
-							<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
+							<div class="login__button">
+								<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
+								<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
+								<a-select style="width: 70px" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+									<a-select-option v-for="lang in langs" :key="lang" :value="lang">
+										{{lang.toUpperCase()}}
+									</a-select-option>
+								</a-select>
+							</div>
 
 						</template>
 						<div v-else class="login__loading">
@@ -40,11 +82,11 @@
 					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
 				</div>
 				<div class="login__forgot" style="margin-top: 5px">
-					{{$t('use access data from my.support.by')}}
+					<router-link :to="{name: 'register'}">{{$t('sign up') | capitalize}}</router-link>
 				</div>
 				<div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>
-					<img src="/img/images/qrcode.png" alt="qrcode" style="width: 150px">
+  				<qrcode-vue :value="selfUrl" size="150" level="M" renderAs="svg" />
 				</div>
 			</div>
 		</div>
@@ -54,6 +96,7 @@
 
 <script>
 import md5 from 'md5'
+import QrcodeVue from 'qrcode.vue'
 
 export default {
 	name: "login",
@@ -67,6 +110,9 @@ export default {
 			qrcode: null
 		}
 	},
+	components: {
+		QrcodeVue
+	},
 	props: {
 		getUser: Function
 	},
@@ -79,7 +125,7 @@ export default {
 			const email = encodeURIComponent(this.email);
 			const password = encodeURIComponent(this.password);
 			
-			this.$axios.get(`/login.php?email=${email}&password=${password}`)
+			this.$api.auth(email, password)
 			.then(Response => {
 				const data = Response.data;
 				const user = {};
@@ -100,8 +146,19 @@ export default {
 						user.currency_code = resp.data.currency_code;
 
 						this.$store.dispatch("onLoadUser", user);
-						this.$router.push("cloud");
-						location.reload() //костыль, починить позже
+						if(this.getOnlogin.redirect){
+							this.$router.push({name: this.getOnlogin.redirect});
+						} else {
+							this.$router.push({name: 'root'});
+						}
+
+						if(this.getOnlogin.action){
+							this.getOnlogin.action();
+						}
+						// location.reload() //костыль, починить позже
+					})
+					.finally( () => {
+						this.tryingLogin = false;
 					})
 				}
 				else if(data.result == "error"){
@@ -112,9 +169,6 @@ export default {
 			.catch(err => {
 				console.error(err);
 				this.$message.error("Can't connect to the server")
-			})
-			.finally( () => {
-				this.tryingLogin = false;
 			})
 		},
 		forgotPass(){
@@ -146,11 +200,56 @@ export default {
 			})
 		}
 		
+	},
+	computed: {
+		getOnlogin(){
+			return this.$store.getters.getOnlogin;
+		},
+		companyName(){
+			return this.$store.getters['getDomainInfo'].name ?? this.$config.appTitle
+		},
+		companyLogo(){
+			return this.$config.appLogo.path;
+		},
+		companyLogoPos(){
+			return this.$config.appLogo.pos;
+		},
+		selfUrl(){
+			return location.href;
+		},
+		langs(){
+			return this.$config.languages;
+		},
 	}
 }
 </script>
 
 <style>
+
+.logo{
+	display: flex;
+	grid-gap: 15px
+}
+
+.pos_top{
+	flex-direction: column-reverse;
+}
+
+.pos_bottom{
+	flex-direction: column;
+}
+
+.pos_left{
+	flex-direction: row-reverse;
+}
+
+.pos_right{
+	flex-direction: row;
+}
+
+.logo__title{
+	text-align: center;
+}
 
 .clipPathSvg{
 	height: 0;
@@ -201,6 +300,7 @@ export default {
 	flex-direction: column;
 	width: 80%;
 	max-width: 500px;
+	position: relative;
 }
 
 .login__horisontal-line{
@@ -220,6 +320,13 @@ export default {
 	margin-bottom: 25px;
 }
 
+.login__button{
+	display: flex;
+	grid-gap: 15px;
+	justify-content: center;
+	align-items: center;
+}
+
 .login__submit{
 	border: none;
 	outline: none;
@@ -232,6 +339,7 @@ export default {
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
+	flex-grow: 1;
 }
 #qrcode{
 	display: none;
@@ -290,6 +398,54 @@ export default {
 	animation: loading 1.4s .6s ease infinite;
 }
 
+.login__onlogin-action {
+	margin-bottom: 40px;
+}
+
+.login__see-services a{
+	display: block;
+	padding: 10px 15px;
+	/* border: 1px solid #d0dfff; */
+	box-shadow: inset 0px 0px 0px 1px #d0dfff;
+	border-radius: 5px;
+	transition: box-shadow .2s ease;
+	display: flex;
+	grid-gap: 10px;
+	font-size: 1.2em;
+}
+
+.login__see-services a:hover{
+	box-shadow: inset 0px 0px 0px 1px var(--main);
+}
+
+.login__see-services a i{
+	font-size: 1.5em;
+}
+
+.order__card{
+	margin-top: 7px;
+	position: relative;
+	box-sizing: border-box;
+	display: flex;
+	min-width: 300px;
+	box-shadow: inset 0px 0px 0px 1px #d0dfff;
+	border-radius: 5px;
+	padding: 10px 15px;
+	grid-gap: 10px;
+}
+
+.order__icon{
+	font-size: 32px;
+}
+
+.order__remove{
+	position: absolute;
+	padding: 5px;
+	top: 5px;
+	right: 10px;
+	cursor: pointer;
+}
+
 @keyframes loading {
 	from, to {transform: scale(1)}
 	50% {transform: scale(.2);}
@@ -299,7 +455,7 @@ export default {
 	color: tomato;
 	text-align: center;
 	position: absolute;
-	top: 0px;
+	top: -35px;
 	left: 50%;
 	transform: translateX(-50%);
 	width: 90%;
@@ -321,11 +477,6 @@ export default {
 
 	.login__forgot{
 		margin-top: 40px;
-	}
-
-	.login__error{
-		top: 50%;
-		transform: translateX(-50%) translateY(-750%);
 	}
 
 	#qrcode{
