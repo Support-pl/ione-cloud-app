@@ -24,7 +24,9 @@
 				<div class="openInvoice__main-content">
 					<div class="openInvoice__cost">
 						<svg viewBox="0 0 95 20">
-							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}</text>
+							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+								{{total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}
+							</text>
 						</svg>
 					</div>
 					<div class="openInvoice__info">
@@ -141,7 +143,8 @@ export default {
 			confirmLoading: {
 				pay: false,
 			},
-			elem: ''
+			elem: '',
+			inv: null
 		}
 	},
 	methods: {
@@ -219,6 +222,9 @@ export default {
 		},
 		statusColor(){
 			return this.inv.status.toLowerCase() == 'paid' ? this.$config.colors.success : this.$config.colors.err;
+		},
+		total(){
+			return this.inv.items.item.reduce((a,b) => a + (+b.amount), 0).toFixed(2);
 		}
 	}
 

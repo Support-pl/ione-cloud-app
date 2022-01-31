@@ -66,7 +66,7 @@
 									<span style="display: inline-block; width: 70px">{{$t('Drive')}}:</span>
 								</a-col>
 								<a-col :xs="10" :sm="14">
-									<a-switch v-model="options.drive" style="width: 60px">
+									<a-switch disabled v-model="options.drive" style="width: 60px">
 										<span slot="checkedChildren">SSD</span>
 										<span slot="unCheckedChildren">HDD</span>
 									</a-switch>
@@ -145,7 +145,7 @@
 
 								<a-col :xs="12" :sm="18" :lg='12'>
 									<a-select v-model="options.period"  style="width: 100%">
-										<a-select-option v-for="period in periods" :key="period.title+period.count" :value='period.value'>
+										<a-select-option v-for="(period, key) in periods" :disabled="key" :key="period.title+period.count" :value='period.value'>
 											{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
 										</a-select-option>
 									</a-select>
