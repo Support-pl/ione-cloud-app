@@ -14,11 +14,23 @@
 					</div>
 
 					<div class="service-page__info">
-						<div class="service-page__info-title">{{$t('status') | capitalize}}:</div>
-						<div class="service-page__info-value">
+						<div class="service-page__info-title">{{$t('status') | capitalize}}:
 							<a-tag :color="getTagColor">
-								{{service.status}}
+								{{$t(service.status)}}
 							</a-tag>
+						</div>
+					</div>
+
+					<div class="service-page__info">
+						<div class="service-page__info-title">{{$t('invoice status') | capitalize}}:
+							<a-tag :color="getInvoiceStatusColor">
+								{{$t('invoice_' + service.ORDER_INFO.invoicestatus)}}
+							</a-tag>
+							<router-link :to="{name: 'invoiceFS', params: {pathMatch: service.ORDER_INFO.invoiceid}}">
+								<a-button size="small" type="primary">
+									{{$t('open')}}
+								</a-button>
+							</router-link>
 						</div>
 					</div>
 
@@ -96,7 +108,7 @@ export default {
 		})
 		.then(res => {
 			this.service = res;
-			console.log(res);
+			// console.log(res);
 		})
 		.catch(err => {
 			console.error(err);
@@ -112,6 +124,20 @@ export default {
 					return 'orange'
 					break;
 				case "Cancelled":
+					return 'red'
+					break;
+			
+				default:
+					break;
+			}
+			return '';
+		},
+		getInvoiceStatusColor(){
+			switch (this.service.ORDER_INFO.invoicestatus) {
+				case "Paind":
+					return 'green'
+					break;
+				case "Unpaid":
 					return 'red'
 					break;
 			
@@ -144,6 +170,10 @@ export default {
 		padding-left: 10px;
 		padding-right: 10px;
 	}
+}
+
+.d-flex{
+	display: flex;
 }
 
 .service-page-card{

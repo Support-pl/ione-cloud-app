@@ -30,6 +30,7 @@
   "Language": "Язык",
   "singleInvoice": "Счёт",
   "status": "Статус",
+  "invoice status": "статус счёта",
   "payed": "оплачен",
   "unpaid": "не оплачен",
   "service": "услуга",
@@ -102,6 +103,7 @@
 	"Order": "Заказать",
 	"order": "заказать",
 
+	"open": "открыть",
 	"or": "или",
 	"sign up": "создайте профиль",
 
@@ -130,6 +132,10 @@
 	"invoice_Paid": "Оплачен",
 	"invoice_Unpaid": "Не оплачен",
 	"invoice_Cancelled": "Отменен",
+
+	"Active": "Активен",
+	"Suspended": "Заморожен",
+	"Canceled": "Отменен",
 
 	"Pay": "Оплатить",
 	"Choose your payment method": "Выберите метод оплаты",
@@ -231,7 +237,9 @@
 	"advice": {
 		"look up": "перейти",
 		"You have billed for the renewal of this virtual machine": "Вам выставлен счёт продления данной виртуальной машины",
-		"If you do not pay within the specified period, the virtual machine will be suspended": "При неуплате в указанный срок работы виртуальной машины будет приостановлена"
+		"If you do not pay within the specified period, the virtual machine will be suspended": "При неуплате в указанный срок работы виртуальной машины будет приостановлена",
+		"open": "перейти",
+		"renewal bill": "счет за продление"
 	},
 
 	"quatnity": {

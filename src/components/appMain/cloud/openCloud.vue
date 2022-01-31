@@ -35,8 +35,8 @@
 										block
 										class="menu__button"
 										:type="btn.type || 'default'"
+										:disabled="disabledMenu(btn.title.toLowerCase())"
 									>
-										<!-- :disabled="disabledMenu(btn.title.toLowerCase())" -->
 										{{$t(btn.title)}}
 									</a-button>
 									
@@ -186,15 +186,14 @@
 								<a-icon type="exclamation-circle" />
 							</div>
 							<div class="content">
-								{{$t('advice.You have billed for the renewal of this virtual machine')}}.
-								{{$t('advice.If you do not pay within the specified period, the virtual machine will be suspended')}}.
+								{{$t('advice.renewal bill') | capitalize}}.
 							</div>
 							<div class="link__wrapper">
 								<router-link
 									class="link"
 									:to="{name: 'invoiceFS', params: {pathMatch: SingleCloud.ORDER_INFO.invoiceid}}"
 								>
-									{{$t('advice.look up') | capitalize}}
+									{{$t('advice.open') | capitalize}}
 								</router-link>
 							</div>
 						</div>
@@ -466,8 +465,8 @@ export default {
 			menuOptions: [
 				{
 					title: "Reinstall",
-					onclick: this.openModal,
-					params: ['reinstall'],
+					onclick: this.sendReinstall,
+					params: [],
 					icon: "exclamation",
 				},
 				{
@@ -571,7 +570,7 @@ export default {
 	},
 	methods: {
 		disabledMenu(menuName){
-			if(this.SingleCloud.DISABLE.includes(menuName)){
+			if(this.SingleCloud.DISABLE.includes(menuName) || (this.SingleCloud.STATE == 3 && this.SingleCloud.LCM_STATE == 2)){
 				return true;
 			}
 
@@ -667,7 +666,7 @@ export default {
 			let close_your_eyes = md5('vmaction' + userid + user.secret);
 			let url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}`
 			if(lowerAct == 'reinstall'){
-				url = `/vmaction.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
+				url = `/vm.recreate_new.php?userid=${userid}&action=${action}&vmid=${vmid}&secret=${close_your_eyes}&passwd=${this.reinstallPass}`
 			}
 			if(lowerAct == 'delete'){
 				close_your_eyes = md5('VMremove' + userid + user.secret);
@@ -680,14 +679,14 @@ export default {
 			.then(res => {
 				if(lowerAct == 'recovertoday' || lowerAct == 'recoveryesterday'){
 					let self = this;
-					console.log('started wait for ans');
+					// console.log('started wait for ans');
 					setTimeout(() => {
 						self.$store.dispatch('cloud/fetchAnsible', res.data.id)
 						.then( res => {
-							console.log(res);
+							// console.log(res);
 							if(res.response.status == 'FAILED'){
-								console.log(res.response.error.message_type);
-								console.log(res.response.error);
+								// console.log(res.response.error.message_type);
+								// console.log(res.response.error);
 								switch (res.response.error.message_type) {
 									case 1:
 										self.$message.error(self.$t('There was a problem while recovering. Please contact support'));
@@ -716,7 +715,7 @@ export default {
 						this.$router.replace({name: "cloud"})
 					} else {
 						this.$message.error(res.data.message);
-						console.log(res.data.errorMSG);
+						// console.log(res.data.errorMSG);
 					}
 				} else {
 					this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
@@ -724,6 +723,9 @@ export default {
 			})
 			.catch(err => {
 				console.error(err);
+			})
+			.finally(() => {
+				this.$store.dispatch('cloud/silentUpdate', this.$route.params.pathMatch);
 			})
 
 		},
@@ -906,7 +908,7 @@ export default {
 					this.$message.success('VM resized successfully');
 				} else {
 					this.$message.error('Some kind an error during resizing VM');
-					console.log(result.data);
+					// console.log(result.data);
 				}
 			})
 			.catch(er=> {

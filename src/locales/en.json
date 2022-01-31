@@ -30,6 +30,7 @@
   "Language": "Language",
   "singleInvoice": "Invoice",
   "status": "Status",
+  "invoice status": "invoice status",
   "payed": "payed",
   "unpaid": "unpaid",
   "service": "service",
@@ -102,6 +103,7 @@
 	"Order": "Order",
 	"order": "order",
 
+	"open": "open",
 	"or": "or",
 	"sign up": "sign up",
 
@@ -130,6 +132,10 @@
 	"invoice_Paid": "Paid",
 	"invoice_Unpaid": "Unpaid",
 	"invoice_Cancelled": "Cancelled",
+
+	"Active": "Active",
+	"Suspended": "Suspended",
+	"Canceled": "Canceled",
 
 	"Pay": "Pay",
 	"Choose your payment method": "Choose your payment method",
@@ -231,7 +237,9 @@
 	"advice": {
 		"look up": "look up",
 		"You have billed for the renewal of this virtual machine": "You have billed for the renewal of this virtual machine",
-		"If you do not pay within the specified period, the virtual machine will be suspended": "If you do not pay within the specified period, the virtual machine will be suspended"
+		"If you do not pay within the specified period, the virtual machine will be suspended": "If you do not pay within the specified period, the virtual machine will be suspended",
+		"open": "open",
+		"renewal bill": "renewal bill"
 	},
 	
 	"quatnity": {

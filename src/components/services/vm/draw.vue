@@ -18,7 +18,7 @@ export default {
 	},
 	methods: {
 		moduleEnter() {
-			const vms = this.$store.getters['cloud/getClouds']();
+			const vms = this.$store.getters['cloud/getClouds'];
 			const id = vms.find( vm => vm.id_service == this.service.id).ID;
 			this.$router.push(`cloud-${id}`);
 		}

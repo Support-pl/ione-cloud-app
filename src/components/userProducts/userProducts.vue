@@ -111,6 +111,10 @@ export default {
 		min: {
 			type: Boolean,
 			default: true
+		},
+		count: {
+			type: Number,
+			default: 5
 		}
 	},
 	data(){
@@ -129,7 +133,7 @@ export default {
 			return this.$store.getters.isLogged;
 		},
 		productsPrepared(){
-			if(this.min) return this.products.slice(0, 3);
+			if(this.min) return this.products.slice(0, 5);
 			else if(this.$route.query.type) {
 				const types = this.checkedTypes;
 				const result = this.products.filter( element => { //фильтруем по значениям из гет запроса
