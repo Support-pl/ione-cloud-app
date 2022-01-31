@@ -23,23 +23,23 @@
 								<a-col span="8" :xs="6">
 									<span style="display: inline-block; width: 70px">CPU:</span>								
 								</a-col>
-								<a-col span="4" :xs="6">
+								<a-col span="4" :xs="12">
 									<a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
 										<span slot="checkedChildren">x2</span>
 										<span slot="unCheckedChildren">x1</span>
 									</a-switch>
 								</a-col>
-								<a-col span="8">
+								<!-- <a-col span="8">
 									<a-tooltip>
 										<template slot="title">
 											{{$t('increases core frequency from 2.4 GHz to 3.7 GHz')}}
 										</template>
 										<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed')}}</a-checkbox>
 									</a-tooltip>
-								</a-col>
+								</a-col> -->
 								<transition name="textchange" mode="out-in">
-									<a-col class="changing__field" span="4" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : "DefaultKey"'>
-										{{getCurrentProd!=null ? getCurrentProd.props.cpu_core.TITLE : ''}}
+									<a-col class="changing__field" span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.specs.CPU : "DefaultKey"'>
+										{{getCurrentProd!=null ? getCurrentProd.specs.CPU : ''}} vCPU
 									</a-col>
 								</transition>
 							</a-row>
@@ -55,8 +55,8 @@
 									</a-switch>
 								</a-col>
 								<transition name="textchange" mode="out-in">
-									<a-col class="changing__field" span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : "DefaultKeyForRAM"'>
-										{{getCurrentProd!=null ? getCurrentProd.props.ram.TITLE : ''}}
+									<a-col class="changing__field" span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.specs.RAM : "DefaultKeyForRAM"'>
+										{{getCurrentProd!=null ? getCurrentProd.specs.RAM : ''}} GB RAM
 									</a-col>
 								</transition>
 							</a-row>
@@ -73,13 +73,13 @@
 								</a-col>
 								<a-col :xs="8" :sm="4">
 									<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('drive', +newdata)">
-										<a-select-option value="-1">{{getCurrentProd.props.drive.VALUE}}</a-select-option>
+										<a-select-option value="-1">{{getCurrentProd.specs.DISK_SIZE}} Gb</a-select-option>
 										<a-select-option
-											v-for="group in getAddons[options.drive?'ssd':'hdd']"
-											:key="group.id"
-											:value="group.id"
+											v-for="disk in getAddons[options.drive?'ssd':'hdd']"
+											:key="disk.id"
+											:value="disk.id"
 										>
-											{{parseInt(getCurrentProd.props.drive.VALUE) + parseInt(group.description.VALUE)}} Gb
+											{{parseInt(getCurrentProd.specs.DISK_SIZE) + parseInt(disk.value)}} Gb
 										</a-select-option>
 									</a-select>
 								</a-col>
@@ -88,7 +88,7 @@
 
 						<div class="paas_addons" v-if="!isAddonsLoading">
 
-							<a-row class="newCloud__prop">
+							<a-row class="newCloud__prop" v-if="getAddons.traffic">
 								<a-col span="8" :xs="6">{{$t('traffic') | capitalize}}:</a-col>
 								<a-col span="16" :xs="18">
 									<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('traffic', +newdata)">
@@ -100,7 +100,7 @@
 								</a-col>
 							</a-row>
 
-							<a-row class="newCloud__prop">
+							<a-row class="newCloud__prop" v-if="getAddons.panel">
 								<a-col span="8" :xs="6">{{$t('panel') | capitalize}}:</a-col>
 								<a-col span="16" :xs="18">
 									<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('panel', +newdata)">
@@ -110,16 +110,16 @@
 								</a-col>
 							</a-row>
 
-							<a-row class="newCloud__prop">
+							<a-row class="newCloud__prop" v-if="getAddons.os">
 								<a-col span="8" :xs="6">{{$t('os')}}:</a-col>
 								<a-col span="16" :xs="18">
 									<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
-										<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.description.TITLE}}</a-select-option>
+										<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.name}}</a-select-option>
 									</a-select>
 								</a-col>
 							</a-row>
 
-							<a-row class="newCloud__prop">
+							<a-row class="newCloud__prop" v-if="getAddons.backup">
 								<a-col span="8" :xs="6">{{$t('backup HDD') | capitalize}}:</a-col>
 								<a-col span="16" :xs="18">
 									<a-select default-value="-1" style="width: 100%" @change="(newdata)=> setAddon('backup', +newdata)">
@@ -206,22 +206,22 @@
 
 								<div class="tariff__item" v-for="tariff in tariffs" :key="tariff" @click="() => {options.isOnCalc = true; options.kind = tariff; options.size = sizes[options.slide]}">
 									<div class="tariff__title">
-										{{getProducts[tariff][sizes[options.slide]][0][0].name | replace('SVDS', '')}}
+										{{getProducts[sizes[options.slide]][tariff].name}}
 									</div>
 									<div class="tariff__body">
 										<loading v-if="isProductsLoading"/>
 										<div v-else>
 											<ul>
-												<li class="tariff__property">
+												<!-- <li class="tariff__property">
 													<span class="tariff__body-value">
-														{{getProducts[tariff][sizes[options.slide]][0][0].pricing[currency].monthly}} <span class="tariff__currency">{{currency}}</span>
+														{{getProducts[sizes[options.slide]][tariff][0][0].pricing[currency].monthly}} <span class="tariff__currency">{{currency}}</span>
 													</span>
-												</li>
-												<li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index" class="tariff__property">
+												</li> -->
+												<!-- <li v-for="(spec, index) in ['cpu_core', 'ram']" :key="index" class="tariff__property">
 													<span class="tariff__body-value">
-														{{getProducts[tariff][sizes[options.slide]][0][0].props[spec].VALUE}}
+														{{getProducts[sizes[options.slide]][tariff][0][0].props[spec].VALUE}}
 													</span>
-												</li>
+												</li> -->
 											</ul>
 										</div>
 									</div>
@@ -288,7 +288,7 @@ export default {
 				period: 'monthly',
 				size: "L",
 				isOnCalc: false,
-				drive: false, // 1 ssd, 0 hdd
+				drive: true, // 1 ssd, 0 hdd
 				highCPU: false, // 1 highCPU, 0 basicCPU
 				slide: 1,
 				addons: {
@@ -422,9 +422,12 @@ export default {
 			'isAddonsLoading',
 		]),
 		...mapGetters('app', ['isMaintananceMode']),
+		productSpecs(){
+			return this.getCurrentProd.specs
+		},
 		getCurrentProd(){
 			const o = this.options;
-			const path =  [o.kind, o.size, +o.drive, +o.highCPU];
+			const path =  [o.size, o.kind];
 			let current = this.getProducts;
 			// console.log(current);
 			if(current == undefined || current.length == 0){
@@ -458,7 +461,7 @@ export default {
 					return 0;
 				}
 				// console.log(this.options.addonsObjects[name], this.options.addonsObjects, name);
-				return this.options.addonsObjects[name].pricing[this.options.period] 
+				return +this.options.addonsObjects[name].pricing[this.options.period] 
 			});
 			// console.log('~~~', addonsCosts);
 			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(2);
@@ -475,7 +478,9 @@ export default {
 	},
 	watch: {
 		getAddons: function(newVal){
-			this.options.addons.os = +newVal.os[0].id;
+			if(newVal.os){
+				this.options.addons.os = +newVal.os[0].id;
+			}
 		}
 	}
 }

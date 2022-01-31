@@ -26,11 +26,11 @@ export default {
 	},
 	actions: {
 		fetchProductsSilent({commit}){
-			const url = `getProducts.php`;
+			const url = `producttest.php`;
 			
 			return axios.get(url)
 				.then(resp => {
-					commit("setProducts", resp.data)
+					commit("setProducts", resp.data.products)
 				})
 		},
 		fetchProducts({commit, dispatch}){
@@ -49,16 +49,16 @@ export default {
 		},
 		
 		fetchAddonsSilent({commit}){
-			const url = `getAddons.php`;
+			const url = `producttestaddons.php`;
 			
 			return axios.get(url)
 				.then(resp => {
 					let data = resp.data;
-					data.ssd = data.ssd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
-					data.hdd = data.hdd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
-					data.backup = data.backup.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
-					data.os = data.os.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
-					data.panel = data.panel.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					// data.ssd = data.ssd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					// data.hdd = data.hdd.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					// data.backup = data.backup.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					// data.os = data.os.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
+					// data.panel = data.panel.sort( (a,b) => parseInt(a.description.VALUE) - parseInt(b.description.VALUE) );
 					commit("setAddons", data);
 				})
 		},
