@@ -1,13 +1,12 @@
 const globalConfig = {
-	WHMCSsiteurl: 'https://my.support.by/',
+	WHMCSsiteurl: 'https://example.vn/',
 	appFolder: 'app_back/v1',
-	appTitle: 'support.by', //using only if backend not returned name
-	appLogo: '', //filename with extension or path from ./img, blank if don't need
-	appLogoPosition: '', //top, right, bottom, left. Relative position from title. Default: top.
+	appTitle: 'title',
+	// appLogo: 'logo-512.png',
+	appLogoPosition: '',
 	currency: {
 		prefix: "",
-		suffix: "BYN",
-		code: "BYN",
-	},
-	dangerModeNoSSLCheck: false
+		suffix: "USD",
+		code: "USD",
+	}
 }
