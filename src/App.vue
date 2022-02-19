@@ -20,6 +20,7 @@ export default {
 		updateNotification
 	},
 	created(){
+    this.$store.dispatch('auth/load')
 		const user = this.$store.getters.getCookie('CloudUser');
 		if(user !== undefined) {
 			this.$store.commit("setUser", JSON.parse(user));
@@ -27,7 +28,8 @@ export default {
 		}
 
 		this.$router.beforeEach((to, from, next) => {
-			const isLogged = this.$store.getters.isLogged;
+			// const isLogged = this.$store.getters.isLogged;
+			const isLogged = this.loggedIn;
 			const mustBeLoggined = to.matched.some(el => !!el.meta?.mustBeLoggined);
 			if(mustBeLoggined && !isLogged){
 				// this.$router.replace("login");
@@ -36,7 +38,7 @@ export default {
 			// if((to.meta?.mustBeLoggined === undefined || to.meta?.mustBeLoggined) && !this.$store.getters.isLogged) next({ name: 'login' })
 			// else if((to.meta?.mustBeUnloggined === undefined || to.meta?.mustBeUnloggined) && this.$store.getters.isLogged) next({ name: 'root' })
 			// if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
-			else if (to.name == 'login' && this.$store.getters.isLogged) next({ name: 'root' })
+			else if (to.name == 'login' && this.loggedIn) next({ name: 'root' })
 			else next()
 		})
 
@@ -44,12 +46,12 @@ export default {
 		if(lang != undefined)
 			this.$i18n.locale = lang;
 
-		this.$store.dispatch('fetchDomainInfo')
+		// this.$store.dispatch('fetchDomainInfo')
 	},
 	mounted(){
 		this.$router.onReady(route => {
 			const rt = this.$router.currentRoute;
-			const isLogged = this.$store.getters.isLogged;
+			const isLogged = this.loggedIn;
 			const mustBeLoggined = rt.matched.some(el => !!el.meta?.mustBeLoggined);
 			if(mustBeLoggined && !isLogged){
 				this.$router.replace("login");
@@ -65,7 +67,10 @@ export default {
 	computed: {
     cssVars() {
       return Object.fromEntries(Object.entries(this.$config.colors).map( ([key, val]) => ([`--${key}`, val])));
-    }
+    },
+		loggedIn(){
+			return this.$store.getters['auth/isLoggedIn']
+		}
   }
 };
 </script>

@@ -14,21 +14,21 @@ export default {
 				title: 'cloud',
 				theme: 'filled'
 			},
-			{
-				icon: 'appstore',
-				title: 'services',
-				theme: 'outlined'
-			},
-			{
-				icon: 'message',
-				title: 'support',
-				theme: 'outlined'
-			},
-			{
-				icon: 'credit-card',
-				title: 'invoice',
-				theme: 'outlined'
-			},
+			// {
+			// 	icon: 'appstore',
+			// 	title: 'services',
+			// 	theme: 'outlined'
+			// },
+			// {
+			// 	icon: 'message',
+			// 	title: 'support',
+			// 	theme: 'outlined'
+			// },
+			// {
+			// 	icon: 'credit-card',
+			// 	title: 'invoice',
+			// 	theme: 'outlined'
+			// },
 			{
 				icon: 'setting',
 				title: 'settings',

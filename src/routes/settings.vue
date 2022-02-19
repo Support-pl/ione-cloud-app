@@ -5,8 +5,9 @@
 
 				<div class="settings__info">
 					<div class="settings__user">
-						<div class="settings__name" v-if="isLogged">{{user.firstname}} {{user.lastname}}</div>
-						<div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div>
+						<!-- <div class="settings__name" v-if="isLogged">{{user.firstname}} {{user.lastname}}</div> -->
+						<div class="settings__name" v-if="isLogged">firstname lastname</div>
+						<!-- <div class="settings__balance">{{$t('Balance')}}: <balance style="display: inline-block" :clickable="false"/></div> -->
 					</div>
 					<div class="settings__user-btn" v-if="user_btn">
 						<a-icon type="right" />
@@ -45,7 +46,7 @@
 					</a-modal>
 				</div>
 
-				<div class="settings__item" @click="showModal('addFunds')">
+				<!-- <div class="settings__item" @click="showModal('addFunds')">
 					<div class="settings__logo">
 						<a-icon type="dollar" />
 					</div>
@@ -53,7 +54,7 @@
 						{{$t('Add Funds')}}
 					</div>
 					<add-funds :modalVisible="modal.addFunds" :hideModal="hideFunds"/>
-				</div>
+				</div> -->
 
 				<div class="settings__item" @click="showModal('QR')">
 					<div class="settings__logo">
@@ -91,8 +92,8 @@
 </template>
 
 <script>
-import balance from "../components/balance/balance.vue";
-import addFunds from "../components/balance/addFunds.vue";
+// import balance from "../components/balance/balance.vue";
+// import addFunds from "../components/balance/addFunds.vue";
 import config from "../appconfig";
 import QrcodeVue from 'qrcode.vue'
 
@@ -111,8 +112,8 @@ export default {
     };
 	},
 	components: {
-		balance,
-		addFunds,
+		// balance,
+		// addFunds,
 		QrcodeVue
 	},
 	methods: {
@@ -188,7 +189,7 @@ export default {
 			return location.host;
 		},
 		isLogged(){
-			return this.$store.getters.isLogged;
+			return this.$store.getters['auth/isLoggedIn'];
 		}
 	}
 }

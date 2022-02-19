@@ -1,10 +1,12 @@
 <template>
-	<div class="cloud__item-wrapper" @click="cloudClick(cloud.ID)">
+	<div class="cloud__item-wrapper" @click="cloudClick(cloud.uuid)">
 		<div class="cloud__item">
 			<div class="cloud__upper">
-				<div class="item__color" :style="{'background-color': statusColor}"></div>
-				<div class="item__title">{{cloud.CUSTOM_VM_NAME ? cloud.CUSTOM_VM_NAME : cloud.NAME}}</div>
-				<div class="item__status">{{cloud.STATE}}</div>
+				<div class="item__color" :style="{'background-color': stateColor}"></div>
+				<div class="item__title">{{cloud.title}}</div>
+				<div class="item__status">
+					{{cloud.status}}
+				</div>
 			</div>
 			<div class="cloud__lower">
 				<template v-if="cloud.HOST != '' && cloud.HOST != undefined">
@@ -13,9 +15,9 @@
 					IP: {{cloud.IP || $t('ip.none')}}
 			</div>
 		</div>
-		<div class="cloud__label cloud__label__mainColor">
+		<!-- <div class="cloud__label cloud__label__mainColor">
 			{{cloud.VDC == 1 ? "PAYG" : "PrePaid"}}
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -29,11 +31,36 @@ export default {
 		statusColor(){
 			const color = this.$store.getters['cloud/getStateColor'](this.cloud.STATE);
 			return color;
-		}
+		},
+		stateColor() {
+			let color = '';
+			switch (this?.cloud?.status?.toLowerCase()) {
+				case 'running':
+				case 'up':
+					color = '#0fd058';
+					break;
+				case 'poweroff':
+				case 'down':
+					color = '#919191';
+					break;
+				case 'suspend':
+				case 'init':
+					color = '#f9f038';
+					break;
+				default:
+					color = '#f9f038';
+					break;
+			}
+			return color;
+		},
+	},
+	created(){
+		console.log(this.cloud)
 	},
 	methods: {
 		cloudClick(id){
-			this.$router.push('cloud-' + id)
+			// this.$router.push('cloud-' + id)
+			this.$router.push({ name: 'vm-page', params: { uuid: id } })
 		}
 	}
 }

@@ -23,7 +23,7 @@
 		<div class="login__main login__layout">
 
 			<div class="login__UI">
-				<div class="login__onlogin-action">
+				<!-- <div class="login__onlogin-action">
 					<div v-if="!getOnlogin.info" class="login__see-services">
 						<router-link :to="{name: 'services'}">
 							<a-icon type="shopping-cart" />
@@ -32,7 +32,6 @@
 					</div>
 
 					<div v-else class="login__action-info">
-						<!-- {{getOnlogin.info}} -->
 						your order:
 						<div class="order__card">
 							<div class="order__icon">
@@ -47,12 +46,12 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
 					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="email">
+						<input type="text" placeholder="login" v-model="email">
 						<template v-if="remember">
 							<span class="login__horisontal-line"></span>
 							<input type="password" placeholder="Password"  v-model="password">
@@ -78,12 +77,12 @@
 						</div>
 					</template>
 				</div>
-				<div class="login__forgot">
+				<!-- <div class="login__forgot">
 					<a href="#" @click="forgotPass()">{{remember?$t('forgotPass'):$t('I have a password') | capitalize}}</a>
 				</div>
 				<div class="login__forgot" style="margin-top: 5px">
 					<router-link :to="{name: 'register'}">{{$t('sign up') | capitalize}}</router-link>
-				</div>
+				</div> -->
 				<div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>
   				<qrcode-vue :value="selfUrl" size="150" level="M" renderAs="svg" />
@@ -122,53 +121,71 @@ export default {
 			this.send(this);
 		},
 		send(context){
-			const email = encodeURIComponent(this.email);
-			const password = encodeURIComponent(this.password);
+			// const email = encodeURIComponent(this.email);
+			// const password = encodeURIComponent(this.password);
 			
-			this.$api.auth(email, password)
-			.then(Response => {
-				const data = Response.data;
-				const user = {};
-				if (data.result == "success"){
+			// this.$api.auth(email, password)
+			// .then(Response => {
+			// 	const data = Response.data;
+			// 	const user = {};
+			// 	if (data.result == "success"){
 
-					user.id = data.userid;
-					user.passwordhash = data.passwordhash;
-					user.email = data.email;
-					user.secret = data.secret;
+			// 		user.id = data.userid;
+			// 		user.passwordhash = data.passwordhash;
+			// 		user.email = data.email;
+			// 		user.secret = data.secret;
 					
-					const close_your_eyes = md5('clientDetails'+user.id+user.secret);
-					const url = `/clientDetails.php?userid=${user.id}&secret=${close_your_eyes}`;
-					this.$axios.get(url)
-					.then(resp => {
-						user.firstname = resp.data.firstname;
-						user.lastname = resp.data.lastname;
-						user.balance = resp.data.credit;
-						user.currency_code = resp.data.currency_code;
+			// 		const close_your_eyes = md5('clientDetails'+user.id+user.secret);
+			// 		const url = `/clientDetails.php?userid=${user.id}&secret=${close_your_eyes}`;
+			// 		this.$axios.get(url)
+			// 		.then(resp => {
+			// 			user.firstname = resp.data.firstname;
+			// 			user.lastname = resp.data.lastname;
+			// 			user.balance = resp.data.credit;
+			// 			user.currency_code = resp.data.currency_code;
 
-						this.$store.dispatch("onLoadUser", user);
-						if(this.getOnlogin.redirect){
-							this.$router.push({name: this.getOnlogin.redirect});
-						} else {
-							this.$router.push({name: 'root'});
-						}
+			// 			this.$store.dispatch("onLoadUser", user);
+			// 			if(this.getOnlogin.redirect){
+			// 				this.$router.push({name: this.getOnlogin.redirect});
+			// 			} else {
+			// 				this.$router.push({name: 'root'});
+			// 			}
 
-						if(this.getOnlogin.action){
-							this.getOnlogin.action();
-						}
-						// location.reload() //костыль, починить позже
-					})
-					.finally( () => {
-						this.tryingLogin = false;
-					})
-				}
-				else if(data.result == "error"){
-					this.loginError = data.message;
-					this.tryingLogin = false;
+			// 			if(this.getOnlogin.action){
+			// 				this.getOnlogin.action();
+			// 			}
+			// 			// location.reload() //костыль, починить позже
+			// 		})
+			// 		.finally( () => {
+			// 			this.tryingLogin = false;
+			// 		})
+			// 	}
+			// 	else if(data.result == "error"){
+			// 		this.loginError = data.message;
+			// 		this.tryingLogin = false;
+			// 	}
+			// })
+			// .catch(err => {
+			// 	console.error(err);
+			// 	this.$message.error("Can't connect to the server")
+			// })
+
+			this.loginLoading = true;
+			this.isLoginFailed = false,
+			this.$store.dispatch('auth/login', {login: this.email, password: this.password})
+			.then(() => {
+				this.$router.push({name: 'root'})
+				this.$store.dispatch('auth/fetchUserData')
+			})
+			.catch(error => {
+				if(error.response && error.response.status == 401){
+					// this.isLoginFailed = true;
+					this.$message.error("wrong")
 				}
 			})
-			.catch(err => {
-				console.error(err);
-				this.$message.error("Can't connect to the server")
+			.finally(()=>{
+				this.loginLoading = false
+				this.tryingLogin = false;
 			})
 		},
 		forgotPass(){

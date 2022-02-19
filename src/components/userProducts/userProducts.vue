@@ -130,7 +130,7 @@ export default {
 			return this.$store.getters.getUser;
 		},
 		isLogged(){
-			return this.$store.getters.isLogged;
+			return this.$store.getters['auth/isLoggedIn'];
 		},
 		productsPrepared(){
 			if(this.min) return this.products.slice(0, 5);

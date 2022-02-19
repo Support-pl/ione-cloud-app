@@ -1,18 +1,12 @@
 <template>
 	<div class="cloud">
-		<maintanance-mode v-if="isMaintananceMode"></maintanance-mode>
+		<loading :ha="true" v-if="isLoading" />
 		<template v-else>
 			<div class="container ha">
-				<create-vm />
-			</div>
-			<!-- <loading :ha="true" v-if="isLoading" /> -->
-			<!-- <template v-else> -->
-				<div class="container ha">
-					<div class="cloud__wrapper">
-						<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
-					</div>
+				<div class="cloud__wrapper">
+					<cloudItem v-for="(cloud, idx) in getClouds" :key="idx" :cloud="cloud"/>
 				</div>
-			<!-- </template> -->
+			</div>
 		</template>
 	</div>
 </template>
@@ -20,8 +14,6 @@
 <script>
 import cloudItem from '@/components/appMain/cloud/cloudItem.vue';
 import loading from '@/components/loading/loading.vue';
-import createvm from '@/components/createVM.vue';
-import maintanance from '@/components/maintanance.vue';
 import { mapGetters } from 'vuex';
 
 
@@ -30,14 +22,10 @@ export default {
 	name: "cloud",
 	components: {
 		cloudItem,
-		loading,
-		maintanance,
-		'create-vm': createvm
+		loading
 	},
 	created(){
-		if(this.isLogged){
-			this.$store.dispatch('vms/fetch');
-		}
+		this.$store.dispatch('vms/fetch');
 	},
 	computed: {
 		...mapGetters('app', ['isMaintananceMode']),
@@ -45,6 +33,19 @@ export default {
 			const clouds = this.$store.getters['vms/instances'];
 			return clouds;
 		},
+		// instances(){
+		// 	if(this.isLoading) return []
+		// 	const instances = [];
+		// 	this.getClouds.forEach(service => {
+		// 		Object.keys(service.instancesGroups).forEach(groupName => {
+		// 			service.instancesGroups[groupName].instances.forEach(instance => {
+		// 				instance.status = service.status
+		// 				instances.push(instance)
+		// 			})
+		// 		})
+		// 	})
+		// 	return instances
+		// },
 		isLoading(){
 			// console.log(this.getClouds);
 			// if(this.getClouds.length == 0) return false

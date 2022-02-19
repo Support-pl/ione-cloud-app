@@ -2,7 +2,13 @@
 	<div class="footer">
 		<div class="container">
 			<div class="footer__content">
-				<div v-for="(button, index) in getButtons" :key="index" @click="setTabByName(button.title)" class="button" :class="{ active: button.title==active }">
+				<div
+					v-for="(button, index) in getButtons"
+					:key="index"
+					@click="setTabByName(button.title)"
+					class="button"
+					:class="{ active: button.title==active }"
+				>
 					<div class="button__icon">
 						<a-icon :type="button.icon" :theme="button.theme" />
 					</div>

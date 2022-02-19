@@ -56,7 +56,7 @@ export default {
 			return this.$config.currency;
 		},
 		isLogged(){
-			return this.$store.getters.isLogged;
+			return this.$store.getters['auth/isLoggedIn'];
 		}
 	},
 	methods: {

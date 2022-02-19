@@ -11,6 +11,9 @@ import network from './network'
 import products from './products'
 import utils from './utils'
 
+import vms from './vms.js'
+import auth from './auth.js'
+
 Vue.use(vuex)
 
 export default new vuex.Store({
@@ -24,6 +27,9 @@ export default new vuex.Store({
 		newPaaS,
 		network,
 		products,
-		utils
+		utils,
+
+		vms,
+		auth,
 	}
 })

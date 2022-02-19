@@ -66,7 +66,9 @@ const routes = [
 					layoutTitle: 'services',
 					mustBeLoggined: true,
 				},
-				component: () => import('../routes/services.vue')
+				// component: () => import('../routes/services.vue')
+				// component: () => import('../routes/cloud.vue')
+				redirect: { name: 'cloud' }
 			},
 			{
 				path: 'cloud',
@@ -160,6 +162,14 @@ const routes = [
 				component: () => import('../routes/userSettings.vue')
 			}
 		]
+	},
+	{
+		path: '/cloud/:uuid',
+		name: 'vm-page',
+		component: () => import('../components/appMain/cloud/openCloud_new.vue'),
+		meta: {
+			mustBeLoggined: true,
+		},
 	},
 	{
 		path: '/cloud-*',

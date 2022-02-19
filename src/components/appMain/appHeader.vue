@@ -66,11 +66,11 @@
 						</div>
 
 					</transition-group>
-					<transition name="header__item-anim">
+					<!-- <transition name="header__item-anim">
 						<div v-if="isNeedBalance && isLogged" class="header__balance">
 							<balance/>
 						</div>
-					</transition>
+					</transition> -->
 
 					<div class="header__links" v-if="!isLogged">
 						<router-link :to="{name: 'login'}">{{$t('login')}}</router-link>
@@ -85,12 +85,12 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import balance from "../balance/balance.vue";
+// import balance from "../balance/balance.vue";
 
 export default {
 	name: "appHeader",
 	components: {
-		balance
+		// balance
 	},
 	data(){
 		return {
@@ -305,7 +305,7 @@ export default {
 				return ''
 		},
 		isLogged(){
-			return this.$store.getters.isLogged;
+			return this.$store.getters['auth/isLoggedIn'];
 		}
 	},
 	created(){
