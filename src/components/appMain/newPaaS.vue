@@ -113,7 +113,7 @@
 							<a-row class="newCloud__prop" v-if="getAddons.os">
 								<a-col span="8" :xs="6">{{$t('os')}}:</a-col>
 								<a-col span="16" :xs="18">
-									<a-select :default-value="getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
+									<a-select :default-value="getAddons.os[0] && getAddons.os[0].id" style="width: 100%" @change="(newdata)=> setAddon('os', +newdata)">
 										<a-select-option v-for="group in getAddons.os" :key="group.id">{{group.name}}</a-select-option>
 									</a-select>
 								</a-col>
