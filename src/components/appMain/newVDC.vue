@@ -580,8 +580,8 @@ export default {
 			}
 		},
 		handleOk(){
-			if(this.options.password.length < 6) {
-				this.$message.error(this.$t("Password is too short"));
+			if(this.user.balance < this.calculateFullPrice()) {
+				this.$message.error(this.$t("Balance is too low"));
 				return 0
 			}
 			if(this.options.password.match(/^[A-Za-z]$/)) {
