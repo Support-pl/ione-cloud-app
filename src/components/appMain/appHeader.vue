@@ -264,6 +264,8 @@ export default {
 				filterElem = this.getAllTickets;
 			} else if(this.active == 'invoice'){
 				filterElem = this.getAllInvoices;
+			} else {
+				filterElem = [];
 			}
 			let statuses = filterElem.map(el => el.status);
 			statuses = arrayUnique(statuses);

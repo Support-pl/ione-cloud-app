@@ -24,7 +24,7 @@ export default {
 			return new Promise((resolve, reject) => {
 				api.sendAsUser('invoices')
 				.then(res => {
-					const invoices = res.invoices.invoice;
+					const invoices = res.invoices?.invoice ?? [];
 					commit('updateInvoices', invoices);
 					commit('makeLoadingIs', false);
 					resolve(invoices)
