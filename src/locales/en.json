@@ -301,8 +301,11 @@
 		"traffic": "traffic"
 	},
 
+	"Passwords must match": "Passwords must match",
+
 	"clientinfo": {
 		"password": "password",
+		"password again": "password again",
 		"firstname": "firstname",
 		"lastname": "lastname",
 		"state": "state",

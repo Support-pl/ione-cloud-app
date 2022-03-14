@@ -301,8 +301,11 @@
 		"traffic": "трафик"
 	},
 
+	"Passwords must match": "Пароли дожны совпадать",
+
 	"clientinfo": {
 		"password": "пароль",
+		"password again": "повторите пароль",
 		"firstname": "имя",
 		"lastname": "фамилия",
 		"state": "район",

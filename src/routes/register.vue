@@ -83,6 +83,15 @@
 								onfocus="this.removeAttribute('readonly')"
 							>
 							<span class="login__horisontal-line"></span>
+							<input
+								type="password"
+								name="password"
+								:placeholder="$t('clientinfo.password again') + ' *' | capitalize" 
+								v-model="userinfo.password2"
+								readonly
+								onfocus="this.removeAttribute('readonly')"
+							>
+							<span class="login__horisontal-line"></span>
 						</div>
 
 						<div class="inputs__log-pas">
@@ -147,6 +156,7 @@ export default {
 				lastname: '',
 				email: '',
 				password: '',
+				password2: '',
 				// address1: '',
 				// city: '',
 				// state: '',
@@ -161,6 +171,11 @@ export default {
 			this.send(this);
 		},
 		send(){
+			if(this.userinfo.password !== this.userinfo.password2){
+				this.$message.warn('Passwords must match')
+				return
+			}
+
 			if(Object.keys(this.userinfo).some(key => !this.userinfo[key].length)){
 				this.$message.warn(this.$t('all fields are required'));
 				return
