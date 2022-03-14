@@ -45,7 +45,8 @@
 					</template>
 					<a-icon class="products__control-item" type="filter" />
 				</a-popover>
-				<a-popover placement="bottomRight">
+				<!-- temporary disabled. waiting implementation -->
+				<!-- <a-popover placement="bottomRight">
 					<template slot="content">
 						<p>
 							{{$t('coming soon')}}
@@ -57,7 +58,7 @@
 						</span>
 					</template>
 					<a-icon class="products__control-item" type="sort-ascending" />
-				</a-popover>
+				</a-popover> -->
 			</div>
 
 		</div>
