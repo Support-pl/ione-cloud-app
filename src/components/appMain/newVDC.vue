@@ -338,6 +338,9 @@
 import md5 from 'md5'
 import { mapGetters } from 'vuex'
 
+const tofixVal = 0;
+const toFixValLong = 0;
+
 export default {
 	name: "newVDC",
 	data(){
@@ -545,7 +548,7 @@ export default {
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size,
 				// this.options.network.price * this.options.network.public.count
 				]
-			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(2);
+			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(tofixVal);
 		},
 		createVDC(){
 			const user = this.user;
@@ -555,7 +558,7 @@ export default {
 				this.options.ram.price*this.options.ram.size,
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size
 				]
-			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(3);
+			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(toFixValLong);
 			if(user && +price > +user.balance){
 				this.$message.error('You don\'t have enough money for a day of use');
 				return;
@@ -713,7 +716,7 @@ export default {
 	computed: {
 		...mapGetters('app', ['isMaintananceMode']),
 		costAfterDiscount(){
-			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(2);
+			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(tofixVal);
 		},
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
@@ -826,7 +829,7 @@ export default {
 	}
 
 	.newCloud__calculate{
-		width: 28%;
+		width: 29%;
 		font-size: 1.1rem;
 		padding: 10px 15px 10px;
 	}

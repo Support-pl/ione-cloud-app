@@ -24,10 +24,10 @@
 									<span style="display: inline-block; width: 70px">CPU:</span>								
 								</a-col>
 								<a-col span="4" :xs="12">
-									<a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
+									<!-- <a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
 										<span slot="checkedChildren">x2</span>
 										<span slot="unCheckedChildren">x1</span>
-									</a-switch>
+									</a-switch> -->
 								</a-col>
 								<!-- <a-col span="8">
 									<a-tooltip>
@@ -49,10 +49,10 @@
 									<span style="display: inline-block; width: 70px">RAM:</span> 
 								</a-col>
 								<a-col span="12">
-									<a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
+									<!-- <a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
 										<span slot="checkedChildren">x2</span>
 										<span slot="unCheckedChildren">x1</span>
-									</a-switch>
+									</a-switch> -->
 								</a-col>
 								<transition name="textchange" mode="out-in">
 									<a-col class="changing__field" span="6" style="text-align: right" :key='getCurrentProd!=null ? getCurrentProd.specs.RAM : "DefaultKeyForRAM"'>
@@ -271,8 +271,10 @@ const periods = [
 	},
 ];
 
+const tofixVal = 0;
+
 const tariffs = ['standart', 'X2CPU', 'X2RAM'];
-const sizes = ['M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
+const sizes = ['2G', '4G', '6G', '8G', '10G'];
 
 import { mapGetters } from 'vuex'
 import loading from '../loading/loading'
@@ -286,7 +288,7 @@ export default {
 			options: {
 				kind: 'standart',
 				period: 'monthly',
-				size: "L",
+				size: "",
 				isOnCalc: false,
 				drive: true, // 1 ssd, 0 hdd
 				highCPU: false, // 1 highCPU, 0 basicCPU
@@ -319,6 +321,8 @@ export default {
 	mounted(){
 		this.$store.dispatch('newPaaS/fetchProductsAuto');
 		this.$store.dispatch('newPaaS/fetchAddonsAuto');
+
+		this.options.size = sizes[Math.min(1, sizes.length - 1)];
 	},
 	methods: {
 		getPopupContainer(trigger) {
@@ -464,7 +468,7 @@ export default {
 				return +this.options.addonsObjects[name].pricing[this.options.period] 
 			});
 			// console.log('~~~', addonsCosts);
-			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(2);
+			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(tofixVal);
 		},
 		sliderIsCanNext(){
 			return this.options.slide < this.sizes.length - 1;
