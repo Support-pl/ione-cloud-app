@@ -5,15 +5,17 @@
 
 				<div class="order_option">
 
-					<a-slider
-						:marks="{...sizes}"
-						:value="sizes.indexOf(options.size)"
-						:tip-formatter="null"
-						:max="sizes.length-1"
-						:min="0"
-						@change="(newval) => options.size = sizes[newval]"
-					>
-					</a-slider>
+					<div style="padding: 0 15px">
+						<a-slider
+							:marks="{...sizes}"
+							:value="sizes.indexOf(options.size)"
+							:tip-formatter="null"
+							:max="sizes.length-1"
+							:min="0"
+							@change="(newval) => options.size = sizes[newval]"
+						>
+						</a-slider>
+					</div>
 
 					<template>
 						
