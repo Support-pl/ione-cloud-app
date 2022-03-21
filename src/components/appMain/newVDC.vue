@@ -587,12 +587,16 @@ export default {
 				this.$message.error(this.$t("Balance is too low"));
 				return 0
 			}
-			if(this.options.password.match(/^[A-Za-z]$/)) {
+			if(!this.options.password.match(/[A-Za-z]/)) {
 				this.$message.error(this.$t("Password must contain at least one letter"));
 				return 0
 			}
-			if(this.options.password.match(/^[1-9]$/)) {
+			if(!this.options.password.match(/[1-9]/)) {
 				this.$message.error(this.$t("Password must contain at least one number"));
+				return 0
+			}
+			if(!this.options.password.length < 6) {
+				this.$message.error(this.$t("Password is too short"));
 				return 0
 			}
 			if(this.options.password != this.options.password2) {
