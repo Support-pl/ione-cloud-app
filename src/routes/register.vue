@@ -102,6 +102,12 @@
 							</a-select>
 						</div>
 
+						<div class="terms-accept">
+							<a-checkbox v-model="accepted">
+								agree to <a href="https://tothost.vn/privacy-policy/" target="_blank">terms and conditions</a>
+							</a-checkbox>
+						</div>
+
 						<!-- <div class="inputs__log-pas">
 							<select name="country" id="country" v-model="userinfo.country">
 								<option v-for="country in countries" :key="country.code" :value="country.code">{{country.title}}</option>
@@ -151,6 +157,7 @@ export default {
 		return {
 			countries,
 			registerLoading: false,
+			accepted: false,
 			userinfo: {
 				firstname: '',
 				lastname: '',
@@ -191,6 +198,11 @@ export default {
 			let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if(!this.userinfo.email.match(regexEmail)){
 				this.$message.warn('Email is not valid');
+				return
+			}
+
+			if(!this.accepted){
+				this.$message.warn('Accept terms of use is required')
 				return
 			}
 
@@ -343,13 +355,20 @@ export default {
 	font-weight: 600;
 	border-radius: 10px;
 	padding: 7px 20px;
-	background: linear-gradient(90deg, #427cf7, #8baef2);
+	background: linear-gradient(90deg, #7474DD 4.43%, #7474DD 4.44%, #5252D5 96.5%);
 	background-size: 150% 200%;
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
 	width: 100%;
 }
+
+.terms-accept {
+	margin-bottom: 10px;
+	margin-top: -5px;
+	margin-left: 5px;
+}
+
 #qrcode{
 	display: none;
 }

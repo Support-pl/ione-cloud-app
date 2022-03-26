@@ -1,6 +1,6 @@
 export default {
 	colors: {
-		main: '#427cf7',
+		main: '#415095',
 		success: '#0fd058',
 		warn: '#f9f038',
 		err: '#f9383b',
@@ -11,7 +11,7 @@ export default {
 
 	autoTicketDepartment: 9,
 
-	languages: ['en', 'ru'],
+	languages: ['en', 'ru', 'vi'],
 	dangerModeNoSSLCheck: globalConfig.dangerModeNoSSLCheck ?? false,
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
 	appFolder: globalConfig.appFolder ?? 'app_backend/v1',

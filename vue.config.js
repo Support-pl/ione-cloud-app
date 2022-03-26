@@ -5,10 +5,17 @@
 // }
 
 let prefix = process.env.titlePrefix ?? '';
-if(prefix.length > 0) prefix = prefix + " ";
+	if(prefix.length > 0) prefix = prefix + " ";
 
 module.exports = {
 	publicPath: './',
+	css: {
+		loaderOptions: {
+			less: {
+				javascriptEnabled: true,
+			},
+		},
+  },
 	pwa: {
 		name: prefix + 'Cloud App',
 		themeColor: '#427cf7',

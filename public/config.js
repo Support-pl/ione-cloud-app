@@ -1,12 +1,13 @@
 const globalConfig = {
 	WHMCSsiteurl: 'https://example.vn/',
 	appFolder: 'app_back/v1',
-	appTitle: 'title',
-	// appLogo: 'logo-512.png',
-	appLogoPosition: '',
+	appTitle: 'TOTHOST', //using only if backend not returned name
+	appLogo: 'images/icon2.png', //filename with extension or path from ./img, blank if don't need
+	appLogoPosition: '', //top, right, bottom, left. Relative position from title. Default: top.
 	currency: {
 		prefix: "",
-		suffix: "USD",
-		code: "USD",
-	}
+		suffix: "VND",
+		code: "VND",
+	},
+	dangerModeNoSSLCheck: false
 }

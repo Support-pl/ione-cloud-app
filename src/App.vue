@@ -103,3 +103,8 @@ html, body{
 } */
 
 </style>
+
+<style lang="less">
+	@import '~ant-design-vue/dist/antd.less';
+	@import './variables.less';
+</style>

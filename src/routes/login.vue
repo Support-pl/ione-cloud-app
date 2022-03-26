@@ -47,6 +47,12 @@
 							</div>
 						</div>
 					</div>
+
+					<a-select style="width: 70px;" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+						<a-select-option v-for="lang in langs" :key="lang" :value="lang">
+							{{lang.toUpperCase()}}
+						</a-select-option>
+					</a-select>
 				</div>
 
 				<div class="login__inputs">
@@ -63,11 +69,6 @@
 							<div class="login__button">
 								<button v-if="remember" @click="submitHandler()" class="login__submit">{{$t('login') | capitalize}}</button>
 								<button v-else @click="restorePass()" class="login__submit">{{$t('restore') | capitalize}}</button>
-								<a-select style="width: 70px" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
-									<a-select-option v-for="lang in langs" :key="lang" :value="lang">
-										{{lang.toUpperCase()}}
-									</a-select-option>
-								</a-select>
 							</div>
 
 						</template>
@@ -84,10 +85,10 @@
 				<div class="login__forgot" style="margin-top: 5px">
 					<router-link :to="{name: 'register'}">{{$t('sign up') | capitalize}}</router-link>
 				</div>
-				<div id="qrcode" style="margin-top: 50px; text-align: center">
+				<!-- <div id="qrcode" style="margin-top: 50px; text-align: center">
 					<p>{{$t('Use on your phone:')}}</p>
   				<qrcode-vue :value="selfUrl" size="150" level="M" renderAs="svg" />
-				</div>
+				</div> -->
 			</div>
 		</div>
   	</div>
@@ -224,7 +225,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+@import '~ant-design-vue/dist/antd.less';
+@import '../variables.less';
 
 .logo{
 	display: flex;
@@ -334,8 +337,8 @@ export default {
 	font-weight: 600;
 	border-radius: 10px;
 	padding: 7px 20px;
-	background: linear-gradient(90deg, #427cf7, #8baef2);
-    background-size: 150% 200%;
+	background: linear-gradient(90deg, #7474DD 4.43%, #7474DD 4.44%, #5252D5 96.5%);
+	background-size: 150% 200%;
 	background-position: 0 0;
 	/* animation: AnimationName 1s ease infinite; */
 	cursor: pointer;
@@ -347,6 +350,15 @@ export default {
 
 .login__submit:hover{
 	animation: gradient 2s ease infinite;
+}
+
+.logo__image {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.logo__image img {
+	max-width: 500px;	
 }
 
 @keyframes gradient {
@@ -399,6 +411,8 @@ export default {
 }
 
 .login__onlogin-action {
+	display: flex;
+	align-items: stretch;
 	margin-bottom: 40px;
 }
 
@@ -484,4 +498,16 @@ export default {
 	}
 }
 
+.login .ant-select {
+	border-radius: 5px;
+	margin-left: 10px;
+}
+
+.login .ant-select .ant-select-selection--single {
+	height: 100%;
+}
+
+.login .ant-select-selection--single .ant-select-selection__rendered {
+	line-height: 44px;
+}
 </style>
