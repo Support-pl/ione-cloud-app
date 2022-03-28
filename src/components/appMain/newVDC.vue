@@ -192,7 +192,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.cpu.price)*options.cpu.count).toFixed(3)}} {{currencyPostfix}}
+							{{(calculatePrice(options.cpu.price)*options.cpu.count) | numsepar}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -203,7 +203,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.ram.price)*options.ram.size).toFixed(3)}} {{currencyPostfix}}
+							{{(calculatePrice(options.ram.price)*options.ram.size) | numsepar}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -214,7 +214,7 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size).toFixed(3)}} {{currencyPostfix}}
+							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size) | numsepar}} {{currencyPostfix}}
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -243,7 +243,7 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('hour')}} {{currencyPostfix}}/{{$t('hour')}}
+								~{{calculateFullPrice('hour') | numsepar}} {{currencyPostfix}}/{{$t('hour')}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -255,7 +255,7 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('day')}} {{currencyPostfix}}/{{$t('day')}}
+								~{{calculateFullPrice('day') | numsepar}} {{currencyPostfix}}/{{$t('day')}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -267,7 +267,7 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('month')}} {{currencyPostfix}}/{{$tc('period.month')}}
+								~{{calculateFullPrice('month') | numsepar}} {{currencyPostfix}}/{{$tc('period.month')}}
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -595,7 +595,7 @@ export default {
 				this.$message.error(this.$t("Password must contain at least one number"));
 				return 0
 			}
-			if(!this.options.password.length < 6) {
+			if(this.options.password.length < 6) {
 				this.$message.error(this.$t("Password is too short"));
 				return 0
 			}

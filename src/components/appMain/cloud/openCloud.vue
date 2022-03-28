@@ -152,7 +152,7 @@
 								</a-radio-group>
 							</a-modal>
 						</div>
-						<div class="Fcloud__button" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='openModal("recover")'>
+						<div class="Fcloud__button disabled" :class="{ 'disabled': permissions.recover , 'btn_disabled_wiggle': true}" @click='false && openModal("recover")'>
 							<div class="Fcloud__BTN-icon">
 								<a-icon type="backward" />
 							</div>

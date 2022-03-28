@@ -159,7 +159,7 @@
 							<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 								<transition name="textchange" mode="out-in">
 									<a-col :key='getFullPrice'>
-										{{getFullPrice}} {{currency}}
+										{{getFullPrice | numsepar}} {{currency}}
 									</a-col>
 								</transition>
 							</a-row>

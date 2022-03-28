@@ -10,10 +10,12 @@
 				{{value}}
 				<template v-if="!Array.isArray(row.LEASES)">
 				<span class="link--clickable" v-if="row.LEASES.LEASE['VM'] != $route.params.pathMatch" @click="GoToVM(row.LEASES.LEASE['VM'])">
-					{{`(used at VM#${row.LEASES.LEASE['VM']})`}}
+					<!-- {{`(used at that vm)`}} -->
+					{{`(used at VM: ${getVMName(row.LEASES.LEASE['VM'])})`}}
 				</span>
 				<span v-else>
-					{{`(used at VM#${row.LEASES.LEASE['VM']})`}}
+					<!-- {{`(used at VM#${row.LEASES.LEASE['VM']})`}} -->
+					{{`(used at that vm)`}}
 				</span>
 				</template>
 			</div>
@@ -135,11 +137,15 @@ export default {
 		},
 		GoToVM(vmid){
 			this.$router.push("/cloud-"+vmid);
+		},
+		getVMName(id){
+			return this.getClouds.find(el => el.ID == id)?.NAME ?? id;
 		}
 	},
 	computed: {
 		...mapGetters('cloud', {
 			SingleCloud: 'getOpenedCloud',
+			getClouds: 'getClouds',
 		}),
 		...mapGetters('network', {
 			NICpublic: 'getNICpublic',

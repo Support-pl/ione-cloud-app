@@ -1,7 +1,7 @@
 <template>
 	<div class="balance" v-if="isLogged">
 		<span class="balance__item" @click="showModal" :class="{ clickable: clickable }">
-			{{currency.prefix}}{{user.balance}} 
+			{{currency.prefix}}{{user.balance | numsepar}} 
 			<a-badge v-if="clickable" :count="'+'" :offset="[10, -8]">
 				{{currency.suffix}}
 			</a-badge>

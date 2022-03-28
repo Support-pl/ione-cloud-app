@@ -33,6 +33,12 @@ Vue.filter('replace', function (value, from, to) {
   return value.replace(from, to)
 })
 
+Vue.filter('numsepar', function (value) {
+  if (!value) return ''
+	value = ~~(+value);
+  return value?.toLocaleString("vn")?.replaceAll(/\s/g, ".") ?? value
+})
+
 Vue.component('maintanance-mode', maintanance);
 
 new Vue({

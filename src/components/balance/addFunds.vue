@@ -9,8 +9,8 @@
 			<p v-if="isLogged">{{$t('Enter value')}} ({{user.currency_code}}):</p>
       <a-input type="number" min="0" v-model="amount" allow-clear/>
 			<a-row type="flex" justify="space-around" align="middle" :gutter="[10, 10]" style="margin-top: 10px">
-				<a-col v-for="add in btns" :key="add" :xl="4" :xs="8">
-					<a-button style="width: 100%" @click="addAmount(add)">+{{add}}</a-button>
+				<a-col v-for="add in btns" :key="add" :xl="6" :xs="8">
+					<a-button style="width: 100%" @click="addAmount(add)">+{{add | numsepar}}</a-button>
 				</a-col>
 			</a-row>
 			<a-row style="margin-top: 10px">
@@ -35,9 +35,9 @@ export default {
 	data(){
 		return {
 			confirmLoading: false,
-			amount: 10,
+			amount: 10000,
 			btns: [
-				5, 10, 50, 100, 500, 1000
+				10000, 50000, 100000, 200000, 500000
 			],
 			stay: false
 		}
