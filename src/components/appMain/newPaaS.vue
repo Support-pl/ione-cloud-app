@@ -145,7 +145,7 @@
 
 								<a-col :xs="12" :sm="18" :lg='12'>
 									<a-select v-model="options.period"  style="width: 100%">
-										<a-select-option v-for="(period, key) in periods" :disabled="key" :key="period.title+period.count" :value='period.value'>
+										<a-select-option v-for="(period, key) in periods" :key="period.title+period.count" :value='period.value'>
 											{{period.title == 'year'?'1 ':''}}{{$tc(period.title, period.count)}}
 										</a-select-option>
 									</a-select>

@@ -23,7 +23,7 @@
 			<div class="container full-height">
 				<div class="openInvoice__main-content">
 					<div class="openInvoice__cost">
-						<svg viewBox="0 0 95 20">
+						<svg viewBox="0 0 120 25">
 							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
 								{{total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}
 							</text>

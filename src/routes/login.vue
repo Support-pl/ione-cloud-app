@@ -2,8 +2,11 @@
 	<div class="login">
 		<div class="login__title login__layout">
 			<div class="logo" :class="['pos_'+companyLogoPos]">
+				<div class="logo__subtitle" v-if="companyName">
+					Instant, Easy, Reliable
+				</div>
 				<div class="logo__title" v-if="companyName">
-					{{companyName}}
+					<img src="/img/images/tothost.svg" alt="tothost">
 				</div>
 				<div class="logo__image" v-if="companyLogo">
 					<img :src="`./img/${companyLogo}`" alt="logo">
@@ -48,7 +51,7 @@
 						</div>
 					</div>
 
-					<a-select style="width: 70px;" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+					<a-select class="login__selector" style="width: 70px;" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
 						<a-select-option v-for="lang in langs" :key="lang" :value="lang">
 							{{lang.toUpperCase()}}
 						</a-select-option>
@@ -58,10 +61,10 @@
 				<div class="login__inputs">
 					<div v-if="loginError" class="login__error">{{loginError}}</div>
 					<div v-on:keyup.enter="submitHandler()" class="inputs__log-pas">
-						<input type="text" placeholder="Email" v-model="email">
+						<input class="login__input" type="text" placeholder="Email" v-model="email">
 						<template v-if="remember">
-							<span class="login__horisontal-line"></span>
-							<input type="password" placeholder="Password"  v-model="password">
+							<!-- <span class="login__horisontal-line"></span> -->
+							<input class="login__input" type="password" placeholder="Password"  v-model="password">
 						</template>
 					</div>
 					<template>
@@ -231,7 +234,8 @@ export default {
 
 .logo{
 	display: flex;
-	grid-gap: 15px
+	grid-gap: 0px;
+	padding-bottom: 88px;
 }
 
 .pos_top{
@@ -254,6 +258,12 @@ export default {
 	text-align: center;
 }
 
+.logo__subtitle{
+	text-align: center;
+	font-size: 16px;
+	font-weight: 300;
+}
+
 .clipPathSvg{
 	height: 0;
 	width: 0;
@@ -263,6 +273,7 @@ export default {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	background-color: #0D0D22;
 }
 
 .login__layout{
@@ -278,6 +289,9 @@ export default {
 	color: var(--bright_font);
 	font-size: 36px;
 	font-weight: bold;
+	background-image: url("/img/images/bg1_1.png");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
 }
 
 .login__title::selection{
@@ -296,6 +310,8 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
+	background-color: #0D0D22;
+	background-image: url("/img/images/bg1_2.png");
 }
 
 .login__inputs{
@@ -304,6 +320,19 @@ export default {
 	width: 80%;
 	max-width: 500px;
 	position: relative;
+}
+
+.login__input {
+	background-color: transparent;
+	border: 1px solid #7A7AE8;
+	outline: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	color: #B0B0B1;
+}
+
+.login__input:not(:last-child) {
+	margin-bottom: 13px;
 }
 
 .login__horisontal-line{
@@ -317,9 +346,9 @@ export default {
 .inputs__log-pas{
 	display: flex;
 	flex-direction: column;
-	border-radius: 10px;
+	// border-radius: 10px;
 	overflow: hidden;
-	box-shadow: 3px 8px 20px rgba(164, 180, 244, .5);
+	// box-shadow: 3px 8px 20px rgba(164, 180, 244, .5);
 	margin-bottom: 25px;
 }
 
@@ -365,12 +394,6 @@ export default {
     0%{background-position:0% 50%}
     50%{background-position:100% 50%}
     100%{background-position:0% 50%}
-}
-
-.inputs__log-pas input{
-	border: none;
-	outline: none;
-	padding: 10px 15px;
 }
 
 .login__forgot a{
@@ -420,7 +443,7 @@ export default {
 	display: block;
 	padding: 10px 15px;
 	/* border: 1px solid #d0dfff; */
-	box-shadow: inset 0px 0px 0px 1px #d0dfff;
+	box-shadow: inset 0px 0px 0px 2px #7F7FEC;
 	border-radius: 5px;
 	transition: box-shadow .2s ease;
 	display: flex;
@@ -429,7 +452,7 @@ export default {
 }
 
 .login__see-services a:hover{
-	box-shadow: inset 0px 0px 0px 1px var(--main);
+	box-shadow: inset 0px 0px 0px 2px #8e8eee;
 }
 
 .login__see-services a i{
@@ -475,10 +498,24 @@ export default {
 	width: 90%;
 }
 
+.login__selector .ant-select-selection{
+	background-color: transparent;
+	box-shadow: inset 0px 0px 0px 2px #8e8eee;
+	border: none;
+}
+
+.login__selector .ant-select-arrow {
+	color: #8e8eee;
+}
+
+.login__selector .ant-select-selection__rendered {
+	color: #fff;
+}
 
 @media screen and (min-width: 1024px){
 	.login{
 		flex-direction: row;
+		padding-bottom: 0px;
 	}
 
 	.login__title{
@@ -496,6 +533,7 @@ export default {
 	#qrcode{
 		display: inline-block;
 	}
+
 }
 
 .login .ant-select {

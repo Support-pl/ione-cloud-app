@@ -11,6 +11,7 @@
 import login from './routes/login.vue';
 import appMain from './components/appMain/appMain.vue';
 import updateNotification from './components/updateNotification/index.vue';
+import config from './appconfig.js';
 
 export default {
 	name: "app",
@@ -41,8 +42,11 @@ export default {
 		})
 
 		const lang = localStorage.getItem("lang");
-		if(lang != undefined)
+		if(lang != undefined && config.languages.includes(lang)) {
 			this.$i18n.locale = lang;
+		} else {
+			this.$i18n.locale = this.$i18n.fallbackLocale;
+		}
 
 		// this.$store.dispatch('fetchDomainInfo')
 	},
