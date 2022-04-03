@@ -29,7 +29,7 @@
 				<div class="product__cost">
 					{{user.currency_code === '$' || user.currency_code.toUpperCase() === 'USD'
 						? `$${cost}`
-						: `${cost}${user.currency_code}`
+						: `${cost | numsepar} ${user.currency_code}`
 					}}
 				</div>
 			</div>

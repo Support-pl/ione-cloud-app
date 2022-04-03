@@ -303,6 +303,7 @@
 
 	"clientinfo": {
 		"password": "mật khẩu",
+		"password again": "nhập lại mật khẩu",
 		"firstname": "tên",
 		"lastname": "họ",
 		"state": "quận/huyện",
@@ -325,5 +326,11 @@
 		"login": "đăng nhập",
 		"sign up": "đăng ký",
 		"see services": "xem dịch vụ"
+	},
+
+	"tos": {
+		"part1": "Với việc tạo tài khoản, bạn đã đọc và đồng ý với",
+		"link": "Điều khoản dịch vụ",
+		"part2": " của chúng tôi."
 	}
 }

@@ -76,7 +76,7 @@
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col>
 						<template v-if="!fetchLoading">
-							{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
+							{{getProducts.pricing[options.period] | numsepar}} {{getProducts.pricing.suffix}}
 						</template>
 						<div v-else class="loadingLine loadingLine--total"></div>
 					</a-col>

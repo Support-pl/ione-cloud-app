@@ -2,8 +2,11 @@
 	<div class="login">
 		<div class="login__title login__layout">
 			<div class="logo" :class="['pos_'+companyLogoPos]">
+				<div class="logo__subtitle" v-if="companyName">
+					Instant, Easy, Reliable
+				</div>
 				<div class="logo__title" v-if="companyName">
-					{{companyName}}
+					<img src="/img/images/tothost.svg" alt="tothost">
 				</div>
 				<div class="logo__image" v-if="companyLogo">
 					<img :src="`./img/${companyLogo}`" alt="logo">
@@ -46,7 +49,7 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 							<input
 								type="text"
 								name="lastname"
@@ -55,7 +58,7 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 							<input
 								type="email"
 								name="email"
@@ -64,7 +67,7 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 							<input
 								type="text"
 								name="phone"
@@ -73,7 +76,7 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 							<input
 								type="password"
 								name="password"
@@ -82,7 +85,7 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 							<input
 								type="password"
 								name="password"
@@ -91,20 +94,19 @@
 								readonly
 								onfocus="this.removeAttribute('readonly')"
 							>
-							<span class="login__horisontal-line"></span>
+							<!-- <span class="login__horisontal-line"></span> -->
 						</div>
 
-						<div class="inputs__log-pas">
-							<a-select style="width: 100%; border: none" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
-								<a-select-option v-for="lang in langs" :key="lang" :value="lang">
-									{{$t('localeLang', lang)}}
-								</a-select-option>
-							</a-select>
-						</div>
+						<a-select class="login__selector" style="width: 100%; border: none; margin-bottom: 15px; margin-left: 0" @change="(e) => $i18n.locale = e" :value="$i18n.locale">
+							<a-select-option v-for="lang in langs" :key="lang" :value="lang">
+								{{$t('localeLang', lang)}}
+							</a-select-option>
+						</a-select>
 
 						<div class="terms-accept">
-							<a-checkbox v-model="accepted">
-								agree to <a href="https://tothost.vn/privacy-policy/" target="_blank">terms and conditions</a>
+							<a-checkbox v-model="accepted" style="color: #B0B0B1">
+								{{$t("tos.part1")}} <a href="https://tothost.vn/privacy-policy/" target="_blank">{{$t("tos.link")}}</a>{{$t("tos.part2")}}
+								<!-- agree to <a href="https://tothost.vn/privacy-policy/" target="_blank">terms and conditions</a> -->
 							</a-checkbox>
 						</div>
 
@@ -339,12 +341,30 @@ export default {
 	background: #f4f4f4;
 }
 
+.inputs__log-pas input{
+	background-color: transparent;
+	border: 1px solid #7A7AE8;
+	outline: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	color: #B0B0B1;
+}
+
+.inputs__log-pas input:not(:last-child) {
+	margin-bottom: 13px;
+
+}
+
+/* .login__input:not(:last-child) {
+	margin-bottom: 13px;
+} */
+
 .inputs__log-pas{
 	display: flex;
 	flex-direction: column;
-	border-radius: 10px;
+	/* border-radius: 10px; */
 	overflow: hidden;
-	box-shadow: 3px 8px 20px rgba(164, 180, 244, .5);
+	/* box-shadow: 3px 8px 20px rgba(164, 180, 244, .5); */
 	margin-bottom: 25px;
 }
 
@@ -385,9 +405,9 @@ export default {
 
 .inputs__log-pas input,
 .inputs__log-pas select{
-	border: none;
+	/* border: none; */
 	outline: none;
-	padding: 10px 15px;
+	/* padding: 10px 15px; */
 }
 
 .inputs__log-pas input::placeholder{
@@ -435,6 +455,15 @@ export default {
 	border: none;
 }
 
+.logo__image {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.logo__image img {
+	max-width: 500px;	
+}
+
 @keyframes loading {
 	from, to {transform: scale(1)}
 	50% {transform: scale(.2);}
@@ -450,6 +479,19 @@ export default {
 	width: 90%;
 }
 
+.login__selector .ant-select-selection{
+	background-color: transparent;
+	box-shadow: inset 0px 0px 0px 1px #7A7AE8;
+	border: none;
+}
+
+.login__selector .ant-select-arrow {
+	color: #8e8eee;
+}
+
+.login__selector .ant-select-selection__rendered {
+	color: #fff;
+}
 
 @media screen and (min-width: 1024px){
 	.login{

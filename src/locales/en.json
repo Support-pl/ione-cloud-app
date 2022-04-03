@@ -303,6 +303,7 @@
 
 	"clientinfo": {
 		"password": "password",
+		"password again": "сonfirm Password",
 		"firstname": "firstname",
 		"lastname": "lastname",
 		"state": "state",
@@ -325,5 +326,11 @@
 		"login": "login",
 		"sign up": "sign up",
 		"see services": "Discover all services "
+	},
+
+	"tos": {
+		"part1": "By creating an account, you agree with our",
+		"link": "Terms of Service",
+		"part2": "."
 	}
 }

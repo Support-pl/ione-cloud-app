@@ -226,7 +226,7 @@
 						</a-col>
 						<a-col>
 							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								{{options.network.public.count * options.network.price}} {{currencyPostfix}}/month
+								{{options.network.public.count * options.network.price | numsepar}} {{currencyPostfix}}/month
 							</a-skeleton>
 						</a-col>
 					</a-row>
