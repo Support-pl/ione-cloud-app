@@ -6,7 +6,12 @@ export default {
 		err: '#f9383b',
 		gray: '#919191',
 		bright_font: '#fff',
-		bright_bg: '#f7f7f7',
+		bright_bg: '#415095',
+		header: '#0D0D22',
+		light: '#77BEFF',
+		accent1: "#00C5E6",
+		footer: '#2E3F8D',
+		gradient: 'linear-gradient(90deg, #7474DD 0%, #5252D5 86.15%)'
 	},
 
 	autoTicketDepartment: 9,

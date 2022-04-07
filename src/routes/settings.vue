@@ -195,6 +195,20 @@ export default {
 </script>
 
 <style>
+	.settings__name {
+		color: #fff;
+		font-weight: bold;
+	}
+
+	.settings__balance {
+		color: #fff;
+	}
+
+	.settings__balance .balance__item {
+		color: var(--accent1);
+		font-weight: bold;
+	}
+
 	.settings{
 		height: 100%;
 	}
@@ -230,7 +244,7 @@ export default {
 	}
 
 	.settings__exit{
-		background-color: #ee5854;
+		background: var(--gradient);
 		/* background-color: var(--err); */
 		border: none;
 		outline: none;
@@ -289,7 +303,7 @@ export default {
 		position: relative;
 		font-size: 1rem;
 		padding: 16px 0;
-		border-top: 1px solid rgba(0, 0, 0, .1);
+		border-top: 1px solid #7F7FEC;
 		cursor: pointer;
 		transition: background-color .2s ease;
 	}
@@ -299,7 +313,7 @@ export default {
 	}
 
 	.settings__item:last-of-type{
-		border-bottom: 1px solid rgba(0, 0, 0, .1);
+		border-bottom: 1px solid #7F7FEC;
 	}
 
 	.settings__logo{
@@ -308,10 +322,12 @@ export default {
 		transform: translateY(-50%);
 		left: 20px;
 		font-size: 1.4rem;
+		color: var(--light);
 	}
 
 	.settings__title{
 		padding-left: 60px;
+		color: #fff;
 	}
 
 	.qr__wrapper{

@@ -417,7 +417,7 @@ export default {
 
 	.icon__wrapper:hover{
 		background-color: var(--bright_bg);
-		color: var(--main);
+		color: var(--light);
 		transform: scale(1.2);
 	}
 	.icon__wrapper.active__btn{

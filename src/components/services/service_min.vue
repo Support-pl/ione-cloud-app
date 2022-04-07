@@ -52,6 +52,11 @@ export default {
 	font-size: 2rem;
 	margin-bottom: 3px;
 	position: relative;
+	color: var(--light);
+}
+
+.service__title {
+	color: #fff;
 }
 
 /* .service__icon::after{

@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="content__wrapper">
 				<div class="content__title">
-					Личный кабинет
+					Personal Area
 					<span class="content__small">
 						#{{user.id}}
 					</span>
@@ -17,14 +17,14 @@
 						</a-form-model-item>
 
 						<a-form-model-item>
-							<a-button-group>
-								<a-button type="primary" @click="sendInfo" :disabled="Object.keys(deltaInfo).length == 0" :loading="isSendingInfo">
+							<!-- <a-button-group> -->
+								<a-button class="user__button user__button--submit" type="primary" @click="sendInfo" :disabled="Object.keys(deltaInfo).length == 0" :loading="isSendingInfo">
 									{{$t('Submit')}}
 								</a-button>
-								<a-button @click="installDataToBuffer">
+								<a-button class="user__button user__button--cancel" @click="installDataToBuffer">
 									{{$t('Cancel')}}
 								</a-button>
-							</a-button-group>
+							<!-- </a-button-group> -->
 						</a-form-model-item>
 						
 					</a-form-model>
@@ -121,9 +121,10 @@ export default {
 
 
 .content__wrapper{
-	background: #fff;
+	background: var(--main);
 	border-radius: 10px;
 	padding: 10px 10px 15px 10px;
+	color: #fff;
 }
 
 .content__title{
@@ -133,5 +134,31 @@ export default {
 .content__small{
 	font-size: .7em;
 	opacity: .5;
+}
+
+.ant-form-item-label label {
+	color: #fff;
+}
+
+.ant-form-item-children input {
+	background: var(--main);
+	color: #fff;
+}
+
+.user__button {
+	color: #fff;
+	border: 2px solid #7F7FEC;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+
+.user__button--submit {
+	background: var(--main);
+}
+
+.user__button--cancel {
+	margin-left: 10px;
+	background: var(--gradient);
+	border: none;
 }
 </style>

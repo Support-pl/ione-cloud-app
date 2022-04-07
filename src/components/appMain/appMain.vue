@@ -1,7 +1,7 @@
 <template>
 	<div class="application">
 		<a-layout>
-			<a-layout-header :style="{'background-color': 'var(--main)', color: 'var(--bright_font)', padding: 0}">
+			<a-layout-header :style="{'background-color': 'var(--header)', color: 'var(--bright_font)', padding: 0}">
 				<appHeader />
 			</a-layout-header>
 
