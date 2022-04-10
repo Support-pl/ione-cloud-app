@@ -44,7 +44,7 @@
 
 				<a-row type="flex" justify="space-around" style="margin-top: 20px">
 					<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
-						{{$t('Pay peroiod')}}:
+						{{$t('Pay period')}}:
 					</a-col>
 
 					<a-col :xs="12" :sm="18" :lg='12'>
@@ -65,7 +65,7 @@
 					<a-col>
 						<transition name="textchange" mode="out-in">
 							<div v-if="!fetchLoading">
-								{{getProducts.pricing[options.period]}} {{getProducts.pricing.suffix}}
+								{{getProducts.pricing[options.period] | numsepar}} {{getProducts.pricing.suffix}}
 							</div>
 							<div v-else class="loadingLine loadingLine--total"></div>
 						</transition>

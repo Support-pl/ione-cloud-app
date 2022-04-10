@@ -217,8 +217,8 @@
 	"monthly": "1-monthly",
 	"quarterly": "3-monthly",
 	"semiannually": "6-monthly",
-	"annually": "yearly",
-	"biennially": "2-yearly",
+	"annually": "Annually",
+	"biennially": "Bi-Annually",
 	"free account": "free account",
 
 	"share app link": "share app link",

@@ -140,7 +140,7 @@
 
 							<a-row type="flex" justify="space-around" style="margin-top: 20px">
 								<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
-									{{$t('Pay peroiod')}}:
+									{{$t('Pay period')}}:
 								</a-col>
 
 								<a-col :xs="12" :sm="18" :lg='12'>
@@ -274,7 +274,7 @@ const periods = [
 const tofixVal = 0;
 
 const tariffs = ['standart', 'X2CPU', 'X2RAM'];
-const sizes = ['2G', '4G', '6G', '8G', '10G'];
+const sizes = ['TOT 2G', 'TOT 4G', 'TOT 6G', 'TOT 8G', 'TOT 10G'];
 
 import { mapGetters } from 'vuex'
 import loading from '../loading/loading'
@@ -468,7 +468,7 @@ export default {
 				return +this.options.addonsObjects[name].pricing[this.options.period] 
 			});
 			// console.log('~~~', addonsCosts);
-			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + val ).toFixed(tofixVal);
+			return [VMonly, ...addonsCosts].reduce( (acc, val) => acc + (val > 0 ? val : 0) ).toFixed(tofixVal);
 		},
 		sliderIsCanNext(){
 			return this.options.slide < this.sizes.length - 1;

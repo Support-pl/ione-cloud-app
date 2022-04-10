@@ -345,7 +345,7 @@ export default {
 	name: "newVDC",
 	data(){
 		return {
-			monthDiscount: 15,
+			monthDiscount: 10,
 			settings: {},
 			diskTypes: [],
 			savedRateId: 0,
@@ -583,7 +583,7 @@ export default {
 			}
 		},
 		handleOk(){
-			if(this.user.balance < this.calculateFullPrice()) {
+			if(+this.user.balance < +this.calculateFullPrice()) {
 				this.$message.error(this.$t("Balance is too low"));
 				return 0
 			}
