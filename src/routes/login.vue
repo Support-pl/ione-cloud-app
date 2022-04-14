@@ -29,7 +29,7 @@
 				<div class="login__onlogin-action">
 					<div v-if="!getOnlogin.info" class="login__see-services">
 						<router-link :to="{name: 'services'}">
-							<a-icon type="shopping-cart" />
+							<img src="/img/logos/logoTothostMini.png" alt="tothost">
 							{{$t('unregistered.see services') | capitalize}}
 						</router-link>
 					</div>
@@ -450,7 +450,10 @@ export default {
 	grid-gap: 10px;
 	font-size: 1.2em;
 }
-
+.login__see-services img{
+	height: 20px;
+	margin-top: 4px;
+}
 .login__see-services a:hover{
 	box-shadow: inset 0px 0px 0px 2px #8e8eee;
 }

@@ -324,7 +324,7 @@
 	},
 
 	"unregistered": {
-		"will be able after": "will be able after",
+		"will be available after": "available after login",
 		"login": "login",
 		"sign up": "sign up",
 		"see services": "see services"

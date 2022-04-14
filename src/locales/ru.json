@@ -324,7 +324,7 @@
 	},
 
 	"unregistered": {
-		"will be able after": "будет доступно после",
+		"will be available after": "будет доступно после",
 		"login": "входа",
 		"sign up": "зарегистрироваться",
 		"see services": "сервисы"
