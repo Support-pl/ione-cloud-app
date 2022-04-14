@@ -170,7 +170,7 @@ export default {
 				// city: '',
 				// state: '',
 				// postcode: '',
-				country: 'BY',
+				country: 'VN',
 				phonenumber: ''
 			}
 		}
