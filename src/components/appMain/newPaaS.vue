@@ -16,24 +16,15 @@
             </a-slider>
 
             <a-skeleton :loading="getCurrentProd == null" :active="true">
-              <a-row justify="space-between" style="margin-top: 50px">
+              <a-row
+                justify="space-between"
+                style="margin-top: 50px"
+                class="newCloud__prop"
+              >
                 <a-col span="8" :xs="6">
                   <span style="display: inline-block; width: 70px">CPU:</span>
                 </a-col>
-                <a-col span="4" :xs="12">
-                  <!-- <a-switch :checked="options.kind == 'X2CPU'" @change="(val) => {options.kind = val?'X2CPU':'standart'}" style="width: 60px">
-										<span slot="checkedChildren">x2</span>
-										<span slot="unCheckedChildren">x1</span>
-									</a-switch> -->
-                </a-col>
-                <!-- <a-col span="8">
-									<a-tooltip>
-										<template slot="title">
-											{{$t('increases core frequency from 2.4 GHz to 3.7 GHz')}}
-										</template>
-										<a-checkbox v-model="options.highCPU" class="newCloud__prop">{{$t('High speed')}}</a-checkbox>
-									</a-tooltip>
-								</a-col> -->
+                <a-col span="4" :xs="12"> </a-col>
                 <transition name="textchange" mode="out-in">
                   <a-col
                     class="changing__field"
@@ -45,9 +36,7 @@
                         : 'DefaultKey'
                     "
                   >
-                    {{
-                      getCurrentProd != null ? getCurrentProd.specs.CPU : ""
-                    }}
+                    {{ getCurrentProd != null ? getCurrentProd.specs.CPU : "" }}
                     vCPU
                   </a-col>
                 </transition>
@@ -57,12 +46,7 @@
                 <a-col span="8" :xs="6">
                   <span style="display: inline-block; width: 70px">RAM:</span>
                 </a-col>
-                <a-col span="12">
-                  <!-- <a-switch :checked="options.kind == 'X2RAM'" @change="(val) => {options.kind = val?'X2RAM':'standart'}" style="width: 60px">
-										<span slot="checkedChildren">x2</span>
-										<span slot="unCheckedChildren">x1</span>
-									</a-switch> -->
-                </a-col>
+                <a-col span="12"> </a-col>
                 <transition name="textchange" mode="out-in">
                   <a-col
                     class="changing__field"
@@ -74,9 +58,7 @@
                         : 'DefaultKeyForRAM'
                     "
                   >
-                    {{
-                      getCurrentProd != null ? getCurrentProd.specs.RAM : ""
-                    }}
+                    {{ getCurrentProd != null ? getCurrentProd.specs.RAM : "" }}
                     GB RAM
                   </a-col>
                 </transition>
@@ -98,28 +80,38 @@
                     <span slot="unCheckedChildren">HDD</span>
                   </a-switch>
                 </a-col>
-                <a-col :xs="8" :sm="4">
-                  <a-select
-                    default-value="-1"
-                    style="width: 100%"
-                    @change="(newdata) => setAddon('drive', +newdata)"
+                <transition name="textchange" mode="out-in">
+                  <a-col
+                    class="changing__field"
+                    style="text-align: right"
+                    :key="
+                      getCurrentProd != null
+                        ? getCurrentProd.specs.DISK_SIZE
+                        : 'DefaultKey'
+                    "
                   >
-                    <a-select-option value="-1"
-                      >{{ getCurrentProd.specs.DISK_SIZE }} Gb</a-select-option
-                    >
-                    <a-select-option
-                      v-for="disk in getAddons[options.drive ? 'ssd' : 'hdd']"
-                      :key="disk.id"
-                      :value="disk.id"
-                    >
-                      {{
-                        parseInt(getCurrentProd.specs.DISK_SIZE) +
-                        parseInt(disk.value)
-                      }}
-                      Gb
-                    </a-select-option>
-                  </a-select>
+                    {{
+                      getCurrentProd != null
+                        ? getCurrentProd.specs.DISK_SIZE
+                        : ""
+                    }}
+                    Gb
+                  </a-col>
+                </transition>
+              </a-row>
+
+              <a-row class="newCloud__prop">
+                <a-col span="8" :xs="6">
+                  <span style="display: inline-block; width: 70px"
+                    >Public IP:</span
+                  >
                 </a-col>
+                <a-col span="12"> </a-col>
+                <transition name="textchange" mode="out-in">
+                  <a-col class="changing__field" style="text-align: right">
+                    1
+                  </a-col>
+                </transition>
               </a-row>
             </a-skeleton>
 
@@ -401,7 +393,7 @@ const periods = [
 const tofixVal = 0;
 
 const tariffs = ["standart", "X2CPU", "X2RAM"];
-const sizes = ["TOT 2G", "TOT 4G", "TOT 6G", "TOT 8G", "TOT 10G"];
+const sizes = ["TOT 1G", "TOT 2G", "TOT 4G", "TOT 6G", "TOT 8G", "TOT 10G"];
 
 import { mapGetters } from "vuex";
 import loading from "../loading/loading";
@@ -582,7 +574,7 @@ export default {
           return null;
         }
       }
-	  console.log(current)
+      console.log(current);
       return current;
     },
     getFullPrice() {
