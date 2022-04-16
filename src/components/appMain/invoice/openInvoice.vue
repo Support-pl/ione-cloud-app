@@ -23,8 +23,10 @@
 			<div class="container full-height">
 				<div class="openInvoice__main-content">
 					<div class="openInvoice__cost">
-						<svg viewBox="0 0 95 20">
-							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{{inv.total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}</text>
+						<svg viewBox="0 0 120 25">
+							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+								{{total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}
+							</text>
 						</svg>
 					</div>
 					<div class="openInvoice__info">
@@ -68,7 +70,7 @@
 									</transition>
 								</div>
 								<div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									{{$t('Show full list')}} ({{inv.items.item.length-1}})
+									{{$t('Show full list')}} ({{inv.items.item.length}} {{$t('quatnity.items')}})
 								</div>
 							</div>
 						</div>
@@ -118,7 +120,6 @@
 <script>
 import md5 from "md5";
 import loading from '../../loading/loading.vue'
-import { mapGetters } from 'vuex';
 import config from '../../../appconfig';
 
 export default {
@@ -142,7 +143,8 @@ export default {
 			confirmLoading: {
 				pay: false,
 			},
-			elem: ''
+			elem: '',
+			inv: null
 		}
 	},
 	methods: {
@@ -152,7 +154,7 @@ export default {
 		OpenWHMCSInvoice(){
 			// console.log('work');
 			const close_your_eyes = md5('openInvoiceWHMCS'+this.user.id+this.user.secret);
-			window.open(config.WHMCSsiteurl + `app_back/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
+			window.open(config.WHMCSsiteurl + config.appFolder +`/openInvoiceWHMCS.php?userid=${this.user.id}&secret=${close_your_eyes}&invoiceid=${this.$route.params.pathMatch}`);
 		},
 		showfull(){
 			this.showFullTable = true;
@@ -199,11 +201,18 @@ export default {
 		.then(res => {
 			this.inv = res.data;
 			this.loading = false;
+			if(res.data.result == 'error'){
+				throw res.data
+			}
 		})
-		this.$axios.get('/GetPaymentMethods.php')
-		.then(res => {
-			this.payMethods = res.data.paymentmethods.paymentmethod;
+		.catch(err => {
+			this.$router.push('/invoice');
+			console.error(err);
 		})
+		// this.$axios.get('/GetPaymentMethods.php')
+		// .then(res => {
+		// 	this.payMethods = res.data.paymentmethods.paymentmethod;
+		// })
 
 
 	},
@@ -213,6 +222,9 @@ export default {
 		},
 		statusColor(){
 			return this.inv.status.toLowerCase() == 'paid' ? this.$config.colors.success : this.$config.colors.err;
+		},
+		total(){
+			return this.inv.items.item.reduce((a,b) => a + (+b.amount), 0).toFixed(2);
 		}
 	}
 

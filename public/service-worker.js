@@ -5,12 +5,13 @@ workbox.core.setCacheNameDetails({
 
 self.addEventListener('message', (event) => {
 	if (event.data && event.data.type === 'SKIP_WAITING') {
-		self.skipWaiting();
+		console.log('trying to skip waiting')
+		self.skipWaiting()
 	}
 });
 
 self.addEventListener('install', (event) => {
-	self.skipWaiting();
+	skipWaiting()
 });
 
 /**

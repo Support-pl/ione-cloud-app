@@ -1,55 +1,37 @@
 <template>
 	<div class="application">
 		<a-layout>
-			<a-layout-header :style="{'background-color': $config.colors.main, color: $config.colors.bright_font, padding: 0}">
-				<appHeader/>
+			<a-layout-header :style="{'background-color': 'var(--header)', color: 'var(--bright_font)', padding: 0}">
+				<appHeader />
 			</a-layout-header>
-			<a-layout-content :style="{'background-color': $config.colors.bright_bg, 'position': 'relative'}">
-				<transition name="nomain__slider">
+
+			<a-layout-content :style="{'background-color': 'var(--bright_bg)', 'position': 'relative'}">
+				<transition name="main-frame-anim">
 					<router-view class="frame"></router-view>
 				</transition>
 			</a-layout-content>
-			<a-layout-footer :style="{padding: 0}">
-				<appFooter :active="active" />
+
+			<a-layout-footer v-if="user" :style="{padding: 0}">
+				<appFooter />
 			</a-layout-footer>
-    	</a-layout>
+
+		</a-layout>
 	</div>
 </template>
 
 <script>
 import appFooter from './appFooter.vue';
 import appHeader from './appHeader.vue';
-import cloud from './cloud/cloud.vue';
-import support from './support/support.vue';
-import invoice from './invoice/invoice.vue';
-import settings from './settings/settings.vue';
 
 export default {
 	name:"appMain",
 	components: {
 		appFooter,
 		appHeader,
-		cloud,
-		support,
-		invoice,
-		settings
-	},
-	data(){
-		return {
-			activeName: '',
-			unwatch: null,
-		}
 	},
 	computed: {
-		active: {
-			get(){
-				let ret = this.activeName == '' ? this.$router.currentRoute.name : this.activeName;
-				ret = ret == "cloudHome" ? 'cloud' : ret;
-				return ret;
-			},
-			set(newVal){
-				this.activeName = newVal; 
-			}
+		user(){
+			return this.$store.getters.getUser;
 		}
 	},
 	created(){
@@ -57,7 +39,6 @@ export default {
 			this.$store.dispatch('app/setTabByNameNoRoute', this.$router.currentRoute.name)
 		});
 		this.$router.beforeEach((to, from, next) => {
-			this.activeName = to.name == 'cloudHome' ? 'cloud' : to.name;
 			this.$store.dispatch('app/setTabByNameNoRoute', to.name)
 			next();
 		})
@@ -77,7 +58,9 @@ export default {
 
 	.container {
 		max-width: 768px;
+		min-height: 100%;
 		margin: 0 auto;
+		position: relative;
 	}
 
 	.frame{
@@ -86,4 +69,19 @@ export default {
 		width: 100%;
 		overflow-y: auto;
 	}
+	
+.main-frame-anim-enter-active,
+.main-frame-anim-leave-active {
+  transition: all .25s ease;
+}
+
+.main-frame-anim-enter{
+  transform: translateY(-0.5em);
+  opacity: 0;
+}
+
+.main-frame-anim-leave-to{
+  transform: translateY(0.5em);
+  opacity: 0;
+}
 </style>

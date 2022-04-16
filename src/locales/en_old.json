@@ -1,0 +1,332 @@
+{
+  "localePrefix": "en",
+  "localeLang": "English",
+	"coming soon": "coming soon",
+  "Settings": "Settings",
+  "Buy a license": "Buy a license",
+  "Have an idea to make the app better": "Have an idea to make the app better",
+  "Application Catalog": "Application Catalog",
+  "Knowledge Base": "Knowledge Base",
+  "Online-chat": "Online-chat",
+  "Order an app development": "Order an app development",
+  "Need more functionality on these app? Write us!": "Need more functionality on these app? Write us!",
+  "Developed by": "Developed by",
+  "login": "login",
+  "Enter value": "Enter value",
+  "stay on page": "stay on page",
+  "forgotPass": "forgot password?",
+  "Enter new password": "Enter new password",
+  "Cloud": "Cloud",
+  "Support": "Support",
+  "Invoice": "Invoice",
+  "cloud": "cloud",
+  "support": "support",
+  "invoice": "invoice",
+  "settings": "settings",
+  "Balance": "Balance",
+  "Exit": "Exit",
+  "I have a password": "I have a password",
+  "restore": "restore",
+  "Language": "Language",
+  "singleInvoice": "Invoice",
+  "status": "Status",
+  "invoice status": "invoice status",
+  "payed": "payed",
+  "unpaid": "unpaid",
+  "service": "service",
+  "services": "services",
+  "invoiceDate": "Invoice date",
+  "dueDate": "Due date",
+  "Choice payment": "Choice payment",
+  "Information": "Information",
+	"It’s empty...": "It’s empty...",
+	"Unknown error.": "Unknown error.",
+	"Password is too short": "Password is too short",
+	"Create VM": "Create VM",
+	"Create": "Create",
+	"Confirm": "Confirm",
+	"Enter OS password": "Enter OS password",
+	"Enter OS password again": "Enter OS password again",
+	"Password mismatch": "Password mismatch",
+	"Enter VM name": "Enter VM name",
+	"VM create": "VM create",
+	"Drive": "Drive",
+	"Drives": "Drives",
+	"Drive type": "Drive type",
+	"Public network": "Public network",
+	"Local network": "Local network",
+	"Result": "Result",
+	"Cost": "Cost",
+	"min": "min",
+	"hour": "hour",
+	"day": "day",
+	"week": "week",
+	"month": "no months | {n} month | {n} months",
+	"year": "year",
+	"Network": "Network",
+	"Total": "Total",
+	"Ready made servers": "Ready made servers",
+	"Pay as you Go": "Pay as you Go",
+	"VDC created successfully with": "VDC created successfully with",
+	"Monthly payment": "Monthly payment",
+	"Tarification": "Tarification",
+	"When paying per month - save up to": "When paying per month - save up to",
+	"With discount": "With discount",
+	"you will pay:": "you will pay:",
+	"Actual price may vary": "Actual price may vary",
+	"Choose a tariff": "Choose a tariff",
+	"Choose OS": "Choose OS",
+	"today": "today",
+	"yesterday": "yesterday",
+	"Send error": "Send error",
+	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
+	"Snapshot successfully deleted": "Snapshot successfully deleted",
+	"Vm was successfully restored from snapshot": "Vm was successfully restored from snapshot",
+	
+	"Recover sended. Wait please": "Recover sended. Wait please",
+	"There was a problem while restoring. Please contact support": "There was a problem while restoring. Please contact support",
+	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots",
+
+	"Reinstall": "Reinstall",
+	"Resize VM": "Resize VM",
+	"Disk control": "Disk control",
+	"Network control": "Network control",
+	"Boot order": "Boot order",
+	"Delete": "Delete",
+	"Snapshots": "Snapshots",
+	"input password": "input password",
+	"order server": "order server",
+
+	"basic": "basic",
+	"high": "high",
+	"processor": "processor",
+	"Order": "Order",
+	"order": "order",
+
+	"open": "open",
+	"or": "or",
+	"sign up": "sign up",
+
+	"High speed": "High speed",
+	"traffic": "traffic",
+	"under 3 Gb per month": "under 3 Gb per month",
+	"panel": "panel",
+	"none": "none",
+	"backup": "backup HDD",
+	"Pay period": "Pay period",
+	"go to invoice": "go to invoice",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "increases core frequency from 2.4 GHz to 3.7 GHz",
+	"Virtual machine will be available after paying the invoice": "Virtual machine will be available after paying the invoice",
+
+	"Power off": "Power off",
+	"Reboot": "Reboot",
+	"Recover": "Recover",
+	"Start": "Start",
+	"Take snapshot": "Take snapshot",
+	"Personal Area": "Personal Area",
+	"use access data from my.support.by": "use access data from my.support.by",
+	"Use on your phone:": "Use on your phone:",
+	
+  "invoice_Description": "Description",
+	"invoice_Price": "Price",
+	"invoice_Paid": "Paid",
+	"invoice_Unpaid": "Unpaid",
+	"invoice_Cancelled": "Cancelled",
+
+	"Active": "Active",
+	"Suspended": "Suspended",
+	"Canceled": "Canceled",
+
+	"Pay": "Pay",
+	"Choose your payment method": "Choose your payment method",
+	"Payment method": "Payment method",
+	"Do you want to defer payment?": "Do you want to defer payment?",
+
+	"Show full list": "Show full list",
+	
+  "cloud_StartTime": "Start time",
+  "cloud_Capacity": "Capacity",
+  "cloud_system": "system",
+  "cloud_Storage": "Storage",
+  "cloud_Memory": "Memory",
+  "cloud_Type": "Type",
+  "cloud_Size": "Size",
+  "cloud_Shutdown": "shutdown",
+  "cloud_Regular": "regular",
+  "cloud_Shutdown_modal": "Shutdown",
+  "cloud_Reboot_modal": "Reboot",
+  "cloud_Recover_modal": "Recover",
+	"cloud_Shutdown_invite": "Select the system shutdown setting:",
+	"cloud_Reboot_invite": "Select the system reboot setting:",
+	"cloud_Recover_invite": "Select the system recover setting:",
+	
+	"cloud_Recover_invite_line1": "WARNING! Virtual machine will be rebooted during the recovering!",
+	"cloud_Recover_invite_line2": "Backups are creating every day at 4:00 AM.",
+	"cloud_Recover_invite_line3": "50GB Disk Recovery takes approximately 1 hour.",
+	
+	"You can only have 3 snapshots at a time.": "You can only have 3 snapshots at a time.",
+	"Each snapshot exists for 24 hours and is then deleted.": "Each snapshot exists for 24 hours and is then deleted.",
+	"Choose a name for the new snapshot:": "Choose a name for the new snapshot:",
+
+	"support_Create_ticket": "Create ticket",
+	"support_Question_subject": "Question subject",
+	"support_Question": "Question",
+
+	"Do you want to download a backup?": "Do you want to download a backup?",
+	"The payment can be postponed only once. The payment is postponed for 5 days.": "The payment can be postponed only once. The payment is postponed for 5 days.",
+	"All unsaved progress will be lost, are you sure?": "All unsaved progress will be lost, are you sure?",
+
+	"Cancel": "Cancel",
+	"Submit": "Submit",
+	"Yes": "Yes",
+	"Send": "Send",
+	"Filter": "Filter",
+	"Check all": "Check all",
+	"Parameters": "Parameters",
+	"Add Funds": "Add Funds",
+
+	"have no": "have no",
+	"ip": {
+		"none": "none"
+	},
+
+	"os": "OS",
+
+	"Do you want to delete this virtual machine?": "Do you want to delete this virtual machine?",
+	"Do you want to reinstall this virtual machine?": "Do you want to reinstall this virtual machine?",
+	"All data will be deleted!": "All data will be deleted!",
+
+	"You can't have more than 3 snaps at the same time": "You can't have more than 3 snaps at the same time",
+	"remove or commit old ones to create new": "remove or commit old ones to create new",
+
+	"select OS": "select OS",
+	"select tariff": "select tariff",
+	"inbound": "inbound",
+	"outgoing": "outgoing",
+	"graphs": "graphs",
+
+	"turn of VM to resize it": "turn of VM to resize it",
+
+	"chat_Resend_message": "Resend message",
+	"chat_Delete_message": "Delete message",
+
+	"sort": "sort",
+	"filter": "filter",
+	"search": "search",
+
+	"monthly": "monthly",
+	"quarterly": "quarterly",
+	"semiannually": "semiannually",
+	"annually": "annually",
+	"biennially": "biennially",
+	"free account": "free account",
+
+	"share app link": "share app link",
+	"copy link": "copy link",
+	"your QR code": "your QR code",
+	"share": "share",
+
+	"Servers": "Servers",
+	"Virtual": "Virtual",
+	"info": "info",
+	
+	"enter": "enter",
+	"all fields are required": "all fields are required",
+	"field must contain more characters": "field must contain more characters",
+	
+	"advice": {
+		"look up": "look up",
+		"You have billed for the renewal of this virtual machine": "You have billed for the renewal of this virtual machine",
+		"If you do not pay within the specified period, the virtual machine will be suspended": "If you do not pay within the specified period, the virtual machine will be suspended",
+		"open": "open",
+		"renewal bill": "renewal bill"
+	},
+	
+	"quatnity": {
+		"items": "items"
+	},
+
+	"disk_manage": {
+		"This will detach the disk immediately": "This will detach the disk immediately",
+		"All data will be lost": "All data will be lost",
+		"Do you want to proceed?": "Do you want to proceed?"
+	},
+	
+	"period": {
+		"day": "day",
+		"week": "week",
+		"month": "month",
+		"year": "year"
+	},
+		
+	"userService": {
+		"billing cycle": "billing cycle",
+		"renewal amount": "renewal amount",
+		"registration date": "registration date",
+		"next payment date": "next payment date"
+	},
+	
+	"comp_services": {
+		"Your orders": "Your orders",
+		"with filter": "with filter",
+		"total": "total",
+		"all": "all"
+	},
+
+	"order_services": {
+		"Do you want to order": "Do you want to order"
+	},
+
+	"IaaS": {
+		"order_info": "Here you can order a pay-per-use server.",
+		"description": "Create in the configurator a virtual machine with payment as you use it.",
+		"createButton": "configurator VM"
+	},
+	
+	"PaaS": {
+		"order_info": "Here you can order servers with monthly payment.",
+		"description": "Сhoose a ready-to-use virtual machine.",
+		"createButton": "ready made VM"
+	},
+	
+	"virtual_product": {
+		"used space": "used space",
+		"bw": "used trafic",
+		"unlimited": "unlimited",
+		"power": "power",
+		"sites": "sites",
+		"mysql": "mysql",
+		"email": "email",
+		"hdd_shared": "hdd shared",
+		"traffic": "traffic"
+	},
+
+	"Passwords must match": "Passwords must match",
+
+	"clientinfo": {
+		"password": "password",
+		"password again": "password again",
+		"firstname": "firstname",
+		"lastname": "lastname",
+		"state": "state",
+		"city": "city",
+		"postcode": "postcode",
+		"address": "address",
+		"phone number": "phone number",
+		"phonenumber": "phone number",
+		"register": "register",
+		"already have account?": "already have account?",
+		"companyname": "company name",
+		"countryname": "country name",
+		"email": "email",
+		"address1": "address line 1",
+		"address2": "address line 2"
+	},
+
+	"unregistered": {
+		"will be available after": "available after",
+		"login": "login",
+		"sign up": "sign up",
+		"see services": "see services"
+	}
+}

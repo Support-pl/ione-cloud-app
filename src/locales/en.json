@@ -1,5 +1,7 @@
 {
   "localePrefix": "en",
+  "localeLang": "English",
+	"coming soon": "coming soon",
   "Settings": "Settings",
   "Buy a license": "Buy a license",
   "Have an idea to make the app better": "Have an idea to make the app better",
@@ -28,22 +30,26 @@
   "Language": "Language",
   "singleInvoice": "Invoice",
   "status": "Status",
-  "payed": "payed",
+  "invoice status": "invoice status",
+  "paid": "paid",
   "unpaid": "unpaid",
-  "service": "Service",
+  "service": "service",
+  "services": "services",
   "invoiceDate": "Invoice date",
   "dueDate": "Due date",
-  "Choice payment": "Choice payment",
+  "Choose payment": "Choose payment",
   "Information": "Information",
 	"It’s empty...": "It’s empty...",
 	"Unknown error.": "Unknown error.",
 	"Password is too short": "Password is too short",
-	"Create VM": "Create VM",
+	"Create VM": "Create VPS",
 	"Create": "Create",
 	"Confirm": "Confirm",
 	"Enter OS password": "Enter OS password",
-	"Enter VM name": "Enter VM name",
-	"VM create": "VM create",
+	"Enter OS password again": "Enter OS password again",
+	"Password mismatch": "Password mismatch",
+	"Enter VM name": "Enter VPS name",
+	"VM create": "VPS create",
 	"Drive": "Drive",
 	"Drives": "Drives",
 	"Drive type": "Drive type",
@@ -55,15 +61,18 @@
 	"hour": "hour",
 	"day": "day",
 	"week": "week",
-	"month": "month",
+	"month": "no months | {n} month | {n} months",
+	"year": "year",
 	"Network": "Network",
 	"Total": "Total",
-	"Ready made servers": "Ready made servers",
-	"Pay as you Go": "Pay as you Go",
+	"Ready made servers": "VPS Hosting Plans",
+	"Pay as you Go": "Pay-As-You-Go VPS",
 	"VDC created successfully with": "VDC created successfully with",
 	"Monthly payment": "Monthly payment",
-	"Tarification": "Tarification",
-	"When paying per month - save up to 15%": "When paying per month - save up to 15%",
+	"Tarification": "Savings",
+	"When paying per month - save up to": "When paying per month - save up to",
+	"With discount": "With discount",
+	"you will pay:": "you will pay:",
 	"Actual price may vary": "Actual price may vary",
 	"Choose a tariff": "Choose a tariff",
 	"Choose OS": "Choose OS",
@@ -72,7 +81,11 @@
 	"Send error": "Send error",
 	"turn on VM to create or load snapshots": "turn on VM to create or load snapshots",
 	"Snapshot successfully deleted": "Snapshot successfully deleted",
-	"Vm was successfully restored from snapshot": "Vm was successfully restored from snapshot",
+	"VM was successfully restored from snapshot": "VM was successfully restored from snapshot",
+	
+	"Recover sent. Please wait": "Recover sent. Pease wait",
+	"There was a problem during restoring. Please contact support": "There was a problem during restoring. Please contact support",
+	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots",
 
 	"Reinstall": "Reinstall",
 	"Resize VM": "Resize VM",
@@ -82,6 +95,28 @@
 	"Delete": "Delete",
 	"Snapshots": "Snapshots",
 	"input password": "input password",
+	"order server": "order server",
+
+	"basic": "basic",
+	"high": "high",
+	"processor": "processor",
+	"Order": "Order",
+	"order": "order",
+
+	"open": "open",
+	"or": "or",
+	"sign up": "sign up",
+
+	"High speed": "High speed",
+	"traffic": "traffic",
+	"under 3 Gb per month": "under 3 Gb per month",
+	"panel": "panel",
+	"none": "none",
+	"backup": "backup HDD",
+	"Payment period": "Payment period",
+	"go to invoice": "go to invoice",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "increases core frequency from 2.4 GHz to 3.7 GHz",
+	"Virtual machine will be available after paying the invoice": "Virtual machine will be available after paying the invoice",
 
 	"Power off": "Power off",
 	"Reboot": "Reboot",
@@ -89,7 +124,7 @@
 	"Start": "Start",
 	"Take snapshot": "Take snapshot",
 	"Personal Area": "Personal Area",
-	"use access data from my.support.by": "use access data from my.support.by",
+	"use access data from my.support.by": "use access data from billing.tothost.vn",
 	"Use on your phone:": "Use on your phone:",
 	
   "invoice_Description": "Description",
@@ -97,6 +132,10 @@
 	"invoice_Paid": "Paid",
 	"invoice_Unpaid": "Unpaid",
 	"invoice_Cancelled": "Cancelled",
+
+	"Active": "Active",
+	"Suspended": "Suspended",
+	"Canceled": "Cancelled",
 
 	"Pay": "Pay",
 	"Choose your payment method": "Choose your payment method",
@@ -107,6 +146,7 @@
 	
   "cloud_StartTime": "Start time",
   "cloud_Capacity": "Capacity",
+  "cloud_system": "system",
   "cloud_Storage": "Storage",
   "cloud_Memory": "Memory",
   "cloud_Type": "Type",
@@ -120,7 +160,7 @@
 	"cloud_Reboot_invite": "Select the system reboot setting:",
 	"cloud_Recover_invite": "Select the system recover setting:",
 	
-	"cloud_Recover_invite_line1": "WARNING! Virtual machine will be rebooted during the recovering!",
+	"cloud_Recover_invite_line1": "WARNING! Virtual machine will be rebooted during the recover!",
 	"cloud_Recover_invite_line2": "Backups are creating every day at 4:00 AM.",
 	"cloud_Recover_invite_line3": "50GB Disk Recovery takes approximately 1 hour.",
 	
@@ -133,10 +173,11 @@
 	"support_Question": "Question",
 
 	"Do you want to download a backup?": "Do you want to download a backup?",
-	"The payment can be postponed only once. The payment is postponed for 5 days.": "The payment can be postponed only once. The payment is postponed for 5 days.",
+	"The payment can be postponed only once. The payment is postponed for 5 days.": "The payment can only be postponed once. The payment is postponed for 5 days.",
 	"All unsaved progress will be lost, are you sure?": "All unsaved progress will be lost, are you sure?",
 
 	"Cancel": "Cancel",
+	"Submit": "Submit",
 	"Yes": "Yes",
 	"Send": "Send",
 	"Filter": "Filter",
@@ -145,6 +186,11 @@
 	"Add Funds": "Add Funds",
 
 	"have no": "have no",
+	"ip": {
+		"none": "none"
+	},
+
+	"os": "OS",
 
 	"Do you want to delete this virtual machine?": "Do you want to delete this virtual machine?",
 	"Do you want to reinstall this virtual machine?": "Do you want to reinstall this virtual machine?",
@@ -159,8 +205,132 @@
 	"outgoing": "outgoing",
 	"graphs": "graphs",
 
-	"turn of VM to resize it": "turn of VM to resize it",
+	"turn of VM to resize it": "turn off VM to resize it",
 
 	"chat_Resend_message": "Resend message",
-	"chat_Delete_message": "Delete message"
+	"chat_Delete_message": "Delete message",
+
+	"sort": "sort",
+	"filter": "filter",
+	"search": "search",
+
+	"monthly": "1-monthly",
+	"quarterly": "3-monthly",
+	"semiannually": "6-monthly",
+	"annually": "Annually",
+	"biennially": "Bi-Annually",
+	"free account": "free account",
+
+	"share app link": "share app link",
+	"copy link": "copy link",
+	"your QR code": "your QR code",
+	"share": "share",
+
+	"Servers": "Vietnam VPS",
+	"Virtual": "Shared Web Hosting",
+	"info": "info",
+	
+	"enter": "enter",
+	"all fields are required": "all fields are required",
+	"field must contain more characters": "field must contain more characters",
+	
+	"advice": {
+		"look up": "look up",
+		"You have billed for the renewal of this virtual machine": "You have been billed for the renewal of this virtual machine",
+		"If you do not pay within the specified period, the virtual machine will be suspended": "If you do not pay within the specified period, the virtual machine will be suspended",
+		"open": "open",
+		"renewal bill": "renewal bill"
+	},
+	
+	"quantity": {
+		"items": "items"
+	},
+
+	"disk_manage": {
+		"This will detach the disk immediately": "This will detach the disk immediately",
+		"All data will be lost": "All data will be lost",
+		"Do you want to proceed?": "Do you want to proceed?"
+	},
+	
+	"period": {
+		"day": "day",
+		"week": "week",
+		"month": "month",
+		"year": "year"
+	},
+		
+	"userService": {
+		"billing cycle": "billing cycle",
+		"renewal amount": "renewal amount",
+		"registration date": "registration date",
+		"next payment date": "next payment date"
+	},
+	
+	"comp_services": {
+		"Your orders": "Your orders",
+		"with filter": "with filter",
+		"total": "total",
+		"all": "all"
+	},
+
+	"order_services": {
+		"Do you want to order": "Do you want to order"
+	},
+
+	"IaaS": {
+		"order_info": "Here you can order a Pay-As-You-Go VPS.",
+		"description": "Get charged based on the amount of compute and storage resources on a per-use basis.",
+		"createButton": "Pay-As-You-Go VPS"
+	},
+	
+	"PaaS": {
+		"order_info": "Here you can order servers with monthly payment.",
+		"description": "Get simple, fast, budget-friendly and reliable VPS hosting plans.",
+		"createButton": "VPS Hosting Plans"
+	},
+	
+	"virtual_product": {
+		"used space": "used space",
+		"bw": "used trafic",
+		"unlimited": "Unlimited",
+		"power": "power",
+		"sites": "Websites",
+		"mysql": "MySQL Databases",
+		"email": "Email Accounts",
+		"hdd_shared": "Shared SSD Storage",
+		"traffic": "Bandwidth"
+	},
+
+	"clientinfo": {
+		"password": "password",
+		"password again": "сonfirm Password",
+		"firstname": "firstname",
+		"lastname": "lastname",
+		"state": "state",
+		"city": "city",
+		"postcode": "postcode",
+		"address": "address",
+		"phone number": "phone number",
+		"phonenumber": "phone number",
+		"register": "register",
+		"already have account?": "already have account?",
+		"companyname": "company name",
+		"countryname": "country name",
+		"email": "email",
+		"address1": "address line 1",
+		"address2": "address line 2"
+	},
+
+	"unregistered": {
+		"will be available after": "available after",
+		"login": "login",
+		"sign up": "sign up",
+		"see services": "Discover all services "
+	},
+
+	"tos": {
+		"part1": "By creating an account, you agree with our",
+		"link": "Terms of Service",
+		"part2": "."
+	}
 }

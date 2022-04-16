@@ -5,7 +5,7 @@
 			<div class="invoice__status" :style="{color: statusColor}">{{$t('invoice_'+invoice.status)}}</div>
 		</div>
 		<div class="invoice__middle flex-between">
-			<div class="invoice__cost">{{invoice.subtotal}} {{invoice.currencycode}}</div>
+			<div class="invoice__cost">{{invoice.subtotal | numsepar}} {{invoice.currencycode}}</div>
 			<div class="invoice__date-item invoice__invDate">
 				<div class="invoice__date-title">
 					{{$t("invoiceDate")}}
@@ -44,7 +44,7 @@ export default {
 					return this.$config.colors.success;
 					break;
 				case 'cancelled':
-					return this.$config.colors.err;
+					return this.$config.colors.gray;
 					break;
 			
 				default:

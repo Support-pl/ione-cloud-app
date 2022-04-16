@@ -1,0 +1,336 @@
+{
+  "localePrefix": "vi",
+  "localeLang": "Tiếng Việt",
+	"coming soon": "sắp ra mắt",
+  "Settings": "Cài đặt",
+  "Buy a license": "Mua giấy phép",
+  "Have an idea to make the app better": "Đóng góp ý tưởng cải thiện dịch vụ",
+  "Application Catalog": "Danh mục ứng dụng",
+  "Knowledge Base": "Kiến thức cơ bản",
+  "Online-chat": "Trò chuyện trực tuyến",
+  "Order an app development": "Đặt hàng phát triển ứng dụng",
+  "Need more functionality on these app? Write us!": "Cần thêm chức năng trên ứng dụng này? Liên hệ với chúng tôi!",
+  "Developed by": "Được phát triển bởi",
+  "login": "đăng nhập",
+  "Enter value": "Vui lòng nhập giá trị",
+  "stay on page": "ở lại trang",
+  "forgotPass": "quên mật khẩu?",
+  "Enter new password": "Vui lòng nhập mật khẩu mới",
+  "Cloud": "Cloud",
+  "Support": "Hỗ trợ",
+  "Invoice": "Hóa đơn",
+  "cloud": "cloud",
+  "support": "hỗ trợ",
+  "invoice": "hóa đơn",
+  "settings": "cài đặt",
+  "Balance": "Số dư",
+  "Exit": "Thoát",
+  "I have a password": "Tôi đã có mật khẩu",
+  "restore": "khôi phục",
+  "Language": "Ngôn ngữ",
+  "singleInvoice": "Hóa đơn",
+  "status": "Trạng thái",
+  "invoice status": "trạng thái hóa đơn",
+  "paid": "đã thanh toán",
+  "unpaid": "chưa thanh toán",
+  "service": "dịch vụ",
+  "services": "các dịch vụ",
+  "invoiceDate": "Ngày thanh toán",
+  "dueDate": "Ngày đáo hạn",
+  "Choose payment": "Chọn thanh toán",
+  "Information": "Thông tin",
+	"It’s empty...": "Đang cập nhật...",
+	"Unknown error.": "Lỗi không xác định.",
+	"Password is too short": "Mật khẩu chưa đủ độ dài yêu cầu",
+	"Create VM": "Tạo VPS",
+	"Create": "Tạo",
+	"Confirm": "Xác nhận",
+	"Enter OS password": "Nhập mật khẩu Hệ điều hành (OS)",
+	"Enter OS password again": "Nhập lại mật khẩu Hệ điều hành (OS)",
+	"Password mismatch": "Mật khẩu không khớp",
+	"Enter VM name": "Nhập tên VPS",
+	"VM create": "Tạo VPS",
+	"Drive": "Lưu trữ",
+	"Drives": "Các lưu trữ",
+	"Drive type": "Loại lưu trữ",
+	"Public network": "Mạng công cộng",
+	"Local network": "Mạng nội bộ",
+	"Result": "Kết quả",
+	"Cost": "Chi phí",
+	"min": "phút",
+	"hour": "giờ",
+	"day": "ngày",
+	"week": "tuần",
+	"month": "không có tháng | {n} tháng | {n} tháng",
+	"year": "năm",
+	"Network": "Mạng",
+	"Total": "Tổng cộng",
+	"Ready made servers": "Gói VPS Hosting",
+	"Pay as you Go": "VPS Pay-As-You-Go",
+	"VDC created successfully with": "VDC được tạo thành công với",
+	"Monthly payment": "Thanh toán hàng tháng",
+	"Tarification": "Tiết kiệm",
+	"When paying per month - save up to": "Khi thanh toán hàng tháng - tiết kiệm lên đến",
+	"With discount": "Với chiết khấu",
+	"you will pay:": "Bạn sẽ trả:",
+	"Actual price may vary": "Giá thực tế có thể thay đổi",
+	"Choose a tariff": "Chọn biểu giá",
+	"Choose OS": "Chọn Hệ điều hành(OS)",
+	"today": "hôm nay",
+	"yesterday": "hôm qua",
+	"Send error": "Gửi báo cáo lỗi",
+	"turn on VM to create or load snapshots": "bật VM để tạo hoặc tải Snapshots",
+	"Snapshot successfully deleted": "Snapshots đã được xóa thành công",
+	"VM was successfully restored from snapshot": "VM đã được khôi phục thành công từ Snapshots",
+	
+	"Recover sent. Please wait": "Đã gửi yêu cầu khôi phục. Vui lòng chờ",
+	"There was a problem during restoring. Please contact support": "Đã xảy ra sự cố trong quá trình khôi phục. Vui lòng liên hệ với bộ phận hỗ trợ",
+	"Before restoring from a service copy, please delete manually created snapshots": "Trước khi khôi phục từ bản sao dịch vụ, vui lòng xóa các ảnh chụp nhanh được tạo thủ công",
+
+	"Reinstall": "Cài đặt lại",
+	"Resize VM": "Thay đổi dung lượng VM",
+	"Disk control": "Disk control",
+	"Network control": "Network control",
+	"Boot order": "Boot order",
+	"Delete": "Xóa",
+	"Snapshots": "Snapshots",
+	"input password": "nhập mật khẩu",
+	"order server": "đặt hàng server",
+
+	"basic": "cơ bản",
+	"high": "cao",
+	"processor": "nhân xử lý",
+	"Order": "Đặt hàng",
+	"order": "đặt hàng",
+
+	"open": "mở",
+	"or": "hoặc",
+	"sign up": "đăng ký",
+
+	"High speed": "Tốc độ cao",
+	"traffic": "lưu lượng",
+	"under 3 Gb per month": "dưới 3 Gb mỗi tháng",
+	"panel": "bảng điều khiển",
+	"none": "none",
+	"backup": "sao lưu HDD",
+	"Payment period": "Kỳ thanh toán",
+	"go to invoice": "đi đến hóa đơn",
+	"increases core frequency from 2.4 GHz to 3.7 GHz": "tăng tần số core từ 2,4 GHz lên 3,7 GHz",
+	"Virtual machine will be available after paying the invoice": "VM sẽ hoạt động sau khi thanh toán hóa đơn",
+
+	"Power off": "Tắt nguồn",
+	"Reboot": "Khởi động lại",
+	"Recover": "Khôi phục lại",
+	"Start": "Khởi động",
+	"Take snapshot": "Tạo snapshot",
+	"Personal Area": "Khu vực cá nhân",
+	"use access data from my.support.by": "sử dụng dữ liệu truy cập từ billing.tothost.vn",
+	"Use on your phone:": "Sử dụng trên điện thoại của bạn:",
+	
+  "invoice_Description": "Mô tả",
+	"invoice_Price": "Giá",
+	"invoice_Paid": "Đã thanh toán",
+	"invoice_Unpaid": "Chưa thanh toán",
+	"invoice_Cancelled": "Đã hủy bỏ",
+
+	"Active": "Kích hoạt",
+	"Suspended": "Tạm dừng",
+	"Canceled": "Đã hủy bỏ",
+
+	"Pay": "Thanh toán",
+	"Choose your payment method": "Chọn phương thức thanh toán",
+	"Payment method": "Phương thức thanh toán",
+	"Do you want to defer payment?": "Bạn có muốn hoãn thanh toán không?",
+
+	"Show full list": "Hiển thị danh sách đầy đủ",
+	
+  "cloud_StartTime": "Thời gian bắt đầu",
+  "cloud_Capacity": "Dung lượng",
+  "cloud_system": "hệ thống",
+  "cloud_Storage": "Lưu trữ",
+  "cloud_Memory": "Bộ nhớ RAM",
+  "cloud_Type": "Loại",
+  "cloud_Size": "Kích cỡ",
+  "cloud_Shutdown": "tắt nguồn",
+  "cloud_Regular": "phổ thông",
+  "cloud_Shutdown_modal": "Tắt nguồn",
+  "cloud_Reboot_modal": "Khởi động lại",
+  "cloud_Recover_modal": "Khôi phục lại",
+	"cloud_Shutdown_invite": "Chọn cài đặt tắt nguồn hệ thống:",
+	"cloud_Reboot_invite": "Chọn cài đặt khởi động lại hệ thống:",
+	"cloud_Recover_invite": "Chọn cài đặt khôi phục hệ thống:",
+	
+	"cloud_Recover_invite_line1": "CẢNH BÁO! VM sẽ được khởi động lại trong quá trình khôi phục!",
+	"cloud_Recover_invite_line2": "Các bản sao lưu được tạo vào 4 giờ sáng hàng ngày.",
+	"cloud_Recover_invite_line3": "Khôi phục ổ cứng 50GB mất khoảng 1 giờ.",
+	
+	"You can only have 3 snapshots at a time.": "Bạn chỉ có thể có 3 snapshots đồng thời.",
+	"Each snapshot exists for 24 hours and is then deleted.": "Mỗi snapshot chỉ tồn tại trong 24 và bị xóa sau đó.",
+	"Choose a name for the new snapshot:": "Chọn tên cho snapshot mới:",
+
+	"support_Create_ticket": "Tạo ticket",
+	"support_Question_subject": "Tiêu đề câu hỏi",
+	"support_Question": "Câu hỏi",
+
+	"Do you want to download a backup?": "Bạn có muốn tải xuống một bản sao lưu không?",
+	"The payment can be postponed only once. The payment is postponed for 5 days.": "Việc thanh toán chỉ có thể được hoãn lại một lần và tối đa trong 5 ngày.",
+	"All unsaved progress will be lost, are you sure?": "Tất cả tiến trình chưa được lưu sẽ bị mất, bạn có chắc chắn không?",
+
+	"Cancel": "Hủy bỏ",
+	"Submit": "Xác nhận",
+	"Yes": "Đổng ý",
+	"Send": "Gửi đi",
+	"Filter": "Bộ lọc",
+	"Check all": "Kiểm tra tất cả",
+	"Parameters": "Các thông số",
+	"Add Funds": "Nạp tiền",
+
+	"have no": "không có",
+	"ip": {
+		"none": "none"
+	},
+
+	"os": "hệ điều hành (OS)",
+
+	"Do you want to delete this virtual machine?": "Bạn có muốn xóa VM này không?",
+	"Do you want to reinstall this virtual machine?": "Bạn có muốn cài đặt lại VM này không?",
+	"All data will be deleted!": "Tất cả dữ liệu sẽ bị xóa!",
+
+	"You can't have more than 3 snaps at the same time": "Bạn không thể có nhiều hơn 3 snapshot đồng thời",
+	"remove or commit old ones to create new": "loại bỏ những cái cũ để tạo cái mới",
+
+	"select OS": "chọn hệ điều hành (OS)",
+	"select tariff": "chọn biểu giá",
+	"inbound": "inbound",
+	"outgoing": "outgoing",
+	"graphs": "đồ thị",
+
+	"turn of VM to resize it": "tắt VM để thay đổi kích thước",
+
+	"chat_Resend_message": "Gửi lại tin nhắn",
+	"chat_Delete_message": "Xóa tin nhắn",
+
+	"sort": "sắp xếp",
+	"filter": "bộ lọc",
+	"search": "tìm kiếm",
+
+	"monthly": "hàng tháng",
+	"quarterly": "hàng quý",
+	"semiannually": "nửa năm",
+	"annually": "hàng năm",
+	"biennially": "2 năm một lần",
+	"free account": "tài khoản miễn phí",
+
+	"share app link": "chia sẻ liên kết",
+	"copy link": "sao chép liên kết",
+	"your QR code": "mã QR của bạn",
+	"share": "chia sẻ",
+
+	"Servers": "Vietnam VPS",
+	"Virtual": "Shared Web Hosting",
+	"info": "thông tin",
+	
+	"enter": "truy cập",
+	"all fields are required": "tất cả các trường là bắt buộc",
+	"field must contain more characters": "chưa nhập đủ ký tự cho trường",
+	
+	"advice": {
+		"look up": "tra cứu",
+		"You have billed for the renewal of this virtual machine": "Bạn đã được lập hóa đơn cho việc gia hạn VM này",
+		"If you do not pay within the specified period, the virtual machine will be suspended": "Nếu bạn không thanh toán trong khoảng thời gian quy định, máy ảo sẽ bị tạm ngưng",
+		"open": "mở",
+		"renewal bill": "hóa đơn gia hạn"
+	},
+	
+	"quantity": {
+		"items": "items"
+	},
+
+	"disk_manage": {
+		"This will detach the disk immediately": "Ổ đĩa sẽ bị tách ra ngay lập tức",
+		"All data will be lost": "Tất cả dữ liệu sẽ bị mất",
+		"Do you want to proceed?": "Bạn có muốn tiếp tục?"
+	},
+	
+	"period": {
+		"day": "ngày",
+		"week": "tuần",
+		"month": "tháng",
+		"year": "năm"
+	},
+		
+	"userService": {
+		"billing cycle": "chu kỳ thanh toán",
+		"renewal amount": "số tiền gia hạn",
+		"registration date": "ngày đăng kí",
+		"next payment date": "ngày thanh toán tiếp theo"
+	},
+	
+	"comp_services": {
+		"Your orders": "Các đặt hàng của bạn",
+		"with filter": "lọc theo",
+		"total": "tổng cộng",
+		"all": "tất cả"
+	},
+
+	"order_services": {
+		"Do you want to order": "Bạn có muốn đặt hàng"
+	},
+
+	"IaaS": {
+		"order_info": "Bạn có thể đặt hàng Pay-As-You-Go VPS tại đây.",
+		"description": "Được tính phí dựa trên số lượng tài nguyên máy tính và bộ nhớ RAM trên cơ sở mỗi lần sử dụng.",
+		"createButton": "VPS Pay-As-You-Go"
+	},
+	
+	"PaaS": {
+		"order_info": "Bạn có thể đặt hàng máy chủ thanh toán hàng tháng tại đây.",
+		"description": "Nhận ngay gói VPS hosting đơn giản, nhanh chóng, tiết kiệm và bảo mật.",
+		"createButton": "Gói VPS Hosting"
+	},
+	
+	"virtual_product": {
+		"used space": "dung lượng đã sử dụng",
+		"bw": "lưu lượng truy cập đã sử dụng",
+		"unlimited": "Không giới hạn",
+		"power": "nguồn",
+		"sites": "Trang web",
+		"mysql": "Cơ sở dữ liệu MySQL",
+		"email": "Tài khoản email",
+		"hdd_shared": "Bộ nhớ SSD dùng chung",
+		"traffic": "Băng thông"
+	},
+
+	"clientinfo": {
+		"password": "mật khẩu",
+		"password again": "nhập lại mật khẩu",
+		"firstname": "tên",
+		"lastname": "họ",
+		"state": "quận/huyện",
+		"city": "tỉnh/thành",
+		"postcode": "mã bưu điện",
+		"address": "địa chỉ",
+		"phone number": "số điện thoại",
+		"phonenumber": "số điện thoại",
+		"register": "đăng ký",
+		"already have account?": "đã có tài khoản?",
+		"companyname": "tên công ty",
+		"countryname": "tên quốc gia",
+		"email": "email",
+		"address1": "địa chỉ 1",
+		"address2": "địa chỉ 2"
+	},
+
+	"unregistered": {
+		"will be available after": "sẽ được kích hoạt sau",
+		"login": "đăng nhập",
+		"sign up": "đăng ký",
+		"see services": "xem dịch vụ"
+	},
+
+	"tos": {
+		"part1": "Với việc tạo tài khoản, bạn đã đọc và đồng ý với",
+		"link": "Điều khoản dịch vụ",
+		"part2": " của chúng tôi."
+	}
+}

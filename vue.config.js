@@ -3,10 +3,21 @@
 // 		? '/production-sub-path/'
 // 		: '/'
 // }
+
+let prefix = process.env.titlePrefix ?? '';
+	if(prefix.length > 0) prefix = prefix + " ";
+
 module.exports = {
 	publicPath: './',
+	css: {
+		loaderOptions: {
+			less: {
+				javascriptEnabled: true,
+			},
+		},
+  },
 	pwa: {
-		name: 'Cloud App',
+		name: prefix + 'Cloud App',
 		themeColor: '#427cf7',
 		msTileColor: '#000000',
 		appleMobileWebAppCapable: 'yes',

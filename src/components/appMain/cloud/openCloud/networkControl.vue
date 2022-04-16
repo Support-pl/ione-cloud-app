@@ -2,7 +2,7 @@
 	<div class="network-control">
 		<a-table :columns="columns" :data-source="newtworks" :pagination="false" rowKey='NIC_ID'>
 			<div slot="buttons" slot-scope="value, row">
-				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" :title="$t('Detach')" @click="detachInit(row)">
+				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn modal_table_action_btn__hoverable" title="Detach" @click="detachInit(row)">
 					<a-icon type="close" />
 				</span>
 			</div>
@@ -10,6 +10,18 @@
 			<span slot="ip" slot-scope="value">
 				{{value || '--'}}
 			</span>
+
+			<div slot="expandedRowRender" slot-scope="record" style="margin: 0">
+				<template v-if="record.ALIAS_IDS != undefined && record.ALIAS_IDS.length > 0 ">
+					<ul>
+						<li v-for="(alias, key) in SingleCloud.NIC_ALIAS" :key="key">
+							Alias #{{alias.ALIAS_ID}} [NIC{{alias.NIC_ID}}]: {{alias.IP}}
+							<a-icon type="close" @click="detachCaller(alias.NIC_ID)"/>
+						</li>
+					</ul>
+				</template>
+				<div v-else>There are no aliases</div>
+			</div>
 		</a-table>
 
 		<a-modal
@@ -27,6 +39,7 @@
 			:title="$t('NIC attach')"
 			:visible="modal.attach"
 			:confirm-loading='attach.loading'
+			:okText="$t('Assign to VM')"
 			@ok="sendNewIP"
 			@cancel="closeModal('attach')"
 		>
@@ -47,8 +60,33 @@
 						</a-select-option>
 					</a-select>
 				</a-input>
+				<!-- <a-row type="flex" style="margin-top: 15px">
+					<a-col>
+						<a-checkbox :checked="attach.showParrent" @change="toggleAlias">{{$t('Attach as alias')}}</a-checkbox>
+					</a-col>
+					<a-col offset="3" v-if="attach.showParrent">
+						<a-select :loading='getNICloading' :value="attach.parent" @change="(val) => attach.parent = val" style="width: 100px">
+							<a-select-option v-for="NIC in SingleCloud.NIC.filter( nic => nic.NETWORK == getNICs.PRIVATE.NAME)" :key="NIC.NIC_ID" :value="'NIC' + NIC.NIC_ID">NIC{{NIC.NIC_ID}}</a-select-option>
+						</a-select>
+					</a-col>
+				</a-row> -->
 			</div>
-			<public-network v-if="attach.type == 2" @onselect="selectedRows"/>
+			<div v-if="attach.type == 2" >
+				<p>
+					Reserve IPv4 for use on any VM. Assign to this VM by selecting the radio button next to any unused IP and selecting "Assign to VM" <b>${{getSettings.PUBLIC_IP_COST}}</b> per IPv4 per month
+				</p>
+				<public-network @onselect="selectedRows"/>
+				<!-- <a-row type="flex" style="margin-top: 15px">
+					<a-col>
+						<a-checkbox :checked="attach.showParrent" @change="toggleAlias">{{$t('Attach as alias')}}</a-checkbox>
+					</a-col>
+					<a-col offset="3" v-if="attach.showParrent">
+						<a-select :loading='getNICloading' :value="attach.parent" @change="(val) => attach.parent = val" style="width: 100px">
+							<a-select-option v-for="NIC in SingleCloud.NIC.filter( nic => nic.NETWORK == getNICs.PUBLIC.NAME)" :key="NIC.NIC_ID" :value="'NIC' + NIC.NIC_ID">NIC{{NIC.NIC_ID}}</a-select-option>
+						</a-select>
+					</a-col>
+				</a-row> -->
+			</div>
 		</a-modal>
 		
 		<a-row style="margin-top: 15px">
@@ -117,18 +155,18 @@ const NICsColumns = [
 
 const privateIPS = [
 	{
-		min: '10.0.0.0',
-		max: '10.255.255.255',
+		min: '10.0.0.1',
+		max: '10.255.255.254',
 		mask: 8
 	},
 	{
-		min: '172.16.0.0',
-		max: '172.31.255.255',
+		min: '172.16.0.1',
+		max: '172.31.255.254',
 		mask: 12
 	},
 	{
-		min: '192.168.0.0',
-		max: '192.168.255.255',
+		min: '192.168.0.1',
+		max: '192.168.255.254',
 		mask: 16
 	},
 
@@ -161,10 +199,13 @@ export default {
 			},
 			attach: {
 				loading: false,
-				type: 1,
+				type: 2,
 				newIP: '',
 				mask: 24,
-				publicAR_ID: -1
+				publicAR_ID: -1,
+				publicAR_IP: '',
+				parent: null,
+				showParrent: false
 			}
 		}
 	},
@@ -172,6 +213,8 @@ export default {
 		...mapGetters('cloud', {
 			SingleCloud: 'getOpenedCloud',
 		}),
+		...mapGetters('network', ['getNICs', 'getNICloading']),
+		...mapGetters('settings', ['getSettings']),
 		...mapGetters({user: 'getUser'}),
 		newtworks(){
 			if(Array.isArray(this.SingleCloud.NIC)){
@@ -220,14 +263,19 @@ export default {
 			this.modal[modalname] = false;
 		},
 		detachInit(NIC){
-			console.log(NIC)
-			console.log('works', NIC.NIC_ID)
-			this.detach.NIC = NIC.NIC_ID;
-			this.showModal('detach');
-			console.log('works', this.modal.detach)
+			// console.log(NIC)
+			// console.log('works', NIC.NIC_ID)
+			// console.log('works', this.modal.detach)
+			this.detachCaller(NIC.NIC_ID);
 		},
-		sendDetach(disk){
-			console.log(disk)
+		detachCaller(NIC_ID){
+			
+			this.detach.NIC = NIC_ID;
+			this.showModal('detach');
+
+		},
+		sendDetach(NIC){
+			// console.log(NIC)
 			if(this.detach.imageID == 0){
 				this.$message.warning('You can\' remove main NIC');
 				return;
@@ -251,11 +299,11 @@ export default {
 			this.detach.loading = true;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				if(res.data.result == 'success')
-					this.$message.success(`Disk detached`);
+					this.$message.success(`NIC detached`);
 				else{
-					this.$message.error(`VM disk detach failed`);
+					this.$message.error(`NIC detach failed`);
 					console.error(res.data);
 				}
 			})
@@ -307,12 +355,18 @@ export default {
 					this.$message.error('You can\'t use that IP for private network');
 					return;
 				}
+
+				if(this.attach.newIP.match(/\.255$|\.0$/)){
+					this.$message.error('You can\'t use that IP for network');
+					return;
+
+				}
 				
 				let actionParams = {
 					type: this.attach.type,
 					// nicID: this.NICs.PRIVATE.NETWORK_ID
 				}
-
+				// console.log(actionParams);
 				if(this.attach.newIP != ''){
 					actionParams.newIP = this.attach.newIP;
 					actionParams.mask = this.attach.mask;
@@ -322,22 +376,30 @@ export default {
 			}
 
 			if(this.attach.type == 2){
+				if(this.attach.publicAR_IP == ''){
+					this.$message.warning(this.$t('select at least one NIC'));
+					return;
+				}
 				let actionParams = {
 					type: this.attach.type,
-					AR_ID: this.attach.publicAR_ID,
+					// AR_ID: this.attach.publicAR_ID,
+					AR_IP: this.attach.publicAR_IP,
 				}
 				query = Object.assign(auth, actionParams);
+			}
+			// console.log(this.attach.parent);
+			if (this.attach.parent != null && this.attach.showParrent) {
+				query.parent = this.attach.parent;
 			}
 			this.attach.loading = true;
 			const url = `/VMNICattach.php?${this.URLparameter(query)}`;
 			this.$axios.get(url)
 			.then( res => {
-				console.log(res);
-				if(res.data.result == 'success')
+				// console.log(res);
+				if(res.result == 'error'){
+					throw res.data;
+				}else{
 					this.$message.success(`NIC attached`);
-				else{
-					this.$message.error(`NIC attach failed`);
-					console.error(res.data);
 				}
 			})
 			.catch( err => {
@@ -365,14 +427,28 @@ export default {
 			this.attach.newIP = this.attach.newIP.replace(/((\d{1,3}\.){3}\d{1,3})\d?\.?/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/(\d{1,3})\d*/gi, '$1');
 			this.attach.newIP = this.attach.newIP.replace(/[3-9]\d\d|[2-9][6-9]\d|[2-9][5-9][6-9]/gi, '255');
-			this.attach.newIP = this.attach.newIP.replace(/[4-9][1-9]|[3-9][3-9]/gi, '32');
+			// this.attach.newIP = this.attach.newIP.replace(/\/[4-9][1-9]|\/[3-9][3-9]/gi, '/32');
 		},
 		selectedRows(rows){
-			this.attach.publicAR_ID = rows.selectedRows.map(el => el.AR_ID).join(',');
-			console.log(this.attach.publicAR_ID);
+			// console.log(rows);
+			this.attach.publicAR_IP = rows.selectedRows[0].IP;
+			// console.log(this.attach.publicAR_ID);
+		},
+		toggleAlias(){
+			if(!this.attach.showParrent) {
+				this.attach.showParrent = true
+				this.$store.dispatch('network/fetchNICsAuto');
+			} else {
+				this.attach.showParrent = false
+			}
 		}
 	},
 	mounted(){
+	},
+	watch: {
+		'attach.type': function (newal) {
+			this.attach.parent = null
+		}	
 	}
 }
 </script>

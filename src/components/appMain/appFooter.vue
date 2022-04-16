@@ -23,10 +23,11 @@ export default {
 		...mapGetters('app', ['getButtons']),
 		...mapGetters('app', ['getActiveTab']),
 		active(){
-			if(this.getActiveTab.title=="newVDC"){
-				return "cloud"
-			}
-			return this.getActiveTab.title
+			const footerTitle = this.$route.meta?.footerTitle;
+			const layoutTitle = this.$route.meta?.layoutTitle;
+			if(footerTitle) return footerTitle;
+			if(layoutTitle) return layoutTitle;
+			return this.getActiveTab.title;
 		}
 	},
 	methods: {
@@ -38,7 +39,7 @@ export default {
 <style scoped>
 
 .footer{
-	background-color:	var(--bright_bg);
+	background-color:	var(--footer);
 	position: relative;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
 	user-select: none;
@@ -64,11 +65,12 @@ export default {
 .button__title{
 	transform: translateY(20px);
 	transition: transform .2s .1s ease;
+	color: var(--main);
 }
 
 .button__icon{
 	font-size: 1.2rem;
-	color: var(--gray);
+	color: #77BEFF;
 	position: relative;
 	z-index: 2;
 	translate: color .2s ease;
@@ -108,17 +110,17 @@ export default {
 }
 
 .button.active{
-	background-color: var(--main);
+	background: var(--gradient);
 }
 
 
 .button.active .button__icon{
-	color: var(--bright_font);
+	color: #fff;
 	transform: translateY(5px);
 }
 
 .button.active .button__title{
 	transform: none;
-	color: var(--bright_font);
+	color: #fff;
 }
 </style>

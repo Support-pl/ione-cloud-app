@@ -6,7 +6,12 @@ import cloud from './cloud'
 import support from './support'
 import invoices from './invoices'
 import newVDC from './newVDC'
+import newPaaS from './newPaaS'
 import network from './network'
+import products from './products'
+import utils from './utils'
+
+import settings from './settings'
 
 Vue.use(vuex)
 
@@ -18,6 +23,11 @@ export default new vuex.Store({
 		support,
 		invoices,
 		newVDC,
-		network
+		newPaaS,
+		network,
+		products,
+		utils,
+		
+		settings
 	}
 })
