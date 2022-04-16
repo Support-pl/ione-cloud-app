@@ -25,7 +25,7 @@
 					<div class="openInvoice__cost">
 						<svg viewBox="0 0 120 25">
 							<text class="openInvoice__cost-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
-								{{total}} {{user.currency_code == undefined ? "USD" : user.currency_code}}
+								{{total | numsepar}} {{user.currency_code == undefined ? "USD" : user.currency_code}}
 							</text>
 						</svg>
 					</div>
@@ -58,13 +58,13 @@
 									<table v-if="!showFullTable" class="table__table">
 										<tr>
 											<td>{{ inv.items.item[0].description }}</td>	
-											<td>{{ inv.items.item[0].amount }} {{user.currency_code}}</td>	
+											<td>{{ inv.items.item[0].amount | numsepar}} {{user.currency_code}}</td>	
 										</tr>
 									</table>
 									<table v-else class="table__table">
 										<tr v-for="(elem, index) of inv.items.item" :key="index">
 											<td>{{ elem.description }}</td>	
-											<td>{{ elem.amount }} {{user.currency_code}}</td>	
+											<td>{{ elem.amount | numsepar}} {{user.currency_code}}</td>	
 										</tr>
 									</table>
 									</transition>
