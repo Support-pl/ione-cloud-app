@@ -17,6 +17,7 @@
                 ></div>
                 {{
                   $t("singleInvoice") +
+                  " " +
                   "#" +
                   parseInt(this.$route.params.pathMatch, 10)
                 }}
@@ -33,16 +34,12 @@
                   <text
                     class="openInvoice__cost-text"
                     x="50%"
-                    y="77%"
+                    y="75%"
                     dominant-baseline="middle"
                     text-anchor="middle"
                   >
-                    {{ total | numsepar }}
-                    {{
-                      user.currency_code == undefined
-                        ? "USD"
-                        : user.currency_code
-                    }}
+                    {{ total | numsepar}}
+                    {{ user.currency_code == undefined ? "USD" : "₫" }}
                   </text>
                 </svg>
               </div>
@@ -56,13 +53,21 @@
                         {{ $t("invoiceDate") }}
                       </div>
                       <div class="info__date-value">
-                        {{ inv.date || "loading..." }}
+                        {{
+                          new Intl.DateTimeFormat("en-GB", {
+                            dateStyle: "short",
+                          }).format(new Date(inv.date)) || "loading..."
+                        }}
                       </div>
                     </div>
                     <div class="info__date-item">
                       <div class="info__date-title">{{ $t("dueDate") }}</div>
                       <div class="info__date-value">
-                        {{ inv.duedate || "loading..." }}
+                        {{
+                          new Intl.DateTimeFormat("en-GB", {
+                            dateStyle: "short",
+                          }).format(new Date(inv.duedate)) || "loading..."
+                        }}
                       </div>
                     </div>
                   </div>
@@ -83,7 +88,7 @@
                             <td>{{ inv.items.item[0].description }}</td>
                             <td>
                               {{ inv.items.item[0].amount | numsepar }}
-                              {{ user.currency_code }}
+                              ₫
                             </td>
                           </tr>
                         </table>
@@ -95,22 +100,30 @@
                             <td>{{ elem.description }}</td>
                             <td>
                               {{ elem.amount | numsepar }}
-                              {{ user.currency_code }}
+                              ₫
                             </td>
                           </tr>
                         </table>
                       </transition>
                     </div>
-                    <!-- <div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
-									{{$t('Show full list')}} ({{inv.items.item.length}} {{$t('quatnity.items')}})
-								</div> -->
+                    <div
+                      v-if="inv.items.item.length > 1 && !showFullTable"
+                      @click="showfull"
+                      class="table__show-full"
+                    >
+                      {{ $t("Show full list") }} ({{ inv.items.item.length }})
+                    </div>
                   </div>
                 </div>
                 <div class="info__footer">
+                  <p class="info__footer__discount">
+                    {{ $t("VNDExcludeVAT") }}
+                  </p>
                   <template v-if="inv.status == 'Unpaid'">
                     <!-- <div class="info__postpone" @click="showConfirm">
 									<a-icon type="clock-circle" />
 								</div> -->
+
                     <div
                       @click="OpenWHMCSInvoice"
                       class="info__button info__button--pay"
@@ -264,7 +277,7 @@ export default {
         : this.$config.colors.err;
     },
     total() {
-      return this.inv.items.item.reduce((a, b) => a + +b.amount, 0).toFixed(2);
+      return this.inv.items.item.reduce((a, b) => a + +b.amount, 0)
     },
   },
 };
@@ -422,11 +435,17 @@ export default {
   max-width: 400px;
   margin: 0 auto;
   display: flex;
-  height: 40px;
+  height: 84px;
   position: absolute;
   bottom: 30px;
   left: 20px;
   right: 20px;
+  flex-direction: column;
+}
+.info__footer__discount {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
 }
 
 .info__postpone {
@@ -477,7 +496,9 @@ export default {
 .info__button--pay:active {
   filter: brightness(0.95);
 }
-
+.table__show-full {
+  cursor: pointer;
+}
 .info__row {
   display: flex;
   border-top: 1px solid rgb(230, 230, 230);
