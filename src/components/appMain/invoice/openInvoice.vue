@@ -33,11 +33,11 @@
                   <text
                     class="openInvoice__cost-text"
                     x="50%"
-                    y="50%"
+                    y="77%"
                     dominant-baseline="middle"
                     text-anchor="middle"
                   >
-                    {{ total }}
+                    {{ total | numsepar }}
                     {{
                       user.currency_code == undefined
                         ? "USD"
@@ -82,7 +82,7 @@
                           <tr>
                             <td>{{ inv.items.item[0].description }}</td>
                             <td>
-                              {{ inv.items.item[0].amount }}
+                              {{ inv.items.item[0].amount | numsepar }}
                               {{ user.currency_code }}
                             </td>
                           </tr>
@@ -93,19 +93,17 @@
                             :key="index"
                           >
                             <td>{{ elem.description }}</td>
-                            <td>{{ elem.amount }} {{ user.currency_code }}</td>
+                            <td>
+                              {{ elem.amount | numsepar }}
+                              {{ user.currency_code }}
+                            </td>
                           </tr>
                         </table>
                       </transition>
                     </div>
-                    <!-- <div
-                      v-if="inv.items.item.length > 1 && !showFullTable"
-                      @click="showfull"
-                      class="table__show-full"
-                    >
-                      {{ $t("Show full list") }} ({{ inv.items.item.length }}
-                      {{ $t("quatnity.items") }})
-                    </div> -->
+                    <!-- <div v-if="inv.items.item.length > 1 && !showFullTable" @click="showfull" class="table__show-full">
+									{{$t('Show full list')}} ({{inv.items.item.length}} {{$t('quatnity.items')}})
+								</div> -->
                   </div>
                 </div>
                 <div class="info__footer">
@@ -417,7 +415,7 @@ export default {
   width: 34%;
   max-width: 150px;
   padding-right: 10px;
-  color: green;
+  color: #06a506;
   font-weight: 500;
 }
 .info__footer {
@@ -426,7 +424,7 @@ export default {
   display: flex;
   height: 40px;
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   left: 20px;
   right: 20px;
 }
@@ -604,9 +602,9 @@ export default {
   .info__dates {
     justify-content: space-between;
   }
-    .openInvoice__info {
+  .openInvoice__info {
     border-radius: 60px 0px 0 0;
-	margin-top: 30px;
+    margin-top: 55px;
   }
   .openInvoice__info::after {
     content: url("../../../../public/img/images/radius.png");
@@ -614,6 +612,5 @@ export default {
     top: -49px;
     right: 0;
   }
-
 }
 </style>
