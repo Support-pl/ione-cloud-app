@@ -36,7 +36,15 @@ Vue.filter('replace', function (value, from, to) {
 Vue.filter('numsepar', function (value) {
   if (!value) return ''
 	value = ~~(+value);
-  return value?.toLocaleString("vn")?.replaceAll(/\s/g, ".") ?? value
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") ?? value
+})
+
+Vue.filter('date', function (value) {
+  if (!value) return ''
+  value = value
+  return   new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "short",
+  }).format(new Date(value))
 })
 
 Vue.component('maintanance-mode', maintanance);
