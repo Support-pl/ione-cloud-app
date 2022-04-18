@@ -38,7 +38,7 @@
                     dominant-baseline="middle"
                     text-anchor="middle"
                   >
-                    {{ total | numsepar}}
+                    {{ total | numsepar }}
                     {{ user.currency_code == undefined ? "USD" : "₫" }}
                   </text>
                 </svg>
@@ -53,21 +53,13 @@
                         {{ $t("invoiceDate") }}
                       </div>
                       <div class="info__date-value">
-                        {{
-                          new Intl.DateTimeFormat("en-GB", {
-                            dateStyle: "short",
-                          }).format(new Date(inv.date)) || "loading..."
-                        }}
+                        {{ inv.date | date }}
                       </div>
                     </div>
                     <div class="info__date-item">
                       <div class="info__date-title">{{ $t("dueDate") }}</div>
                       <div class="info__date-value">
-                        {{
-                          new Intl.DateTimeFormat("en-GB", {
-                            dateStyle: "short",
-                          }).format(new Date(inv.duedate)) || "loading..."
-                        }}
+                        {{ inv.duedate | date }}
                       </div>
                     </div>
                   </div>
@@ -277,7 +269,7 @@ export default {
         : this.$config.colors.err;
     },
     total() {
-      return this.inv.items.item.reduce((a, b) => a + +b.amount, 0)
+      return this.inv.items.item.reduce((a, b) => a + +b.amount, 0);
     },
   },
 };
