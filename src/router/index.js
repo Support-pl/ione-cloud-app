@@ -138,7 +138,7 @@ const routes = [
 				component: () => import('../components/appMain/newVDC.vue')
 			},
 			{
-				path: 'service-*',
+				path: 'service/:id',
 				name: 'service',
 				meta: {
 					mustBeLoggined: true,
@@ -147,6 +147,36 @@ const routes = [
 					isNeedBackButton: true,
 				},
 				component: () => import('../routes/userService.vue')
+			},
+			{
+				path: 'service/:id/certificate',
+				name: 'certificate',
+				meta: {
+					mustBeLoggined: true,
+					headerTitle: 'certificate configuration',
+					isNeedBackButton: true,
+				},
+				component: () => import('../routes/ssl/certificate.vue')
+			},
+			{
+				path: 'service/:id/certificate/csr',
+				name: 'csr',
+				meta: {
+					mustBeLoggined: true,
+					headerTitle: 'CSR',
+					isNeedBackButton: true,
+				},
+				component: () => import('../routes/ssl/csr.vue')
+			},
+			{
+				path: 'service/:id/ssl',
+				name: 'ssl',
+				meta: {
+					mustBeLoggined: true,
+					headerTitle: 'SSL certificate',
+					isNeedBackButton: true,
+				},
+				component: () => import('../routes/ssl/ssl.vue')
 			},
 			{
 				path: 'cabinet',

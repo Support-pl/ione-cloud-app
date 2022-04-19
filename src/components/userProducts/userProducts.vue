@@ -179,7 +179,7 @@ export default {
 	},
 	methods: {
 		productClickHandler(product){
-			this.$router.push({name: 'service', params: {pathMatch: product.hostingid}});
+			this.$router.push({name: 'service', params: {id: product.hostingid}});
 		},
 		filterElementClickHandler(key){
 			const types = new Set(this.checkedTypes);
