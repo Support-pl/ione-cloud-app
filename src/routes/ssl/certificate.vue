@@ -2,11 +2,11 @@
   <div class="certificate-page">
     <div class="container">
       <div class="certificate-page-card">
-        <a-steps :current="current" @change="onChange" style="margin-top: 10px">
+        <a-steps :current="current" style="margin-top: 10px">
           <a-step
             v-for="item in steps"
             :key="item.title"
-            :title="$t('ssl' + '.' + item.title )"
+            :title="$t('ssl' + '.' + item.title)"
           />
         </a-steps>
         <div class="steps__content">
@@ -14,9 +14,12 @@
             :is="steps[current].content"
             @handleClickNext="handleClickNext"
             @handleClickPrev="handleClickPrev"
+            @saveProductInfo="saveProductInfo"
+            @saveReissueInfo="saveReissueInfo"
             :personal="personal"
             :personal_back="personal_back || {}"
             :csr="csr"
+            :product_info="product_info"
           />
         </div>
       </div>
@@ -49,14 +52,12 @@ export default {
       current: 0,
       personal: "",
       personal_back: "",
-      csr: "",
+      product_info: {},
+      csr: {},
       steps,
     };
   },
   methods: {
-    onChange(current) {
-      this.current = current;
-    },
     handleClickPrev(data) {
       if (data) {
         this.personal_back = data;
@@ -73,6 +74,16 @@ export default {
         this.personal = data;
         this.current++;
         return;
+      }
+    },
+    saveProductInfo(data) {
+      if (data) {
+        this.product_info = data;
+      }
+    },
+    saveReissueInfo(data) {
+      if (data) {
+        this.personal_back = data;
       }
     },
   },
