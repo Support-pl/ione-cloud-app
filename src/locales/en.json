@@ -369,6 +369,7 @@
 		"awaiting configuration": "Awaiting configuration",
 		"configuration status": "Configuration status:",
 		"completed": "Completed",
+		"Completed": "Completed",
 		"configure": "configure",
 		"ssl certificate": "SSL certificate",
 		"csr_warning": "Make sure the CSR contains header and footer \"BEGIN\" and \"END\" lines. Use CSR Generator if you have NO CSR code.",
