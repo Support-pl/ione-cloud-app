@@ -18,7 +18,11 @@
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item :label="$t('ssl.email')" prop="email">
+      <a-form-model-item
+        :label="$t('ssl.email')"
+        v-if="verification.dcv == 'EMAIL'"
+        prop="email"
+      >
         <a-select v-model="verification.email">
           <a-select-option
             v-for="item in email_list"
