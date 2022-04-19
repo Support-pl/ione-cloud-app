@@ -39,13 +39,17 @@
               </router-link>
             </div>
           </div>
+
           <!-- SSL -->
-          <div class="service-page__info">
+          <div
+            class="service-page__info"
+            v-if="service.translated_groupname === 'SSL'"
+          >
             <div
               class="service-page__info-title"
               v-if="service.SSL.sslstatus === 'Completed'"
             >
-              {{ $t("ssl.configuration status") }}:
+              {{ $t("ssl.configuration status") }}
               <a-tag :color="getTagColorSSL">
                 {{ $t("ssl.completed") }}
               </a-tag>
@@ -64,7 +68,7 @@
             </div>
 
             <div class="service-page__info-title" v-else>
-              {{ $t("ssl.configuration status") }}:
+              {{ $t("ssl.configuration status") }}
               <a-tag :color="getTagColorSSL">
                 {{ $t("ssl.awaiting configuration") }}
               </a-tag>
@@ -229,20 +233,20 @@ export default {
       }
       return "";
     },
-    // 	     getTagColorSSL() {
-    //   switch (this.service.SSL.sslstatus) {
-    //     case "Completed":
-    //       return "green";
-    //       break;
-    //     case "Awaiting Configuration":
-    //       return "red";
-    //       break;
+    getTagColorSSL() {
+      switch (this.service.SSL.sslstatus) {
+        case "Completed":
+          return "green";
+          break;
+        case "Awaiting Configuration":
+          return "red";
+          break;
 
-    //     default:
-    //       break;
-    //   }
-    //   return "";
-    // },
+        default:
+          break;
+      }
+      return "";
+    },
     user() {
       return this.$store.getters.getUser;
     },
