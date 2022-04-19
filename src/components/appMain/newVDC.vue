@@ -165,7 +165,7 @@
 								</a-row>
 							</a-col>
 
-							<a-col :sm="12" :span="24">
+							<!-- <a-col :sm="12" :span="24">
 								<a-row>
 									<a-col :sm="10" :span="12">
 										{{$t("Local network")}}:
@@ -175,7 +175,7 @@
 										<a-input-number v-model="options.network.local.count" :min="0" :max="10" :disabled="!options.network.local.status" :style="{'margin-left': '10px'}"/>
 									</a-col>
 								</a-row>
-							</a-col>
+							</a-col> -->
 
 						</a-row>
 					</div>
