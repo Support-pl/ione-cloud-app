@@ -20,7 +20,7 @@
               </a-tag>
             </div>
           </div>
-   
+
           <div class="service-page__info">
             <div class="service-page__info-title">
               {{ $t("invoice status") | capitalize }}:
@@ -39,13 +39,14 @@
               </router-link>
             </div>
           </div>
-       <!-- SSL -->
+          <!-- SSL -->
           <div class="service-page__info">
-            <!-- v-if="service.SSL.sslstatus === 'Completed'" -->
-            <div class="service-page__info-title">
+            <div
+              class="service-page__info-title"
+              v-if="service.SSL.sslstatus === 'Completed'"
+            >
               {{ $t("ssl.configuration status") }}:
-              <!-- <a-tag :color="getTagColorSSL"> -->
-              <a-tag>
+              <a-tag :color="getTagColorSSL">
                 {{ $t("ssl.completed") }}
               </a-tag>
               <router-link
@@ -62,11 +63,11 @@
               </router-link>
             </div>
 
-            <div class="service-page__info-title">
+            <div class="service-page__info-title" v-else>
               {{ $t("ssl.configuration status") }}:
-
-              <!-- <a-tag :color="getTagColorSSL"> -->
-              <a-tag> {{ $t("ssl.awaiting configuration") }}: </a-tag>
+              <a-tag :color="getTagColorSSL">
+                {{ $t("ssl.awaiting configuration") }}
+              </a-tag>
               <router-link
                 :to="{
                   name: 'certificate',
@@ -79,6 +80,7 @@
               </router-link>
             </div>
           </div>
+
           <a-row :gutter="[10, 10]">
             <a-col
               :md="12"
