@@ -39,9 +39,8 @@ Vue.filter('numsepar', function (value) {
   return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") ?? value
 })
 
-Vue.filter('date', function (value) {
+Vue.filter('dateFormat', function (value) {
   if (!value) return ''
-  value = value
   return   new Intl.DateTimeFormat("en-GB", {
     dateStyle: "short",
   }).format(new Date(value))

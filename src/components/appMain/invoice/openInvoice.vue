@@ -53,13 +53,13 @@
                         {{ $t("invoiceDate") }}
                       </div>
                       <div class="info__date-value">
-                        {{ inv.date | date }}
+                        {{ inv.date | dateFormat }}
                       </div>
                     </div>
                     <div class="info__date-item">
                       <div class="info__date-title">{{ $t("dueDate") }}</div>
                       <div class="info__date-value">
-                        {{ inv.duedate | date }}
+                        {{ inv.duedate | dateFormat }}
                       </div>
                     </div>
                   </div>
