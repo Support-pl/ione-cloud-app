@@ -32,12 +32,12 @@ export default {
 	},
 	services: {
 		virtual: {
-			groupname: ['Виртуальный хостинг'],
+			groupname: ['Виртуальный хостинг', 'Shared Hosting'],
 			creationRouteName: "service-virtual",
 			icon: 'solution',
 		},
 		SSL: {
-			groupname: ['GoGet SSL 2.5.6', 'SSL', 'SSL сертификаты'],
+			groupname: ['GoGet SSL 2.5.6', 'SSL', 'SSL сертификаты', 'SSL'],
 			creationRouteName: "service-SSL",
 			icon: 'lock',
 			additionalRoutes: [
@@ -54,7 +54,7 @@ export default {
 			]
 		},
 		VM: {
-			groupname: ['Self-Service VDS (2018)', 'Self-Service VDS SSD HC', 'Self-Service VDS SSD (2018)'],
+			groupname: ['VDS SSD', 'Self-Service VDS SSD HC', 'Self-Service VDS SSD (2018)'],
 			creationRouteName: "newPaaS",
 			icon: 'database',
 		},
