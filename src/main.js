@@ -10,6 +10,7 @@ import './registerServiceWorker'
 import axios from './axios'
 import config from './appconfig'
 import api from "@/api.js"
+import './assets/style.css'
 
 import maintanance from '@/components/maintanance.vue'
 

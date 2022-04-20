@@ -2,7 +2,7 @@
   <div class="generate-page">
     <div class="container">
       <div class="generate-page-card">
-        <template v-if="generate.csr_email">
+        <template v-if="generate.csr_commonname">
           <div class="generate-page__header">
             <div class="generate-page__title" v-if="result.result == 'success'">
               CSR
@@ -57,7 +57,6 @@
               <a-form-model-item :label="$t('ssl.state')" prop="csr_state">
                 <a-input v-model="generate.csr_state" />
               </a-form-model-item>
-
               <a-form-model-item
                 :label="$t('ssl.countryname')"
                 prop="csr_country"
@@ -68,7 +67,7 @@
                     :key="country"
                     :value="country"
                   >
-                    {{ country }}: {{ countries[country] }}
+                    {{ country }}: {{ $t(`country.${country}`) }}
                   </a-select-option>
                 </a-select>
               </a-form-model-item>
@@ -162,6 +161,7 @@ export default {
         csr_state: "",
         csr_country: "",
         csr_email: "",
+        csr_domain: "",
       },
       result: {
         csr_code: "",
@@ -248,7 +248,20 @@ export default {
           console.error(res);
         });
     },
+    fetchService() {
+      api
+        .sendAsUser("services.getInfo", {
+          serviceid: this.$route.params.id,
+        })
+        .then((res) => {
+          this.generate.csr_commonname = res.domain;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     installDataToBuffer() {
+      this.generate.csr_organization = this.userData.companyname;
       this.generate.csr_email = this.userData.email;
       this.generate.csr_country = this.userData.country;
       this.generate.csr_city = this.userData.city;
@@ -293,7 +306,8 @@ export default {
       this.result.result = "pending";
     },
   },
-  mounted() {
+  created() {
+    this.fetchService();
     this.fetchInfo();
   },
 };
@@ -303,7 +317,9 @@ export default {
 .ssl-generator {
   padding-top: 20px;
 }
-
+.ant-form-item-label label {
+  color: rgba(0, 0, 0, 0.85);
+}
 .generator__wrapper {
   background-color: #fff;
   border-radius: 20px;

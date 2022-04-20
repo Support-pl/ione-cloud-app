@@ -165,3 +165,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+.ant-form-item-label label {
+    color: rgba(0, 0, 0, 0.85);
+}
+.ant-form-item-children input {
+    background: inherit; 
+    color: inherit;
+}
+</style>

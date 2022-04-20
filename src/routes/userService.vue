@@ -75,7 +75,7 @@
               <router-link
                 :to="{
                   name: 'certificate',
-                  params: { id: $route.params.id },
+                  params: { id: $route.params.id},
                 }"
               >
                 <a-button size="small" type="primary">
@@ -102,7 +102,8 @@
                   v-if="elem.type == 'money'"
                   class="service-page__info-value"
                 >
-                  {{ service[elem.key] |  numsepar }}  {{ user.currency_code == undefined ? "USD" : "₫" }}
+                  {{ service[elem.key] | numsepar }}
+                  {{ user.currency_code == undefined ? "USD" : "₫" }}
                 </div>
                 <div
                   v-else-if="
