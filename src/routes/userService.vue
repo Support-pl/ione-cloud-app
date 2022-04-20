@@ -102,7 +102,7 @@
                   v-if="elem.type == 'money'"
                   class="service-page__info-value"
                 >
-                  {{ service[elem.key] }} {{ user.currency_code }}
+                  {{ service[elem.key] |  numsepar }}  {{ user.currency_code == undefined ? "USD" : "₫" }}
                 </div>
                 <div
                   v-else-if="
@@ -116,11 +116,7 @@
                   v-else-if="elem.type == 'date'"
                   class="service-page__info-value"
                 >
-                  {{
-                    new Intl.DateTimeFormat().format(
-                      new Date(service[elem.key])
-                    )
-                  }}
+                  {{ service[elem.key] | dateFormat }}
                 </div>
                 <div
                   v-else-if="elem.type == 'text'"

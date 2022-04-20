@@ -34,7 +34,7 @@
       <div class="product__column product__column--secondary-info">
         <div class="product__date">{{ date | dateFormat}}</div>
         <div class="product__cost">
-          {{ cost | numsepar }} ₫
+          {{ cost | numsepar }} {{ user.currency_code == undefined ? "USD" : "₫" }}
         </div>
       </div>
     </div>

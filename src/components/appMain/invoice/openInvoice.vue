@@ -78,9 +78,9 @@
                         <table v-if="!showFullTable" class="table__table">
                           <tr>
                             <td>{{ inv.items.item[0].description }}</td>
-                            <td>
+                            <td >
                               {{ inv.items.item[0].amount | numsepar }}
-                              ₫
+                              {{ user.currency_code == undefined ? "USD" : "₫" }}
                             </td>
                           </tr>
                         </table>
@@ -90,9 +90,9 @@
                             :key="index"
                           >
                             <td>{{ elem.description }}</td>
-                            <td>
+                            <td v-if="elem.amount">
                               {{ elem.amount | numsepar }}
-                              ₫
+                            {{ user.currency_code == undefined ? "USD" : "₫" }}
                             </td>
                           </tr>
                         </table>
