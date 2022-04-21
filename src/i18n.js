@@ -26,7 +26,7 @@ console.log(`lang`, lang)
 export default new VueI18n({
 	// locale: process.env.VUE_APP_I18N_LOCALE || 'en',
 	locale: lang,
-	fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+	fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'vi',
 	messages: loadLocaleMessages(),
 	pluralizationRules: {
 		'ru': function(choice, choicesLength) {

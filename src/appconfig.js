@@ -16,7 +16,7 @@ export default {
 
 	autoTicketDepartment: 9,
 
-	languages: ['en', 'vi'],
+	languages: ['vi','en'],
 	dangerModeNoSSLCheck: globalConfig.dangerModeNoSSLCheck ?? false,
 	WHMCSsiteurl: globalConfig.WHMCSsiteurl,
 	appFolder: globalConfig.appFolder ?? 'app_backend/v1',
