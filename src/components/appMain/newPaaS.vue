@@ -620,6 +620,10 @@ export default {
 </script>
 
 <style>
+.ant-slider-mark .ant-slider-mark-text:last-child {
+  width: 55px;
+  left: 99% !important; 
+}
 .newCloud__prop {
   margin-bottom: 15px;
 }
