@@ -334,43 +334,7 @@
 		"link": "Điều khoản dịch vụ",
 		"part2": " của chúng tôi."
 	},
-	"ssl": {
-		"firstname": "Firstname",
-		"lastname": "Lastname",
-		"state": "State",
-		"city": "City",
-		"address": "Address",
-		"phone number": "Phone number",
-		"register": "Register",
-		"companyname": "Company name",
-		"countryname": "Country name",
-		"email": "Email",
-		"certificate configuration": "Certificate configuration",
-		"personal data": "Personal data",
-		"verification":"Verification",
-		"CSR":"CSR",
-		"generate": "Generate",
-		"domain": "Domain",
-		"departament":"Departament",
-		"order type":"Order type",
-		"new order":"New order",
-		"renewal":"Renewal",
-		"any other":"Any other",
-		"webserver type": "Webserver type",
-		"back":"Back",
-		"continue":"Continue",
-		"save and return": "Save and return",
-		"private key (RSA)": "Private key (RSA)",
-		"DCV Method": "DCV Method",
-		"email address":"Email address",
-		"send":"Send",
-		"field is required": "This field is required",
-		"fields is required": "Please fill in all fields",
-		"awaiting configuration":"Awaiting configuration",
-		"configuration status":"Configuration status",
-		"completed":"Completed",
-		"configure":"configure",
-		"ssl certificate":"SSL certificate"
-	}
+	"product_name":"Tên sản phẩm"
+
 
 }

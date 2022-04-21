@@ -423,6 +423,8 @@
 		"download_validation_file": "Download Validation File",
 		"download": "Download"
 	},
+	"product_name":"Product name",
+
 	"country":{
 		"BY": "Belarus",
 		"RU": "Russia",

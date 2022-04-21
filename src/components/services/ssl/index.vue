@@ -32,7 +32,7 @@
 					</div>
 
 					<a-row class="order__prop">
-						<a-col span="8" :xs="6">{{$t('tarif') | capitalize}}:</a-col>
+						<a-col span="8" :xs="6">{{$t('product_name') | capitalize}}:</a-col>
 						<a-col span="16" :xs="18">
 							<a-select v-if="!fetchLoading" v-model="options.tarif" style="width: 100%">
 								<a-select-option v-for="kind of products[options.provider]" :value="kind.tarif" :key="kind.tarif">{{kind.tarif}}</a-select-option>
