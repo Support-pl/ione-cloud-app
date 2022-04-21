@@ -11,6 +11,7 @@ import network from './network'
 import products from './products'
 import utils from './utils'
 
+
 import settings from './settings'
 
 Vue.use(vuex)
@@ -27,7 +28,7 @@ export default new vuex.Store({
 		network,
 		products,
 		utils,
-		
+
 		settings
 	}
 })

@@ -57,6 +57,7 @@
               <a-form-model-item :label="$t('ssl.state')" prop="csr_state">
                 <a-input v-model="generate.csr_state" />
               </a-form-model-item>
+
               <a-form-model-item
                 :label="$t('ssl.countryname')"
                 prop="csr_country"
