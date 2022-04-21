@@ -315,11 +315,16 @@ export default {
 </script>
 
 <style>
+
 .ssl-generator {
   padding-top: 20px;
 }
 .ant-form-item-label label {
   color: rgba(0, 0, 0, 0.85);
+}
+.ant-form-item-children input {
+    background: inherit; 
+    color: inherit;
 }
 .generator__wrapper {
   background-color: #fff;
