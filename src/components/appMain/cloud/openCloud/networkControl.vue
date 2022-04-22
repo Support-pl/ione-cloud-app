@@ -73,7 +73,9 @@
 			</div>
 			<div v-if="attach.type == 2" >
 				<p>
-					Reserve IPv4 for use on any VM. Assign to this VM by selecting the radio button next to any unused IP and selecting "Assign to VM" <b>${{getSettings.PUBLIC_IP_COST}}</b> per IPv4 per month
+					Reserve IPv4 for use on any VM. 
+					Assign to this VM by selecting the radio button next to any unused IP and selecting 
+					"Assign to VM" <b>${{getSettings.PUBLIC_IP_COST}} {{getSettings.CURRENCY_MAIN}}</b> per IPv4 per month
 				</p>
 				<public-network @onselect="selectedRows"/>
 				<!-- <a-row type="flex" style="margin-top: 15px">

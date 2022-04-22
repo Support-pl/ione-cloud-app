@@ -621,7 +621,7 @@ export default {
 
 <style>
 .ant-slider-mark .ant-slider-mark-text:last-child {
-  width: 55px;
+  width: 60px !important;
   left: 99% !important; 
 }
 .newCloud__prop {
