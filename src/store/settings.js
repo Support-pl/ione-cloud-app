@@ -6,34 +6,34 @@ export default {
 		settings: {}
 	},
 	mutations: {
-		setSettings(state, data){
+		setSettings(state, data) {
 			state.settings = data;
 		},
-		updateSettings(state, data){
+		updateSettings(state, data) {
 			state.settings = Object.assign(state.settings, data);
 		}
 	},
 	actions: {
-		fetchSettings(ctx){
+		fetchSettings(ctx) {
 			const filters = ['cost', 'disktypes', 'sizes'];
 			const params = {
 				filter: filters.join(',')
 			}
-			return new Promise( (resolve, reject) => {
+			return new Promise((resolve, reject) => {
 				api.getWithParams("getSettings", params)
-				.then( resp => {
-					ctx.commit('setSettings', resp);
-					resolve(resp);
-				})
-				.catch( err => {
-					console.error(err);
-					reject(err);
-				})
-			} )
+					.then(resp => {
+						ctx.commit('setSettings', resp);
+						resolve(resp);
+					})
+					.catch(err => {
+						console.error(err);
+						reject(err);
+					})
+			})
 		}
 	},
 	getters: {
-		getSettings(state){
+		getSettings(state) {
 			return state.settings;
 		}
 	}
