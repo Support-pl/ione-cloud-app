@@ -1,164 +1,313 @@
 <template>
-	<div class="user__settings">
-		<div class="container">
-			<div class="content__wrapper">
-				<div class="content__title">
-					Personal Area
-					<span class="content__small">
-						#{{user.id}}
-					</span>
-				</div>
+  <div class="user__settings">
+    <div class="container">
+      <div class="content__wrapper">
+        <div class="content__title">
+          Personal Area
+          <span class="content__small"> #{{ user.id }} </span>
+        </div>
 
-				<div class="content__fields-wrapper">
-					<a-form-model layout="vertical" :model="form" v-if="form.firstname">
+        <div class="content__fields-wrapper">
+          <a-form-model
+            ref="form"
+            :model="form"
+            v-if="form.firstname"
+            :rules="rules"
+          >
+            <a-form-model-item
+              :label="$t('clientinfo.firstname') | capitalize"
+              prop="firstname"
+            >
+              <a-input v-model="form.firstname" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.lastname') | capitalize"
+              prop="lastname"
+            >
+              <a-input v-model="form.lastname" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.companyname') | capitalize"
+              prop="companyname"
+            >
+              <a-input v-model="form.companyname" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.email') | capitalize"
+              prop="email"
+            >
+              <a-input v-model="form.email" />
+            </a-form-model-item>
 
-						<a-form-model-item v-for="(item, key) in form" :key="key" :label="$t('clientinfo.'+key) | capitalize">
-							<a-input v-model="form[key]" placeholder="input placeholder" />
-						</a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.address1') | capitalize"
+              prop="address1"
+            >
+              <a-input v-model="form.address1" />
+            </a-form-model-item>
 
-						<a-form-model-item>
-							<!-- <a-button-group> -->
-								<a-button class="user__button user__button--submit" type="primary" @click="sendInfo" :disabled="Object.keys(deltaInfo).length == 0" :loading="isSendingInfo">
-									{{$t('Submit')}}
-								</a-button>
-								<a-button class="user__button user__button--cancel" @click="installDataToBuffer">
-									{{$t('Cancel')}}
-								</a-button>
-							<!-- </a-button-group> -->
-						</a-form-model-item>
-						
-					</a-form-model>
+            <a-form-model-item
+              :label="$t('clientinfo.city') | capitalize"
+              prop="city"
+            >
+              <a-input v-model="form.city" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.state') | capitalize"
+              prop="state"
+            >
+              <a-input v-model="form.state" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.postcode') | capitalize"
+              prop="postcode"
+            >
+              <a-input v-model="form.postcode" />
+            </a-form-model-item>
+            <a-form-model-item
+              :label="$t('clientinfo.phonenumber') | capitalize"
+              prop="phonenumber"
+            >
+              <a-input v-model="form.phonenumber" />
+            </a-form-model-item>
 
-					<loading v-else/>
-				</div>
-			</div>
-		</div>
-	</div>
+            <a-form-model-item>
+              <a-form-model-item
+                :label="$t('clientinfo.countryname') | capitalize"
+                prop="countryname"
+              >
+                <a-select v-model="form.countryname">
+                  <a-select-option
+                    v-for="country in Object.keys(countries)"
+                    :key="country"
+                    :value="country"
+                  >
+                    {{ $t(`country.${country}`) }}
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+
+              <!-- <a-button-group> -->
+              <a-button
+                class="user__button user__button--submit"
+                type="primary"
+                @click="sendInfo"
+                :loading="isSendingInfo"
+              >
+                {{ $t("Submit") }}
+              </a-button>
+              <a-button
+                class="user__button user__button--cancel"
+                @click="installDataToBuffer"
+              >
+                {{ $t("Cancel") }}
+              </a-button>
+              <!-- </a-button-group> -->
+            </a-form-model-item>
+          </a-form-model>
+
+          <loading v-else />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import api from "@/api.js";
 import loading from "@/components/loading/loading";
-
+import { countries } from "@/setup/countries";
 export default {
-	name: 'userSettings-view',
-	components: {
-		loading
-	},
-	data(){
-		return {
-			form: {
-
-			},
-			isSendingInfo: false
-		}
-	},
-	methods: {
-		installDataToBuffer(){
-			const interestedKeys = ['firstname', 'lastname', 'companyname', 'email', 'address1', 'address2', 'city', 'state', 'postcode', 'countryname', 'phonenumber'];
-			interestedKeys.forEach(key => {
-				this.$set(this.form, key, this.userData[key]);
-			});
-		},
-		fetchInfo(){
-			api.sendAsUser('clientDetails')
-			.then(res => {
-				this.$store.commit('setUserData', res);
-				this.installDataToBuffer();
-			})
-			.catch(res => {
-				console.error(res);
-			})
-
-		},
-		sendInfo(){
-			if(Object.keys(this.deltaInfo).length == 0) {
-				return
-			}
-
-			this.isSendingInfo = true;
-
-			api.sendAsUser('user.update', this.deltaInfo)
-			.then(res=>{
-				this.$message.success('success');		
-				this.fetchInfo();
-			})
-			.catch(err => {
-				console.error(err);
-				this.$message.error('Something went wrong');
-			})
-			.finally(()=>{
-				this.isSendingInfo = false; 
-			})
-		}
-	},
-	computed: {
-		...mapGetters({
-			user: 'getUser',
-			userData: 'getUserData'
-		}),
-		deltaInfo(){
-			const info = {...this.form};
-			for(let key in info){
-				if(info[key] == this.userData[key]){
-					delete info[key];
-				}
-			}
-			return info;
-		}
-	},
-	mounted(){
-		this.fetchInfo();
-	}
-}
+  name: "userSettings-view",
+  components: {
+    loading,
+  },
+  data() {
+    return {
+      form: {},
+      isSendingInfo: false,
+      countries,
+      rules: {
+        firstname: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        lastname: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        companyname: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        email: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        address1: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        city: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        state: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        countryname: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        postcode: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+        phonenumber: [
+          {
+            required: true,
+            message: `${this.$t("ssl.field is required")}`,
+          },
+        ],
+      },
+    };
+  },
+  methods: {
+    installDataToBuffer() {
+      const interestedKeys = [
+        "firstname",
+        "lastname",
+        "companyname",
+        "email",
+        "address1",
+        "address2",
+        "city",
+        "state",
+        "postcode",
+        "countryname",
+        "phonenumber",
+      ];
+      interestedKeys.forEach((key) => {
+        this.$set(this.form, key, this.userData[key]);
+      });
+    },
+    fetchInfo() {
+      api
+        .sendAsUser("clientDetails")
+        .then((res) => {
+          this.$store.commit("setUserData", res);
+          this.installDataToBuffer();
+        })
+        .catch((res) => {
+          console.error(res);
+        });
+    },
+    sendInfo() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.isSendingInfo = true;
+          api
+            .sendAsUser("user.update", {
+              ...this.deltaInfo,
+              country: this.form.countryname,
+            })
+            .then((res) => {
+              this.$message.success("success");
+              this.fetchInfo();
+            })
+            .catch((err) => {
+              console.error(err);
+              this.$message.error("Something went wrong");
+            })
+            .finally(() => {
+              this.isSendingInfo = false;
+            });
+        } else {
+          this.$message.error(`${this.$t("ssl.fields is required")}`);
+          this.isSendingInfo = false;
+          return false;
+        }
+      });
+    },
+  },
+  computed: {
+    ...mapGetters({
+      user: "getUser",
+      userData: "getUserData",
+    }),
+    deltaInfo() {
+      const info = { ...this.form };
+      for (let key in info) {
+        if (info[key] == this.userData[key]) {
+          delete info[key];
+        }
+      }
+      return info;
+    },
+  },
+  mounted() {
+    this.fetchInfo();
+  },
+};
 </script>
 
-<style>
-.user__settings{
-	padding-top: 10px;
+<style scoped>
+.user__settings {
+  padding-top: 10px;
 }
 
-
-.content__wrapper{
-	background: var(--main);
-	border-radius: 10px;
-	padding: 10px 10px 15px 10px;
-	color: #fff;
+.content__wrapper {
+  background: var(--main);
+  border-radius: 10px;
+  padding: 10px 10px 15px 10px;
+  color: #fff;
 }
 
-.content__title{
-	font-size: 1.6rem;
+.content__title {
+  font-size: 1.6rem;
 }
 
-.content__small{
-	font-size: .7em;
-	opacity: .5;
-}
-
-.ant-form-item-label label {
-	color: #fff;
+.content__small {
+  font-size: 0.7em;
+  opacity: 0.5;
 }
 
 .ant-form-item-children input {
-	background: var(--main);
-	color: #fff;
+  background: var(--main);
+  color: #fff;
 }
 
 .user__button {
-	color: #fff;
-	border: 2px solid #7F7FEC;
-	box-sizing: border-box;
-	border-radius: 5px;
-}
-
-.user__button--submit {
-	background: var(--main);
+  box-sizing: border-box;
+  border-radius: 5px;
 }
 
 .user__button--cancel {
-	margin-left: 10px;
-	background: var(--gradient);
-	border: none;
+  background: var(--gradient);
+  border: none;
+  margin-left: 10px;
+}
+.user__button--cancel:hover {
+  background: #fff;
 }
 </style>

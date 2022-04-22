@@ -6,10 +6,24 @@
     line-height: 23px;
 }
 
+.user__settings .ant-form-item label {
+    color: #ffff !important;
+}
+
+.user__settings .ant-form-item-children .ant-select-selection {
+    background: var(--main);
+    color     : #fff;
+}
+
+.user__settings .ant-form-item-children .ant-select-arrow {
+    color: #fff;
+}
+
 @media (max-width: 575px) {
     .ant-form-item {
         margin-bottom: 10px;
     }
+
     .ant-form-item-label {
         line-height: 13px;
     }
