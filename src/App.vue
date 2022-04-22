@@ -62,7 +62,7 @@ export default {
 		// if (this.$router.currentRoute.name != 'login' && !this.$store.getters.isLogged) {
 		// 	this.$router.replace("login");
 		// }
-		document.title = 'Cloud'
+		document.title = 'TotHost Cloud App'
 		const bodyCSS = Object.entries(this.cssVars).map(([k, v]) => `${k}:${v}`).join(';')
 		document.body.setAttribute('style', bodyCSS)
 	},
