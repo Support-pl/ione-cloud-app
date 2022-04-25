@@ -88,9 +88,11 @@
 	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots",
 
 	"Reinstall": "Reinstall",
+	"Rename": "Rename",
+	"Access manager": "Access manager",
 	"Resize VM": "Resize VM",
-	"Disk control": "Disk Management",
-	"Network control": "Network Management",
+	"Disk control": "Disk control",
+	"Network control": "Network control",
 	"Boot order": "Boot Order",
 	"Delete": "Delete",
 	"Snapshots": "Snapshots",

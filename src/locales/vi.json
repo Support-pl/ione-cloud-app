@@ -86,6 +86,8 @@
 	"There was a problem during restoring. Please contact support": "Đã xảy ra sự cố trong quá trình khôi phục. Vui lòng liên hệ với bộ phận hỗ trợ",
 	"Before restoring from a service copy, please delete manually created snapshots": "Trước khi khôi phục từ bản sao dịch vụ, vui lòng xóa các ảnh chụp nhanh được tạo thủ công",
 	"Reinstall": "Cài đặt lại",
+	"Rename": "Rename",
+	"Access manager": "Access manager",
 	"Resize VM": "Thay đổi dung lượng VM",
 	"Disk control": "Disk control",
 	"Network control": "Network control",
