@@ -179,6 +179,7 @@ export default {
 			this.remember = !this.remember;
 		},
 		restorePass(){
+			this.tryingLogin = true;
 			const email = encodeURIComponent(this.email);
 			
 			this.$axios.get(`/userResetPassword.php?email=${email}`)
