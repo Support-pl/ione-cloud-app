@@ -266,6 +266,7 @@
 	},
 	"clientinfo": {
 		"password": "Mật khẩu",
+		"password again": "Nhập lại mật khẩu",
 		"firstname": "Tên",
 		"lastname": "Họ",
 		"state": "Quận/huyện",
@@ -379,7 +380,7 @@
 	"tos": {
 		"part1": "Với việc tạo tài khoản, bạn đã đọc và đồng ý với",
 		"link": "Điều khoản dịch vụ",
-		"part2": " của chúng tôi."
+		"part2": "của chúng tôi."
 	},
 	"product_name": "Tên sản phẩm",
 	"country": {

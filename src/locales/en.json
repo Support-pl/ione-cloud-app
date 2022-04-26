@@ -266,6 +266,7 @@
 	},
 	"clientinfo": {
 		"password": "Password",
+		"password again": "Repeat Password",
 		"firstname": "First Name",
 		"lastname": "Last Name",
 		"state": "State",

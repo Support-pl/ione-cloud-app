@@ -105,7 +105,7 @@
 
 						<div class="terms-accept">
 							<a-checkbox v-model="accepted" style="color: #B0B0B1">
-								{{$t("tos.part1")}} <a href="https://tothost.vn/terms/" target="_blank">{{$t("tos.link")}}</a>{{$t("tos.part2")}}
+								{{$t("tos.part1")}} {{$t("tos.part2")}} <a href="https://tothost.vn/terms/" target="_blank">{{$t("tos.link")}}</a>
 								<!-- agree to <a href="https://tothost.vn/privacy-policy/" target="_blank">terms and conditions</a> -->
 							</a-checkbox>
 						</div>
