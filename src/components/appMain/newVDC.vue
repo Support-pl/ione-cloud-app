@@ -551,6 +551,7 @@ export default {
 			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(tofixVal);
 		},
 		createVDC(){
+			if(this.$store.getters.getUser){
 			const user = this.user;
 	
 			let parts = [
@@ -572,6 +573,9 @@ export default {
 				this.$message.error(this.$t("select tariff"));
 			} else {
 				this.modal.confirmCreate = true;
+			}
+			}else{
+				this.$router.push({ name: 'login' })
 			}
 		},
 		diskChange(){

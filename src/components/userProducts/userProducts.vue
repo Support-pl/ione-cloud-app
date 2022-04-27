@@ -64,7 +64,7 @@
 		</div>
 		<div class="products__wrapper" :class="{ 'products__wrapper--loading': productsLoading }">
 			<div class="products__unregistred" v-if="!user">
-				{{$t('unregistered.will be available after') | capitalize}} <router-link :to="{name: 'login'}">{{$t('unregistered.login')}}</router-link>.
+				{{$t('unregistered.will be able after') | capitalize}} <router-link :to="{name: 'login'}">{{$t('unregistered.login')}}</router-link>.
 			</div>
 			<template v-else-if="!productsLoading && productsPrepared.length > 0">
 				<product

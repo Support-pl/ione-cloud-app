@@ -255,7 +255,7 @@
                   type="primary"
                   block
                   shape="round"
-                  @click="() => (modal.confirmCreate = true)"
+                  @click="() => ($store.getters.getUser ? modal.confirmCreate = true : $router.push({ name: 'login' }))"
                   :loading="getCurrentProd == null"
                 >
                   {{ $t("Create") }}

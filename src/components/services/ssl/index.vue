@@ -188,11 +188,15 @@ export default {
 			})
 		},
 		orderConfirm(){
-			if(!this.options.domain.match(/.+\..+/)){
-				this.$message.error('domain is wrong');
-				return
+			if(this.$store.getters.getUser){
+				if(!this.options.domain.match(/.+\..+/)){
+					this.$message.error('domain is wrong');
+					return
+				}
+				this.modal.confirmCreate = true;
+			}else{
+				this.$router.push({ name: 'login' })
 			}
-			this.modal.confirmCreate = true;
 		}
 	},
 	computed: {
