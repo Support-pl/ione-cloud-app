@@ -383,6 +383,7 @@
 		"part2": "của chúng tôi."
 	},
 	"product_name": "Tên sản phẩm",
+	"VNDExcludeVAT": "Giá trên chưa bao gồm thuế VAT (10%)",
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",

@@ -383,6 +383,7 @@
 		"part2": " our"
 	},
 	"product_name": "Product Name",
+	"VNDExcludeVAT": "Prices quoted in VND, subject to 10% VAT",
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",
