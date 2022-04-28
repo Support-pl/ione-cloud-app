@@ -2,7 +2,7 @@
 	<div class="publicNetwork">
 		<a-table :row-selection="rowSelection" row-key="AR_ID" :pagination="NICpublic.length > 10 ? '' : false" :loading="NICloading" :columns="NICsColumns" :data-source="NICpublic">
 			<div slot="buttons" slot-scope="value, row">
-				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" title="Relase" @click="ReleaseNIC(row)">
+				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" title="Release" @click="ReleaseNIC(row)">
 					<a-icon type="close" />
 				</span>
 			</div>
@@ -15,7 +15,7 @@
 				</span>
 				<span v-else>
 					<!-- {{`(used at VM#${row.LEASES.LEASE['VM']})`}} -->
-					{{`(used at that vm)`}}
+					{{`(used for this VM)`}}
 				</span>
 				</template>
 			</div>
