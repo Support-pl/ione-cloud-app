@@ -272,7 +272,7 @@ export default {
 		},
 		getImageName(disk){
 			if(disk.IMAGE != undefined){
-				return disk.IMAGE.replace(/_/g, " ")
+				return disk.IMAGE.replace(/_/g, " ").replace(/[a-z]+/gi, (match) => match[0].toUpperCase()+match.substr(1))
 			} else {
 				return `${Math.round(disk.SIZE/1024)}GB - ${disk.FORMAT}`;
 			}
