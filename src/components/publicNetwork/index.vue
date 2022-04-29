@@ -2,8 +2,7 @@
 	<div class="publicNetwork">
 		<a-table :row-selection="rowSelection" row-key="AR_ID" :pagination="NICpublic.length > 10 ? '' : false" :loading="NICloading" :columns="NICsColumns" :data-source="NICpublic">
 			<div slot="buttons" slot-scope="value, row">
-				
-				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" :title="row.LEASES.LEASE['VM'] != $route.params.pathMatch ? 'Release' : ''" @click="ReleaseNIC(row)">
+				<span v-if="value.NIC_ID != 0" class="modal_table_action_btn" :title="!row.LEASES.LEASE ? 'Release' : '' " @click="ReleaseNIC(row)">
 					<a-icon type="close" />
 				</span>
 			</div>
