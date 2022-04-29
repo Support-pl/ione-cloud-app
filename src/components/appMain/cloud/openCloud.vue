@@ -60,7 +60,7 @@
                   <a-modal
                     v-model="modal.rename"
                     :confirmLoading="isRenameLoading"
-                    title="rename"
+                    :title="$t('Rename')"
                     @ok="sendRename"
                   >
                     <p>{{ $t("Enter new VM name") }}</p>
