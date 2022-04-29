@@ -85,6 +85,8 @@
 	"Recover sended. Wait please": "Đã gửi yêu cầu khôi phục. Vui lòng chờ",
 	"There was a problem while restoring. Please contact support": "Đã xảy ra sự cố trong quá trình khôi phục. Vui lòng liên hệ với bộ phận hỗ trợ.",
 	"Before restoring from a service copy, please delete manually created snapshots": "Trước khi khôi phục từ bản sao dịch vụ, vui lòng xóa các bản Snapshot được tạo thủ công.",
+	"Network reserve 1":"Đặt ngay IPv4 cho máy ảo của bạn với giá ",
+	"Network reserve 2": "cho mỗi IPv4. Bạn có thể chọn bất kỳ IP không sử dụng nào và 'Gán cho máy ảo'.",
 	"Enter new VM name":"Nhập tên máy ảo mới",
 	"Reinstall": "Cài đặt lại",
 	"Rename": "Đổi tên",

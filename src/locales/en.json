@@ -85,6 +85,8 @@
 	"Recover sended. Wait please": "A moment please while recovering",
 	"There was a problem while restoring. Please contact support": "There was a problem during restoring. Please contact Support.",
 	"Before restoring from a service copy, please delete manually created snapshots": "Before restoring from a service copy, please delete manually created snapshots.",
+	"Network reserve 1":"Reserve IPv4 for your VM for",
+	"Network reserve 2": "per IPv4. You can select any unused IP and 'Assign to VM'.",
 	"Enter new VM name":"Enter new VM name",
 	"Reinstall": "Reinstall",
 	"Rename": "Rename",

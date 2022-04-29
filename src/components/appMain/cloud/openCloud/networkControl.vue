@@ -91,13 +91,12 @@
       </div>
       <div v-if="attach.type == 2">
         <p>
-          Reserve IPv4 for use on any VM. Assign to this VM by selecting the
-          radio button next to any unused IP and selecting "Assign to VM"
-          <b
-            >{{ getSettings.PUBLIC_IP_COST }}
-            {{ getSettings.CURRENCY_MAIN }}/{{ $t('period.month') }}</b
-          >
-          per IPv4 
+          {{$t('Network reserve 1')}}
+          <b>
+            {{ getSettings.PUBLIC_IP_COST }}
+            {{ getSettings.CURRENCY_MAIN }}/{{ $t('period.month') }}
+          </b>
+          {{$t('Network reserve 2')}}
         </p>
         <public-network @onselect="selectedRows" />
         <!-- <a-row type="flex" style="margin-top: 15px">
