@@ -82,7 +82,7 @@
                     :key="country"
                     :value="country"
                   >
-                    {{ $t(`country.${country}`).sort }}
+                    {{ $t(`country.${country}`) }}
                   </a-select-option>
                 </a-select>
               </a-form-model-item>
