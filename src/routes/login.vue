@@ -85,6 +85,7 @@
             </div>
           </template>
         </div>
+
         <div class="login__forgot">
           <a href="#" @click="forgotPass()">{{
             remember ? $t("forgotPass") : $t("I have a password") | capitalize
@@ -162,11 +163,11 @@ export default {
                 if (this.getOnlogin.redirect) {
                   this.$router.push({ name: this.getOnlogin.redirect });
                 } else {
-                  if (this.$router.go(-1)) {
+                  if (window.location.href === "https://cloudapp.tothost.vn/#/login") {
                     this.$router.go(-1);
-                  }else{
- 						this.$router.push({ name: "root" });
-				  }
+                  } else {
+                    this.$router.push({ name: "root" });
+                  }
                 }
 
                 if (this.getOnlogin.action) {

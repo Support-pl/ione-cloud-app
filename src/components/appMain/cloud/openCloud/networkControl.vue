@@ -243,7 +243,12 @@ export default {
     ...mapGetters({ user: "getUser" }),
     newtworks() {
       if (Array.isArray(this.SingleCloud.NIC)) {
-        return this.SingleCloud.NIC;
+           const arrayNIC = [];
+        for(let i=0; i < this.SingleCloud.NIC.length; i++ ){
+          const objNIC = {...this.SingleCloud.NIC[i], NIC_ID: this.SingleCloud.NIC[i].NIC_ID = i + 1}
+          arrayNIC.push(objNIC)
+        }
+        return arrayNIC;
       }
       return [this.SingleCloud.NIC];
     },

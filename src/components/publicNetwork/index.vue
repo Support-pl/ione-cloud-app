@@ -148,10 +148,20 @@ export default {
 			getClouds: 'getClouds',
 		}),
 		...mapGetters('network', {
-			NICpublic: 'getNICpublic',
+			NICpublicData: 'getNICpublic',
 			NICloading: 'getNICloading'
 		}),
 		...mapGetters({user: 'getUser'}),
+		NICpublic(){
+			if(Array.isArray(this.NICpublicData)){
+				const arrayNICpublic = [];
+				for(let i=0; i < this.NICpublicData.length; i++){
+						const objNICpublic = { ...this.NICpublicData[i], AR_ID: this.NICpublicData[i].AR_ID = i + 1 }
+						arrayNICpublic.push(objNICpublic)
+				}
+				return arrayNICpublic
+			}
+		},
 		rowSelection(){
 			return {
         onChange: (selectedRowKeys, selectedRows) => {
