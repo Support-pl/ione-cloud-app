@@ -805,7 +805,11 @@ export default {
       return data;
     },
     IPs() {
-      return this.SingleCloud.NIC.filter((el) => el?.IP != undefined);
+			const ips = [
+				...this.SingleCloud.NIC.filter((el) => el?.IP != undefined),
+				...this.SingleCloud.NIC_ALIAS.filter((el) => el?.IP != undefined)
+			]
+      return ips;
     },
   },
   created() {
