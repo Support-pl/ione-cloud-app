@@ -741,13 +741,6 @@ export default {
           forVNC: true,
         },
         {
-          title: "Boot order",
-          onclick: this.changeModal,
-          params: ["bootOrder"],
-          icon: "ordered-list",
-          forVNC: true,
-        },
-        {
           title: "Delete",
           onclick: this.sendDelete,
           icon: "delete",
