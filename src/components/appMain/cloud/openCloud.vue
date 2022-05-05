@@ -740,6 +740,13 @@ export default {
           icon: "global",
           forVNC: true,
         },
+        // {
+        //   title: "Boot order",
+        //   onclick: this.changeModal,
+        //   params: ["bootOrder"],
+        //   icon: "ordered-list",
+        //   forVNC: true,
+        // },
         {
           title: "Delete",
           onclick: this.sendDelete,
@@ -805,11 +812,7 @@ export default {
       return data;
     },
     IPs() {
-			const ips = [
-				...this.SingleCloud.NIC.filter((el) => el?.IP != undefined),
-				...this.SingleCloud.NIC_ALIAS.filter((el) => el?.IP != undefined)
-			]
-      return ips;
+      return this.SingleCloud.NIC.filter((el) => el?.IP != undefined);
     },
   },
   created() {
