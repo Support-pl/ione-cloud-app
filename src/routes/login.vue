@@ -163,11 +163,11 @@ export default {
                 if (this.getOnlogin.redirect) {
                   this.$router.push({ name: this.getOnlogin.redirect });
                 } else {
-                  if (window.location.href === "https://cloudapp.tothost.vn/#/login") {
-                    this.$router.go(-1);
-                  } else {
+                  // if (window.location.href ) {
+                  //   this.$router.go(-1);
+                  // } else {
                     this.$router.push({ name: "root" });
-                  }
+                  // }
                 }
 
                 if (this.getOnlogin.action) {

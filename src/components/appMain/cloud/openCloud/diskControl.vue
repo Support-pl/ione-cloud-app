@@ -179,7 +179,8 @@ export default {
         for (let i = 0; i < this.SingleCloud.DISKS.length; i++) {
           const objDISKS = {
             ...this.SingleCloud.DISKS[i],
-            DISK_ID: (this.SingleCloud.DISKS[i].DISK_ID = i + 1),
+            DISK_ID: this.SingleCloud.DISKS[i].DISK_ID = i + 1,
+            FORMAT:  this.SingleCloud.DISKS[i].FORMAT = 'VMDK'
           };
           arrayDISKS.push(objDISKS);
         }
