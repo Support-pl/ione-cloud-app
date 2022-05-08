@@ -127,6 +127,7 @@ export default {
   props: {
     getUser: Function,
   },
+
   methods: {
     submitHandler() {
       this.tryingLogin = true;
@@ -163,11 +164,12 @@ export default {
                 if (this.getOnlogin.redirect) {
                   this.$router.push({ name: this.getOnlogin.redirect });
                 } else {
-                  // if (window.location.href) {
-                  //   this.$router.go(-1);
-                  // } else {
-                    this.$router.push({ name: "root" });
-                  // }
+                  if (this.getFromRoute) {
+                    this.$router.push({ path: this.getFromRoute });
+                    this.$store.dispatch("app/fromRoute", "");
+                  } else {
+                    this.$router.push({ name: "root" }).catch(() => {});
+                  }
                 }
 
                 if (this.getOnlogin.action) {
@@ -222,6 +224,9 @@ export default {
     getOnlogin() {
       return this.$store.getters.getOnlogin;
     },
+    getFromRoute() {
+      return this.$store.state.app.fromRoute;
+    },
     companyName() {
       return this.$store.getters["getDomainInfo"].name ?? this.$config.appTitle;
     },
@@ -237,6 +242,17 @@ export default {
     langs() {
       return this.$config.languages;
     },
+  },
+  created() {
+    this.$router.beforeEach((to, from, next) => {
+      const isLogged = this.$store.getters.isLogged;
+      if (
+        from.meta.isFromRoute && !isLogged
+      ) {
+        this.$store.dispatch("app/fromRoute", from.path);
+      }
+      next();
+    });
   },
 };
 </script>

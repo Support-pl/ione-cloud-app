@@ -14,6 +14,7 @@ for(let service in servicesArray){
 		path: service,
 		name: `service-${service}`,
 		meta: {
+			isFromRoute:true,
 			footerTitle: 'services',
 			isNeedBackButton: true,
 			headerTitle: service,
@@ -124,7 +125,8 @@ const routes = [
 				name: 'newPaaS',
 				meta: {
 					// mustBeLoggined: true,
-					footerTitle: 'cloud'
+					footerTitle: 'cloud',
+					isFromRoute:true,
 				},
 				component: () => import('../components/appMain/newPaaS.vue')
 			},
@@ -133,7 +135,8 @@ const routes = [
 				name: 'newVDC',
 				meta: {
 					// mustBeLoggined: true,
-					footerTitle: 'cloud'
+					footerTitle: 'cloud',
+					isFromRoute:true,
 				},
 				component: () => import('../components/appMain/newVDC.vue')
 			},

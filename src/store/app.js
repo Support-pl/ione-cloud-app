@@ -41,6 +41,7 @@ export default {
 		},
 		currencyPostfix: '',
 		maintananceMode: false,
+		fromRoute:''
 	},
 	mutations: {
 		setActiveTabName(state, value){
@@ -57,6 +58,9 @@ export default {
 		},
 		setMaintananceMode(state, value){
 			state.maintananceMode = value;
+		},
+		fromRoute(state, value){
+			state.fromRoute = value;
 		}
 	},
 	actions: {
@@ -81,6 +85,9 @@ export default {
 			if (value == 'root') value = 'services'
 			ctx.commit('setActiveTabName', value)
 			ctx.commit('setActiveTabNum', ctx.getters.getButtons.findIndex(el => el.title == value))
+		},
+		fromRoute(ctx, route) {
+			ctx.commit('fromRoute', route)
 		}
 	},
 	getters: {

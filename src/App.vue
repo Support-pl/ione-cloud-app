@@ -37,7 +37,7 @@ export default {
 			// if((to.meta?.mustBeLoggined === undefined || to.meta?.mustBeLoggined) && !this.$store.getters.isLogged) next({ name: 'login' })
 			// else if((to.meta?.mustBeUnloggined === undefined || to.meta?.mustBeUnloggined) && this.$store.getters.isLogged) next({ name: 'root' })
 			// if (to.name !== 'login' && !this.$store.getters.isLogged) next({ name: 'login' })
-			else if (to.name == 'login' && this.$store.getters.isLogged) next({ name: 'root' })
+			else if (to.name == 'login' && this.$store.getters.isLogged ) next({ name: 'root' })
 			else next()
 		})
 
