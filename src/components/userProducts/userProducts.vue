@@ -7,7 +7,7 @@
 					<transition name="header-transition" mode="out-in">
 					<span class="header__animated" :key="$route.query.type || 'emptyQuery'">
 						<span v-if="isNeedFilterStringInHeader">
-							{{$t('comp_services.with filter')}}: <b>{{ "Web Hosting" }}</b>
+							{{$t('comp_services.with filter')}}: <b>{{ $route.query.type.replace(/,/g, ', ')==="virtual" ? "Web Hosting"  : $route.query.type.replace(/,/g, ', ') }}</b>
 							 <!-- по фильтру -->
 						</span>
 						<transition name="fade-in">
