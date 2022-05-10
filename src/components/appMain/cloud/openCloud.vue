@@ -318,8 +318,22 @@
                 <table class="Fcloud__table">
                   <tbody>
                     <tr v-for="nic in IPs" :key="nic.NAME">
-                      <td>IP</td>
-                      <td>{{ nic.IP }}</td>
+                      <td>
+                        IP {{ nic.IP }}
+                        <template
+                          v-if="
+                            nic.ALIAS_IDS != undefined &&
+                            nic.ALIAS_IDS.length > 0
+                          "
+                        >
+                          <div
+                            v-for="alias in IPsALIAS"
+                            :key="alias"
+                          >
+                           IP {{ alias.IP }}
+                          </div>
+                        </template>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -813,6 +827,9 @@ export default {
     },
     IPs() {
       return this.SingleCloud.NIC.filter((el) => el?.IP != undefined);
+    },
+    IPsALIAS() {
+      return this.SingleCloud.NIC_ALIAS.filter((el) => el?.IP != undefined);
     },
   },
   created() {

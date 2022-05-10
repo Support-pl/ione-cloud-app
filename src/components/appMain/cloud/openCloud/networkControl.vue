@@ -1,6 +1,7 @@
 <template>
   <div class="network-control">
     <a-table
+      v-if="newtworks.length"
       :columns="columns"
       :data-source="newtworks"
       :pagination="false"
@@ -91,12 +92,12 @@
       </div>
       <div v-if="attach.type == 2">
         <p>
-          {{$t('Network reserve 1')}}
+          {{ $t("Network reserve 1") }}
           <b>
             {{ getSettings.PUBLIC_IP_COST }}
-            {{ getSettings.CURRENCY_MAIN }}/{{ $t('period.month') }}
+            {{ getSettings.CURRENCY_MAIN }}/{{ $t("period.month") }}
           </b>
-          {{$t('Network reserve 2')}}
+          {{ $t("Network reserve 2") }}
         </p>
         <public-network @onselect="selectedRows" />
         <!-- <a-row type="flex" style="margin-top: 15px">
@@ -242,15 +243,16 @@ export default {
     ...mapGetters("settings", ["getSettings"]),
     ...mapGetters({ user: "getUser" }),
     newtworks() {
-      if (Array.isArray(this.SingleCloud.NIC)) {
-           const arrayNIC = [];
-        for(let i=0; i < this.SingleCloud.NIC.length; i++ ){
-          const objNIC = {...this.SingleCloud.NIC[i], NIC_ID_ITEM: i + 1}
-          arrayNIC.push(objNIC)
+      if (this.SingleCloud.NIC.length) {
+        const arrayNIC = [];
+        for (let i = 0; i < this.SingleCloud.NIC.length; i++) {
+          if (this.SingleCloud.NIC[i] !== null) {
+            const objNIC = { ...this.SingleCloud.NIC[i], NIC_ID_ITEM: i + 1 };
+            arrayNIC.push(objNIC);
+          }
         }
         return arrayNIC;
       }
-      return [this.SingleCloud.NIC];
     },
     possibleMasks() {
       const interval = this.privateIPS.find((el) => {
