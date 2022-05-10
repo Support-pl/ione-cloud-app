@@ -107,9 +107,9 @@ import { mapGetters } from "vuex";
 const columns = [
   {
     title: "№",
-    dataIndex: "DISK_ID",
+    dataIndex: "DISK_ID_ITEM",
     // rowKey: 'DISK_ID',
-    key: "DISK_ID",
+    key: "DISK_ID_ITEM",
     width: 50,
     align: "center",
   },
@@ -179,7 +179,7 @@ export default {
         for (let i = 0; i < this.SingleCloud.DISKS.length; i++) {
           const objDISKS = {
             ...this.SingleCloud.DISKS[i],
-            DISK_ID: this.SingleCloud.DISKS[i].DISK_ID = i + 1,
+            DISK_ID_ITEM: i + 1,
             FORMAT:  this.SingleCloud.DISKS[i].FORMAT = 'VMDK'
           };
           arrayDISKS.push(objDISKS);

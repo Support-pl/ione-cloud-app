@@ -132,8 +132,8 @@ import publicNetwork from "../../../publicNetwork";
 const columns = [
   {
     title: "№",
-    dataIndex: "NIC_ID",
-    key: "NIC_ID",
+    dataIndex: "NIC_ID_ITEM",
+    key: "NIC_ID_ITEM",
     width: 50,
     align: "center",
   },
@@ -245,7 +245,7 @@ export default {
       if (Array.isArray(this.SingleCloud.NIC)) {
            const arrayNIC = [];
         for(let i=0; i < this.SingleCloud.NIC.length; i++ ){
-          const objNIC = {...this.SingleCloud.NIC[i], NIC_ID: this.SingleCloud.NIC[i].NIC_ID = i + 1}
+          const objNIC = {...this.SingleCloud.NIC[i], NIC_ID_ITEM: i + 1}
           arrayNIC.push(objNIC)
         }
         return arrayNIC;

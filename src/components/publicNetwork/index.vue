@@ -31,8 +31,8 @@ import { mapGetters } from 'vuex'
 const NICsColumns = [
 	{
     title: 'ID',
-		dataIndex: 'AR_ID',
-		key: "AR_ID",
+		dataIndex: 'AR_ID_ITEM',
+		key: "AR_ID_ITEM",
 		width: 50,
 		align: 'center'
 	},
@@ -156,7 +156,7 @@ export default {
 			if(Array.isArray(this.NICpublicData)){
 				const arrayNICpublic = [];
 				for(let i=0; i < this.NICpublicData.length; i++){
-						const objNICpublic = { ...this.NICpublicData[i], AR_ID: this.NICpublicData[i].AR_ID = i + 1 }
+						const objNICpublic = { ...this.NICpublicData[i], AR_ID_ITEM: i + 1 }
 						arrayNICpublic.push(objNICpublic)
 				}
 				return arrayNICpublic
