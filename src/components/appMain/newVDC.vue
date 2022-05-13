@@ -595,7 +595,7 @@ export default {
 				this.$message.error(this.$t("Password must contain at least one letter"));
 				return 0
 			}
-			if(!this.options.password.match(/[1-9]/)) {
+			if(!this.options.password.match(/[0-9]/)) {
 				this.$message.error(this.$t("Password must contain at least one number"));
 				return 0
 			}

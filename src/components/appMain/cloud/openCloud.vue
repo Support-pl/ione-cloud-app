@@ -62,6 +62,7 @@
                     :confirmLoading="isRenameLoading"
                     :title="$t('Rename')"
                     @ok="sendRename"
+                    :cancelText="$t('Cancel')"
                   >
                     <p>{{ $t("Enter new VM name") }}</p>
                     <a-input
@@ -74,6 +75,7 @@
                     v-model="modal.reinstall"
                     title="reinstall"
                     @ok="sendReinstall"
+                   
                   >
                     <template v-if="!disabledMenu('reinstall')">
                       <p>{{ $t("Enter new password") }}</p>
@@ -96,6 +98,7 @@
                     v-model="modal.expand"
                     :title="$t('Resize VM')"
                     @ok="ExpandVM"
+                    :cancelText="$t('Cancel')"
                     :ok-button-props="{
                       props: {
                         disabled:
@@ -1360,6 +1363,7 @@ export default {
         content: (h) => (
           <div style="color:red;">{me.$t("All data will be deleted!")}</div>
         ),
+        cancelText: me.$t("Cancel"),
         onOk() {
           me.sendAction("Reinstall");
           me.modal.menu = false;

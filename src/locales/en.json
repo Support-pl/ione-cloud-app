@@ -442,6 +442,7 @@
 		"Open":"Open",
 		"Refunded":"Refunded"
 	},
+	"virtual":"virtual",
 
 	"country": {
 		"VN": "Vietnam",

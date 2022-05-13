@@ -2,7 +2,7 @@
 	<div>
 		<a-row>
 			<a-col :span="6">
-				password:
+				{{$t( 'clientinfo.password' )}}: 
 			</a-col>
 			<a-col :span="18">
 				<password :password="SingleCloud.TEMPLATE.CONTEXT.PASSWORD"/>
