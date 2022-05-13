@@ -130,6 +130,7 @@
 	"invoice_Paid": "Đã thanh toán",
 	"invoice_Unpaid": "Chưa thanh toán",
 	"invoice_Cancelled": "Đã hủy bỏ",
+	"invoice_Refunded": "Đã hoàn lại",
 	"Active": "Kích hoạt",
 	"Suspended": "Tạm dừng",
 	"Canceled": "Đã hủy bỏ",
@@ -387,6 +388,59 @@
 	},
 	"product_name": "Tên sản phẩm",
 	"VNDExcludeVAT": "Giá trên chưa bao gồm thuế VAT (10%)",
+	
+	"accept terms": "Vui lòng chấp nhận các điều khoản sử dụng để tiếp tục.",
+	"ask a question":"Gửi phiếu yêu cầu",
+ 	"department":"Bộ phận hỗ trợ",
+ 	"subject":"Tiêu đề",
+	"question":"Nội dung yêu cầu",
+	"message":"Tin nhắn",
+	"ticketStatus":{
+		"Closed": "Đã đóng",
+		"Closeticket": "“Đóng yêu cầu",
+		"Customerreply":"Phản hồi của khách hàng",
+		"Inprogress":"Đang xử lý",
+		"Onhold": "Chờ xử lý",
+		"Open": "Đang mở"
+	},
+	"domain is wrong":"Tên miền không hợp lệ",
+	"no data":"Không có thông tin",
+
+	"add funds": "Nạp tiền",
+	"attach new NIC":"Thêm NIC mới",
+	"there are no aliases":"Không có bí danh",
+	"alias":"Bí danh",
+	"IP":"IP",
+	"Actions": "Hành động",
+	"cloudStateItem":{ 
+		"BOOT":"BOOT",
+		"PENDING":"CHỜ THỰC HIỆN",
+		"POWEROFF":"TẮT NGUỒN",
+		"SNAPSHOT":"SNAPSHOT",
+		"RUNNING":"ĐANG CHẠY"
+		}, 
+		"public":"Public",
+		"servicesTitle":{
+			"Virtual Servers": "Virtual Servers",
+			"SSL": "SSL",
+			"Web Hosting": "Web Hosting"
+		},
+		"virtualSlider":{ 
+			"Single": "Single",
+			"Standard":"Standard", 
+			"Deluxe":"Deluxe",
+			"Premium":"Premium", 
+			"Business":"Business"
+		}, 
+		"PAYG":"PAYG",
+		"PrePaid":"Trả trước",
+		"filterHeader":{ 
+			"Unpaid":"Chưa thanh toán",
+			"Paid":"Đã thanh toán",
+			"Open":"Mở",
+			"Refunded":"Đã hoàn lại"
+		}, 
+
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",

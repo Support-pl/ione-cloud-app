@@ -222,11 +222,11 @@
 				<transition name="networkApear">
 					<a-row v-if="options.network.public.status" type="flex" justify="space-between" :style="{'font-size': '1.2rem'}">
 						<a-col>
-							Public IPv4:
+							{{ $t('Public')}} IPv4:
 						</a-col>
 						<a-col>
 							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								{{options.network.public.count * options.network.price | numsepar}} {{currencyPostfix}}/month
+								{{options.network.public.count * options.network.price | numsepar}} {{currencyPostfix}}/{{ $t('period.month') }}
 							</a-skeleton>
 						</a-col>
 					</a-row>

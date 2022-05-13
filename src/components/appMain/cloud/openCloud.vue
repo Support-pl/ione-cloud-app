@@ -34,7 +34,7 @@
                   class="Fcloud__status"
                   :class="{ 'glowing-animations': updating }"
                 >
-                  {{ vmState | replace("_", " ") }}
+                  {{ $t(`cloudStateItem.${vmState}`)| replace("_", " ") }}
                 </div>
               </div>
               <div class="Fcloud__menu-wrapper">
@@ -431,14 +431,14 @@
                       <GChart
                         type="LineChart"
                         :data="inbChartDataReady"
-                        :options="chartOption('inbound')"
+                        :options="chartOption($t('inbound'))"
                       />
                     </a-col>
                     <a-col>
                       <GChart
                         type="LineChart"
                         :data="outChartDataReady"
-                        :options="chartOption('outgoing')"
+                        :options="chartOption($t('outgoing'))"
                       />
                     </a-col>
                   </a-row>
@@ -620,6 +620,7 @@ import diskControl from "./openCloud/diskControl";
 import bootOrder from "./openCloud/bootOrder";
 import networkControl from "./openCloud/networkControl";
 import accessManager from "./openCloud/accessManager";
+
 
 const columns = [
   {

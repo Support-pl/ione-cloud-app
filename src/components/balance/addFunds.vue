@@ -1,10 +1,11 @@
 <template>
 		<a-modal
-      :title="$t('Add Funds')"
-      :visible="modalVisible"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
+			:title="$t('Add Funds')"
+			:visible="modalVisible"
+			:confirm-loading="confirmLoading"
+			@ok="handleOk"
+			@cancel="handleCancel"
+			:cancelText="$t('Cancel')"
     >
 			<p v-if="isLogged">{{$t('Enter value')}} ({{user.currency_code}}):</p>
       <a-input type="number" min="0" v-model="amount" allow-clear/>

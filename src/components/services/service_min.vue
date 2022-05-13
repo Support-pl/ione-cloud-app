@@ -7,7 +7,7 @@
       <a-icon :type="service.icon"></a-icon>
     </div>
     <div class="service__title">
-      {{ translatedName }}
+      {{ $t(`servicesTitle.${translatedName}`) }}
     </div>
   </div>
 </template>

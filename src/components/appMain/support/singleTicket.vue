@@ -11,7 +11,7 @@
 						#{{ticket.tid}} - {{titleDecoded}}
 					</template>
 				</div>
-				<div class="ticket__status-text">{{ticket.status}}</div>
+				<div class="ticket__status-text">{{$t(`ticketStatus.${ticket.status}`)}}</div>
 			</div>
 			<div class="ticket__lower">
 				<div class="ticket__message">{{beauty(ticket.message)}}</div>
@@ -51,7 +51,7 @@ export default {
 			const ho = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false}).format(d)
 			const mi = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(d)
 
-			return `${ye}-${mo}-${da} ${(ho<=9 ? '0' + ho : ho)}:${(mi<=9 ? '0' + mi : mi)}`;
+			return `${da}/${mo}/${ye} ${(ho<=9 ? '0' + ho : ho)}:${(mi<=9 ? '0' + mi : mi)}`;
 		},
 		decode(text){
 			var txt = document.createElement('textarea');

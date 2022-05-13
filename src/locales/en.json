@@ -19,7 +19,8 @@
 	"Cloud": "TotHost Cloud App",
 	"Support": "Support",
 	"Invoice": "Orders",
-	"cloud": "Cloud",
+	"cloudState": "Cloud",
+	"cloud":"Cloud",
 	"support": "Support",
 	"invoice": "Orders",
 	"settings": "Settings",
@@ -123,13 +124,14 @@
 	"Start": "Start",
 	"Take snapshot": "Take snapshot",
 	"Personal Area": "Personal Area",
-	"use access data from my.support.by": "Use your login information from cloudapp.tothost.vn",
+	"use access data from my.support.by": "Use your login information from cloudStateapp.tothost.vn",
 	"Use on your phone:": "Use on your phone:",
 	"invoice_Description": "Description",
 	"invoice_Price": "Price",
 	"invoice_Paid": "Paid",
 	"invoice_Unpaid": "Awaiting Payment",
 	"invoice_Cancelled": "Cancelled",
+	"invoice_Refunded": "Refunded",
 	"Active": "Active",
 	"Suspended": "Suspended",
 	"Canceled": "Cancelled",
@@ -138,7 +140,7 @@
 	"Payment method": "Payment method",
 	"Do you want to defer payment?": "Do you want to defer payment?",
 	"Show full list": "Show full list",
-	"cloud_StartTime": "Start time",
+	"cloudState_StartTime": "Start time",
 	"cloud_Capacity": "Capacity",
 	"cloud_system": "System",
 	"cloud_Storage": "Storage",
@@ -381,12 +383,66 @@
 		"see services": "Discover all services"
 	},
 	"tos": {
-		"part1": "By creating an account, you have read and agreed with",
+		"part1": "By creating an account, you have read and agreed with our",
 		"link": "Terms of Service.",
-		"part2": " our"
+		"part2": ""
 	},
 	"product_name": "Product Name",
 	"VNDExcludeVAT": "Prices quoted in VND, subject to 10% VAT",
+
+
+	"accept terms":"Please accept terms of use to proceed.",
+	"ask a question":"Ask a question",
+ 	"department":"Department",
+ 	"subject":"Subject",
+	"question":"Question",
+	"message":"Message",
+	"ticketStatus":{
+		"Closed":"Closed",
+		"Closeticket": "Close ticket",
+		"Customerreply":"Customer reply",
+		"Inprogress":"In progress",
+		"Onhold": "On hold",
+		"Open": "Open"
+	},
+	"domain is wrong":"domain is wrong",
+	"no data":"No information available",
+
+	"add funds": "Add funds",
+	"attach new NIC":"Attach new NIC",
+	"there are no aliases":"There are no aliases",
+	"alias":"Alias",
+	"IP":"IP",
+	"Actions": "Actions",
+	"cloudStateItem":{
+		"BOOT":"BOOT",
+		"PENDING":"PENDING",
+		"POWEROFF":"POWEROFF",
+		"SNAPSHOT":"SNAPSHOT",
+		"RUNNING":"RUNNING"
+	},
+	"public":"Public",
+	"servicesTitle":{
+		"Virtual Servers": "Virtual Servers",
+		"SSL": "SSL",
+		"Web Hosting": "Web Hosting"
+	},
+	"virtualSlider":{
+		"Single": "Single",
+		"Standard":"Standart",
+		"Deluxe":"Deluxe",
+		"Premium":"Premium", 
+		"Business":"Business"
+	},
+	"PAYG":"PAYG",
+	"PrePaid":"PrePaid",
+	"filterHeader":{
+		"Unpaid":"Unpaid",
+		"Paid":"Paid",
+		"Open":"Open",
+		"Refunded":"Refunded"
+	},
+
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",

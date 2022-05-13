@@ -28,13 +28,13 @@
         >
           <ul>
             <li v-for="(alias, key) in SingleCloud.NIC_ALIAS" :key="key">
-              Alias #{{ alias.ALIAS_ID }} [NIC{{ alias.NIC_ID }}]:
+              {{ $t("alias") }}#{{ alias.ALIAS_ID }} [NIC{{ alias.NIC_ID }}]:
               {{ alias.IP }}
               <a-icon type="close" @click="detachCaller(alias.NIC_ID)" />
             </li>
           </ul>
         </template>
-        <div v-else>There are no aliases</div>
+        <div v-else>{{ $t("there are no aliases") }}</div>
       </div>
     </a-table>
 
@@ -118,7 +118,7 @@
         <a-button
           @click="showModal('attach')"
           @final="() => this.closeModal('detach')"
-          >{{ $t("Attach new NIC") }}</a-button
+          >{{ $t("attach new NIC") }}</a-button
         >
       </a-col>
     </a-row>
@@ -129,34 +129,6 @@
 import md5 from "md5";
 import { mapGetters, mapActions } from "vuex";
 import publicNetwork from "../../../publicNetwork";
-
-const columns = [
-  {
-    title: "№",
-    dataIndex: "NIC_ID_ITEM",
-    key: "NIC_ID_ITEM",
-    width: 50,
-    align: "center",
-  },
-  {
-    title: "Network",
-    dataIndex: "NETWORK",
-    key: "NETWORK",
-    // scopedSlots: { customRender: 'ImageName' },
-  },
-  {
-    title: "IP",
-    dataIndex: "IP",
-    key: "IP",
-    scopedSlots: { customRender: "ip" },
-  },
-  {
-    title: "Actions",
-    key: "actions",
-    scopedSlots: { customRender: "buttons" },
-    width: 100,
-  },
-];
 
 const NICsColumns = [
   {
@@ -210,7 +182,33 @@ export default {
   },
   data() {
     return {
-      columns,
+      columns: [
+        {
+          title: "№",
+          dataIndex: "NIC_ID_ITEM",
+          key: "NIC_ID_ITEM",
+          width: 50,
+          align: "center",
+        },
+        {
+          title: this.$t("Network"),
+          dataIndex: "NETWORK",
+          key: "NETWORK",
+          // scopedSlots: { customRender: 'ImageName' },
+        },
+        {
+          title: this.$t("IP"),
+          dataIndex: "IP",
+          key: "IP",
+          scopedSlots: { customRender: "ip" },
+        },
+        {
+          title: this.$t("Actions"),
+          key: "actions",
+          scopedSlots: { customRender: "buttons" },
+          width: 100,
+        },
+      ],
       NICsColumns,
       NICs: [],
       privateIPS,
@@ -243,7 +241,7 @@ export default {
     ...mapGetters("settings", ["getSettings"]),
     ...mapGetters({ user: "getUser" }),
     newtworks() {
-      if (this.SingleCloud.NIC.length) {
+      if (Array.isArray(this.SingleCloud.NIC)) {
         const arrayNIC = [];
         for (let i = 0; i < this.SingleCloud.NIC.length; i++) {
           if (this.SingleCloud.NIC[i] !== null) {

@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content__wrapper">
         <div class="content__title">
-          Personal Area
+          {{ $t('Personal Area')}}
           <span class="content__small"> #{{ user.id }} </span>
         </div>
 

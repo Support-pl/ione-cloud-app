@@ -44,7 +44,7 @@
 
 				<a-row type="flex" justify="space-around" style="margin-top: 20px">
 					<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
-						{{$t('Pay period')}}:
+						{{$t("Payment period")}}:
 					</a-col>
 
 					<a-col :xs="12" :sm="18" :lg='12'>
@@ -132,7 +132,7 @@ export default {
 			.then(res => {
 				res = res.sort((a, b) => b.name - a.name)
 				this.products = res;
-				this.sizes = res.map(el => el.name.replace(/Виртуальный хостинг |Host /gi, ''));
+				this.sizes = res.map(el => this.$t(`virtualSlider.${el.name.replace(/Виртуальный хостинг |Host /gi, '')}`));
 				this.options.size = this.sizes[1];
 				this.periods = Object.keys(res[0].pricing).filter(el => !el.match(/fix/));
 				this.options.period = this.periods[1];
@@ -183,7 +183,7 @@ export default {
 		orderConfirm(){
 			if(this.$store.getters.getUser){
 			if(!this.options.domain.match(/.+\..+/)){
-				this.$message.error('domain is wrong');
+				this.$message.error(this.$t('domain is wrong'));
 				return
 			}
 			this.modal.confirmCreate = true;

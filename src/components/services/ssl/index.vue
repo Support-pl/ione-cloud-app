@@ -56,7 +56,7 @@
 
 				<a-row type="flex" justify="space-around" style="margin-top: 20px">
 					<a-col :xs="10" :sm="6" :lg='12' style="font-size: 1rem">
-						{{$t('Pay period')}}:
+						{{$t('Payment period')}}:
 					</a-col>
 
 					<a-col :xs="12" :sm="18" :lg='12'>
@@ -209,7 +209,6 @@ export default {
 		}
 	},
 	created(){
-		// console.log(this.data);
 		this.fetch();
 	},
 	watch: {

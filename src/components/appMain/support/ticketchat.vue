@@ -47,7 +47,7 @@
 				class="chat__input"
 				name="message"
 				id="message"
-				placeholder="Message..."
+				:placeholder="$t('message') + '...'"
 			>
 			</a-textarea>
 			<div class="chat__send" @click="sendMessage">

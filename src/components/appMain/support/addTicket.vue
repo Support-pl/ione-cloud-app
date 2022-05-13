@@ -1,24 +1,25 @@
 <template>
 	<a-modal
-		title="Ask a question"
+		:title="$t('ask a question')"
 		:visible="addTicketStatus"
 		:confirmLoading="isSending"
 		@cancel="closeFields"
 		@ok="sendNewTicket"
+		:cancelText="$t('Cancel')"
 	>
 	
 	<a-form-model layout="vertical">
-		<a-form-model-item label="Department">
+		<a-form-model-item :label="$t('department')">
 			<a-select :loading="ticketDepartment == -1" v-model="ticketDepartment" placeholder="department">
 				<a-select-option v-for="department in departments" :key="department.id" :value="department.id">{{department.name}}</a-select-option>
 			</a-select>
 		</a-form-model-item>
 
-		<a-form-model-item label="Subject">
+		<a-form-model-item :label="$t('subject')">
 			<a-input v-model="ticketTitle" placeholder="" />
 		</a-form-model-item>
 
-		<a-form-model-item label="Question">
+		<a-form-model-item :label="$t('question')">
 			<a-textarea v-model="ticketMessage" rows="10" />
 		</a-form-model-item>
 	</a-form-model>
