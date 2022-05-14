@@ -53,21 +53,22 @@
       :title="$t('NIC attach')"
       :visible="modal.attach"
       :confirm-loading="attach.loading"
-      :okText="$t('Assign to VM')"
+      :okText="$t('assign to VM')"
       @ok="sendNewIP"
       @cancel="closeModal('attach')"
+      :cancelText="$t('Cancel')"
     >
       <a-radio-group v-model="attach.type" style="margin-bottom: 20px">
-        <a-radio :value="1">{{ $t("Private") }}</a-radio>
-        <a-radio :value="2">{{ $t("Public") }}</a-radio>
+        <a-radio :value="1">{{ $t("private") }}</a-radio>
+        <a-radio :value="2">{{ $t("public") }}</a-radio>
       </a-radio-group>
       <div v-if="attach.type == 1">
-        <p style="margin-bottom: 2px">{{ $t("Available intervals:") }}</p>
+        <p style="margin-bottom: 2px">{{ $t("available intervals") }}</p>
         <span v-for="ips in privateIPS" :key="ips.min"
           >{{ ips.min }} - {{ ips.max }}<br
         /></span>
 
-        <p style="margin-top: 15px">{{ $t("Enter new private IP:") }}</p>
+        <p style="margin-top: 15px">{{ $t("enter new private IP") }}</p>
         <a-input v-model="attach.newIP" @change="ipInput">
           <a-select v-model="attach.mask" slot="addonAfter" style="width: 80px">
             <a-select-option

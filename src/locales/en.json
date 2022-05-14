@@ -443,6 +443,21 @@
 		"Refunded":"Refunded"
 	},
 	"virtual":"virtual",
+	"input new name":"Input new name",	
+	"reserve public NIC":"Reserve public NIC",
+	"used for this VM":"used for this VM",
+	"attach new disk":"Attach new disk",
+	"size":"Size",
+	"disk":"Disk",
+	"disk attach":"Disk attach",
+	"assign to VM":"Assign to VM",
+	"NIC attach":"NIC attach",
+	"private":"Private",
+	"available intervals": "Available intervals:",
+	"enter new private IP": "Enter new private IP:",
+	"image": "Image",
+	"volatile disk":"Volatile disk",
+
 
 	"country": {
 		"VN": "Vietnam",

@@ -44,7 +44,7 @@
     </a-table>
     <a-row style="margin-top: 15px">
       <a-col>
-        <a-button @click="showModal('attach')">Attach new disk</a-button>
+        <a-button @click="showModal('attach')">{{$t('attach new disk')}}</a-button>
       </a-col>
     </a-row>
     <a-modal
@@ -59,15 +59,16 @@
       <p>{{ $t("disk_manage.Do you want to proceed?") }}</p>
     </a-modal>
     <a-modal
-      title="Disk attach"
+      :title="$t('disk attach')"
       :visible="modal.attach"
       :confirm-loading="attach.loading"
       @ok="sendAttach"
       @cancel="closeModal('attach')"
+      :cancelText="$t('Cancel')"
     >
       <a-radio-group v-model="attach.type">
-        <a-radio disabled :value="1">Image</a-radio>
-        <a-radio :value="2">Volatile disk</a-radio>
+        <a-radio disabled :value="1">{{$t('image')}}</a-radio>
+        <a-radio :value="2">{{$t('volatile disk')}}</a-radio>
       </a-radio-group>
 
       <template v-if="attach.type == 1">
@@ -104,39 +105,38 @@
 import md5 from "md5";
 import { mapGetters } from "vuex";
 
-const columns = [
-  {
-    title: "№",
-    dataIndex: "DISK_ID_ITEM",
-    // rowKey: 'DISK_ID',
-    key: "DISK_ID_ITEM",
-    width: 50,
-    align: "center",
-  },
-  {
-    title: "Disk",
-    key: "ImageName",
-    scopedSlots: { customRender: "ImageName" },
-  },
-  {
-    title: "Size",
-    dataIndex: "SIZE",
-    key: "SIZE",
-    scopedSlots: { customRender: "size" },
-  },
-  {
-    title: "Actions",
-    key: "actions",
-    scopedSlots: { customRender: "buttons" },
-    width: 100,
-  },
-];
 
 export default {
   name: "diskControl",
   data() {
     return {
-      columns,
+      columns: [
+        {
+          title: "№",
+          dataIndex: "DISK_ID_ITEM",
+          // rowKey: 'DISK_ID',
+          key: "DISK_ID_ITEM",
+          width: 50,
+          align: "center",
+        },
+        {
+          title: this.$t('disk'),
+          key: "ImageName",
+          scopedSlots: { customRender: "ImageName" },
+        },
+        {
+          title: this.$t('size'),
+          dataIndex: "SIZE",
+          key: "SIZE",
+          scopedSlots: { customRender: "size" },
+        },
+        {
+          title: this.$t('Actions'),
+          key: "actions",
+          scopedSlots: { customRender: "buttons" },
+          width: 100,
+        },
+      ],
       modal: {
         resize: false,
         detach: false,
@@ -180,7 +180,7 @@ export default {
           const objDISKS = {
             ...this.SingleCloud.DISKS[i],
             DISK_ID_ITEM: i + 1,
-            FORMAT:  this.SingleCloud.DISKS[i].FORMAT = 'VMDK'
+            FORMAT: (this.SingleCloud.DISKS[i].FORMAT = "VMDK"),
           };
           arrayDISKS.push(objDISKS);
         }

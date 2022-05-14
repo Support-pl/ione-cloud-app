@@ -32,47 +32,46 @@
           </span>
           <span v-else>
             <!-- {{`(used at VM#${row.LEASES.LEASE['VM']})`}} -->
-            {{ `(used for this VM)` }}
+            {{ `(${$t("used for this VM")})` }}
           </span>
         </template>
       </div>
     </a-table>
-    <a-button style="margin-top: 15px" v-if="!NICloading" @click="ReserveNIC"
-      >Reserve public NIC</a-button
-    >
+    <a-button style="margin-top: 15px" v-if="!NICloading" @click="ReserveNIC">{{
+      $t("reserve public NIC")
+    }}</a-button>
   </div>
 </template>
 
 <script>
 import md5 from "md5";
 import { mapGetters } from "vuex";
-const NICsColumns = [
-  {
-    title: "ID",
-    dataIndex: "AR_ID_ITEM",
-    key: "AR_ID_ITEM",
-    width: 50,
-    align: "center",
-  },
-  {
-    title: "IP",
-    dataIndex: "IP",
-    key: "IP",
-    scopedSlots: { customRender: "ip" },
-  },
-  {
-    title: "Actions",
-    key: "actions",
-    scopedSlots: { customRender: "buttons" },
-    width: 100,
-  },
-];
 
 export default {
   name: "publicNetworks",
   data() {
     return {
-      NICsColumns,
+      NICsColumns: [
+        {
+          title: "ID",
+          dataIndex: "AR_ID_ITEM",
+          key: "AR_ID_ITEM",
+          width: 50,
+          align: "center",
+        },
+        {
+          title: "IP",
+          dataIndex: "IP",
+          key: "IP",
+          scopedSlots: { customRender: "ip" },
+        },
+        {
+          title: this.$t("Actions"),
+          key: "actions",
+          scopedSlots: { customRender: "buttons" },
+          width: 100,
+        },
+      ],
     };
   },
   created() {

@@ -441,6 +441,21 @@
 			"Refunded":"Đã hoàn lại"
 		}, 
 	"virtual":"ảo",
+	"input new name":"Nhập tên mới",	
+	"reserve public NIC":"Đặt NIC public",
+	"used for this VM":"sử dụng cho VM này",	
+	"attach new disk":"Thêm bộ nhớ mới",
+	"size":"Kích thước",
+	"disk":"Bộ nhớ",
+	"disk attach":"Bộ nhớ thêm",
+	"assign to VM":"Gắn cho VM",
+	"NIC attach":"NIC thêm",
+	"private":"Riêng tư",
+	"available intervals": "Thời gian khả dụng:",
+	"enter new private IP": "Nhập IP private mới:",
+	"image": "Bản sao (Image)",
+	"volatile disk":"Bộ nhớ linh hoạt",
+
 
 	"country": {
 		"VN": "Vietnam",
