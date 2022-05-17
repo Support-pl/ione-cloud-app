@@ -441,7 +441,13 @@
 		"Unpaid":"Unpaid",
 		"Paid":"Paid",
 		"Open":"Open",
-		"Refunded":"Refunded"
+		"Refunded":"Refunded",
+		"Closed":"Closed",
+		"Close-Ticket": "Close ticket",
+		"Customer-Reply":"Customer reply",
+		"In Progress":"In progress",
+		"On Hold": "On hold",
+		"Answered":"Answered"
 	},
 	"virtual":"virtual",
 	"input new name":"Input new name",	

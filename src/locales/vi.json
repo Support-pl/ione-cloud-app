@@ -397,7 +397,7 @@
 	"message":"Tin nhắn",
 	"ticketStatus":{
 		"Closed": "Đã đóng",
-		"Close-Ticket": "“Đóng yêu cầu",
+		"Close-Ticket": "Đóng yêu cầu",
 		"Customer-Reply":"Phản hồi của khách hàng",
 		"In Progress":"Đang xử lý",
 		"On Hold": "Chờ xử lý",
@@ -438,8 +438,14 @@
 		"filterHeader":{ 
 			"Unpaid":"Chưa thanh toán",
 			"Paid":"Đã thanh toán",
-			"Open":"Mở",
-			"Refunded":"Đã hoàn lại"
+			"Refunded":"Đã hoàn lại",
+			"Closed": "Đã đóng",
+			"Close-Ticket": "Đóng yêu cầu",
+			"Customer-Reply":"Phản hồi của khách hàng",
+			"In Progress":"Đang xử lý",
+			"On Hold": "Chờ xử lý",
+			"Open": "Đang mở",
+			"Answered":"Đã trả lời"
 		}, 
 	"virtual":"ảo",
 	"input new name":"Nhập tên mới",	
