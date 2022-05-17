@@ -77,7 +77,8 @@
                       <transition name="tableAnim">
                         <table v-if="!showFullTable" class="table__table">
                           <tr>
-                            <td>{{ inv.items.item[0].description }}</td>
+                            <td v-if="inv.items.item[0].description == 'Add funds'">{{ $t('Add funds') }}</td>
+                            <td v-else>{{ inv.items.item[0].description }}</td>
                             <td >
                               {{ inv.items.item[0].amount | numsepar }}
                               {{ user.currency_code == undefined ? "USD" : "₫" }}

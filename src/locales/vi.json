@@ -389,7 +389,7 @@
 	"product_name": "Tên sản phẩm",
 	"VNDExcludeVAT": "Giá trên chưa bao gồm thuế VAT (10%)",
 	
-	"accept terms": "Vui lòng chấp nhận các điều khoản sử dụng để tiếp tục.",
+	"accept terms": "Vui lòng chấp nhận Điều khoản dịch vụ để tiếp tục",
 	"ask a question":"Gửi phiếu yêu cầu",
  	"department":"Bộ phận hỗ trợ",
  	"subject":"Tiêu đề",
@@ -397,11 +397,12 @@
 	"message":"Tin nhắn",
 	"ticketStatus":{
 		"Closed": "Đã đóng",
-		"Closeticket": "“Đóng yêu cầu",
-		"Customerreply":"Phản hồi của khách hàng",
-		"Inprogress":"Đang xử lý",
-		"Onhold": "Chờ xử lý",
-		"Open": "Đang mở"
+		"Close-Ticket": "“Đóng yêu cầu",
+		"Customer-Reply":"Phản hồi của khách hàng",
+		"In Progress":"Đang xử lý",
+		"On Hold": "Chờ xử lý",
+		"Open": "Đang mở",
+		"Answered":"Đã trả lời"
 	},
 	"domain is wrong":"Tên miền không hợp lệ",
 	"no data":"Không có thông tin",
@@ -455,7 +456,8 @@
 	"enter new private IP": "Nhập IP private mới:",
 	"image": "Bản sao (Image)",
 	"volatile disk":"Bộ nhớ linh hoạt",
-
+	"No Data":"Không có dữ liệu",
+	"Add funds":"Nạp tiền",
 
 	"country": {
 		"VN": "Vietnam",

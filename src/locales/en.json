@@ -399,11 +399,12 @@
 	"message":"Message",
 	"ticketStatus":{
 		"Closed":"Closed",
-		"Closeticket": "Close ticket",
-		"Customerreply":"Customer reply",
-		"Inprogress":"In progress",
-		"Onhold": "On hold",
-		"Open": "Open"
+		"Close-Ticket": "Close ticket",
+		"Customer-Reply":"Customer reply",
+		"In Progress":"In progress",
+		"On Hold": "On hold",
+		"Open": "Open",
+		"Answered":"Answered"
 	},
 	"domain is wrong":"domain is wrong",
 	"no data":"No information available",
@@ -457,8 +458,8 @@
 	"enter new private IP": "Enter new private IP:",
 	"image": "Image",
 	"volatile disk":"Volatile disk",
-
-
+	"No Data":"No Data",
+	"Add funds":"Add funds",
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",

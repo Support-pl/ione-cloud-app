@@ -204,7 +204,7 @@ export default {
 			}
 
 			if(!this.accepted){
-				this.$message.warn(`${this.$t('Accept terms')}`)
+				this.$message.warn(`${this.$t('accept terms')}`)
 				return
 			}
 
