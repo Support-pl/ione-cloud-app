@@ -161,7 +161,7 @@ export default {
           language: billingLang,
         })
         .then((res) => {
-          this.$message.success("success");
+          this.$message.success(this.$t('Successfully changed'));
         })
         .catch((err) => {
           console.error(err);

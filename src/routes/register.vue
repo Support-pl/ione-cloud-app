@@ -181,7 +181,7 @@ export default {
 		},
 		send(){
 			if(this.userinfo.password !== this.userinfo.password2){
-				this.$message.warn('Passwords must match')
+				this.$message.warn(this.$t('Passwords do not match'))
 				return
 			}
 
@@ -199,7 +199,7 @@ export default {
 
 			let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if(!this.userinfo.email.match(regexEmail)){
-				this.$message.warn('Email is not valid');
+				this.$message.warn(this.$t('Please enter a valid email'));
 				return
 			}
 

@@ -406,7 +406,7 @@
 		"Open": "Open",
 		"Answered":"Answered"
 	},
-	"domain is wrong":"domain is wrong",
+	"domain is wrong":"Please enter a valid domain",
 	"no data":"No information available",
 
 	"add funds": "Add funds",
@@ -430,7 +430,7 @@
 	},
 	"virtualSlider":{
 		"Single": "Single",
-		"Standard":"Standart",
+		"Standard":"Standard",
 		"Deluxe":"Deluxe",
 		"Premium":"Premium", 
 		"Business":"Business"
@@ -715,5 +715,9 @@
 		"ZA": "South Africa",
 		"ZM": "Zambia",
 		"ZW": "Zimbabwe"
-	}
+	},
+	"Please enter a valid email":"Please enter a valid email",
+	"Passwords do not match": "Passwords do not match",
+	"Successfully changed": "Successfully changed",
+	"Please enter a valid domain":"Please enter a valid domain"
 }

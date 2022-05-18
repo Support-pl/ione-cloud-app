@@ -183,7 +183,7 @@ export default {
 		orderConfirm(){
 			if(this.$store.getters.getUser){
 			if(!this.options.domain.match(/.+\..+/)){
-				this.$message.error(this.$t('domain is wrong'));
+				this.$message.error(this.$t(this.$t('Please enter a valid domain')));
 				return
 			}
 			this.modal.confirmCreate = true;

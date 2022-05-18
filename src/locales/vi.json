@@ -404,7 +404,7 @@
 		"Open": "Đang mở",
 		"Answered":"Đã trả lời"
 	},
-	"domain is wrong":"Tên miền không hợp lệ",
+	"domain is wrong":"Vui lòng nhập một tên miền hợp lệ",
 	"no data":"Không có thông tin",
 
 	"add funds": "Nạp tiền",
@@ -464,7 +464,6 @@
 	"volatile disk":"Bộ nhớ linh hoạt",
 	"No Data":"Không có dữ liệu",
 	"Add funds":"Nạp tiền",
-
 	"country": {
 		"VN": "Vietnam",
 		"BY": "Belarus",
@@ -714,5 +713,9 @@
 		"ZA": "South Africa",
 		"ZM": "Zambia",
 		"ZW": "Zimbabwe"
-	}
+	},
+	"Please enter a valid email":"Vui lòng nhập email hợp lệ",
+	"Passwords do not match": "Mật khẩu nhập lại không đúng ",
+	"Successfully changed":"Thay đổi thành công",
+	"Please enter a valid domain":"Vui lòng nhập một tên miền hợp lệ"
 }
