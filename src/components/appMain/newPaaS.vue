@@ -255,7 +255,12 @@
                   type="primary"
                   block
                   shape="round"
-                  @click="() => ($store.getters.getUser ? modal.confirmCreate = true : $router.push({ name: 'login' }))"
+                  @click="
+                    () =>
+                      $store.getters.getUser
+                        ? (modal.confirmCreate = true)
+                        : $router.push({ name: 'login' })
+                  "
                   :loading="getCurrentProd == null"
                 >
                   {{ $t("Create") }}
@@ -622,7 +627,7 @@ export default {
 <style>
 .ant-slider-mark .ant-slider-mark-text:last-child {
   width: 60px !important;
-  left: 99% !important; 
+  left: 99% !important;
 }
 .newCloud__prop {
   margin-bottom: 15px;
