@@ -420,7 +420,8 @@
 		"PENDING":"PENDING",
 		"POWEROFF":"POWEROFF",
 		"SNAPSHOT":"SNAPSHOT",
-		"RUNNING":"RUNNING"
+		"RUNNING":"RUNNING",
+		"SUSPENDED":"SUSPENDED"
 	},
 	"public":"Public",
 	"servicesTitle":{

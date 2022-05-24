@@ -418,7 +418,8 @@
 		"PENDING":"CHỜ THỰC HIỆN",
 		"POWEROFF":"TẮT NGUỒN",
 		"SNAPSHOT":"SNAPSHOT",
-		"RUNNING":"ĐANG CHẠY"
+		"RUNNING":"ĐANG CHẠY",
+		"SUSPENDED":"ĐÃ TẠM DỪNG"
 		}, 
 		"public":"Public",
 		"servicesTitle":{
