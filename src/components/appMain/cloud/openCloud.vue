@@ -166,6 +166,9 @@
               </div>
             </div>
             <div class="Fcloud__buttons">
+
+
+
               <div
                 v-if="SingleCloud.STATE == '3'"
                 class="Fcloud__button"

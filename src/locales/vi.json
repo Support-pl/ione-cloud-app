@@ -419,7 +419,8 @@
 		"POWEROFF":"TẮT NGUỒN",
 		"SNAPSHOT":"SNAPSHOT",
 		"RUNNING":"ĐANG CHẠY",
-		"SUSPENDED":"ĐÃ TẠM DỪNG"
+		"SUSPENDED":"ĐÃ TẠM DỪNG",
+		"ACTIVE":"KÍCH HOẠT"
 		}, 
 		"public":"Public",
 		"servicesTitle":{

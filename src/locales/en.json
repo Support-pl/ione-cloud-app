@@ -421,7 +421,8 @@
 		"POWEROFF":"POWEROFF",
 		"SNAPSHOT":"SNAPSHOT",
 		"RUNNING":"RUNNING",
-		"SUSPENDED":"SUSPENDED"
+		"SUSPENDED":"SUSPENDED",
+		"ACTIVE":"ACTIVE"
 	},
 	"public":"Public",
 	"servicesTitle":{
