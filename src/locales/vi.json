@@ -420,7 +420,9 @@
 		"SNAPSHOT":"SNAPSHOT",
 		"RUNNING":"ĐANG CHẠY",
 		"SUSPENDED":"ĐÃ TẠM DỪNG",
-		"ACTIVE":"KÍCH HOẠT"
+		"ACTIVE":"KÍCH HOẠT",
+		"CLEANUP DELETE": "CLEANUP DELETE",
+		"BOOT POWEROFF":"BOOT POWEROFF"
 		}, 
 		"public":"Public",
 		"servicesTitle":{
