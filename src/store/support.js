@@ -46,7 +46,8 @@ export default {
 		},
 		fetch({dispatch, commit}){
 			commit('makeLoadingIs', true);
-			return dispatch('silentFetch');
+			// return dispatch('silentFetch');
+			return dispatch('onLoadUser');
 		},
 		autoFetch({state, dispatch}){
 			if(state.tickets.length > 0){
