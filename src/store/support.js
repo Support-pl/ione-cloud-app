@@ -12,79 +12,78 @@ export default {
 		departments: [],
 	},
 	mutations: {
-		updateTickets(state, value){
+		updateTickets(state, value) {
 			state.tickets = value;
 		},
-		updateFilter(state, value){
+		updateFilter(state, value) {
 			state.filter = value;
 		},
-		makeLoadingIs(state, value){
+		makeLoadingIs(state, value) {
 			state.loading = value;
 		},
-		makeOnlyClosedTicketsIs(state, value){
+		makeOnlyClosedTicketsIs(state, value) {
 			state.onlyClosedTickets = value
 		},
-		inverseAddTicketState(state){
+		inverseAddTicketState(state) {
 			state.addTicketState = !state.addTicketState;
 		},
-		setDepartments(state, data){
+		setDepartments(state, data) {
 			state.departments = data;
 		}
 	},
 	actions: {
-		silentFetch({commit}){
+		silentFetch({ commit }) {
 			return new Promise((resolve, reject) => {
 				api.sendAsUser('tickets')
-				.then(res => {
-					const tickets = res.tickets.ticket;
-					commit('updateTickets', tickets);
-					commit('makeLoadingIs', false);
-					resolve(tickets)
-				})
-				.catch(err => reject(err));
+					.then(res => {
+						const tickets = res.tickets.ticket;
+						commit('updateTickets', tickets);
+						commit('makeLoadingIs', false);
+						resolve(tickets)
+					})
+					.catch(err => reject(err));
 			});
 		},
-		fetch({dispatch, commit}){
+		fetch({ dispatch, commit }) {
 			commit('makeLoadingIs', true);
-			// return dispatch('silentFetch');
-			return dispatch('onLoadUser');
+			return dispatch('silentFetch')
 		},
-		autoFetch({state, dispatch}){
-			if(state.tickets.length > 0){
+		autoFetch({ state, dispatch }) {
+			if (state.tickets.length > 0) {
 				return dispatch('silentFetch');
 			} else {
 				return dispatch('fetch');
 			}
 		},
-		fetchDepartments({commit}){
+		fetchDepartments({ commit }) {
 			return new Promise((resolve, reject) => {
 				api.getWithParams('support.getDepartments')
-				.then(res => {
-					if(res.result == "success"){
-						commit('setDepartments', res.response);
-						resolve(res);
-					} else {
-						throw res;
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					reject(err);
-				})
+					.then(res => {
+						if (res.result == "success") {
+							commit('setDepartments', res.response);
+							resolve(res);
+						} else {
+							throw res;
+						}
+					})
+					.catch(err => {
+						console.error(err);
+						reject(err);
+					})
 			})
 		}
 	},
 	getters: {
-		getAllTickets(state){
+		getAllTickets(state) {
 			return state.tickets;
 		},
-		getTickets(state){
+		getTickets(state) {
 			const order = [
 				'open',
 				'closed'
 			];
 			// console.log(state.tickets);
-			const tickets = state.tickets.sort((a,b) => {
+			const tickets = state.tickets.sort((a, b) => {
 				return order.indexOf(a.status.toLowerCase()) - order.indexOf(b.status.toLowerCase());
 			})
 			if (state.filter[0] == 'all' || state.filter.length == 0) {
@@ -93,16 +92,16 @@ export default {
 				return tickets.filter(ticket => state.filter.includes(ticket.status))
 			}
 		},
-		isLoading(state){
+		isLoading(state) {
 			return state.loading;
 		},
-		isOnlyClosedTickets(state){
+		isOnlyClosedTickets(state) {
 			return state.onlyClosedTickets;
 		},
-		isAddTicketState(state){
+		isAddTicketState(state) {
 			return state.addTicketState;
 		},
-		getDepartments(state){
+		getDepartments(state) {
 			return state.departments;
 		}
 	}
