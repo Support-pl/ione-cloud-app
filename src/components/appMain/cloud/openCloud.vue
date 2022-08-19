@@ -117,13 +117,13 @@
                     <a-row :gutter="[10, 10]">
                       <a-col :xs="24" :sm="4"> CPU </a-col>
                       <a-col :xs="24" :sm="20">
-                        <a-input type="number" :min="1" v-model="resize.VCPU" />
+                        <a-input type="number" :min="1" :max="32" v-model="resize.VCPU" />
                       </a-col>
                     </a-row>
                     <a-row :gutter="[10, 10]">
                       <a-col :xs="24" :sm="4"> RAM (GB) </a-col>
                       <a-col :xs="24" :sm="20">
-                        <a-input type="number" :min="1" v-model="resize.RAM" />
+                        <a-input type="number" :min="1" :max="64" v-model="resize.RAM" />
                       </a-col>
                     </a-row>
                   </a-modal>
