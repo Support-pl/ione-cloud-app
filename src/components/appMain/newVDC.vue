@@ -71,7 +71,7 @@
 														<a-icon type="minus" class="slider_btn" @click="changeValue('ramsize', -1)"></a-icon>
 													</a-col>
 													<a-col :span="18">
-														<a-input-number v-model="options.ram.size" class="max-width" :min="options.ram.min" :max="options.ram.max" default-value="1" :disabled="disableNotCustom" />
+														<a-input-number v-model="options.ram.size" class="max-width" :min="options.ram.min" :max="64" default-value="1" :disabled="disableNotCustom" />
 													</a-col>
 													<a-col :span="3">
 														<a-icon type="plus" class="slider_btn" @click="changeValue('ramsize', 1)"></a-icon>
@@ -94,7 +94,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='options.cpu.max' default-value="1" :disabled="disableNotCustom" />
+												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='32' default-value="1" :disabled="disableNotCustom" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
