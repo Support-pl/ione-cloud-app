@@ -449,7 +449,8 @@
 			"In Progress":"Đang xử lý",
 			"On Hold": "Chờ xử lý",
 			"Open": "Đang mở",
-			"Answered":"Đã trả lời"
+			"Answered":"Đã trả lời",
+      "Cancelled": "Đã hủy bỏ"
 		}, 
 	"virtual":"ảo",
 	"input new name":"Nhập tên mới",	

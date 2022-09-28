@@ -451,7 +451,8 @@
 		"Customer-Reply":"Customer reply",
 		"In Progress":"In progress",
 		"On Hold": "On hold",
-		"Answered":"Answered"
+		"Answered":"Answered",
+    "Cancelled": "Cancelled"
 	},
 	"virtual":"virtual",
 	"input new name":"Input new name",	

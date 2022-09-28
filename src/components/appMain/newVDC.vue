@@ -57,6 +57,27 @@
 						<a-collapse-panel key="CPURAM" header="CPU + RAM:" :disabled="disableNotCustom" v-if="custom">
 					<div class="newCloud__option-field">
 
+							<a-col :sm="12" :span="24">
+								<a-row>
+									<a-col :sm="8" :span="10">
+										CPU: 
+									</a-col>
+									<a-col :sm="13" :span="14">
+										<a-row type="flex" justify="space-between" align="middle">
+											<a-col :span="3">
+												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
+											</a-col>
+											<a-col :span="18">
+												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='32' default-value="1" :disabled="disableNotCustom" />
+											</a-col>
+											<a-col :span="3">
+												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
+											</a-col>
+										</a-row>
+									</a-col>
+								</a-row>
+							</a-col>
+
 						<a-row :gutter="[10, 10]">
 							<a-col :sm="12" :span="24">
 								<a-row>
@@ -77,27 +98,6 @@
 														<a-icon type="plus" class="slider_btn" @click="changeValue('ramsize', 1)"></a-icon>
 													</a-col>
 												</a-row>
-											</a-col>
-										</a-row>
-									</a-col>
-								</a-row>
-							</a-col>
-
-							<a-col :sm="12" :span="24">
-								<a-row>
-									<a-col :sm="8" :span="10">
-										CPU: 
-									</a-col>
-									<a-col :sm="13" :span="14">
-										<a-row type="flex" justify="space-between" align="middle">
-											<a-col :span="3">
-												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
-											</a-col>
-											<a-col :span="18">
-												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='32' default-value="1" :disabled="disableNotCustom" />
-											</a-col>
-											<a-col :span="3">
-												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
 											</a-col>
 										</a-row>
 									</a-col>

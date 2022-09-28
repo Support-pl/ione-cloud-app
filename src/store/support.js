@@ -78,18 +78,21 @@ export default {
 			return state.tickets;
 		},
 		getTickets(state) {
-			const order = [
-				'open',
-				'closed'
-			];
+			const order = ['open', 'closed', 'answered'];
 			// console.log(state.tickets);
-			const tickets = state.tickets.sort((a, b) => {
+			const tickets = [...state.tickets].sort((a, b) => {
 				return order.indexOf(a.status.toLowerCase()) - order.indexOf(b.status.toLowerCase());
 			})
+      const filters = state.filter.map((el) => {
+        if (!el.includes(' ')) return el;
+        return el.split(' ').map((el) => `${el[0].toUpperCase()}${el.slice(1)}`).join('-');
+      })
+
 			if (state.filter[0] == 'all' || state.filter.length == 0) {
+        state.tickets.sort();
 				return tickets;
 			} else {
-				return tickets.filter(ticket => state.filter.includes(ticket.status))
+				return tickets.filter(ticket => filters.includes(ticket.status))
 			}
 		},
 		isLoading(state) {
