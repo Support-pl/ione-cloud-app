@@ -42,6 +42,7 @@
 	"It’s empty...": "Chưa có thông tin.",
 	"Unknown error.": "Lỗi không xác định.",
 	"Password is too short": "Mật khẩu chưa đủ độ dài yêu cầu",
+  "Password is weak": "Mật khẩu yếu",
 	"Create VM": "Tạo VM",
 	"Create": "Tạo",
 	"Confirm": "Xác nhận",

@@ -43,6 +43,7 @@
 	"It’s empty...": "No information is available yet.",
 	"Unknown error.": "Unknown error.",
 	"Password is too short": "Password is too short",
+  "Password is weak": "Password is weak",
 	"Create VM": "Create VM",
 	"Create": "Create",
 	"Confirm": "Confirm",

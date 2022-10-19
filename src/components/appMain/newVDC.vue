@@ -316,6 +316,11 @@
 							</p>
 							<p>
 								{{$t("Enter OS password")}}:
+                <password-meter
+                  style="height: 10px"
+                  :password="options.password"
+                  @score="(value) => score = value.score"
+                />
 								<a-input-password v-model="options.password" />
 							</p>
 							<p>
@@ -335,12 +340,14 @@
 <script>
 import md5 from 'md5'
 import { mapGetters } from 'vuex'
+import passwordMeter from 'vue-simple-password-meter'
 
 const tofixVal = 0;
 const toFixValLong = 0;
 
 export default {
 	name: "newVDC",
+  components: { passwordMeter },
 	data(){
 		return {
 			monthDiscount: 10,
@@ -353,6 +360,7 @@ export default {
 			collapseKey: "",
 			period: "hour",
 			pricesLoaded: false,
+      score: 0,
 			toShow: {
 				minute: "min",
 				hour: "hour",
@@ -605,6 +613,10 @@ export default {
 				this.$message.error(this.$t("Password mismatch"));
 				return 0
 			}
+      if(this.score < 4) {
+        this.$message.error(this.$t("Password is weak"));
+        return 0;
+      }
 			this.modal.confirmLoading = true;
 			this.send()
 				.then( response => {
