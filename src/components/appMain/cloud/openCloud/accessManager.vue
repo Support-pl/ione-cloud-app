@@ -24,6 +24,7 @@
     <a-col style="display: flex; justify-content: end" :span="24">
       <a-button
         type="primary"
+        :loading="isLoading"
         :disabled="score < 4 || options.password !== options.password2"
         @click="$emit('send', options.password)"
       >
@@ -41,6 +42,7 @@ import passwordMeter from 'vue-simple-password-meter'
 export default {
 	name: "access-manager",
 	components: { password, passwordMeter },
+  props: { isLoading: { type: Boolean, required: true } },
   data: () => ({
     options: {
       password: '',

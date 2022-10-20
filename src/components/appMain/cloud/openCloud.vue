@@ -160,7 +160,7 @@
                     :title="$t('Access manager')"
                     :footer="null"
                   >
-                    <access-manager @send="changePassword" />
+                    <access-manager :isLoading="isRenameLoading" @send="changePassword" />
                   </a-modal>
                 </div>
               </div>
@@ -916,9 +916,17 @@ export default {
       let close_your_eyes = md5("VMChangePassword" + userid + user.secret);
       let url = `/VMChangePassword.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}&pass=${pass}`;
 
+      this.isRenameLoading = true;
       this.$axios.get(url)
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+        .then(({ result, message }) => {
+          if (result === 'error') this.$message.error(message);
+          this.$message.success(this.$t('Password changed successfully'));
+        })
+        .catch((err) => {
+          this.$message.error(err.response?.data?.message ?? err.message ?? err);
+          console.error(err);
+        })
+        .finally(() => this.isRenameLoading = false);
     },
     sendAction(action) {
       switch (action.toLowerCase()) {

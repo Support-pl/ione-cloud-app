@@ -49,6 +49,7 @@
 	"Enter OS password": "Nhập mật khẩu Hệ điều hành (OS)",
 	"Enter OS password again": "Nhập lại mật khẩu Hệ điều hành (OS)",
 	"Password mismatch": "Mật khẩu không khớp",
+  "Password changed successfully": "Mật khẩu đã thay đổi thành công",
 	"Enter VM name": "Nhập tên VM",
 	"VM create": "Tạo VM",
 	"Drive": "Lưu trữ",

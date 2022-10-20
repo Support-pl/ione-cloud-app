@@ -50,6 +50,7 @@
 	"Enter OS password": "Enter OS password",
 	"Enter OS password again": "Enter OS password again",
 	"Password mismatch": "Password mismatch",
+  "Password changed successfully": "Password changed successfully",
 	"Enter VM name": "Enter VM name",
 	"VM create": "VM create",
 	"Drive": "Drive",
