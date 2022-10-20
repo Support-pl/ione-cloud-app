@@ -913,7 +913,7 @@ export default {
       const userid = user.id;
       const vmid = this.SingleCloud.ID;
 
-      let close_your_eyes = md5("vmaction" + userid + user.secret);
+      let close_your_eyes = md5("VMChangePassword" + userid + user.secret);
       let url = `/VMChangePassword.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}&pass=${pass}`;
 
       this.$axios.get(url)
