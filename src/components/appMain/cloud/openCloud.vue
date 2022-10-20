@@ -160,7 +160,7 @@
                     :title="$t('Access manager')"
                     :footer="null"
                   >
-                    <access-manager />
+                    <access-manager @send="changePassword" />
                   </a-modal>
                 </div>
               </div>
@@ -907,6 +907,18 @@ export default {
       let capitalized = localizeTitle[0].toUpperCase() + localizeTitle.slice(1);
       newOpt.title = `${capitalized} (${range})`;
       return newOpt;
+    },
+    changePassword(pass) {
+      const user = this.$store.getters.getUser;
+      const userid = user.id;
+      const vmid = this.SingleCloud.ID;
+
+      let close_your_eyes = md5("vmaction" + userid + user.secret);
+      let url = `/VMChangePassword.php?userid=${userid}&vmid=${vmid}&secret=${close_your_eyes}&pass=${pass}`;
+
+      this.$axios.get(url)
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
     },
     sendAction(action) {
       switch (action.toLowerCase()) {
