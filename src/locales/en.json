@@ -182,6 +182,8 @@
 		"none": "none"
 	},
 	"os": "OS",
+  "You can't delete this virtual machine!": "You can't delete this virtual machine!",
+  "You need to remove the IP addresses from the server before deleting the VM": "You need to remove the IP addresses from the server before deleting the VM",
 	"Do you want to delete this virtual machine?": "Do you want to delete this virtual machine?",
 	"Do you want to reinstall this virtual machine?": "Do you want to reinstall this virtual machine?",
 	"All data will be deleted!": "All data will be deleted!",

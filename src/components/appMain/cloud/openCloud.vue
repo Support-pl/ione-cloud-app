@@ -1399,14 +1399,19 @@ export default {
     },
     sendDelete() {
       const me = this;
+      const title = (this.IPs.length < 1)
+        ? this.$t("You can't delete this virtual machine!")
+        : this.$t("Do you want to delete this virtual machine?");
+      const content = (this.IPs.length < 1)
+        ? this.$t("You need to remove the IP addresses from the server before deleting the VM")
+        : this.$t("All data will be deleted!");
+
       this.$confirm({
-        title: me.$t("Do you want to delete this virtual machine?"),
+        title,
         okType: "danger",
-        content: (h) => (
-          <div style="color:red;">{me.$t("All data will be deleted!")}</div>
-        ),
+        content: (h) => (<div style="color:red;">{ content }</div>),
         onOk() {
-          me.sendAction("Delete");
+          if (this.IPs.length > 0) me.sendAction("Delete");
           me.modal.menu = false;
           me.modal.delete = false;
         },

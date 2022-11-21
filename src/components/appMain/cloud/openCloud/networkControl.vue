@@ -9,7 +9,6 @@
     >
       <div slot="buttons" slot-scope="value, row">
         <span
-          v-if="value.NIC_ID != 0"
           class="modal_table_action_btn modal_table_action_btn__hoverable"
           title="Detach"
           @click="detachInit(row)"

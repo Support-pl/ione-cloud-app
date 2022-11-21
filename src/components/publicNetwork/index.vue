@@ -11,7 +11,7 @@
     >
       <div slot="buttons" slot-scope="value, row">
         <span
-          v-if="value.NIC_ID != 0"
+          v-if="Array.isArray(row.LEASES)"
           class="modal_table_action_btn"
           :title="!row.LEASES.LEASE ? 'Release' : ''"
           @click="ReleaseNIC(row)"
