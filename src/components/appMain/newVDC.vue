@@ -156,7 +156,7 @@
 							<a-col :sm="12" :span="24">
 								<a-row>
 									<a-col  :sm="10" :span="12">
-										{{$t("Public network")}}:
+										{{$t("Public network")}}*:
 									</a-col>
 									<a-col  :sm="12" :span="12">
 										<a-switch v-model="options.network.public.status"/>
@@ -326,6 +326,10 @@
 							</p>
 						</a-modal>
 					</a-col>
+          <a-col style="font-size: 14px; margin: 16px 16px 0">
+            <span style="position: absolute; left: -8px">*</span>
+            {{ $t('Payment will be made immediately after purchase') }}
+          </a-col>
 				</a-row>
 
 			</div>

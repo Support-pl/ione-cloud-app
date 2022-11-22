@@ -127,7 +127,7 @@
                     @change="(newdata) => setAddon('traffic', +newdata)"
                   >
                     <a-select-option value="-1">{{
-                      $t("under 3 Gb per month")
+                      $t("under 3 Tb per month")
                     }}</a-select-option>
                     <a-select-option
                       v-for="group in getAddons.traffic"

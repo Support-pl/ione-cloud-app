@@ -67,6 +67,7 @@
 	"Total": "Total",
 	"Ready made servers": "VPS Hosting Plans",
 	"Pay as you Go": "Pay-As-You-Go VPS",
+  "Payment will be made immediately after purchase": "Payment will be made immediately after purchase",
 	"VDC created successfully with": "VDC created successfully with",
 	"Monthly payment": "Monthly payment",
 	"Tarification": "Savings",
@@ -109,7 +110,7 @@
 
 	"High speed": "High speed",
 	"traffic": "traffic",
-	"under 3 Gb per month": "under 3 Gb per month",
+	"under 3 Tb per month": "under 3 Tb per month",
 	"panel": "panel",
 	"none": "none",
 	"backup": "backup HDD",

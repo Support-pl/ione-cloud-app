@@ -67,6 +67,7 @@
 	"Total": "Итого",
 	"Ready made servers": "Готовые тарифы",
 	"Pay as you Go": "Оплата по факту",
+  "Payment will be made immediately after purchase": "Оплата будет произведена сразу после покупки",
 	"VDC created successfully with": "VDC создана успешно с",
 	"Monthly payment": "Оплата за месяц",
 	"Tarification": "Тарификация",
@@ -109,7 +110,7 @@
 
 	"High speed": "Улучшенный",
 	"traffic": "Трафик",
-	"under 3 Gb per month": "До 3 Гб в месяц",
+	"under 3 Tb per month": "До 3 Тб в месяц",
 	"panel": "Панель",
 	"none": "Без панели",
 	"backup HDD": "Бэкап HDD",
