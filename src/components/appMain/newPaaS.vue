@@ -238,8 +238,17 @@
                 :style="{ 'font-size': '1.5rem' }"
               >
                 <transition name="textchange" mode="out-in">
-                  <a-col :key="getFullPrice">
-                    {{ getFullPrice | numsepar }} {{ currency }}
+                  <a-col :key="getFullPrice" style="display: flex; gap: 10px;">
+                    {{ getFullPrice | numsepar }}
+                    <a-select v-model="options.currency">
+                      <a-select-option
+                        v-for="currency of currencies"
+                        :key="currency.value"
+                      >
+                        {{ currency.value }}
+                      </a-select-option>
+                    </a-select>
+
                   </a-col>
                 </transition>
               </a-row>
@@ -399,6 +408,7 @@ const tofixVal = 0;
 
 const tariffs = ["standart", "X2CPU", "X2RAM"];
 const sizes = ["TOT 1G", "TOT 2G", "TOT 4G", "TOT 6G", "TOT 8G", "TOT 10G"];
+const currencies = [{ value: 'USD', id: 2 }, { value: 'VND', id: 1 }];
 
 import { mapGetters } from "vuex";
 import loading from "../loading/loading";
@@ -409,9 +419,11 @@ export default {
       periods,
       sizes,
       tariffs,
+      currencies,
       options: {
         kind: "standart",
         period: "monthly",
+        currency: "USD",
         size: "",
         isOnCalc: false,
         drive: true, // 1 ssd, 0 hdd
@@ -447,6 +459,7 @@ export default {
     this.$store.dispatch("newPaaS/fetchAddonsAuto");
 
     this.options.size = sizes[Math.min(1, sizes.length - 1)];
+    this.options.currency = this.currency;
   },
   methods: {
     getPopupContainer(trigger) {
@@ -476,6 +489,7 @@ export default {
         pid: this.getCurrentProd.pid,
         addons,
         billingcycle: this.options.period,
+        currency: currencies.find(({ value }) => value === this.options.currency).id
       };
       // console.log(orderData, this.$store.getters.getUser);
 
@@ -583,11 +597,8 @@ export default {
       return current;
     },
     getFullPrice() {
-      if (this.isAddonsLoading || this.isProductsLoading) {
-        return false;
-      }
-      const VMonly =
-        +this.getCurrentProd.pricing[this.currency][this.options.period];
+      if (this.isAddonsLoading || this.isProductsLoading) return false;
+      const VMonly = +this.getCurrentProd?.pricing[this.options.currency][this.options.period];
       const addonsName = ["drive", "traffic", "panel", "os", "backup"];
       const addonsCosts = addonsName.map((name) => {
         if (this.options.addonsObjects[name] == null) {
@@ -620,6 +631,22 @@ export default {
         this.options.addons.os = +newVal.os[0].id;
       }
     },
+    'options.currency'(value) {
+      const me = this;
+      if (value !== this.currency) this.$confirm({
+        title: me.$t("Do you want to switch a currency?"),
+        content: (h) => {
+          const string = me.$t(
+            "Currency in all products will be changed, are you sure?"
+          );
+          return <div>{ string }</div>;
+        },
+        okText: me.$t("Yes"),
+        cancelText: me.$t("Cancel"),
+        onCancel() { me.options.currency = me.currency },
+        onOk() {},
+      });
+    }
   },
 };
 </script>
