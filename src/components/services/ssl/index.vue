@@ -74,9 +74,17 @@
 				</a-divider>
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-					<a-col>
+					<a-col style="display: flex; gap: 10px">
 						<template v-if="!fetchLoading">
-							{{getProducts.pricing[options.period] | numsepar}} {{getProducts.pricing.suffix}}
+							{{getFullPrice | numsepar}} {{ options.currency }}
+              <!-- <a-select v-model="options.currency">
+                <a-select-option
+                  v-for="currency of currencies"
+                  :key="currency.value"
+                >
+                  {{ currency.value }}
+                </a-select-option>
+              </a-select> -->
 						</template>
 						<div v-else class="loadingLine loadingLine--total"></div>
 					</a-col>
@@ -114,10 +122,13 @@
 <script>
 import api from "@/api.js";
 
+const currencies = [{ value: 'USD', id: 2 }, { value: 'VND', id: 1 }];
+
 export default {
 	name: 'ssl-component',
 	data(){
 		return {
+      currencies,
 			products: [],
 			fetchLoading: false,
 			sendloading: false,
@@ -125,7 +136,8 @@ export default {
 				provider: '',
 				tarif: '',
 				domain: '',
-				period: 'annually'
+				period: 'annually',
+        currency: "USD"
 			},
 			modal: {
 				confirmCreate: false,
@@ -154,7 +166,8 @@ export default {
 			const info = {
 				domain: this.options.domain,
 				billingcycle: 'annually',
-				pid: this.getProducts.pid
+				pid: this.getProducts.pid,
+        currency: currencies.find(({ value }) => value === this.options.currency).id
 			}
 
 			if(!this.$store.getters.getUser){
@@ -162,7 +175,7 @@ export default {
 				this.$store.commit('setOnloginInfo', {
 					type: 'SSL',
 					title: 'SSL Certificate',
-					cost: this.getProducts.pricing[this.options.period]
+					cost: this.getFullPrice
 				});
 				this.$store.dispatch('setOnloginAction', () => {
 					this.createSSL(info);
@@ -203,18 +216,41 @@ export default {
 		productName(){
 			return 'test'
 		},
-		getProducts(){
+    currency() {
+      const { currency_code } = this.$store.getters.getUser;
+
+      return currency_code ?? this.$config.currency.code;
+    },
+		getProducts() {
 			if(Object.keys(this.products).length == 0) return "NAN"
 			return this.products[this.options.provider].find(el => el.tarif == this.options.tarif)
-		}
+		},
+    getFullPrice() {
+      return this.getProducts.pricing[this.options.currency][this.options.period];
+    }
 	},
 	created(){
 		this.fetch();
+    this.options.currency = this.currency;
 	},
 	watch: {
-		'options.provider': function() {
+		'options.provider'() {
 			this.options.tarif = this.products[this.options.provider][0].tarif;
-		}
+		},
+    'options.currency'(value) {
+      const me = this;
+      const string = this.$t(
+        "Currency in all products will be changed, are you sure?"
+      );
+      if (value !== this.currency) this.$confirm({
+        title: me.$t("Do you want to switch a currency?"),
+        content: (h) => (<div>{ string }</div>),
+        okText: me.$t("Yes"),
+        cancelText: me.$t("Cancel"),
+        onCancel() { me.options.currency = me.currency },
+        onOk() {},
+      });
+    }
 	}
 }
 </script>

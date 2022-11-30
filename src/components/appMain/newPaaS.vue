@@ -239,16 +239,15 @@
               >
                 <transition name="textchange" mode="out-in">
                   <a-col :key="getFullPrice" style="display: flex; gap: 10px;">
-                    {{ getFullPrice | numsepar }}
-                    <a-select v-model="options.currency">
+                    {{ getFullPrice | numsepar }} {{ options.currency }}
+                    <!-- <a-select v-model="options.currency">
                       <a-select-option
                         v-for="currency of currencies"
                         :key="currency.value"
                       >
                         {{ currency.value }}
                       </a-select-option>
-                    </a-select>
-
+                    </a-select> -->
                   </a-col>
                 </transition>
               </a-row>
@@ -619,7 +618,9 @@ export default {
       return this.options.slide > 0;
     },
     currency() {
-      return this.$config.currency.code;
+      const { currency_code } = this.$store.getters.getUser;
+
+      return currency_code ?? this.$config.currency.code;
     },
     firstOS() {
       return this.getAddons?.os?.[0]?.id ?? "Empty";
@@ -633,14 +634,12 @@ export default {
     },
     'options.currency'(value) {
       const me = this;
+      const string = this.$t(
+        "Currency in all products will be changed, are you sure?"
+      );
       if (value !== this.currency) this.$confirm({
         title: me.$t("Do you want to switch a currency?"),
-        content: (h) => {
-          const string = me.$t(
-            "Currency in all products will be changed, are you sure?"
-          );
-          return <div>{ string }</div>;
-        },
+        content: (h) => (<div>{ string }</div>),
         okText: me.$t("Yes"),
         cancelText: me.$t("Cancel"),
         onCancel() { me.options.currency = me.currency },

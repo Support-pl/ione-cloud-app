@@ -120,6 +120,8 @@
 	"go to invoice": "Go to Order",
 	"increases core frequency from 2.4 GHz to 3.7 GHz": "increases core frequency from 2.4 GHz to 3.7 GHz",
 	"Virtual machine will be available after paying the invoice": "Virtual machine will be available after paying the order",
+  "Currency in all products will be changed, are you sure?": "Currency in all products will be changed, are you sure?",
+  "Do you want to switch a currency?": "Do you want to switch a currency?",
 	"Power off": "Power Off",
 	"Reboot": "Reboot",
 	"Recover": "Recover",

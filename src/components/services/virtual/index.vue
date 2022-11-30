@@ -62,13 +62,19 @@
 				</a-divider>
 
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
-					<a-col>
-						<transition name="textchange" mode="out-in">
-							<div v-if="!fetchLoading">
-								{{getProducts.pricing[options.period] | numsepar}} {{getProducts.pricing.suffix}}
-							</div>
-							<div v-else class="loadingLine loadingLine--total"></div>
-						</transition>
+					<a-col style="display: flex; gap: 10px">
+            <template v-if="!fetchLoading">
+              {{getFullPrice | numsepar}} {{ options.currency }}
+                <!-- <a-select v-model="options.currency">
+                  <a-select-option
+                    v-for="currency of currencies"
+                    :key="currency.value"
+                  >
+                    {{ currency.value }}
+                  </a-select-option>
+                </a-select> -->
+            </template>
+            <div v-else class="loadingLine loadingLine--total"></div>
 					</a-col>
 				</a-row>
 
@@ -104,10 +110,13 @@
 <script>
 import api from "@/api.js";
 
+const currencies = [{ value: 'USD', id: 2 }, { value: 'VND', id: 1 }];
+
 export default {
 	name: 'ssl-component',
 	data(){
 		return {
+      currencies,
 			sizes: [],
 			products: [],
 			fetchLoading: false,
@@ -115,7 +124,8 @@ export default {
 			options: {
 				size: '',
 				domain: '',
-				period: ''
+				period: '',
+        currency: "USD"
 			},
 			modal: {
 				confirmCreate: false,
@@ -134,7 +144,7 @@ export default {
 				this.products = res;
 				this.sizes = res.map(el => this.$t(`virtualSlider.${el.name.replace(/Виртуальный хостинг |Host /gi, '')}`));
 				this.options.size = this.sizes[1];
-				this.periods = Object.keys(res[0].pricing).filter(el => !el.match(/fix/));
+				this.periods = Object.keys(res[0].pricing[this.options.currency]).filter(el => el.match(/ly/));
 				this.options.period = this.periods[1];
 			})
 			.catch(err => console.error(err))
@@ -146,7 +156,8 @@ export default {
 			const info = {
 				domain: this.options.domain,
 				billingcycle: this.options.period,
-				pid: this.getProducts.pid
+				pid: this.getProducts.pid,
+        currency: currencies.find(({ value }) => value === this.options.currency).id
 			}
 
 			if(!this.$store.getters.getUser){
@@ -154,7 +165,7 @@ export default {
 				this.$store.commit('setOnloginInfo', {
 					type: 'IaaS',
 					title: 'Virtual Hosting',
-					cost: this.getProducts.pricing[this.options.period]
+					cost: this.getFullPrice
 				});
 				this.$store.dispatch('setOnloginAction', () => {
 					this.createVirtual(info);
@@ -193,15 +204,40 @@ export default {
 		}
 	},
 	computed: {
-		getProducts(){
+    currency() {
+      const { currency_code } = this.$store.getters.getUser;
+
+      return currency_code ?? this.$config.currency.code;
+    },
+		getProducts() {
 			if(Object.keys(this.products).length == 0) return "NAN"
 			return this.products[this.sizes.indexOf(this.options.size)]
-		}
+		},
+    getFullPrice() {
+      return this.getProducts.pricing[this.options.currency][this.options.period];
+    }
 	},
 	created(){
 		// console.log(this.data);
 		this.fetch();
-	}
+    this.options.currency = this.currency;
+	},
+  watch: {
+    'options.currency'(value) {
+      const me = this;
+      const string = this.$t(
+        "Currency in all products will be changed, are you sure?"
+      );
+      if (value !== this.currency) this.$confirm({
+        title: me.$t("Do you want to switch a currency?"),
+        content: (h) => (<div>{ string }</div>),
+        okText: me.$t("Yes"),
+        cancelText: me.$t("Cancel"),
+        onCancel() { me.options.currency = me.currency },
+        onOk() {},
+      });
+    }
+  }
 }
 </script>
 

@@ -62,6 +62,7 @@ export default {
       return this.$store.getters.getUser;
     },
     currency() {
+      if (this.user.currency_code) return { suffix: this.user.currency_code };
       return this.$config.currency;
     },
     isLogged() {
