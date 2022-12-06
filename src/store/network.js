@@ -46,7 +46,7 @@ export default {
 	},
 	getters: {
 		getNICpublic(state){
-			if(Object.keys(state.NICs).length > 0){
+			if(Object.keys(state.NICs).includes('PUBLIC')){
 				return state.NICs['PUBLIC']['AR'];
 			} else {
 				return [];
