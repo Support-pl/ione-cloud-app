@@ -65,14 +65,14 @@
 					<a-col style="display: flex; gap: 10px">
             <template v-if="!fetchLoading">
               {{getFullPrice | numsepar}} {{ options.currency }}
-                <!-- <a-select v-model="options.currency">
-                  <a-select-option
-                    v-for="currency of currencies"
-                    :key="currency.value"
-                  >
-                    {{ currency.value }}
-                  </a-select-option>
-                </a-select> -->
+              <a-select v-model="options.currency">
+                <a-select-option
+                  v-for="currency of currencies"
+                  :key="currency.value"
+                >
+                  {{ currency.value }}
+                </a-select-option>
+              </a-select>
             </template>
             <div v-else class="loadingLine loadingLine--total"></div>
 					</a-col>
