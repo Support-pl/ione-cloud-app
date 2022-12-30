@@ -35,6 +35,12 @@ export default {
 				'max-age': '2592000'
 			}) // странная штука, вероятно потом надо будет переделать, но пока побудет так 08.10.2020
 		},
+    setRate(state, {value, getters}){
+      state.user.currency_rate = (state.user.currency_code === "USD") ? value : 1
+			setCookie('CloudUser', JSON.stringify(getters.getUser), {
+				'max-age': '2592000'
+			}) // странная штука, вероятно потом надо будет переделать, но пока побудет так 08.10.2020
+    },
 		logout(state){
 			state.user = null
 			state.logged = false
@@ -81,6 +87,10 @@ export default {
 			const getters = ctx.getters;
 			ctx.commit("setCurrency", {value, getters})
 		},
+    updateRate(ctx, value){
+      const getters = ctx.getters;
+      ctx.commit("setRate", {value, getters})
+    },
 		setOnloginAction({commit}, data){
 			commit('_setOnloginAction', () => {
 				data();

@@ -69,7 +69,7 @@
 												<a-icon type="minus" class="slider_btn" @click="changeValue('cpucount', -1)"></a-icon>
 											</a-col>
 											<a-col :span="18">
-												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='32' default-value="1" :disabled="disableNotCustom" />
+												<a-input-number v-model="options.cpu.count" class="max-width" :min='options.cpu.min' :max='options.cpu.max' default-value="1" :disabled="disableNotCustom" />
 											</a-col>
 											<a-col :span="3">
 												<a-icon type="plus" class="slider_btn" @click="changeValue('cpucount', 1)"></a-icon>
@@ -91,7 +91,7 @@
                           <a-icon type="minus" class="slider_btn" @click="changeValue('ramsize', -1)"></a-icon>
                         </a-col>
                         <a-col :span="18">
-                          <a-input-number v-model="options.ram.size" class="max-width" :min="options.ram.min" :max="64" default-value="1" :disabled="disableNotCustom" />
+                          <a-input-number v-model="options.ram.size" class="max-width" :min="options.ram.min" :max="options.ram.max" default-value="1" :disabled="disableNotCustom" />
                         </a-col>
                         <a-col :span="3">
                           <a-icon type="plus" class="slider_btn" @click="changeValue('ramsize', 1)"></a-icon>
@@ -190,7 +190,12 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.cpu.price)*options.cpu.count) | numsepar}} {{currencyPostfix}}
+              <template v-if="user.currency_code === 'USD'">
+							  {{(calculatePrice(options.cpu.price)*options.cpu.count)}} {{currencyPostfix}}
+              </template>
+              <template v-else>
+							  {{(calculatePrice(options.cpu.price)*options.cpu.count) | numsepar}} {{currencyPostfix}}
+              </template>
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -201,7 +206,12 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.ram.price)*options.ram.size) | numsepar}} {{currencyPostfix}}
+              <template v-if="user.currency_code === 'USD'">
+							  {{(calculatePrice(options.ram.price)*options.ram.size)}} {{currencyPostfix}}
+              </template>
+              <template v-else>
+							  {{(calculatePrice(options.ram.price)*options.ram.size) | numsepar}} {{currencyPostfix}}
+              </template>
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -212,7 +222,12 @@
 					</a-col>
 					<a-col>
 						<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.000USD">
-							{{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size) | numsepar}} {{currencyPostfix}}
+              <template v-if="user.currency_code === 'USD'">
+							  {{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size)}} {{currencyPostfix}}
+              </template>
+              <template v-else>
+							  {{(calculatePrice(options.disk.price[options.disk.type])*options.disk.size) | numsepar}} {{currencyPostfix}}
+              </template>
 						</a-skeleton>
 					</a-col>
 				</a-row>
@@ -224,7 +239,14 @@
 						</a-col>
 						<a-col>
 							<a-skeleton class='removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1">
-								{{options.network.public.count * options.network.price | numsepar}} {{currencyPostfix}}/{{ $t('period.month') }}
+								<template v-if="user.currency_code === 'USD'">
+								  {{(options.network.public.count * options.network.price * user.currency_rate).toFixed(4)}}
+                  {{currencyPostfix}}/{{ $t('period.month') }}
+                </template>
+                <template v-else>
+								  {{options.network.public.count * options.network.price | numsepar}}
+                  {{currencyPostfix}}/{{ $t('period.month') }}
+                </template>
 							</a-skeleton>
 						</a-col>
 					</a-row>
@@ -241,7 +263,12 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('hour') | numsepar}} {{currencyPostfix}}/{{$t('hour')}}
+								<template v-if="user.currency_code === 'USD'">
+								  ~{{calculateFullPrice('hour') | numsepar}} {{currencyPostfix}}/{{$t('hour')}}
+                </template>
+                <template v-else>
+                  ~{{calculateFullPrice('hour') | numsepar}} {{currencyPostfix}}/{{$t('hour')}}
+                </template>
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -253,7 +280,12 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('day') | numsepar}} {{currencyPostfix}}/{{$t('day')}}
+								<template v-if="user.currency_code === 'USD'">
+                  ~{{calculateFullPrice('day')}} {{currencyPostfix}}/{{$t('day')}}
+                </template>
+                <template v-else>
+                  ~{{calculateFullPrice('day') | numsepar}} {{currencyPostfix}}/{{$t('day')}}
+                </template>
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -265,7 +297,12 @@
 								{{$t('Actual price may vary')}}
 							</template>
 							<a-skeleton class='total removeMarginSkeleton' :loading="!pricesLoaded" active paragraph rows="1" width="0.00USD">
-								~{{calculateFullPrice('month') | numsepar}} {{currencyPostfix}}/{{$tc('period.month')}}
+								<template v-if="user.currency_code === 'USD'">
+                  ~{{calculateFullPrice('month') | numsepar}} {{currencyPostfix}}/{{$tc('period.month')}}
+                </template>
+                <template v-else>
+                  ~{{calculateFullPrice('month') | numsepar}} {{currencyPostfix}}/{{$tc('period.month')}}
+                </template>
 							</a-skeleton>
 						</a-tooltip>
 					</a-col>
@@ -398,7 +435,7 @@ export default {
 					units: "GB",
 					price: 0,
 					min: 1,
-					max: 512
+					max: 64
 				},
 				disk: {
 					size: 0,
@@ -541,7 +578,9 @@ export default {
 					return undefined
 					break;
 			}
-			return price;
+      const fix = (this.user.currency_code === "USD" ? 4 : 0);
+
+			return +(price * this.user.currency_rate).toFixed(fix);
 		},
 		calculateFullPrice(tarification = this.period){
 			if(this.options.rate.id != 0){
@@ -554,18 +593,21 @@ export default {
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size,
 				// this.options.network.price * this.options.network.public.count
 				]
-			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(tofixVal);
+      const fix = (this.user.currency_code === "USD" ? 4 : 0);
+
+			return this.calculatePrice(parts.reduce( (a,b)=>a+b ), tarification).toFixed(fix);
 		},
 		createVDC(){
 			if(this.$store.getters.getUser){
 			const user = this.user;
+      const fix = (user.currency_code === "USD" ? 4 : 0);
 	
 			let parts = [
 				this.options.cpu.price*this.options.cpu.count,
 				this.options.ram.price*this.options.ram.size,
 				this.options.disk.price[this.options.disk.type] * this.options.disk.size
 				]
-			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(toFixValLong);
+			let price = this.calculatePrice( parts.reduce( (a,b)=>a+b ), 'day' ).toFixed(fix);
 			if(user && +price > +user.balance){
 				this.$message.error('You don\'t have enough money for a day of use');
 				return;
@@ -734,7 +776,9 @@ export default {
 	computed: {
 		...mapGetters('app', ['isMaintananceMode']),
 		costAfterDiscount(){
-			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(tofixVal);
+      const fix = (this.user.currency_code === "USD" ? 4 : 0);
+
+			return (this.calculateFullPrice('month') * (1-(this.monthDiscount/100))).toFixed(fix);
 		},
 		templatesArray(){
 			const elements = this.$store.getters["newVDC/getTemplates"];
@@ -759,7 +803,9 @@ export default {
 			return user;
 		},
 		currencyPostfix(){
-			return this.$config.currency.suffix;
+			const { currency_code } = this.$store.getters.getUser;
+
+      return currency_code ?? this.$config.currency.code;
 		},
 		isWindowsSelected(){
 			return this.options.os.name.search(/windows/i) != -1;

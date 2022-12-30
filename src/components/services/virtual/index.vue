@@ -64,7 +64,7 @@
 				<a-row type="flex" justify="space-around" :style="{'font-size': '1.5rem'}">
 					<a-col style="display: flex; gap: 10px">
             <template v-if="!fetchLoading">
-              {{getFullPrice | numsepar}} {{ options.currency }}
+              {{getFullPrice | numsepar}}
               <a-select v-model="options.currency">
                 <a-select-option
                   v-for="currency of currencies"

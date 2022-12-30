@@ -239,7 +239,7 @@
               >
                 <transition name="textchange" mode="out-in">
                   <a-col :key="getFullPrice" style="display: flex; gap: 10px;">
-                    {{ getFullPrice | numsepar }} {{ options.currency }}
+                    {{ getFullPrice | numsepar }}
                     <a-select v-model="options.currency">
                       <a-select-option
                         v-for="currency of currencies"

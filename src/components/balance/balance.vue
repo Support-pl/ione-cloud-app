@@ -53,6 +53,7 @@ export default {
         if (this.isLogged && this.user.id == res.userid) {
           this.$store.dispatch("updateBalance", res.balance);
           this.$store.dispatch("updateCurrency", res.currency_code);
+          this.$store.dispatch("updateRate", res.currency_rate);
         }
       })
       .catch((err) => console.error(err));
