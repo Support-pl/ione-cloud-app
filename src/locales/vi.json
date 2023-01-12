@@ -394,6 +394,7 @@
 	},
 	"product_name": "Tên sản phẩm",
 	"VNDExcludeVAT": "Giá trên chưa bao gồm thuế VAT (10%)",
+  "USDExcludeVAT": "Giá trên chưa bao gồm thuế VAT (10%)",
 	
 	"accept terms": "Vui lòng chấp nhận Điều khoản dịch vụ để tiếp tục",
 	"ask a question":"Gửi phiếu yêu cầu",

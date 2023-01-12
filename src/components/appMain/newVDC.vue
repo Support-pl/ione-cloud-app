@@ -807,10 +807,10 @@ export default {
 		},
 		user(){
 			const user = this.$store.getters.getUser;
-			return user;
+			return user ?? { currency_code: "VND", currency_rate: 1 };
 		},
 		currencyPostfix(){
-			const { currency_code } = this.$store.getters.getUser;
+			const { currency_code } = this.$store.getters.getUser ?? {};
 
       return currency_code ?? this.$config.currency.code;
 		},

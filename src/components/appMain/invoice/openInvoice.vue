@@ -38,8 +38,13 @@
                     dominant-baseline="middle"
                     text-anchor="middle"
                   >
-                    {{ total | numsepar }}
-                    {{ user.currency_code == undefined ? "USD" : "₫" }}
+                    <template v-if="inv.currencycode === 'VND'">
+                      {{ +(total * user.currency_rate).toFixed(4) }}
+                    </template>
+                    <template v-else>
+                      {{ total | numsepar }}
+                    </template>
+                    {{ [undefined, "USD"].includes(user.currency_code) ? "USD" : "₫" }}
                   </text>
                 </svg>
               </div>
@@ -80,8 +85,11 @@
                             <td v-if="inv.items.item[0].description == 'Add funds'">{{ $t('Add funds') }}</td>
                             <td v-else>{{ inv.items.item[0].description }}</td>
                             <td >
-                              {{ inv.items.item[0].amount | numsepar }}
-                              {{ user.currency_code == undefined ? "USD" : "₫" }}
+                              <template v-if="inv.currencycode === 'VND'">
+                                {{ +(inv.items.item[0].amount * user.currency_rate).toFixed(4) }}
+                              </template>
+                              <template v-else>{{ inv.items.item[0].amount | numsepar }}</template>
+                              {{ [undefined, "USD"].includes(user.currency_code) ? "USD" : "₫" }}
                             </td>
                           </tr>
                         </table>
@@ -92,8 +100,11 @@
                           >
                             <td>{{ elem.description }}</td>
                             <td v-if="elem.amount">
-                              {{ elem.amount | numsepar }}
-                            {{ user.currency_code == undefined ? "USD" : "₫" }}
+                              <template v-if="inv.currencycode === 'VND'">
+                                {{ +(elem.amount * user.currency_rate).toFixed(4) }}
+                              </template>
+                              <template v-else>{{ elem.amount | numsepar }}</template>
+                              {{ [undefined, "USD"].includes(user.currency_code) ? "USD" : "₫" }}
                             </td>
                           </tr>
                         </table>
@@ -109,8 +120,11 @@
                   </div>
                 </div>
                 <div class="info__footer">
-                  <p class="info__footer__discount">
+                  <p class="info__footer__discount" v-if="inv.currencycode === 'VND'">
                     {{ $t("VNDExcludeVAT") }}
+                  </p>
+                  <p class="info__footer__discount" v-else>
+                    {{ $t("USDExcludeVAT") }}
                   </p>
                   <template v-if="inv.status == 'Unpaid'">
                     <!-- <div class="info__postpone" @click="showConfirm">
@@ -242,10 +256,11 @@ export default {
   mounted() {
     const close_your_eyes = md5("invoice" + this.user.id + this.user.secret);
     const url = `/invoice.php?userid=${this.user.id}&id=${this.$route.params.pathMatch}&secret=${close_your_eyes}`;
-    this.$axios
-      .get(url)
+    this.$store.dispatch("invoices/silentFetch")
+      .then(() => this.$axios.get(url))
       .then((res) => {
         this.inv = res.data;
+        this.inv.currencycode = this.invoices.find((inv) => inv.id === res.data.invoiceid).currencycode;
         this.loading = false;
         if (res.data.result == "error") {
           throw res.data;
@@ -263,6 +278,9 @@ export default {
   computed: {
     user() {
       return this.$store.getters.getUser;
+    },
+    invoices() {
+      return this.$store.getters["invoices/getInvoices"];
     },
     statusColor() {
       return this.inv.status.toLowerCase() == "paid"

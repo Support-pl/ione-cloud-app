@@ -8,7 +8,13 @@
     </div>
     <div class="invoice__middle">
       <div class="invoice__cost">
-        {{ invoice.subtotal | numsepar }} {{ invoice.currencycode }}
+        <template v-if="invoice.currencycode === 'VND'">
+          {{ +(invoice.subtotal * user.currency_rate).toFixed(4) }}
+        </template>
+        <template v-else>
+          {{ invoice.subtotal | numsepar }}
+        </template>
+        {{ user.currency_code }}
       </div>
       <div class="invoice__date-item invoice__invDate">
         <div class="invoice__date-title">
@@ -42,6 +48,9 @@ export default {
     invoice: Object,
   },
   computed: {
+    user() {
+      return this.$store.getters.getUser;
+    },
     statusColor() {
       switch (this.invoice.status.toLowerCase()) {
         case "paid":

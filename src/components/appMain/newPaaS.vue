@@ -618,7 +618,7 @@ export default {
       return this.options.slide > 0;
     },
     currency() {
-      const { currency_code } = this.$store.getters.getUser;
+      const { currency_code } = this.$store.getters.get ?? {};
 
       return currency_code ?? this.$config.currency.code;
     },
@@ -637,7 +637,8 @@ export default {
       const string = this.$t(
         "Currency in all products will be changed, are you sure?"
       );
-      if (value !== this.currency) this.$confirm({
+      if (!me.$store.getters.getUser) return;
+      if (value !== this.currency) me.$confirm({
         title: me.$t("Do you want to switch a currency?"),
         content: (h) => (<div>{ string }</div>),
         okText: me.$t("Yes"),

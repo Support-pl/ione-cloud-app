@@ -395,6 +395,7 @@
 	},
 	"product_name": "Product Name",
 	"VNDExcludeVAT": "Prices quoted in VND, subject to 10% VAT",
+  "USDExcludeVAT": "Prices quoted in USD, subject to 10% VAT",
 
 
 	"accept terms":"Please accept terms of use to proceed.",
